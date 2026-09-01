@@ -16,6 +16,8 @@
     "src/case-workspace/**/*.tsx",
     "src/task-workspace/**/*.ts",
     "src/task-workspace/**/*.tsx",
+    "src/workbench/**/*.ts",
+    "src/workbench/**/*.tsx",
     "src/ui/components/features/app/**/*.ts",
     "src/ui/components/features/app/**/*.tsx",
     "src/ui/components/features/user/UserAvatar.tsx",

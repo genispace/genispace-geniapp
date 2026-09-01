@@ -245,11 +245,11 @@ sequenceDiagram
 
 生成项目是普通 GeniApp，不使用 `generated/` 与 `custom/` 分层。导出完成后 Workbench 与生成项目彼此独立，原低代码应用继续存在，二者可同时安装、打开和比较。
 
-### 5.1 首发阶段为何仍自包含
+### 5.1 导出运行时与源码结构
 
-Workbench 下载包当前内置一份冻结的 GeniApp `0.1.0` 契约实现，并在 `manifest`、`export-lock` 和生成 README 中记录 `geniappContractVersion`。这样在 npm 首次发布前，用户下载源码后也能立即安装和构建，不会引用一个尚不存在的 registry 包。
+`@genispace/geniapp/workbench` 是导出应用唯一依赖的 Workbench 兼容运行时。它公开可移植组件、桌面/移动导航、亮暗主题、Shell 消息与多语言行为，但不包含 Workbench 编辑器、草稿状态或发布流程。生成源码按 `src/pages/<page>` 与 `src/components/<page>` 拆分，每个嵌套组件也有独立模块，开发者可直接调整配置或替换实现。
 
-`@genispace/geniapp@0.2.0` 正式发布并完成生产可用性验证后，新导出物使用 npm 精确依赖；这不改变“只下载、不代部署”的产品边界。
+生成项目精确锁定 `@genispace/geniapp` 版本；预构建 `dist` 同时冻结该版本的浏览器运行时代码。因此下载后可以立即安装，执行 `pnpm build` 后也使用同一份公共合同，不会出现预构建版本与源码版本行为漂移。这不改变“只下载、不代部署”的产品边界。
 
 ## 6. 已实施迁移
 

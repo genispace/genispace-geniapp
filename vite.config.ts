@@ -35,6 +35,7 @@ export default defineConfig({
         'case-workspace/domain': entry('case-workspace/domain.ts'),
         'task-workspace': entry('task-workspace.ts'),
         'task-workspace/domain': entry('task-workspace/domain.ts'),
+        workbench: entry('workbench.ts'),
         vite: entry('vite.ts'),
         'ai/errors/userFacingError': entry('ai/errors/userFacingError.ts'),
       },

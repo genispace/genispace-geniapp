@@ -8,6 +8,7 @@ const output = path.join(root, 'dist');
 
 mkdirSync(path.join(output, 'styles'), { recursive: true });
 mkdirSync(path.join(output, 'components', 'ui'), { recursive: true });
+mkdirSync(path.join(output, 'workbench'), { recursive: true });
 for (const file of ['base.css', 'reduced-motion.css', 'tailwind-preset.js']) {
   copyFileSync(path.join(source, 'styles', file), path.join(output, 'styles', file));
 }
@@ -15,4 +16,8 @@ copyFileSync(path.join(source, 'fonts.css'), path.join(output, 'fonts.css'));
 copyFileSync(
   path.join(source, 'components', 'ui', 'calendar.css'),
   path.join(output, 'components', 'ui', 'calendar.css'),
+);
+copyFileSync(
+  path.join(root, 'src', 'workbench', 'styles.css'),
+  path.join(output, 'workbench', 'styles.css'),
 );

@@ -7,7 +7,7 @@ Public, versioned developer contract for building a GeniApp. This package is int
 ```text
 frontend/                         geniapp/                         applications/
 ├── apps/*                        └── @genispace/geniapp           └── apps/*
-└── packages/shared-* (private)      ├── ui + kit                      ├── genispace SDK
+└── packages/shared-* (private)      ├── ui + kit                      ├── @genispace/sdk
                                       ├── Shell bridge                  └── @genispace/geniapp
                                       ├── hooks + runtime
                                       ├── theme + i18n contract
@@ -16,15 +16,15 @@ frontend/                         geniapp/                         applications/
 
 - `frontend/packages/shared-*` belongs only to the platform frontend and is never a GeniApp dependency.
 - `@genispace/geniapp` is the public UI/runtime/build contract used by built-in, custom and Workbench-exported GeniApps.
-- [`genispace`](https://www.npmjs.com/package/genispace) remains the public platform API SDK. This package does not duplicate its HTTP/SSE clients.
-- `@genispace/geniapp@0.1.0` requires exactly `genispace@3.1.0`. The SDK version is part of the GeniApp runtime contract and is checked before packing or publishing.
+- [`@genispace/sdk`](https://www.npmjs.com/package/@genispace/sdk) is the public platform API SDK. This package does not duplicate its HTTP/SSE clients.
+- `@genispace/geniapp@0.2.0` requires exactly `@genispace/sdk@3.1.0`. The SDK version is part of the GeniApp runtime contract and is checked before packing or publishing.
 
 ## Install
 
 Install both public packages from npm. GeniApp releases pin their supported SDK version exactly, so applications should use the matching SDK version shown below.
 
 ```bash
-pnpm add @genispace/geniapp@0.1.0 genispace@3.1.0 react react-dom react-router-dom i18next react-i18next
+pnpm add @genispace/geniapp@0.2.0 @genispace/sdk@3.1.0 react react-dom react-router-dom i18next react-i18next
 ```
 
 ## Public entries

@@ -1,4 +1,4 @@
-import { GeniSpace } from 'genispace';
+import { GeniSpace } from '@genispace/sdk';
 
 function metaBool(v: unknown): boolean {
   return v === true || v === 'true';

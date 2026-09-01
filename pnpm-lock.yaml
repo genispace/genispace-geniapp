@@ -115,6 +115,9 @@ dependencies:
     version: 0.18.5
 
 devDependencies:
+  '@genispace/sdk':
+    specifier: 3.1.0
+    version: 3.1.0
   '@radix-ui/react-accordion':
     specifier: ^1.2.8
     version: 1.2.20(@types/react-dom@18.3.7)(@types/react@18.3.31)(react-dom@18.3.1)(react@18.3.1)
@@ -139,9 +142,6 @@ devDependencies:
   '@vitest/coverage-v8':
     specifier: ^3.2.4
     version: 3.2.7(vitest@3.2.7)
-  genispace:
-    specifier: 3.1.0
-    version: 3.1.0
   i18next:
     specifier: ^24.2.2
     version: 24.2.3(typescript@5.9.3)
@@ -685,6 +685,17 @@ packages:
   /@fontsource/space-grotesk@5.3.0:
     resolution: {integrity: sha512-ksnGizDPXIDuvqcTYTSrmZ+evx9sDlS8rp7+42BQ7wU+spt3twEoXfbJz672C+5CLg6VeUQwRy5RXshWb67LcQ==}
     dev: false
+
+  /@genispace/sdk@3.1.0:
+    resolution: {integrity: sha512-yHoV8atb3peelgw4n0o2kT2LPVbRXbDxh6jI/Zy1u/+NJHORayp5C7DTIq38HhY0iMobCfoRbrF0bRY+OulpIA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      axios: 1.20.0
+      form-data: 4.0.6
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+    dev: true
 
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -3255,17 +3266,6 @@ packages:
 
   /function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
-
-  /genispace@3.1.0:
-    resolution: {integrity: sha512-lcDw4bPFd7wNsrbiwXttTFY43RzeJos3dL6fvBUDO00Pk/EqxEdbezeiLf1g3RnWk3tpO//2VVGxdTGWyANxCw==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      axios: 1.20.0
-      form-data: 4.0.6
-    transitivePeerDependencies:
-      - debug
-      - supports-color
-    dev: true
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}

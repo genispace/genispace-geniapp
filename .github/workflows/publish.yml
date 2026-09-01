@@ -1,7 +1,6 @@
 name: Publish GeniApp Package
 
 on:
-  workflow_dispatch:
   push:
     tags: ['v*.*.*']
 
@@ -29,7 +28,9 @@ jobs:
           test "$GITHUB_REF_NAME" = "v$PACKAGE_VERSION"
           if npm view "@genispace/geniapp@$PACKAGE_VERSION" version >/dev/null 2>&1; then
             echo "@genispace/geniapp@$PACKAGE_VERSION is already published"
-            exit 1
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
           fi
           echo "sdk_version=$SDK_VERSION" >> "$GITHUB_OUTPUT"
 
@@ -57,4 +58,5 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - name: Publish public package with provenance
+        if: steps.versions.outputs.already_published != 'true'
         run: npm publish --access public

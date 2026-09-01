@@ -55,6 +55,10 @@ During local migration before the first npm release:
 
 Only symbols exported by these entries are public. Files below `src/` and `dist/` are implementation details and cannot be imported through package exports.
 
+Build tooling that creates a separately hosted shared font bundle may resolve
+`@genispace/geniapp/fonts.css`; applications should continue importing
+`@genispace/geniapp/styles.css`.
+
 ## Application setup
 
 ```tsx

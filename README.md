@@ -24,7 +24,7 @@ frontend/                         geniapp/                         applications/
 Install both public packages from npm. GeniApp releases pin their supported SDK version exactly, so applications should use the matching SDK version shown below.
 
 ```bash
-pnpm add @genispace/geniapp@0.2.0 @genispace/sdk@3.1.0 react react-dom react-router-dom i18next react-i18next
+pnpm add @genispace/geniapp@0.3.0 @genispace/sdk@3.1.0 react react-dom react-router-dom i18next react-i18next
 ```
 
 ## Public entries
@@ -42,6 +42,8 @@ pnpm add @genispace/geniapp@0.2.0 @genispace/sdk@3.1.0 react react-dom react-rou
 | `@genispace/geniapp/dashboard` | stable | Dashboard filters, KPI and chart patterns |
 | `@genispace/geniapp/case-workspace` | stable | Case workspace contract |
 | `@genispace/geniapp/task-workspace` | stable | Task workspace contract |
+| `@genispace/geniapp/workbench` | stable | Versioned renderer for GeniApps exported from Workbench |
+| `@genispace/geniapp/workbench/styles.css` | stable | Responsive shell and component styles for exported Workbench apps |
 
 Only symbols exported by these entries are public. Files below `src/` and `dist/` are implementation details and cannot be imported through package exports.
 
@@ -92,6 +94,20 @@ export default {
 ```
 
 The stylesheet contains the platform light/dark semantic tokens, local fonts, responsive application layout rules and component CSS. Locale text remains owned by each application; shared components accept labels or use the host `react-i18next` provider.
+
+### Workbench export runtime
+
+Workbench exports pin an exact GeniApp version and keep each page and component in a separate source module. The public runtime renders that portable configuration without importing the private Workbench editor:
+
+```ts
+import { mountWorkbench } from '@genispace/geniapp/workbench';
+import '@genispace/geniapp/workbench/styles.css';
+import workbenchConfig from './config/workbench.config';
+
+mountWorkbench(document.getElementById('root')!, workbenchConfig);
+```
+
+The runtime owns portable component behavior, desktop/mobile navigation, the theme bridge and the locale bridge. Exported component modules own application-specific props, data and custom styles, so developers can edit or replace one component without reading a monolithic snapshot. The exported prebuilt bundle remains frozen to the same runtime version recorded in `contracts/workbench-export.lock.json`.
 
 ## Vite
 

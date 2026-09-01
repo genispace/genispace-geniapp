@@ -1,6 +1,6 @@
 {
   "name": "@genispace/geniapp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Public runtime, UI, Shell protocol and build contracts for GeniSpace applications",
   "type": "module",
   "license": "MIT",
@@ -88,6 +88,11 @@
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js"
     },
+    "./workbench": {
+      "types": "./dist/workbench.d.ts",
+      "import": "./dist/workbench.js"
+    },
+    "./workbench/styles.css": "./dist/workbench/styles.css",
     "./styles.css": "./dist/styles/base.css",
     "./fonts.css": "./dist/fonts.css",
     "./tailwind-preset": "./dist/styles/tailwind-preset.js"

@@ -89,6 +89,7 @@
       "import": "./dist/vite.js"
     },
     "./styles.css": "./dist/styles/base.css",
+    "./fonts.css": "./dist/fonts.css",
     "./tailwind-preset": "./dist/styles/tailwind-preset.js"
   },
   "publishConfig": {

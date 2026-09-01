@@ -16,25 +16,15 @@ frontend/                         geniapp/                         applications/
 
 - `frontend/packages/shared-*` belongs only to the platform frontend and is never a GeniApp dependency.
 - `@genispace/geniapp` is the public UI/runtime/build contract used by built-in, custom and Workbench-exported GeniApps.
-- [`genispace`](../sdk-javascript) remains the public platform API SDK. This package does not duplicate its HTTP/SSE clients.
+- [`genispace`](https://www.npmjs.com/package/genispace) remains the public platform API SDK. This package does not duplicate its HTTP/SSE clients.
 - `@genispace/geniapp@0.1.0` requires exactly `genispace@3.1.0`. The SDK version is part of the GeniApp runtime contract and is checked before packing or publishing.
 
 ## Install
 
-The package is publish-ready but must not be published until the npm scope, package name, repository and release credentials are approved.
+Install both public packages from npm. GeniApp releases pin their supported SDK version exactly, so applications should use the matching SDK version shown below.
 
 ```bash
-pnpm add @genispace/geniapp genispace react react-dom react-router-dom i18next react-i18next
-```
-
-During local migration before the first npm release:
-
-```json
-{
-  "dependencies": {
-    "@genispace/geniapp": "file:../../../geniapp"
-  }
-}
+pnpm add @genispace/geniapp@0.1.0 genispace@3.1.0 react react-dom react-router-dom i18next react-i18next
 ```
 
 ## Public entries

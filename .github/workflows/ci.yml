@@ -1,0 +1,37 @@
+name: GeniApp Package CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stack/geniapp
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: stack/geniapp
+      - name: Checkout JavaScript SDK
+        uses: actions/checkout@v4
+        with:
+          repository: genispace/sdk-javascript
+          ref: v3.1.0
+          path: stack/sdk-javascript
+          token: ${{ secrets.CICD_REPO_TOKEN }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: stack/geniapp/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check:sdk-version
+      - run: pnpm type-check
+      - run: pnpm test
+      - run: pnpm pack:check

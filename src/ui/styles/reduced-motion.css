@@ -1,0 +1,14 @@
+/**
+ * prefers-reduced-motion 无障碍支持
+ * 符合 GeniSpace Design Guideline - WCAG 2.1
+ * 尊重用户减少动画偏好设置
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

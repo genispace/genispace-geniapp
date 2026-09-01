@@ -1,0 +1,60 @@
+name: Publish GeniApp Package
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    defaults:
+      run:
+        working-directory: stack/geniapp
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: stack/geniapp
+
+      - name: Resolve package contracts
+        id: versions
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          SDK_VERSION=$(node -p "require('./package.json').peerDependencies.genispace")
+          test "$GITHUB_REF_NAME" = "v$PACKAGE_VERSION"
+          if npm view "@genispace/geniapp@$PACKAGE_VERSION" version >/dev/null 2>&1; then
+            echo "@genispace/geniapp@$PACKAGE_VERSION is already published"
+            exit 1
+          fi
+          echo "sdk_version=$SDK_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout JavaScript SDK
+        uses: actions/checkout@v6
+        with:
+          repository: genispace/sdk-javascript
+          ref: v${{ steps.versions.outputs.sdk_version }}
+          path: stack/sdk-javascript
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Upgrade npm for trusted publishing
+        run: npm install --global npm@latest
+      - name: Verify pinned SDK is published
+        run: npm view "genispace@${{ steps.versions.outputs.sdk_version }}" version
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check:sdk-version
+      - run: pnpm type-check
+      - run: pnpm test
+      - run: pnpm build
+      - name: Publish public package with provenance
+        run: npm publish --access public

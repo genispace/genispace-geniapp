@@ -1,0 +1,42 @@
+{
+  "businessGuidance": {
+    "refresh": "Refresh",
+    "errorTitle": "Suggestions are temporarily unavailable",
+    "errorDescription": "You can continue your work and try again later.",
+    "applied": "Applied",
+    "dismissed": "Dismissed",
+    "attention": "Needs attention",
+    "ready": "Ready to review",
+    "unreadable": "This suggestion needs to be refreshed before it can be shown here. No business data was changed.",
+    "sources": "Sources",
+    "noSources": "No verifiable source was provided; do not use this for a critical update.",
+    "confidence": "Confidence"
+  },
+  "suggestion": {
+    "panelTitle": "Suggested updates",
+    "panelHint": "Review the latest recommendation for this record. Nothing changes until you choose an action.",
+    "loadError": "Suggestions are temporarily unavailable. You can continue editing this record.",
+    "emptyField": "This suggestion has no usable content.",
+    "adopted": "Suggestion added to this record.",
+    "adoptedAll": "Suggestions added to this record.",
+    "applyError": "This suggestion could not be applied. Your other changes are still safe.",
+    "applyAllError": "These suggestions could not be applied. Your other changes are still safe.",
+    "emptyTitle": "No suggestion needs your attention",
+    "noResults": "When there is a useful recommendation for this record, it will appear here for review.",
+    "added": "Added",
+    "adopt": "Use suggestion",
+    "adopting": "Adding…",
+    "adoptAll": "Use all suggested updates",
+    "statusApplied": "Previously applied",
+    "statusAttention": "Needs attention",
+    "statusReady": "Ready to review",
+    "sources": "Sources",
+    "noSources": "No verifiable source was provided.",
+    "confidence": "Confidence",
+    "confirmTitle": "Review changes before applying",
+    "confirmOne": "This will update {{field}} on the current business record. Check the suggested value and its source before continuing.",
+    "confirmAll": "This will update {{count}} fields on the current business record. Check every suggested value and its source before continuing.",
+    "confirmAction": "Apply changes",
+    "cancelAction": "Keep reviewing"
+  }
+}

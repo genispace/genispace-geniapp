@@ -1,0 +1,42 @@
+{
+  "businessGuidance": {
+    "refresh": "刷新",
+    "errorTitle": "建议暂时无法读取",
+    "errorDescription": "你可以继续处理当前工作，稍后再试。",
+    "applied": "已使用",
+    "dismissed": "已忽略",
+    "attention": "需要处理",
+    "ready": "待审核",
+    "unreadable": "这条建议需要重新生成后才能显示，当前业务数据没有发生变化。",
+    "sources": "信息来源",
+    "noSources": "没有可核对的信息来源，请勿用于关键业务更新。",
+    "confidence": "可信度"
+  },
+  "suggestion": {
+    "panelTitle": "建议更新",
+    "panelHint": "请核对当前记录的最新建议。只有选择操作后，业务数据才会变化。",
+    "loadError": "建议暂时无法读取，你仍可继续编辑当前记录。",
+    "emptyField": "这条建议没有可用内容。",
+    "adopted": "建议已加入当前记录。",
+    "adoptedAll": "建议已加入当前记录。",
+    "applyError": "这条建议未能加入，其他修改仍然安全。",
+    "applyAllError": "这些建议未能加入，其他修改仍然安全。",
+    "emptyTitle": "当前没有需要处理的建议",
+    "noResults": "有适合当前记录的建议时，会在这里显示并等待审核。",
+    "added": "已加入",
+    "adopt": "使用建议",
+    "adopting": "正在加入…",
+    "adoptAll": "使用全部建议",
+    "statusApplied": "已使用",
+    "statusAttention": "需要处理",
+    "statusReady": "待审核",
+    "sources": "信息来源",
+    "noSources": "没有可核对的信息来源。",
+    "confidence": "可信度",
+    "confirmTitle": "应用前请核对变更",
+    "confirmOne": "此操作会更新当前业务记录中的“{{field}}”。继续前请核对建议值及其信息来源。",
+    "confirmAll": "此操作会更新当前业务记录中的 {{count}} 个字段。继续前请逐项核对建议值及其信息来源。",
+    "confirmAction": "应用变更",
+    "cancelAction": "继续核对"
+  }
+}

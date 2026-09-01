@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import GeniSpace from 'genispace';
+import GeniSpace from '@genispace/sdk';
 import { GENISPACE_SHELL_INIT_APPLIED_EVENT } from './shell';
 
 function readAccessToken(): string {

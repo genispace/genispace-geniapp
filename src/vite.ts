@@ -81,7 +81,7 @@ export function geniappBasePath(options: {
 
 /** Dependencies that should remain host-resolved instead of pre-bundled in dev. */
 export const geniappOptimizeDeps = {
-  exclude: ['lucide-react', 'genispace', '@genispace/geniapp'],
+  exclude: ['lucide-react', '@genispace/sdk', '@genispace/geniapp'],
 };
 
 /** Stable chunk grouping without repository-path aliases. */
@@ -89,6 +89,6 @@ export function geniappManualChunks(id: string) {
   if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/') || id.includes('/node_modules/react-router')) return 'react-runtime';
   if (id.includes('/node_modules/i18next') || id.includes('/node_modules/react-i18next')) return 'localization';
   if (id.includes('/node_modules/lucide-react/')) return 'icons';
-  if (id.includes('/node_modules/@genispace/geniapp/') || id.includes('/node_modules/genispace/')) return 'genispace-runtime';
+  if (id.includes('/node_modules/@genispace/geniapp/') || id.includes('/node_modules/@genispace/sdk/')) return 'genispace-runtime';
   return undefined;
 }

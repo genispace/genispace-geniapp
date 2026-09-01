@@ -1,7 +1,7 @@
 # GeniApp 公开开发包与前端共享层拆分实施方案
 
 > 状态：已完成本地代码迁移与核心验收，待团队评审后创建远端仓库并执行 npm 首次发布。  
-> 目标版本：`@genispace/geniapp@0.1.0`  
+> 目标版本：`@genispace/geniapp@0.2.0`
 > 适用范围：`frontend`、`applications`、`applications-custom`、客户 GeniApp、Workbench 一键导出 GeniApp。
 
 ## 1. 决策摘要
@@ -65,7 +65,7 @@ flowchart LR
 flowchart TB
   FE["frontend/apps/*"] --> FP["frontend/packages/shared-*"]
   APP["GeniApp"] --> GP["@genispace/geniapp exports"]
-  APP --> SDK["genispace SDK"]
+  APP --> SDK["@genispace/sdk"]
   GP --> SDK
 
   APP -. "禁止" .-> FP
@@ -142,8 +142,8 @@ geniapp/
 ```json
 {
   "dependencies": {
-    "@genispace/geniapp": "0.1.0",
-    "genispace": "3.1.0",
+    "@genispace/geniapp": "0.2.0",
+    "@genispace/sdk": "3.1.0",
     "i18next": "^24.2.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -249,7 +249,7 @@ sequenceDiagram
 
 Workbench 下载包当前内置一份冻结的 GeniApp `0.1.0` 契约实现，并在 `manifest`、`export-lock` 和生成 README 中记录 `geniappContractVersion`。这样在 npm 首次发布前，用户下载源码后也能立即安装和构建，不会引用一个尚不存在的 registry 包。
 
-`@genispace/geniapp@0.1.0` 正式发布并完成生产可用性验证后，可另立版本将新导出物切换为 npm 精确依赖；这不是本次交付的必要条件，也不改变“只下载、不代部署”的产品边界。
+`@genispace/geniapp@0.2.0` 正式发布并完成生产可用性验证后，新导出物使用 npm 精确依赖；这不改变“只下载、不代部署”的产品边界。
 
 ## 6. 已实施迁移
 
@@ -285,23 +285,23 @@ Workbench 下载包当前内置一份冻结的 GeniApp `0.1.0` 契约实现，�
 ```mermaid
 flowchart LR
   A["评审并合并本地迁移"] --> B["创建 genispace/genispace-geniapp"]
-  B --> C["发布 genispace SDK 3.1.0"]
+  B --> C["发布 @genispace/sdk 3.1.0"]
   C --> D["运行 GeniApp CI + tarball consumer test"]
-  D --> E["发布 @genispace/geniapp 0.1.0"]
-  E --> F["消费者 file: 改为精确 0.1.0"]
+  D --> E["发布 @genispace/geniapp 0.2.0"]
+  E --> F["消费者改为精确 0.2.0"]
   F --> G["全量构建、安装验收"]
   G --> H["归档 frontend-packages 远端仓库"]
 ```
 
-发布顺序不能颠倒：`@genispace/geniapp@0.1.0` 的 peer dependency 精确要求 `genispace@3.1.0`，CI 也固定检出 SDK tag `v3.1.0` 并校验版本，因此 npm 上必须先有 SDK `3.1.0`。
+发布顺序不能颠倒：`@genispace/geniapp@0.2.0` 的 peer dependency 精确要求 `@genispace/sdk@3.1.0`，因此 npm 上必须先有 scoped SDK `3.1.0`。
 
 需要仓库管理员执行的外部动作：
 
 1. 创建公开或组织可见仓库 `genispace/genispace-geniapp`，把当前 `geniapp/` 设为其根目录。
 2. 确认 npm `@genispace` scope、包名、2FA/automation token 与 provenance 权限。
 3. 审核 MIT 许可证以及哪些组件允许成为公共 API。
-4. 发布并验证 `genispace@3.1.0`。
-5. 从干净 Git tag 发布 `@genispace/geniapp@0.1.0`。
+4. 发布并验证 `@genispace/sdk@3.1.0`。
+5. 从干净 Git tag 发布 `@genispace/geniapp@0.2.0`。
 6. 将各应用的临时 `file:` 依赖替换成精确 npm 版本，更新 lockfile 后再次验收。
 7. 确认所有生产 CI 已切到新仓库后，将旧 `frontend-packages` 远端仓库设为 archived；本地历史副本可按团队保留策略处理。
 
@@ -310,7 +310,7 @@ flowchart LR
 ## 9. 版本与治理
 
 - 使用 SemVer。删除/改名公共 export，改变 Shell message、CSS token、导航尺寸或 manifest 构建行为均视为 breaking change。
-- 每个 `@genispace/geniapp` 版本精确绑定一个 `genispace` SDK 版本；不能用 `^`、`~` 或大范围 peer range。SDK 升级通过新的 GeniApp 版本和完整应用回归交付。
+- 每个 `@genispace/geniapp` 版本精确绑定一个 `@genispace/sdk` 版本；不能用 `^`、`~` 或大范围 peer range。SDK 升级通过新的 GeniApp 版本和完整应用回归交付。
 - GeniApp 在 lockfile 中固定已发布版本；升级通过常规 PR 和全量验收，不通过源码 alias 偷渡。
 - 公共包 CI 至少执行 type-check、unit test、build、`pnpm pack` 和 tarball consumer test。
 - 新公共 symbol 必须说明用途、移动/暗色/i18n 行为及兼容责任；仅平台内部使用的组件留在 `frontend/packages`。

@@ -24,7 +24,7 @@ jobs:
         id: versions
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          SDK_VERSION=$(node -p "require('./package.json').peerDependencies.genispace")
+          SDK_VERSION=$(node -p "require('./package.json').peerDependencies['@genispace/sdk']")
           test "$GITHUB_REF_NAME" = "v$PACKAGE_VERSION"
           if npm view "@genispace/geniapp@$PACKAGE_VERSION" version >/dev/null 2>&1; then
             echo "@genispace/geniapp@$PACKAGE_VERSION is already published"
@@ -45,7 +45,7 @@ jobs:
       - name: Upgrade npm for trusted publishing
         run: npm install --global npm@latest
       - name: Verify pinned SDK is published
-        run: npm view "genispace@${{ steps.versions.outputs.sdk_version }}" version
+        run: npm view "@genispace/sdk@${{ steps.versions.outputs.sdk_version }}" version
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:sdk-version
       - run: pnpm type-check

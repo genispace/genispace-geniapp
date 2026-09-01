@@ -3,14 +3,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const sdkRoot = path.resolve(packageRoot, '..', 'sdk-javascript');
 
 const readJson = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 const geniappPackage = readJson(path.join(packageRoot, 'package.json'));
-const sdkPackagePath = path.join(sdkRoot, 'package.json');
+const sdkPackagePath = path.join(packageRoot, 'node_modules', 'genispace', 'package.json');
 
 if (!fs.existsSync(sdkPackagePath)) {
-  throw new Error(`GeniSpace SDK checkout is required at ${sdkRoot}`);
+  throw new Error(`Published GeniSpace SDK dependency is not installed at ${sdkPackagePath}`);
 }
 
 const expectedVersion = geniappPackage.peerDependencies?.genispace;
@@ -24,7 +23,7 @@ if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(expectedVersion ?? '')) {
 
 if (sdkPackage.version !== expectedVersion) {
   throw new Error(
-    `SDK version mismatch: @genispace/geniapp expects ${expectedVersion}, but ${sdkPackagePath} declares ${sdkPackage.version}`,
+    `SDK version mismatch: @genispace/geniapp expects ${expectedVersion}, but the installed package declares ${sdkPackage.version}`,
   );
 }
 

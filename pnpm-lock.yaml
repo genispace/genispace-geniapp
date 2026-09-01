@@ -140,8 +140,8 @@ devDependencies:
     specifier: ^3.2.4
     version: 3.2.7(vitest@3.2.7)
   genispace:
-    specifier: file:../sdk-javascript
-    version: file:../sdk-javascript
+    specifier: 3.1.0
+    version: 3.1.0
   i18next:
     specifier: ^24.2.2
     version: 24.2.3(typescript@5.9.3)
@@ -3256,6 +3256,17 @@ packages:
   /function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
+  /genispace@3.1.0:
+    resolution: {integrity: sha512-lcDw4bPFd7wNsrbiwXttTFY43RzeJos3dL6fvBUDO00Pk/EqxEdbezeiLf1g3RnWk3tpO//2VVGxdTGWyANxCw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      axios: 1.20.0
+      form-data: 4.0.6
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+    dev: true
+
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -5710,15 +5721,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-  file:../sdk-javascript:
-    resolution: {directory: ../sdk-javascript, type: directory}
-    name: genispace
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      axios: 1.20.0
-      form-data: 4.0.6
-    transitivePeerDependencies:
-      - debug
-      - supports-color
-    dev: true

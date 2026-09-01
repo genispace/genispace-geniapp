@@ -34,12 +34,6 @@ jobs:
           fi
           echo "sdk_version=$SDK_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout JavaScript SDK
-        uses: actions/checkout@v6
-        with:
-          repository: genispace/sdk-javascript
-          ref: v${{ steps.versions.outputs.sdk_version }}
-          path: stack/sdk-javascript
       - uses: pnpm/action-setup@v4
         with:
           version: 8.15.0

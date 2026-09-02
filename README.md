@@ -134,6 +134,8 @@ createRoot(document.getElementById('root')!).render(
 
 The runtime owns the exact component behavior, layout, mobile adaptation, platform adapters, theme bridge and locale bridge. Exported component modules own application-specific props, data and custom styles, so developers can edit or replace one component without reading a monolithic snapshot. There is no legacy `workbench` package entry: the export feature was not released before the `components` contract became official.
 
+Release lifecycle presentation is available from `@genispace/geniapp/components/release`. These components are intentionally host-controlled and side-effect free: the platform remains responsible for authorization, effective-version resolution, preview membership and release-note acknowledgement. Runtime platform adapters can resolve portable Datasource, Dataset, Agent, Task, Workflow, Operator, Knowledge Base and Skill references through the installed Application version without embedding source-space UUIDs.
+
 ## Vite
 
 ```ts

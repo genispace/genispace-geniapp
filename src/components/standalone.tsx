@@ -43,6 +43,16 @@ export function mountGeniApp(
           apiRoot: options.apiRoot,
           applicationIdentifier: options.identifier,
           datasourceIdentifiers: config.geniappRuntime?.datasourceIdentifiers,
+          resourceIdentifiers: {
+            datasource: config.geniappRuntime?.datasourceIdentifiers,
+            dataset: config.geniappRuntime?.datasetIdentifiers,
+            agent: config.geniappRuntime?.agentIdentifiers,
+            task: config.geniappRuntime?.taskIdentifiers,
+            workflow: config.geniappRuntime?.workflowIdentifiers,
+            operator: config.geniappRuntime?.operatorIdentifiers,
+            knowledge_base: config.geniappRuntime?.knowledgeBaseIdentifiers,
+            skill: config.geniappRuntime?.skillIdentifiers,
+          },
         })}
         locale={locale}
         localeMetadata={config.metadata}

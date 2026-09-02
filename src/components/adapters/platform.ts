@@ -1,4 +1,5 @@
 import { createResolveApiRoot } from '../../hooks/shell/resolveApiRoot';
+import { GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY } from '../../hooks/shell/shell';
 import type {
   GeniAppHostAdapters,
   GeniAppHostRequest,
@@ -12,7 +13,52 @@ export interface CreatePlatformHostAdaptersOptions {
   applicationIdentifier?: string;
   /** Source datasource UUID -> installed managed datasource identifier. */
   datasourceIdentifiers?: Record<string, string>;
+  /** Source or portable logical id -> installed logical id, grouped by resource type. */
+  resourceIdentifiers?: Partial<Record<PlatformResourceType, Record<string, string>>>;
 }
+
+export type PlatformResourceType =
+  | 'datasource'
+  | 'dataset'
+  | 'agent'
+  | 'task'
+  | 'workflow'
+  | 'operator'
+  | 'knowledge_base'
+  | 'skill';
+
+const RESOURCE_URL_PATTERNS: Array<{ type: PlatformResourceType; pattern: RegExp }> = [
+  { type: 'datasource', pattern: /\/datasources\/([^/?#]+)(?=\/|\?|#|$)/u },
+  { type: 'dataset', pattern: /\/datasets\/([^/?#]+)(?=\/|\?|#|$)/u },
+  { type: 'task', pattern: /\/tasks\/([^/?#]+)(?=\/|\?|#|$)/u },
+  { type: 'agent', pattern: /\/agents\/([^/?#]+)(?=\/|\?|#|$)/u },
+  { type: 'workflow', pattern: /\/workflows\/([^/?#]+)(?=\/|\?|#|$)/u },
+  { type: 'operator', pattern: /\/(?:operators|user-operators)\/([^/?#]+)(?=\/|\?|#|$)/u },
+];
+
+const RESOURCE_FIELD_TYPES: Record<string, PlatformResourceType> = {
+  datasourceId: 'datasource',
+  datasetId: 'dataset',
+  agentId: 'agent',
+  userAgentId: 'agent',
+  taskId: 'task',
+  workflowId: 'workflow',
+  operatorId: 'operator',
+  knowledgeBaseId: 'knowledge_base',
+  skillId: 'skill',
+};
+
+const RESOURCE_LIST_FIELD_TYPES: Record<string, PlatformResourceType> = {
+  datasourceIds: 'datasource',
+  datasetIds: 'dataset',
+  agentIds: 'agent',
+  userAgentIds: 'agent',
+  taskIds: 'task',
+  workflowIds: 'workflow',
+  operatorIds: 'operator',
+  knowledgeBaseIds: 'knowledge_base',
+  skillIds: 'skill',
+};
 
 const isAbsoluteUrl = (value: string) => /^https?:\/\//iu.test(value);
 
@@ -72,47 +118,111 @@ export function createPlatformHostAdapters(
     : () => configuredRoot?.trim() || resolveDefaultRoot();
   const tokenStorageKey = options.tokenStorageKey ?? 'token';
   const languageStorageKey = options.languageStorageKey ?? 'i18nextLng';
-  const resolvedDatasourceIds = new Map<string, Promise<string>>();
+  const resolvedResourceIds = new Map<string, Promise<string>>();
+  const resourceIdentifiers: CreatePlatformHostAdaptersOptions['resourceIdentifiers'] = {
+    ...options.resourceIdentifiers,
+    datasource: {
+      ...(options.datasourceIdentifiers || {}),
+      ...(options.resourceIdentifiers?.datasource || {}),
+    },
+  };
 
-  const resolveDatasourceUrl = async (
+  const readApplicationId = () => {
+    try {
+      return typeof sessionStorage === 'undefined'
+        ? null
+        : sessionStorage.getItem(GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY);
+    } catch {
+      return null;
+    }
+  };
+
+  const resolveResourceId = async (
+    type: PlatformResourceType,
+    sourceId: string,
+    headers: Headers,
+  ): Promise<string> => {
+    const logicalIdentifier = resourceIdentifiers?.[type]?.[sourceId];
+    if (!logicalIdentifier || !options.applicationIdentifier) return sourceId;
+    const cacheKey = `${type}:${sourceId}`;
+    let resolution = resolvedResourceIds.get(cacheKey);
+    if (!resolution) {
+      resolution = (async () => {
+        const applicationId = readApplicationId();
+        if (!applicationId && type === 'datasource') {
+          const params = new URLSearchParams({
+            applicationIdentifier: options.applicationIdentifier || '',
+            datasourceIdentifier: logicalIdentifier,
+          });
+          const response = await fetch(
+            joinApiUrl(resolveRoot(), `/datasources/managed/resolve?${params}`),
+            { headers, credentials: 'same-origin' },
+          );
+          const payload = await response.json() as { data?: { datasourceId?: string }; message?: string };
+          const datasourceId = payload.data?.datasourceId;
+          if (!response.ok || !datasourceId) throw responseError(response, payload);
+          return datasourceId;
+        }
+        if (!applicationId) return sourceId;
+        const params = new URLSearchParams({
+          applicationId,
+          applicationIdentifier: options.applicationIdentifier || '',
+          resourceType: type,
+          logicalIdentifier,
+        });
+        const response = await fetch(
+          joinApiUrl(resolveRoot(), `/applications/runtime-resources/resolve?${params}`),
+          { headers, credentials: 'same-origin' },
+        );
+        const payload = await response.json() as { data?: { resourceId?: string }; message?: string };
+        const resourceId = payload.data?.resourceId;
+        if (!response.ok || !resourceId) throw responseError(response, payload);
+        return resourceId;
+      })();
+      resolvedResourceIds.set(cacheKey, resolution);
+    }
+    try {
+      return await resolution;
+    } catch (error) {
+      resolvedResourceIds.delete(cacheKey);
+      throw error;
+    }
+  };
+
+  const resolveResourceUrl = async (
     rawUrl: string,
     headers: Headers,
   ): Promise<string> => {
-    const match = rawUrl.match(/\/datasources\/([^/?#]+)(?=\/|\?|#|$)/u);
-    if (!match || !options.applicationIdentifier) return rawUrl;
-    const sourceId = decodeURIComponent(match[1]);
-    const datasourceIdentifier = options.datasourceIdentifiers?.[sourceId];
-    if (!datasourceIdentifier) return rawUrl;
-
-    let resolution = resolvedDatasourceIds.get(sourceId);
-    if (!resolution) {
-      resolution = (async () => {
-        const params = new URLSearchParams({
-          applicationIdentifier: options.applicationIdentifier || '',
-          datasourceIdentifier,
-        });
-        const response = await fetch(
-          joinApiUrl(resolveRoot(), `/datasources/managed/resolve?${params}`),
-          { headers, credentials: 'same-origin' },
-        );
-        const payload = await response.json() as {
-          data?: { datasourceId?: string };
-          message?: string;
-        };
-        const datasourceId = payload.data?.datasourceId;
-        if (!response.ok || !datasourceId) throw responseError(response, payload);
-        return datasourceId;
-      })();
-      resolvedDatasourceIds.set(sourceId, resolution);
+    for (const candidate of RESOURCE_URL_PATTERNS) {
+      const match = rawUrl.match(candidate.pattern);
+      if (!match) continue;
+      const sourceId = decodeURIComponent(match[1]);
+      if (!resourceIdentifiers?.[candidate.type]?.[sourceId]) return rawUrl;
+      const resourceId = await resolveResourceId(candidate.type, sourceId, headers);
+      return rawUrl.replace(match[1], encodeURIComponent(resourceId));
     }
+    return rawUrl;
+  };
 
-    try {
-      const datasourceId = await resolution;
-      return rawUrl.replace(match[1], encodeURIComponent(datasourceId));
-    } catch (error) {
-      resolvedDatasourceIds.delete(sourceId);
-      throw error;
-    }
+  const resolveBodyReferences = async (value: unknown, headers: Headers): Promise<unknown> => {
+    if (Array.isArray(value)) return Promise.all(value.map((item) => resolveBodyReferences(item, headers)));
+    if (!value || typeof value !== 'object') return value;
+    const entries = await Promise.all(Object.entries(value as Record<string, unknown>).map(async ([key, child]) => {
+      const type = RESOURCE_FIELD_TYPES[key];
+      if (type && typeof child === 'string' && resourceIdentifiers?.[type]?.[child]) {
+        return [key, await resolveResourceId(type, child, headers)] as const;
+      }
+      const listType = RESOURCE_LIST_FIELD_TYPES[key];
+      if (listType && Array.isArray(child)) {
+        return [key, await Promise.all(child.map((item) => (
+          typeof item === 'string' && resourceIdentifiers?.[listType]?.[item]
+            ? resolveResourceId(listType, item, headers)
+            : item
+        )))] as const;
+      }
+      return [key, await resolveBodyReferences(child, headers)] as const;
+    }));
+    return Object.fromEntries(entries);
   };
 
   const request = async <T = unknown>({
@@ -134,11 +244,14 @@ export function createPlatformHostAdapters(
 
     if (token && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${token}`);
     if (language && !headers.has('X-Language')) headers.set('X-Language', language);
-    const resolvedUrl = await resolveDatasourceUrl(url, headers);
+    const resolvedUrl = await resolveResourceUrl(url, headers);
     const finalUrl = appendParams(joinApiUrl(resolveRoot(), resolvedUrl), params);
+    const resolvedBody = body === undefined || (typeof FormData !== 'undefined' && body instanceof FormData)
+      ? body
+      : await resolveBodyReferences(body, headers);
 
-    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
-    if (body !== undefined && !isFormData && !headers.has('Content-Type')) {
+    const isFormData = typeof FormData !== 'undefined' && resolvedBody instanceof FormData;
+    if (resolvedBody !== undefined && !isFormData && !headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
     if (isFormData) headers.delete('Content-Type');
@@ -148,11 +261,11 @@ export function createPlatformHostAdapters(
       headers,
       signal,
       credentials: 'same-origin',
-      body: body === undefined
+      body: resolvedBody === undefined
         ? undefined
-        : isFormData || typeof body === 'string' || body instanceof Blob
-          ? body as BodyInit
-          : JSON.stringify(body),
+        : isFormData || typeof resolvedBody === 'string' || resolvedBody instanceof Blob
+          ? resolvedBody as BodyInit
+          : JSON.stringify(resolvedBody),
     });
 
     let payload: unknown;

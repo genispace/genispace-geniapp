@@ -87,6 +87,7 @@ export default defineConfig({
         'components/renderers/custom-content': entry('components/renderers/custom-content/index.ts'),
         'components/layout': entry('components/layout/index.ts'),
         'components/mobile': entry('components/mobile/index.ts'),
+        'components/release': entry('components/release/index.ts'),
         'components/testing': entry('components/testing/index.ts'),
         'components/adapters/host': entry('components/adapters/host.ts'),
         vite: entry('vite.ts'),

@@ -3,6 +3,8 @@ import { createPlatformHostAdapters } from './platform';
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  localStorage.clear();
+  sessionStorage.clear();
 });
 
 describe('createPlatformHostAdapters', () => {
@@ -58,5 +60,44 @@ describe('createPlatformHostAdapters', () => {
     expect(resolveHeaders.get('X-Language')).toBe('zh');
     expect(requestHeaders.get('Authorization')).toBe('Bearer acceptance-token');
     expect(requestHeaders.get('Content-Type')).toBe('application/json');
+  });
+
+  it('resolves portable task references through the installed application version', async () => {
+    sessionStorage.setItem('__genispace_shell_application_id__', 'application-1');
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.includes('/applications/runtime-resources/resolve?')) {
+        return new Response(JSON.stringify({ data: { resourceId: 'physical-task-id' } }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      return new Response(JSON.stringify({ success: true, data: { body: init?.body } }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const adapters = createPlatformHostAdapters({
+      apiRoot: 'https://platform.example/api',
+      applicationIdentifier: 'portable-app',
+      resourceIdentifiers: {
+        task: { portable_task: 'portable_task' },
+      },
+    });
+    await adapters.request?.({
+      url: '/tasks/portable_task/execute',
+      method: 'POST',
+      body: { taskId: 'portable_task' },
+    });
+
+    expect(String(fetchMock.mock.calls[0]?.[0])).toContain(
+      'applicationId=application-1&applicationIdentifier=portable-app&resourceType=task&logicalIdentifier=portable_task',
+    );
+    expect(String(fetchMock.mock.calls[1]?.[0])).toBe(
+      'https://platform.example/api/tasks/physical-task-id/execute',
+    );
+    expect(JSON.parse(String(fetchMock.mock.calls[1]?.[1]?.body))).toEqual({ taskId: 'physical-task-id' });
   });
 });

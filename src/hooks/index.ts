@@ -31,6 +31,7 @@ export {
   GENISPACE_SHELL_INIT_APPLIED_EVENT,
   GENISPACE_SHELL_SESSION_API_KEY,
   GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY,
+  GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY,
 } from './shell/shell';
 export { useGenispacePlatformClient } from './shell/useGenispacePlatformClient';
 export {

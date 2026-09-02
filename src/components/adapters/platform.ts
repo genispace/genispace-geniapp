@@ -1,5 +1,8 @@
 import { createResolveApiRoot } from '../../hooks/shell/resolveApiRoot';
-import { GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY } from '../../hooks/shell/shell';
+import {
+  GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY,
+  GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY,
+} from '../../hooks/shell/shell';
 import type {
   GeniAppHostAdapters,
   GeniAppHostRequest,
@@ -244,6 +247,10 @@ export function createPlatformHostAdapters(
 
     if (token && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${token}`);
     if (language && !headers.has('X-Language')) headers.set('X-Language', language);
+    if (typeof sessionStorage !== 'undefined') {
+      const releaseChannel = readStorage(sessionStorage, GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY);
+      if (releaseChannel === 'stable') headers.set('X-GeniApp-Release-Channel', 'stable');
+    }
     const resolvedUrl = await resolveResourceUrl(url, headers);
     const finalUrl = appendParams(joinApiUrl(resolveRoot(), resolvedUrl), params);
     const resolvedBody = body === undefined || (typeof FormData !== 'undefined' && body instanceof FormData)

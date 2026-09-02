@@ -6,3 +6,5 @@ export const GENISPACE_SHELL_SESSION_API_KEY = '__genispace_shell_api_public_bas
 
 /** Session key for the installed Application instance id injected by Shell. */
 export const GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY = '__genispace_shell_application_id__';
+/** Server only honors the lower-privilege `stable` override. */
+export const GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY = '__genispace_shell_release_channel__';

@@ -64,6 +64,7 @@ describe('createPlatformHostAdapters', () => {
 
   it('resolves portable task references through the installed application version', async () => {
     sessionStorage.setItem('__genispace_shell_application_id__', 'application-1');
+    sessionStorage.setItem('__genispace_shell_release_channel__', 'stable');
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.includes('/applications/runtime-resources/resolve?')) {
@@ -95,6 +96,7 @@ describe('createPlatformHostAdapters', () => {
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain(
       'applicationId=application-1&applicationIdentifier=portable-app&resourceType=task&logicalIdentifier=portable_task',
     );
+    expect((fetchMock.mock.calls[0]?.[1]?.headers as Headers).get('X-GeniApp-Release-Channel')).toBe('stable');
     expect(String(fetchMock.mock.calls[1]?.[0])).toBe(
       'https://platform.example/api/tasks/physical-task-id/execute',
     );

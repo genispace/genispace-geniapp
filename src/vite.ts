@@ -79,9 +79,16 @@ export function geniappBasePath(options: {
     : `/${options.identifier}/${options.version}/`;
 }
 
-/** Dependencies that should remain host-resolved instead of pre-bundled in dev. */
+/**
+ * Dependencies that must remain host-resolved in development.
+ *
+ * The public runtime itself and lucide-react intentionally remain eligible for
+ * Vite dependency optimization. Excluding either one leaks transitive CommonJS
+ * modules (notably html-parse-stringify -> void-elements) into the browser as
+ * unconverted ESM and can leave a freshly generated GeniApp with a blank page.
+ */
 export const geniappOptimizeDeps = {
-  exclude: ['lucide-react', '@genispace/sdk', '@genispace/geniapp'],
+  exclude: ['@genispace/sdk'],
 };
 
 /** Stable chunk grouping without repository-path aliases. */

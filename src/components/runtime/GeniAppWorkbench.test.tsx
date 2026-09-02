@@ -47,9 +47,12 @@ describe('GeniAppWorkbench', () => {
     expect(await screen.findByRole('navigation', { name: 'Application navigation' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '概览' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByText('Overview content')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '深色' })).toBeInTheDocument();
+    expect(document.documentElement).toHaveAttribute('lang', 'zh-CN');
 
     fireEvent.click(screen.getByRole('button', { name: 'English' }));
     expect(await screen.findByRole('button', { name: 'Overview' })).toBeInTheDocument();
+    expect(document.documentElement).toHaveAttribute('lang', 'en-US');
 
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     await waitFor(() => expect(document.documentElement).toHaveClass('dark'));

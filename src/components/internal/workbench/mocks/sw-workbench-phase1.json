@@ -1,0 +1,108 @@
+{
+  "appConfig": {
+    "name": "SW 零售分析看板",
+    "description": "Stuart Weitzman 门店销售 & 商品分析 — Phase 1 骨架",
+    "version": "1.0.0",
+    "defaultPage": "sw-page-sales",
+    "navigation": {
+      "mode": "bottom",
+      "items": [
+        {
+          "key": "sw-sales",
+          "title": "销售",
+          "icon": "BarChart2",
+          "linkedPage": "sw-page-sales"
+        },
+        {
+          "key": "sw-product",
+          "title": "商品",
+          "icon": "Package",
+          "linkedPage": "sw-page-product"
+        },
+        {
+          "key": "sw-member",
+          "title": "会员",
+          "icon": "Users",
+          "linkedPage": "sw-page-member"
+        },
+        {
+          "key": "sw-guide",
+          "title": "导购",
+          "icon": "UserCircle",
+          "linkedPage": "sw-page-guide"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "sw-page-sales": {
+      "title": "销售",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "sw-filter-global",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "view",
+                "type": "segmented",
+                "label": "",
+                "defaultValue": "hq",
+                "segments": [
+                  { "label": { "zh": "总部", "en": "HQ" }, "value": "hq" },
+                  { "label": { "zh": "门店", "en": "Store" }, "value": "store" }
+                ]
+              },
+              {
+                "key": "period",
+                "type": "presetDateRange",
+                "label": "",
+                "defaultValue": "currentFiscalWeek",
+                "fiscalPresets": [
+                  { "label": { "zh": "本财周", "en": "This FW" }, "value": "currentFiscalWeek" },
+                  { "label": { "zh": "上财周", "en": "Last FW" }, "value": "lastFiscalWeek" },
+                  { "label": { "zh": "本财月", "en": "This FM" }, "value": "currentFiscalMonth" },
+                  { "label": { "zh": "上财月", "en": "Last FM" }, "value": "lastFiscalMonth" },
+                  { "label": { "zh": "本财年", "en": "This FY" }, "value": "currentFiscalYear" },
+                  { "label": { "zh": "上财年", "en": "Last FY" }, "value": "lastFiscalYear" }
+                ]
+              },
+              {
+                "key": "storeId",
+                "type": "pillSelect",
+                "label": "门店",
+                "placeholder": "选择门店",
+                "multiple": false,
+                "defaultValue": "",
+                "options": [
+                  { "label": "上海 K11", "value": "sh-k11" },
+                  { "label": "北京 SKP", "value": "bj-skp" },
+                  { "label": "成都 IFS", "value": "cd-ifs" },
+                  { "label": "香港 LANDMARK", "value": "hk-landmark" }
+                ],
+                "visibleWhen": { "key": "view", "value": "store" }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "sw-page-product": {
+      "title": "商品",
+      "layout": "fluid",
+      "components": []
+    },
+    "sw-page-member": {
+      "title": "会员",
+      "layout": "fluid",
+      "components": []
+    },
+    "sw-page-guide": {
+      "title": "导购",
+      "layout": "fluid",
+      "components": []
+    }
+  }
+}

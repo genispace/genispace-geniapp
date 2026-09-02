@@ -1,0 +1,11 @@
+{
+  "error": "Error",
+  "missing_id": "Missing task ID",
+  "submit_success": "Submit Success",
+  "submit_success_message": "Task submitted successfully",
+  "submit_error": "Submit Failed",
+  "submit_error_message": "Task submission failed",
+  "skip_port_mismatch_edge": "Skipping edge with port type mismatch: {{source}} -> {{target}}. Source port {{sourcePort}} should be output port, target port {{targetPort}} should be input port",
+  "skip_invalid_node_edge": "Skipping invalid node edge: {{source}} -> {{target}}"
+}
+

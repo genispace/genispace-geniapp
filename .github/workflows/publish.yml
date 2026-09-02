@@ -19,6 +19,13 @@ jobs:
       - uses: actions/checkout@v6
         with:
           path: stack/geniapp
+      - name: Checkout Workbench parity source
+        uses: actions/checkout@v6
+        with:
+          repository: genispace/frontend
+          ref: develop
+          path: stack/frontend
+          token: ${{ secrets.CICD_REPO_TOKEN }}
 
       - name: Resolve package contracts
         id: versions
@@ -48,6 +55,7 @@ jobs:
         run: npm view "@genispace/sdk@${{ steps.versions.outputs.sdk_version }}" version
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:sdk-version
+      - run: pnpm check:workbench-parity
       - run: pnpm type-check
       - run: pnpm test
       - run: pnpm build

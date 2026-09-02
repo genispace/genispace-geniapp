@@ -1,0 +1,167 @@
+{
+  "appConfig": {
+    "name": "示例项目工作台",
+    "description": "这是一个 Mock 数据示例项目",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "title": "首页",
+          "icon": "Home",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "data",
+          "title": "数据管理",
+          "icon": "Database",
+          "children": [
+            {
+              "key": "data-list",
+              "title": "数据列表",
+              "icon": "List",
+              "linkedPage": "data-list"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "工作台首页",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total",
+                "title": "总数量",
+                "value": 1234,
+                "icon": "Database",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "active",
+                "title": "活跃数",
+                "value": 856,
+                "icon": "Activity"
+              },
+              {
+                "key": "pending",
+                "title": "待处理",
+                "value": 42,
+                "icon": "Clock"
+              },
+              {
+                "key": "completed",
+                "title": "已完成",
+                "value": 336,
+                "icon": "CheckCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "welcome-card",
+          "type": "Card",
+          "props": {
+            "title": "欢迎使用",
+            "description": "这是一个示例 Mock 数据工作台"
+          }
+        }
+      ]
+    },
+    "data-list": {
+      "title": "数据列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "data-table",
+          "type": "Table",
+          "props": {
+            "title": "数据管理",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "名称",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true
+              },
+              {
+                "title": "类型",
+                "dataIndex": "type",
+                "key": "type"
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "创建时间",
+                "dataIndex": "createdAt",
+                "key": "createdAt"
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "数据项 1",
+              "type": "类型 A",
+              "status": "active",
+              "createdAt": "2025-01-15"
+            },
+            {
+              "id": "2",
+              "name": "数据项 2",
+              "type": "类型 B",
+              "status": "active",
+              "createdAt": "2025-01-16"
+            },
+            {
+              "id": "3",
+              "name": "数据项 3",
+              "type": "类型 A",
+              "status": "inactive",
+              "createdAt": "2025-01-17"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}
+

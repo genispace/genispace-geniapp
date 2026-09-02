@@ -1,0 +1,7 @@
+{
+  "task_execute_dialog_a11y": "填写任务参数，完成后点击执行任务",
+  "validation_error": "验证失败",
+  "upload_required": "请上传{{field}}",
+  "field_required": "请填写{{field}}"
+}
+

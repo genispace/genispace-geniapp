@@ -1,0 +1,2604 @@
+{
+  "pages": {
+    "dashboard": {
+      "title": "工作台首页",
+      "layout": {
+        "type": "custom",
+        "preset": "top1-bottom2-left-large",
+        "componentPositions": {
+          "recent-students": {
+            "area": "bottom-left",
+            "order": 0
+          },
+          "statistics-group": {
+            "area": "top",
+            "order": 0
+          },
+          "recent-reports-chart": {
+            "area": "bottom-right",
+            "order": 1
+          },
+          "component_1761229875147_vjjjyn2fs": {
+            "area": "bottom-right",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "statistics-group",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-students",
+                "icon": "Users",
+                "title": "总学生数",
+                "trend": {
+                  "type": "up",
+                  "value": 12,
+                  "status": "success",
+                  "suffix": "%",
+                  "description": "较上月"
+                },
+                "value": 156
+              },
+              {
+                "key": "satisfaction-rate",
+                "icon": "Star",
+                "title": "本月新增学生数",
+                "trend": {
+                  "type": "up",
+                  "value": 3,
+                  "status": "success",
+                  "suffix": "%",
+                  "description": "较上季度"
+                },
+                "value": 23
+              },
+              {
+                "key": "completed-reports",
+                "icon": "CheckCircle",
+                "title": "已完成报告",
+                "trend": {
+                  "type": "up",
+                  "value": 8,
+                  "status": "success",
+                  "suffix": "个",
+                  "description": "本周"
+                },
+                "value": 89
+              },
+              {
+                "key": "pending-reports",
+                "icon": "Clock",
+                "title": "待生成报告",
+                "trend": {
+                  "type": "down",
+                  "value": 5,
+                  "status": "success",
+                  "suffix": "个",
+                  "description": "较昨日"
+                },
+                "value": 12
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "recent-students",
+          "type": "DataGridCard",
+          "props": {
+            "title": "最近咨询学生",
+            "columns": [
+              {
+                "title": "姓名",
+                "primary": true,
+                "dataIndex": "name"
+              },
+              {
+                "title": "年级",
+                "dataIndex": "grade",
+                "secondary": true
+              },
+              {
+                "title": "目标国家/地区",
+                "dataIndex": "target"
+              },
+              {
+                "title": "状态",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "暂停": "red",
+                      "咨询中": "blue",
+                      "已完成": "green",
+                      "规划中": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "title": "负责顾问",
+                "dataIndex": "consultant"
+              }
+            ],
+            "pagination": {
+              "pageSize": 5,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "gpa": "3.8",
+              "name": "张小明",
+              "grade": "高二",
+              "status": "咨询中",
+              "target": "美国",
+              "createdAt": "2025-01-15",
+              "consultant": "李老师"
+            },
+            {
+              "id": "2",
+              "gpa": "3.9",
+              "name": "王芳芳",
+              "grade": "高三",
+              "status": "规划中",
+              "target": "英国",
+              "createdAt": "2025-01-12",
+              "consultant": "张老师"
+            },
+            {
+              "id": "3",
+              "gpa": "3.7",
+              "name": "李建国",
+              "grade": "高二",
+              "status": "已完成",
+              "target": "加拿大",
+              "createdAt": "2025-01-10",
+              "consultant": "王老师"
+            },
+            {
+              "id": "4",
+              "gpa": "3.6",
+              "name": "陈思雨",
+              "grade": "高一",
+              "status": "咨询中",
+              "target": "澳大利亚",
+              "createdAt": "2025-01-08",
+              "consultant": "李老师"
+            },
+            {
+              "id": "5",
+              "gpa": "4.0",
+              "name": "刘晓东",
+              "grade": "高三",
+              "status": "规划中",
+              "target": "美国",
+              "createdAt": "2025-01-05",
+              "consultant": "张老师"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-reports-chart",
+          "type": "Chart",
+          "props": {
+            "title": "报告生成趋势",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "count",
+            "chartType": "line"
+          },
+          "mockData": [
+            {
+              "date": "01-15",
+              "count": 8
+            },
+            {
+              "date": "01-16",
+              "count": 12
+            },
+            {
+              "date": "01-17",
+              "count": 15
+            },
+            {
+              "date": "01-18",
+              "count": 10
+            },
+            {
+              "date": "01-19",
+              "count": 18
+            },
+            {
+              "date": "01-20",
+              "count": 16
+            },
+            {
+              "date": "01-21",
+              "count": 20
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "component_1761229875147_vjjjyn2fs",
+          "type": "Chart",
+          "props": {
+            "meta": {
+              "date": {
+                "alias": "日期"
+              },
+              "value": {
+                "alias": "数值"
+              }
+            },
+            "title": "新增学生趋势",
+            "height": 300,
+            "xField": "date",
+            "yField": "value",
+            "chartType": "line"
+          },
+          "mockData": [
+            {
+              "name": "产品A",
+              "value": 5,
+              "percentage": 35
+            },
+            {
+              "name": "产品B",
+              "value": 12,
+              "percentage": 25
+            },
+            {
+              "name": "产品C",
+              "value": 10,
+              "percentage": 20
+            },
+            {
+              "name": "产品D",
+              "value": 20,
+              "percentage": 20
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "report-list": {
+      "title": "报告列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "report-table",
+          "type": "Table",
+          "props": {
+            "title": "升学规划报告管理",
+            "rowKey": "id",
+            "actions": [
+              {
+                "id": "view-report",
+                "type": "navigate",
+                "label": "查看",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "reportId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "report-editor"
+                },
+                "variant": "link"
+              },
+              {
+                "id": "edit-report",
+                "type": "navigate",
+                "label": "编辑",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "reportId",
+                      "value": "id",
+                      "source": "column"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "edit",
+                      "source": "static"
+                    }
+                  ],
+                  "targetPage": "report-editor"
+                },
+                "variant": "default"
+              },
+              {
+                "id": "export-pdf",
+                "type": "custom",
+                "label": "导出PDF",
+                "variant": "default"
+              }
+            ],
+            "columns": [
+              {
+                "key": "reportNo",
+                "title": "报告编号",
+                "dataIndex": "reportNo",
+                "searchable": true
+              },
+              {
+                "key": "studentName",
+                "title": "学生姓名",
+                "dataIndex": "studentName",
+                "searchable": true
+              },
+              {
+                "key": "reportType",
+                "title": "报告类型",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "完整报告": "blue",
+                      "摘要报告": "green"
+                    }
+                  }
+                },
+                "dataIndex": "reportType"
+              },
+              {
+                "key": "status",
+                "title": "生成状态",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "已交付": "gold",
+                      "已完成": "green",
+                      "待修正": "blue",
+                      "生成中": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "createdAt",
+                "title": "创建时间",
+                "sorter": true,
+                "dataIndex": "createdAt"
+              },
+              {
+                "key": "completedAt",
+                "title": "完成时间",
+                "dataIndex": "completedAt"
+              },
+              {
+                "key": "consultant",
+                "title": "负责顾问",
+                "dataIndex": "consultant"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            },
+            "showSearch": true,
+            "showRefresh": true,
+            "showToolbar": true,
+            "enableExport": true
+          },
+          "mockData": [
+            {
+              "id": "RPT001",
+              "status": "已完成",
+              "reportNo": "RPT-2025-001",
+              "createdAt": "2025-01-15 10:30",
+              "consultant": "李老师",
+              "reportType": "完整报告",
+              "completedAt": "2025-01-18 16:45",
+              "studentName": "张小明"
+            },
+            {
+              "id": "RPT002",
+              "status": "待修正",
+              "reportNo": "RPT-2025-002",
+              "createdAt": "2025-01-16 09:15",
+              "consultant": "张老师",
+              "reportType": "完整报告",
+              "completedAt": "2025-01-19 14:20",
+              "studentName": "王芳芳"
+            },
+            {
+              "id": "RPT003",
+              "status": "已交付",
+              "reportNo": "RPT-2025-003",
+              "createdAt": "2025-01-17 11:00",
+              "consultant": "王老师",
+              "reportType": "摘要报告",
+              "completedAt": "2025-01-17 11:30",
+              "studentName": "李建国"
+            },
+            {
+              "id": "RPT004",
+              "status": "生成中",
+              "reportNo": "RPT-2025-004",
+              "createdAt": "2025-01-20 08:45",
+              "consultant": "李老师",
+              "reportType": "完整报告",
+              "completedAt": null,
+              "studentName": "陈思雨"
+            },
+            {
+              "id": "RPT005",
+              "status": "已完成",
+              "reportNo": "RPT-2025-005",
+              "createdAt": "2025-01-18 14:20",
+              "consultant": "张老师",
+              "reportType": "完整报告",
+              "completedAt": "2025-01-21 10:15",
+              "studentName": "刘晓东"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "student-list": {
+      "title": "学生列表",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "component_1761234349491_d90ovbxkl": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "student-table",
+          "type": "Table",
+          "props": {
+            "title": "学生信息管理",
+            "rowKey": "id",
+            "actions": [
+              {
+                "id": "view-detail",
+                "type": "navigate",
+                "label": "查看详情",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "studentId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "student-detail"
+                },
+                "variant": "link"
+              },
+              {
+                "id": "generate-report",
+                "type": "navigate",
+                "label": "生成报告",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "studentId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "report-generator"
+                },
+                "variant": "default"
+              }
+            ],
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "学生姓名",
+                "editable": true,
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "gender",
+                "title": "性别",
+                "editable": true,
+                "dataIndex": "gender"
+              },
+              {
+                "key": "grade",
+                "title": "年级",
+                "editable": true,
+                "dataIndex": "grade",
+                "filterable": true
+              },
+              {
+                "key": "gpa",
+                "title": "GPA",
+                "sorter": true,
+                "editable": true,
+                "dataIndex": "gpa"
+              },
+              {
+                "key": "target",
+                "title": "目标国家/地区",
+                "editable": true,
+                "dataIndex": "target",
+                "filterable": true
+              },
+              {
+                "key": "major",
+                "title": "意向专业",
+                "editable": true,
+                "dataIndex": "major"
+              },
+              {
+                "key": "languageScore",
+                "title": "托福/雅思",
+                "editable": true,
+                "dataIndex": "languageScore"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "暂停": "red",
+                      "咨询中": "blue",
+                      "已完成": "green",
+                      "规划中": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "consultant",
+                "title": "负责顾问",
+                "dataIndex": "consultant"
+              },
+              {
+                "key": "createdAt",
+                "title": "创建时间",
+                "sorter": true,
+                "dataIndex": "createdAt"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "showSearch": true,
+            "showRefresh": true,
+            "showToolbar": true,
+            "enableExport": true
+          },
+          "mockData": [
+            {
+              "id": "STU001",
+              "gpa": "3.8",
+              "name": "张小明",
+              "grade": "高二",
+              "major": "计算机科学",
+              "gender": "男",
+              "status": "咨询中",
+              "target": "美国",
+              "createdAt": "2025-01-15",
+              "consultant": "李老师",
+              "languageScore": "托福 105"
+            },
+            {
+              "id": "STU002",
+              "gpa": "3.9",
+              "name": "王芳芳",
+              "grade": "高三",
+              "major": "商业管理",
+              "gender": "女",
+              "status": "规划中",
+              "target": "英国",
+              "createdAt": "2025-01-12",
+              "consultant": "张老师",
+              "languageScore": "雅思 7.5"
+            },
+            {
+              "id": "STU003",
+              "gpa": "3.7",
+              "name": "李建国",
+              "grade": "高二",
+              "major": "工程学",
+              "gender": "男",
+              "status": "已完成",
+              "target": "加拿大",
+              "createdAt": "2025-01-10",
+              "consultant": "王老师",
+              "languageScore": "托福 98"
+            },
+            {
+              "id": "STU004",
+              "gpa": "3.6",
+              "name": "陈思雨",
+              "grade": "高一",
+              "major": "心理学",
+              "gender": "女",
+              "status": "咨询中",
+              "target": "澳大利亚",
+              "createdAt": "2025-01-08",
+              "consultant": "李老师",
+              "languageScore": "雅思 6.5"
+            },
+            {
+              "id": "STU005",
+              "gpa": "4.0",
+              "name": "刘晓东",
+              "grade": "高三",
+              "major": "经济学",
+              "gender": "男",
+              "status": "规划中",
+              "target": "美国",
+              "createdAt": "2025-01-05",
+              "consultant": "张老师",
+              "languageScore": "托福 110"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "component_1761234349491_d90ovbxkl",
+          "type": "TaskInput",
+          "props": {
+            "title": "学生信息导入",
+            "taskId": "12345678-1234-4abc-9def-123456789abc",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "请填写任务参数并执行",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "这是一个模拟的PDF文档内容。\n\n文档包含以下信息：\n- 项目概述\n- 技术规格\n- 实施计划\n- 风险评估",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "导入",
+            "showOptionalInputs": false
+          }
+        }
+      ]
+    },
+    "report-editor": {
+      "title": "报告编辑器",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "report-sections",
+          "type": "Tabs",
+          "props": {
+            "items": [
+              {
+                "key": "base-info",
+                "label": "封面页",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "name",
+                        "type": "text",
+                        "label": "学生姓名",
+                        "required": true,
+                        "placeholder": "请输入学生姓名",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 1,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "gender",
+                        "type": "radio",
+                        "label": "性别",
+                        "options": [
+                          {
+                            "label": "男",
+                            "value": "male"
+                          },
+                          {
+                            "label": "女",
+                            "value": "female"
+                          }
+                        ],
+                        "required": true,
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 1,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "country",
+                        "type": "text",
+                        "label": "国籍",
+                        "required": false,
+                        "placeholder": "4.0制",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 2,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "school",
+                        "type": "text",
+                        "label": "就读学校",
+                        "required": true,
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 3,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "graduation-year",
+                        "type": "text",
+                        "label": "毕业年份",
+                        "required": false,
+                        "placeholder": "4.0制",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 2,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "gpa",
+                        "type": "number",
+                        "label": "GPA",
+                        "required": true,
+                        "placeholder": "4.0制",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 3,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "courseSystem",
+                        "type": "text",
+                        "label": "课程体系",
+                        "required": false,
+                        "placeholder": "",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 4,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "intendedMajor",
+                        "type": "text",
+                        "label": "意向专业",
+                        "placeholder": "如：计算机科学、商业管理等",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 4,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "意向学校",
+                        "type": "textarea",
+                        "label": "意向学校",
+                        "placeholder": "其他需要说明的信息",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 5,
+                            "column": 1,
+                            "colSpan": 2,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "个人成长未来规划",
+                        "type": "textarea",
+                        "label": "个人成长未来规划",
+                        "placeholder": "其他需要说明的信息",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 6,
+                            "column": 1,
+                            "colSpan": 2,
+                            "rowSpan": 1
+                          }
+                        }
+                      }
+                    ],
+                    "layout": "vertical",
+                    "actions": [
+                      {
+                        "id": "save",
+                        "type": "submit",
+                        "label": "保存",
+                        "variant": "default"
+                      },
+                      {
+                        "id": "generate-report",
+                        "type": "navigate",
+                        "label": "生成报告",
+                        "config": {
+                          "targetPage": "report-generator"
+                        },
+                        "variant": "default"
+                      }
+                    ]
+                  },
+                  "mockData": {
+                    "gpa": "3.8",
+                    "name": "张小明",
+                    "grade": "grade-11",
+                    "notes": "学生对AI和机器学习特别感兴趣",
+                    "awards": "全国青少年信息学奥林匹克竞赛省一等奖",
+                    "budget": "50",
+                    "gender": "male",
+                    "school": "北京市第四中学",
+                    "birthday": "2007-05-15",
+                    "satScore": "1450",
+                    "interests": "编程、机器人、围棋",
+                    "activities": "校机器人社团队长、参加过全国青少年信息学奥林匹克竞赛",
+                    "consultant": "consultant-1",
+                    "englishName": "Mike Zhang",
+                    "languageTest": "TOEFL",
+                    "intendedMajor": "计算机科学",
+                    "languageScore": "105",
+                    "targetCountry": [
+                      "USA",
+                      "UK"
+                    ],
+                    "familyBackground": "父母均为IT从业者",
+                    "courseSystem": "A-Level",
+                    "graduation-year": "2024",
+                    "country": "中国",
+                    "意向学校": "1. 麻省理工学院\n2. 斯坦福大学",
+                    "优势与潜力": "1. 获得过Awards\n2. 获得过Certificate",
+                    "个人成长未来规划": "我的留学之旅旨在实现学术、职业与个人成长的多元目标。​​学业上，​​我将深耕[你的专业]领域，积极利用学术资源，培养批判性思维与研究能力。​​职业上，​​我计划通过实习与校园活动，积累实践经验，建立专业网络，为未来的国际化职业生涯奠定基础。​​个人层面，​​我渴望主动融入多元环境，提升跨文化沟通力与全球视野，锻造独立、坚韧的品格。我将定期复盘，动态调整策略，确保每一步都坚实有力。我坚信这段经历将使我成为一个具备竞争力的世界公民。"
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "summary",
+                "label": "报告摘要",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "summary",
+                        "rows": 8,
+                        "type": "textarea",
+                        "label": "摘要内容（300-500字）"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "summary": "这是一个模拟的摘要内容。\n摘要内容应该包含学生个人特点、目标院校、申请流程、申请材料、申请条件等信息。\n摘要内容应该具有 coherence（一致性）、cohesion（一致性）、clarity（清晰性）、specificity（特异性）和 conciseness（简洁性）五个方面。"
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "student-profile",
+                "label": "学生画像分析",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "strengths",
+                        "type": "textarea",
+                        "label": "核心优势"
+                      },
+                      {
+                        "name": "interests",
+                        "type": "textarea",
+                        "label": "兴趣标签"
+                      },
+                      {
+                        "name": "improvement",
+                        "type": "textarea",
+                        "label": "待提升领域"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "strengths": "突出了学生的逻辑思维能力、创新意识、自主学习能力和团队合作能力",
+                    "interests": "展现了学生在科技创新、艺术创作和体育运动方面的多元化兴趣",
+                    "improvement": "指出了时间管理、语言表达和跨学科整合方面的改进空间"
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "strategy",
+                "label": "申请策略",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "strategy",
+                        "rows": 10,
+                        "type": "textarea",
+                        "label": "策略内容"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "strategy": "这是一个模拟的申请策略。\n策略内容应该包含学生个人优势、兴趣标签、待提升领域、目标院校、申请流程、申请材料、申请条件等信息。\n策略内容应该具有 coherence（一致性）、cohesion（一致性）、clarity（清晰性）、specificity（特异性）和 conciseness（简洁性）五个方面。"
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "majors",
+                "label": "专业推荐",
+                "component": {
+                  "type": "Table",
+                  "props": {
+                    "rowKey": "id",
+                    "columns": [
+                      {
+                        "key": "name",
+                        "title": "专业名称",
+                        "dataIndex": "name"
+                      },
+                      {
+                        "key": "zykc",
+                        "title": "主要课程",
+                        "dataIndex": "zykc"
+                      },
+                      {
+                        "key": "reason",
+                        "title": "推荐理由",
+                        "dataIndex": "reason"
+                      },
+                      {
+                        "key": "career",
+                        "title": "职业前景",
+                        "dataIndex": "career"
+                      }
+                    ]
+                  },
+                  "mockData": [
+                    {
+                      "id": "1",
+                      "name": "计算机科学",
+                      "zykc": "数据结构、算法、计算机网络、操作系统、软件工程、数据库",
+                      "career": "软件工程师、AI研究员、数据科学家",
+                      "reason": "结合学生在编程和机器人方面的兴趣，以及优秀的数学成绩"
+                    },
+                    {
+                      "id": "2",
+                      "name": "数据科学",
+                      "zykc": "数据处理、数据可视化、数据挖掘、机器学习、深度学习、数据处理技术、数据可视化技术、数据挖掘技术、机器学习技术、深度学习技术",
+                      "career": "数据分析师、机器学习工程师、商业智能分析师",
+                      "reason": "数学基础扎实，对数据分析和AI有浓厚兴趣"
+                    },
+                    {
+                      "id": "3",
+                      "name": "人工智能",
+                      "zykc": "人工智能、机器学习、深度学习、自然语言处理、计算机视觉、图像处理",
+                      "career": "AI工程师、研究科学家、技术顾问",
+                      "reason": "参加过信息学竞赛，对机器学习特别感兴趣"
+                    }
+                  ],
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "schools",
+                "label": "学校推荐",
+                "component": {
+                  "type": "Table",
+                  "props": {
+                    "rowKey": "id",
+                    "columns": [
+                      {
+                        "key": "tier",
+                        "title": "层次",
+                        "render": {
+                          "type": "Tag",
+                          "props": {
+                            "color": {
+                              "主申": "blue",
+                              "保底": "green",
+                              "冲刺": "orange"
+                            }
+                          }
+                        },
+                        "dataIndex": "tier"
+                      },
+                      {
+                        "key": "name",
+                        "title": "学校名称",
+                        "dataIndex": "name"
+                      },
+                      {
+                        "key": "ranking",
+                        "title": "排名",
+                        "dataIndex": "ranking"
+                      },
+                      {
+                        "key": "reason",
+                        "title": "推荐理由",
+                        "dataIndex": "reason"
+                      },
+                      {
+                        "key": "acceptance",
+                        "title": "录取率",
+                        "dataIndex": "acceptance"
+                      }
+                    ]
+                  },
+                  "mockData": [
+                    {
+                      "id": "1",
+                      "name": "麻省理工学院",
+                      "reason": "综合实力：​​ ​​顶级​​。常年位居世界大学排名前三。是科学和工程领域的绝对王者，代表着顶尖的学术严谨性、创新精神和研究强度。\n​学术与专业匹配度： ​​极高​​。如果你立志成为顶尖的科学家、工程师、计算机专家或科技创业者，MIT是圣地。其课程极其硬核，强调基础科学和动手能力。几乎所有理工科专业都是世界顶尖。\n​地理位置：​​位于马萨诸塞州的剑桥市，与波士顿隔河相望。波士顿是美国东部的教育、医疗和科技中心，生物技术产业尤其发达。但气候寒冷，且生活成本非常高。\n​校友资源：​​​无与伦比​​。MIT的校友网络是全球科技界和创业界最强大、最紧密的网络之一。校友以极强的互助精神著称，毕业生进入顶尖公司、研究机构或成功创业的比例极高。\n官方网址：https://www.mit.edu/",
+                      "tier": "冲刺",
+                      "ranking": "QS #1",
+                      "acceptance": "3.2%"
+                    },
+                    {
+                      "id": "2",
+                      "name": "斯坦福大学",
+                      "reason": "综合实力：​​ ​​顶级​​。与MIT齐名，世界排名前三。在人文、社科、商科、医学等领域也同样强大，是一所综合实力极其均衡的顶尖学府。\n​学术与专业匹配度：​​ ​​极高​​。与MIT的“学院”风格不同，斯坦福更强调创新、创业和跨学科精神。其计算机、电子工程、人工智能等领域与硅谷的产业紧密结合，是创业的摇篮。\n​地理位置：​​ ​​极致优势​​。位于加州硅谷的核心地带。这里是全球科技创新的心脏，为学生提供了无与伦比的实习、就业和创业机会。气候宜人，但生活成本极高。\n​校友资源：​​ ​​硅谷之王​​。斯坦福的校友网络主宰着硅谷和整个风险投资界。从谷歌到雅虎，从Instagram到Snapchat，无数科技巨头的创始人都是斯坦福校友。这个网络对于想进入科技行业的学生来说是黄金门票。\n官方网址： https://www.stanford.edu/",
+                      "tier": "冲刺",
+                      "ranking": "QS #3",
+                      "acceptance": "3.9%"
+                    },
+                    {
+                      "id": "3",
+                      "name": "卡内基梅隆大学",
+                      "reason": "综合实力：​​ ​​顶级​​。作为顶尖的公立大学，其学术声誉与MIT、斯坦福比肩。在基础科学、工程、人文社科等领域都有极高的造诣。\n​学术与专业匹配度：​​ ​​极高​​。工程（尤其是EECS）、计算机科学是神级专业，竞争异常激烈。学术氛围非常浓厚且自由开放，强调社会责任。但由于是公立大学，部分热门专业低年级大课人数可能较多。\n​​地理位置：​​ 位于旧金山湾区的伯克利市。紧邻硅谷和旧金山这座科技与金融中心，地理位置优越。但学校周边安全情况近年来备受关注，生活成本高。\n​校友资源：​​ ​​极其强大​​。伯克利的校友遍布全球各行各业，尤其在科技公司中势力庞大。校友数量多，且在学术界和工业界都有深厚根基。\n官方网址：  https://www.cmu.edu/",
+                      "tier": "冲刺",
+                      "ranking": "QS #52",
+                      "acceptance": "11%"
+                    },
+                    {
+                      "id": "4",
+                      "name": "加州大学伯克利分校",
+                      "reason": "综合实力：​​ ​​顶级（尤其在某些领域）​​。综合排名可能稍逊于前三所，但在计算机科学、工程、机器人、戏剧、设计等特定领域是毫无争议的世界第一。\n​学术与专业匹配度：​​ ​​极致专精​​。如果你的目标非常明确，就是计算机科学、软件工程、人工智能、机器人，那么CMU可能是地球上最好的选择。课程工作量极大，以“硬核”和“压力大”闻名。跨学科合作（如计算机+艺术）是其一大特色。\n​​地理位置：​​ 位于宾夕法尼亚州的匹兹堡市。该市已从钢铁城转型为医疗、教育和科技中心，生活成本相对东西海岸要低。但不如硅谷或波士顿那样是科技公司聚集地。\n​校友资源：​​ ​​在特定领域内顶尖​​。在硅谷和各大科技公司中，CMU的校友，特别是计算机学院的校友，拥有极高的声誉和强大的网络。毕业生是科技公司竞相争夺的对象。\n官方网址：https://www.berkeley.edu/",
+                      "tier": "主申",
+                      "ranking": "QS #10",
+                      "acceptance": "14.5%"
+                    },
+                    {
+                      "id": "5",
+                      "name": "伊利诺伊大学香槟分校",
+                      "reason": "综合实力：​​ ​​顶尖公立大学​​。被誉为“公立常春藤”，综合排名稳定在世界前列。\n​学术与专业匹配度：​​ ​​极高，尤其是工程和商科​​。其工程学院（尤其是电子工程、计算机工程、土木工程）和计算机科学是世界顶尖水平，与麻省理工、斯坦福等并列。学术声誉极高，但录取难度相对于前四所“神校”稍低，性价比突出。\n​地理位置：​​ 位于伊利诺伊州中部双子城。最大的劣势是地理位置相对偏僻，四周是玉米地。离芝加哥约2-3小时车程。冬季寒冷多风。\n​​校友资源：​​ ​​非常强大​​。UIUC拥有庞大且忠诚的校友网络，尤其是在工程领域。无数顶尖科技公司的创始人和工程师都毕业于UIUC，校友间互助意识强。\n官方网址：https://illinois.edu/",
+                      "tier": "主申",
+                      "ranking": "QS #64",
+                      "acceptance": "45%"
+                    },
+                    {
+                      "id": "6",
+                      "name": "华盛顿大学西雅图",
+                      "reason": "​​综合实力：​​ ​​顶尖公立大学​​。世界排名很高，尤其在医学、生命科学和计算机科学领域。\n​​学术与专业匹配度：​​ ​​很高，且与产业结合紧密​​。计算机科学、电子工程等专业极强。由于其地理位置，与亚马逊、微软等公司有深度的合作（亚马逊总部就在校园内）。但请注意，UW的本科直接录取到计算机科学等热门专业难度极大，很多学生需要先进入文理学院再申请。\n​​地理位置：​​ ​​优势巨大​​。位于西雅图市中心，是亚马逊、微软、波音等巨头的总部所在地，科技氛围浓厚。城市环境优美，但气候多雨。\n​校友资源：​​ ​​在西海岸科技界影响力巨大​​。得益于地理位置，毕业生很容易进入本地科技巨头，校友网络在西雅图地区非常强大。\n官方网址：https://www.washington.edu",
+                      "tier": "主申",
+                      "ranking": "QS #63",
+                      "acceptance": "48%"
+                    },
+                    {
+                      "id": "7",
+                      "name": "普渡大学",
+                      "reason": "综合实力：​​ ​​著名公立大学​​。以强大的工程和农学项目闻名。\n​学术与专业匹配度：​​ ​​工程领域极强​​。其工程学院（尤其是航空航天工程、机械工程、工业工程、计算机工程）享誉全球，被称为“航空航天之母”。课程非常扎实，注重实践。\n​地理位置：​​ 位于印第安纳州西拉法叶市。典型的大学城，学习氛围浓厚，但地理位置相对偏僻，离芝加哥约2小时车程。生活成本较低。\n​校友资源：​​ ​​在工程界声誉卓著​​。普渡的工程师以扎实的基本功著称，校友网络在工业界，特别是制造业、航空航天领域非常强大。\n官方网址：https://www.purdue.edu/",
+                      "tier": "保底",
+                      "ranking": "QS #99",
+                      "acceptance": "53%"
+                    },
+                    {
+                      "id": "8",
+                      "name": "俄亥俄州立大学",
+                      "reason": "综合实力：​​ ​​大型顶尖公立大学​​。是美国规模最大的大学之一，学科设置非常全面，几乎所有专业都在全美前列。\n​学术与专业匹配度：​​ ​​全面且优秀​​。其商学院、工程学院、社会科学等都很强。虽然其顶尖工程的声誉可能略逊于UIUC或普渡，但依然是非常顶尖的水平。优势在于学科齐全，方便跨专业学习。\n​​地理位置：​​ 位于俄亥俄州首府哥伦布市。这是一个快速发展的中型城市，生活成本适中。中西部地理位置，不如东西海岸繁华。\n​校友资源：​​ ​​庞大而团结​​。OSU拥有全美最大、最活跃的校友会之一。校友遍布全美各行各业，人数优势明显，校友忠诚度极高。\n官方网址：https://www.osu.edu/",
+                      "tier": "保底",
+                      "ranking": "QS #140",
+                      "acceptance": "57%"
+                    }
+                  ],
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "competitiveness",
+                "label": "竞争力分析",
+                "components": [
+                  {
+                    "id": "basic-radar",
+                    "type": "RadarChart",
+                    "props": {
+                      "title": "六维能力分析报告​",
+                      "height": 400,
+                      "angleField": "subject",
+                      "radiusField": "value",
+                      "showTooltip": true,
+                      "showLegend": true,
+                      "showDataView": true,
+                      "gridLevels": 5,
+                      "meta": {
+                        "value": {
+                          "alias": "数值",
+                          "formatter": "(value) => `${value}分`"
+                        }
+                      }
+                    },
+                    "mockData": [
+                      {
+                        "subject": "GPA",
+                        "value": 4
+                      },
+                      {
+                        "subject": "语言",
+                        "value": 5
+                      },
+                      {
+                        "subject": "活动",
+                        "value": 2
+                      },
+                      {
+                        "subject": "奖项",
+                        "value": 2
+                      },
+                      {
+                        "subject": "SAT/ACT",
+                        "value": 0
+                      }
+                    ],
+                    "useMockData": true
+                  },
+                  {
+                    "type": "Form",
+                    "props": {
+                      "fields": [
+                        {
+                          "name": "analysis",
+                          "rows": 10,
+                          "type": "textarea",
+                          "label": "分析内容"
+                        }
+                      ],
+                      "layout": "vertical"
+                    },
+                    "mockData": {
+                      "analysis": "根据学生信息，该学生可能适合于以下学校：\n1. 麻省理工学院\n2. 斯坦福大学\n3. 卡内基梅隆大学\n4. 加州大学伯克利分校\n5. 伊利诺伊大学香槟分校\n6. 华盛顿大学西雅图\n7. 普渡大学\n8. 俄亥俄州立大学"
+                    },
+                    "useMockData": true
+                  }
+                ]
+              },
+              {
+                "key": "planning",
+                "label": "规划建议",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "academic",
+                        "type": "textarea",
+                        "label": "学术规划"
+                      },
+                      {
+                        "name": "exam",
+                        "type": "textarea",
+                        "label": "考试规划"
+                      },
+                      {
+                        "name": "background",
+                        "type": "textarea",
+                        "label": "背景提升"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "academic": "根据学生信息，该学生可能适合于以下学校：\n1. 麻省理工学院\n2. 斯坦福大学\n3. 卡内基梅隆大学\n4. 加州大学伯克利分校\n5. 伊利诺伊大学香槟分校\n6. 华盛顿大学西雅图\n7. 普渡大学\n8. 俄亥俄州立大学",
+                    "exam": "根据学生信息，该学生可能适合",
+                    "background": "根据学生信息，该学生可能适合"
+                  },
+                  "useMockData": true
+                }
+              }
+            ],
+            "defaultActiveKey": "base-info"
+          }
+        }
+      ]
+    },
+    "student-detail": {
+      "title": "学生详细信息",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "component_1761234349491_d90oaaaaa",
+          "type": "TaskInput",
+          "props": {
+            "title": "学生信息导入",
+            "taskId": "12345678-1234-4abc-9def-1234567aaaaa",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "请填写任务参数并执行",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "这是一个模拟的PDF文档内容。\n\n文档包含以下信息：\n- 项目概述\n- 技术规格\n- 实施计划\n- 风险评估",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "导入",
+            "showOptionalInputs": false
+          }
+        },
+        {
+          "id": "student-info-form",
+          "type": "Form",
+          "props": {
+            "title": "学生基本信息",
+            "fields": [
+              {
+                "name": "name",
+                "type": "text",
+                "label": "学生姓名",
+                "required": true,
+                "placeholder": "请输入学生姓名",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "englishName",
+                "type": "text",
+                "label": "英文名",
+                "placeholder": "请输入英文名",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "gender",
+                "type": "radio",
+                "label": "性别",
+                "options": [
+                  {
+                    "label": "男",
+                    "value": "male"
+                  },
+                  {
+                    "label": "女",
+                    "value": "female"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "birthday",
+                "type": "date",
+                "label": "出生日期",
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "grade",
+                "type": "select",
+                "label": "当前年级",
+                "options": [
+                  {
+                    "label": "高一",
+                    "value": "grade-10"
+                  },
+                  {
+                    "label": "高二",
+                    "value": "grade-11"
+                  },
+                  {
+                    "label": "高三",
+                    "value": "grade-12"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "school",
+                "type": "text",
+                "label": "就读学校",
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "country",
+                "type": "text",
+                "label": "国籍",
+                "required": false,
+                "placeholder": "4.0制",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 9,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "graduation-year",
+                "type": "text",
+                "label": "毕业年份",
+                "required": false,
+                "placeholder": "4.0制",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 9,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "gpa",
+                "type": "number",
+                "label": "GPA",
+                "required": true,
+                "placeholder": "4.0制",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "targetCountry",
+                "type": "select",
+                "label": "目标国家/地区",
+                "options": [
+                  {
+                    "label": "美国",
+                    "value": "USA"
+                  },
+                  {
+                    "label": "英国",
+                    "value": "UK"
+                  },
+                  {
+                    "label": "加拿大",
+                    "value": "Canada"
+                  },
+                  {
+                    "label": "澳大利亚",
+                    "value": "Australia"
+                  }
+                ],
+                "multiple": true,
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "intendedMajor",
+                "type": "text",
+                "label": "意向专业",
+                "placeholder": "如：计算机科学、商业管理等",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "languageTest",
+                "type": "select",
+                "label": "语言考试类型",
+                "options": [
+                  {
+                    "label": "托福",
+                    "value": "TOEFL"
+                  },
+                  {
+                    "label": "雅思",
+                    "value": "IELTS"
+                  }
+                ],
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "languageScore",
+                "type": "number",
+                "label": "语言考试成绩",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 6,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "satScore",
+                "type": "number",
+                "label": "SAT成绩",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 6,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "actScore",
+                "type": "number",
+                "label": "ACT成绩",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 7,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "interests",
+                "type": "textarea",
+                "label": "兴趣爱好",
+                "placeholder": "请描述学生的兴趣爱好",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 10,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "activities",
+                "type": "textarea",
+                "label": "课外活动",
+                "placeholder": "请描述学生参与的课外活动",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 11,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "awards",
+                "type": "textarea",
+                "label": "获奖情况",
+                "placeholder": "请列出学生的获奖情况",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 12,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "familyBackground",
+                "type": "textarea",
+                "label": "家庭背景",
+                "placeholder": "简要描述家庭情况",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 13,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "budget",
+                "type": "number",
+                "label": "留学预算（万元/年）",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 7,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "consultant",
+                "type": "select",
+                "label": "负责顾问",
+                "options": [
+                  {
+                    "label": "李老师",
+                    "value": "consultant-1"
+                  },
+                  {
+                    "label": "张老师",
+                    "value": "consultant-2"
+                  },
+                  {
+                    "label": "王老师",
+                    "value": "consultant-3"
+                  }
+                ],
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 8,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "courseSystem",
+                "type": "text",
+                "label": "课程体系",
+                "required": false,
+                "placeholder": "",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 8,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "意向学校",
+                "type": "textarea",
+                "label": "意向学校",
+                "placeholder": "其他需要说明的信息",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 14,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "优势与潜力",
+                "type": "textarea",
+                "label": "优势与潜力",
+                "placeholder": "其他需要说明的信息",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 15,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "个人成长未来规划",
+                "type": "textarea",
+                "label": "个人成长未来规划",
+                "placeholder": "其他需要说明的信息",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 16,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "notes",
+                "type": "textarea",
+                "label": "备注",
+                "placeholder": "其他需要说明的信息",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 17,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              }
+            ],
+            "layout": "vertical",
+            "actions": [
+              {
+                "id": "save",
+                "type": "submit",
+                "label": "保存",
+                "variant": "default"
+              },
+              {
+                "id": "generate-report",
+                "type": "navigate",
+                "label": "生成报告",
+                "config": {
+                  "targetPage": "report-generator"
+                },
+                "variant": "default"
+              }
+            ],
+            "displayConfig": {
+              "columns": 2,
+              "showCard": true
+            }
+          },
+          "mockData": {
+            "gpa": "3.8",
+            "name": "张小明",
+            "grade": "grade-11",
+            "notes": "学生对AI和机器学习特别感兴趣",
+            "awards": "全国青少年信息学奥林匹克竞赛省一等奖",
+            "budget": "50",
+            "gender": "male",
+            "school": "北京市第四中学",
+            "birthday": "2007-05-15",
+            "satScore": "1450",
+            "interests": "编程、机器人、围棋",
+            "activities": "校机器人社团队长、参加过全国青少年信息学奥林匹克竞赛",
+            "consultant": "consultant-1",
+            "englishName": "Mike Zhang",
+            "languageTest": "TOEFL",
+            "intendedMajor": "计算机科学",
+            "languageScore": "105",
+            "targetCountry": [
+              "USA",
+              "UK"
+            ],
+            "familyBackground": "父母均为IT从业者",
+            "courseSystem": "A-Level",
+            "graduation-year": "2024",
+            "country": "中国",
+            "意向学校": "1. 麻省理工学院\n2. 斯坦福大学",
+            "优势与潜力": "1. 获得过Awards\n2. 获得过Certificate",
+            "个人成长未来规划": "我的留学之旅旨在实现学术、职业与个人成长的多元目标。​​学业上，​​我将深耕[你的专业]领域，积极利用学术资源，培养批判性思维与研究能力。​​职业上，​​我计划通过实习与校园活动，积累实践经验，建立专业网络，为未来的国际化职业生涯奠定基础。​​个人层面，​​我渴望主动融入多元环境，提升跨文化沟通力与全球视野，锻造独立、坚韧的品格。我将定期复盘，动态调整策略，确保每一步都坚实有力。我坚信这段经历将使我成为一个具备竞争力的世界公民。"
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "major-management": {
+      "title": "专业管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "major-table",
+          "type": "Table",
+          "props": {
+            "title": "专业信息管理",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "专业名称",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "category",
+                "title": "专业类别",
+                "dataIndex": "category",
+                "filterable": true
+              },
+              {
+                "key": "field",
+                "title": "学科领域",
+                "dataIndex": "field"
+              },
+              {
+                "key": "employment_outlook",
+                "title": "就业前景",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "一般": "orange",
+                      "优秀": "green",
+                      "良好": "blue"
+                    }
+                  }
+                },
+                "dataIndex": "employment_outlook"
+              },
+              {
+                "key": "avg_salary",
+                "title": "平均起薪（美元）",
+                "sorter": true,
+                "dataIndex": "avg_salary"
+              },
+              {
+                "key": "updated_at",
+                "title": "更新时间",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "计算机科学",
+              "field": "计算机",
+              "category": "工程与技术",
+              "avg_salary": "95000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "优秀"
+            },
+            {
+              "id": "2",
+              "name": "数据科学",
+              "field": "计算机",
+              "category": "工程与技术",
+              "avg_salary": "100000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "优秀"
+            },
+            {
+              "id": "3",
+              "name": "工商管理",
+              "field": "管理学",
+              "category": "商科",
+              "avg_salary": "75000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "良好"
+            },
+            {
+              "id": "4",
+              "name": "心理学",
+              "field": "心理学",
+              "category": "社会科学",
+              "avg_salary": "55000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "良好"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "major-stats",
+          "type": "Chart",
+          "props": {
+            "title": "专业类别分布",
+            "height": 300,
+            "xField": "category",
+            "yField": "count",
+            "chartType": "pie",
+            "angleField": "count"
+          },
+          "mockData": [
+            {
+              "count": 45,
+              "category": "工程与技术"
+            },
+            {
+              "count": 32,
+              "category": "商科"
+            },
+            {
+              "count": 28,
+              "category": "社会科学"
+            },
+            {
+              "count": 25,
+              "category": "自然科学"
+            },
+            {
+              "count": 20,
+              "category": "人文艺术"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "report-generator": {
+      "title": "生成升学规划报告",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "component_1761268401474_dcpn6txrb": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "report-config-form",
+          "type": "Form",
+          "props": {
+            "title": "报告生成配置",
+            "fields": [
+              {
+                "name": "studentId",
+                "type": "select",
+                "label": "选择学生",
+                "options": [
+                  {
+                    "label": "张小明 (STU001)",
+                    "value": "STU001"
+                  },
+                  {
+                    "label": "王芳芳 (STU002)",
+                    "value": "STU002"
+                  },
+                  {
+                    "label": "李建国 (STU003)",
+                    "value": "STU003"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "reportType",
+                "type": "radio",
+                "label": "报告类型",
+                "options": [
+                  {
+                    "label": "完整报告（1-3天）",
+                    "value": "full"
+                  },
+                  {
+                    "label": "摘要报告（30秒）",
+                    "value": "summary"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "targetCountries",
+                "type": "select",
+                "label": "目标国家/地区",
+                "options": [
+                  {
+                    "label": "美国",
+                    "value": "USA"
+                  },
+                  {
+                    "label": "英国",
+                    "value": "UK"
+                  },
+                  {
+                    "label": "加拿大",
+                    "value": "Canada"
+                  },
+                  {
+                    "label": "澳大利亚",
+                    "value": "Australia"
+                  }
+                ],
+                "multiple": true,
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "majorPreferences",
+                "type": "select",
+                "label": "专业偏好（最多3个）",
+                "options": [
+                  {
+                    "label": "计算机科学",
+                    "value": "CS"
+                  },
+                  {
+                    "label": "数据科学",
+                    "value": "DS"
+                  },
+                  {
+                    "label": "人工智能",
+                    "value": "AI"
+                  },
+                  {
+                    "label": "商业分析",
+                    "value": "BA"
+                  },
+                  {
+                    "label": "经济学",
+                    "value": "ECON"
+                  }
+                ],
+                "multiple": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "schoolCount",
+                "type": "number",
+                "label": "推荐学校数量",
+                "required": true,
+                "placeholder": "建议12-15所",
+                "defaultValue": 12,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "schoolTier",
+                "type": "text",
+                "label": "学校层次分布",
+                "placeholder": "如：冲刺3所，主申6所，保底3所",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "includeFinancialAid",
+                "type": "switch",
+                "label": "包含奖学金信息",
+                "defaultValue": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "includeCareerPath",
+                "type": "switch",
+                "label": "包含职业路径分析",
+                "defaultValue": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "specialRequirements",
+                "type": "textarea",
+                "label": "特殊要求",
+                "placeholder": "如特定的学校偏好、专业方向等",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              }
+            ],
+            "layout": "vertical",
+            "actions": [
+              {
+                "id": "generate",
+                "type": "submit",
+                "label": "生成报告",
+                "variant": "default"
+              },
+              {
+                "id": "cancel",
+                "type": "custom",
+                "label": "取消",
+                "variant": "outline"
+              }
+            ],
+            "displayConfig": {
+              "columns": 2,
+              "showCard": true
+            }
+          },
+          "mockData": {
+            "studentId": "STU001",
+            "targetCountries": "US",
+            "majorPreferences": "AI",
+            "schoolCount": 15,
+            "schoolTier": "冲刺3所，主申6所，保底3所",
+            "includeFinancialAid": 1,
+            "includeCareerPath": 1,
+            "specialRequirements": "环境友好，交通方便，生活条件好, 课程质量好, 教学效果好, 课程内容丰富",
+            "reportType": "完整报告（1-3天）"
+          },
+          "useMockData": true
+        },
+        {
+          "id": "component_1761268401474_dcpn6txrb",
+          "type": "TaskInput",
+          "props": {
+            "title": "生成报告",
+            "taskId": "mock-0ed77c18-8303-4174-bfb2-a8ba9db8aee5",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "请填写任务参数并执行",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "这是一个模拟的PDF文档内容。\n\n文档包含以下信息：\n- 项目概述\n- 技术规格\n- 实施计划\n- 风险评估",
+                  "lastModified": "2025-10-24T01:13:35.028Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-24T01:13:35.028Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "一键生成",
+            "showOptionalInputs": false
+          }
+        }
+      ]
+    },
+    "school-management": {
+      "title": "学校管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "school-tree",
+          "type": "Tree",
+          "props": {
+            "label": "name",
+            "title": "学校分类",
+            "height": 300,
+            "addable": true,
+            "sortKey": "sort_order",
+            "editable": true,
+            "keyField": "id",
+            "showIcon": true,
+            "deletable": true,
+            "parentKey": "parent_id",
+            "showCount": true,
+            "searchable": true,
+            "defaultExpandLevel": 2
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "美国",
+              "parent_id": null,
+              "sort_order": 1
+            },
+            {
+              "id": "2",
+              "name": "藤校",
+              "parent_id": "1",
+              "sort_order": 1
+            },
+            {
+              "id": "3",
+              "name": "哈佛大学",
+              "ranking": "1",
+              "parent_id": "2",
+              "sort_order": 1,
+              "acceptance_rate": "3.4%"
+            },
+            {
+              "id": "4",
+              "name": "耶鲁大学",
+              "ranking": "5",
+              "parent_id": "2",
+              "sort_order": 2,
+              "acceptance_rate": "4.6%"
+            },
+            {
+              "id": "5",
+              "name": "公立大学",
+              "parent_id": "1",
+              "sort_order": 2
+            },
+            {
+              "id": "6",
+              "name": "加州大学伯克利分校",
+              "ranking": "15",
+              "parent_id": "5",
+              "sort_order": 1,
+              "acceptance_rate": "14.5%"
+            },
+            {
+              "id": "7",
+              "name": "英国",
+              "parent_id": null,
+              "sort_order": 2
+            },
+            {
+              "id": "8",
+              "name": "G5超级精英大学",
+              "parent_id": "7",
+              "sort_order": 1
+            },
+            {
+              "id": "9",
+              "name": "剑桥大学",
+              "ranking": "2",
+              "parent_id": "8",
+              "sort_order": 1,
+              "acceptance_rate": "18.8%"
+            },
+            {
+              "id": "10",
+              "name": "牛津大学",
+              "ranking": "4",
+              "parent_id": "8",
+              "sort_order": 2,
+              "acceptance_rate": "17.5%"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "school-detail-table",
+          "type": "Table",
+          "props": {
+            "title": "学校详细信息",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "学校名称",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "country",
+                "title": "国家/地区",
+                "dataIndex": "country"
+              },
+              {
+                "key": "qs_ranking",
+                "title": "QS排名",
+                "sorter": true,
+                "dataIndex": "qs_ranking"
+              },
+              {
+                "key": "acceptance_rate",
+                "title": "录取率",
+                "dataIndex": "acceptance_rate"
+              },
+              {
+                "key": "tuition",
+                "title": "学费（美元/年）",
+                "dataIndex": "tuition"
+              },
+              {
+                "key": "updated_at",
+                "title": "更新时间",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "哈佛大学",
+              "country": "美国",
+              "tuition": "57261",
+              "qs_ranking": "1",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "3.4%"
+            },
+            {
+              "id": "2",
+              "name": "斯坦福大学",
+              "country": "美国",
+              "tuition": "56169",
+              "qs_ranking": "3",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "3.9%"
+            },
+            {
+              "id": "3",
+              "name": "剑桥大学",
+              "country": "英国",
+              "tuition": "38000",
+              "qs_ranking": "2",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "18.8%"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "template-management": {
+      "title": "报告模板管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "template-table",
+          "type": "Table",
+          "props": {
+            "title": "报告模板",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "模板名称",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "type",
+                "title": "模板类型",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "完整报告": "blue",
+                      "摘要报告": "green"
+                    }
+                  }
+                },
+                "dataIndex": "type"
+              },
+              {
+                "key": "countries",
+                "title": "适用国家",
+                "dataIndex": "countries"
+              },
+              {
+                "key": "version",
+                "title": "版本",
+                "dataIndex": "version"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "停用": "red",
+                      "启用": "green"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "updated_at",
+                "title": "更新时间",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "美国本科完整报告模板",
+              "type": "完整报告",
+              "status": "启用",
+              "version": "v2.0",
+              "countries": "美国",
+              "updated_at": "2025-01-10"
+            },
+            {
+              "id": "2",
+              "name": "英国研究生完整报告模板",
+              "type": "完整报告",
+              "status": "启用",
+              "version": "v1.5",
+              "countries": "英国",
+              "updated_at": "2025-01-08"
+            },
+            {
+              "id": "3",
+              "name": "通用摘要报告模板",
+              "type": "摘要报告",
+              "status": "启用",
+              "version": "v1.0",
+              "countries": "全球",
+              "updated_at": "2025-01-05"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  },
+  "appConfig": {
+    "logo": "",
+    "name": "越洋升学规划工作台",
+    "version": "1.0.0",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "icon": "Home",
+          "title": "工作台首页",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "students",
+          "icon": "Users",
+          "title": "学生管理",
+          "children": [
+            {
+              "key": "student-list",
+              "icon": "List",
+              "title": "学生列表",
+              "linkedPage": "student-list"
+            },
+            {
+              "key": "student-detail",
+              "icon": "User",
+              "title": "学生详情",
+              "linkedPage": "student-detail"
+            }
+          ]
+        },
+        {
+          "key": "reports",
+          "icon": "FileText",
+          "title": "报告管理",
+          "children": [
+            {
+              "key": "report-list",
+              "icon": "List",
+              "title": "报告列表",
+              "linkedPage": "report-list"
+            },
+            {
+              "key": "report-generator",
+              "icon": "Plus",
+              "title": "生成报告",
+              "linkedPage": "report-generator"
+            },
+            {
+              "key": "report-editor",
+              "icon": "Edit",
+              "title": "报告编辑",
+              "linkedPage": "report-editor"
+            }
+          ]
+        },
+        {
+          "key": "admin",
+          "icon": "Settings",
+          "title": "后台管理",
+          "children": [
+            {
+              "key": "school-management",
+              "icon": "Building",
+              "title": "学校管理",
+              "linkedPage": "school-management"
+            },
+            {
+              "key": "major-management",
+              "icon": "BookOpen",
+              "title": "专业管理",
+              "linkedPage": "major-management"
+            },
+            {
+              "key": "template-management",
+              "icon": "FileText",
+              "title": "模板管理",
+              "linkedPage": "template-management"
+            }
+          ]
+        }
+      ]
+    },
+    "defaultPage": "dashboard",
+    "description": "AI驱动的升学规划系统"
+  }
+}

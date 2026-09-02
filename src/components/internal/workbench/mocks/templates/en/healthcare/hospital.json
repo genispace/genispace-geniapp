@@ -1,0 +1,607 @@
+{
+  "appConfig": {
+    "name": "Hospital Management System",
+    "description": "Healthcare operations: patients, scheduling, medical records, pharmacy, and providers",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "Workbench",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "patients",
+          "title": "Patients",
+          "icon": "Users",
+          "children": [
+            {
+              "key": "patient-list",
+              "title": "Patient list",
+              "icon": "List",
+              "linkedPage": "patient-list"
+            },
+            {
+              "key": "patient-register",
+              "title": "Registration",
+              "icon": "UserPlus",
+              "linkedPage": "patient-register"
+            }
+          ]
+        },
+        {
+          "key": "appointments",
+          "title": "Scheduling",
+          "icon": "Calendar",
+          "linkedPage": "appointments"
+        },
+        {
+          "key": "medical-records",
+          "title": "Records",
+          "icon": "FileText",
+          "linkedPage": "medical-records"
+        },
+        {
+          "key": "pharmacy",
+          "title": "Pharmacy",
+          "icon": "Pill",
+          "linkedPage": "pharmacy"
+        },
+        {
+          "key": "doctors",
+          "title": "Providers",
+          "icon": "Stethoscope",
+          "linkedPage": "doctors"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Workbench",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-patients",
+                "title": "Visits today",
+                "value": 156,
+                "icon": "Users",
+                "trend": {
+                  "value": 8,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "today-appointments",
+                "title": "Appointments today",
+                "value": 89,
+                "icon": "Calendar",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "pending-appointments",
+                "title": "Pending",
+                "value": 12,
+                "icon": "Clock",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "low-medicine",
+                "title": "Low-stock meds",
+                "value": 8,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 2,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "warning",
+                  "description": "vs yesterday"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "appointment-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Appointment trend",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "count": 85
+            },
+            {
+              "date": "2024-01-02",
+              "count": 92
+            },
+            {
+              "date": "2024-01-03",
+              "count": 88
+            },
+            {
+              "date": "2024-01-04",
+              "count": 95
+            },
+            {
+              "date": "2024-01-05",
+              "count": 89
+            },
+            {
+              "date": "2024-01-06",
+              "count": 102
+            },
+            {
+              "date": "2024-01-07",
+              "count": 98
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-patients",
+          "type": "Table",
+          "props": {
+            "title": "Recent visits",
+            "columns": [
+              {
+                "key": "patientId",
+                "title": "Patient ID",
+                "dataIndex": "patientId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "age",
+                "title": "Age",
+                "dataIndex": "age"
+              },
+              {
+                "key": "department",
+                "title": "Department",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "Provider",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "time",
+                "title": "Visit time",
+                "dataIndex": "time"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "patientId": "P001",
+              "name": "Alex Chen",
+              "age": 35,
+              "department": "Internal medicine",
+              "doctor": "Dr. Lee",
+              "time": "2024-01-07 14:30:00"
+            },
+            {
+              "patientId": "P002",
+              "name": "Jordan Wu",
+              "age": 28,
+              "department": "Surgery",
+              "doctor": "Dr. Wang",
+              "time": "2024-01-07 13:20:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "patient-list": {
+      "title": "Patient list",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "patient-table",
+          "type": "Table",
+          "props": {
+            "title": "Patient list",
+            "columns": [
+              {
+                "key": "patientId",
+                "title": "Patient ID",
+                "dataIndex": "patientId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "gender",
+                "title": "Gender",
+                "dataIndex": "gender"
+              },
+              {
+                "key": "age",
+                "title": "Age",
+                "dataIndex": "age"
+              },
+              {
+                "key": "phone",
+                "title": "Phone",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "lastVisit",
+                "title": "Last visit",
+                "dataIndex": "lastVisit"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "New patient",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "rowActions": [
+              {
+                "key": "view",
+                "label": "View",
+                "icon": "Eye"
+              },
+              {
+                "key": "edit",
+                "label": "Edit",
+                "icon": "Edit"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "patientId": "P001",
+              "name": "Alex Chen",
+              "gender": "Male",
+              "age": 35,
+              "phone": "138****8888",
+              "lastVisit": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "appointments": {
+      "title": "Scheduling",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "appointment-table",
+          "type": "Table",
+          "props": {
+            "title": "Appointments",
+            "columns": [
+              {
+                "key": "appointmentId",
+                "title": "Appt. ID",
+                "dataIndex": "appointmentId"
+              },
+              {
+                "key": "patientName",
+                "title": "Patient",
+                "dataIndex": "patientName"
+              },
+              {
+                "key": "department",
+                "title": "Department",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "Provider",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "appointmentTime",
+                "title": "Time",
+                "dataIndex": "appointmentTime"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "appointmentId": "APT20240107001",
+              "patientName": "Alex Chen",
+              "department": "Internal medicine",
+              "doctor": "Dr. Lee",
+              "appointmentTime": "2024-01-08 09:00",
+              "status": "Confirmed"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "pharmacy": {
+      "title": "Pharmacy",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "medicine-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-medicines",
+                "title": "SKUs",
+                "value": 1250,
+                "icon": "Pill"
+              },
+              {
+                "key": "total-stock",
+                "title": "Total units",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "Low stock",
+                "value": 8,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "expiring-soon",
+                "title": "Expiring soon",
+                "value": 5,
+                "icon": "Clock"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "medicine-table",
+          "type": "Table",
+          "props": {
+            "title": "Inventory",
+            "columns": [
+              {
+                "key": "medicineId",
+                "title": "Drug ID",
+                "dataIndex": "medicineId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "specification",
+                "title": "Strength / form",
+                "dataIndex": "specification"
+              },
+              {
+                "key": "stock",
+                "title": "On hand",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "expiryDate",
+                "title": "Expiry",
+                "dataIndex": "expiryDate"
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "medicineId": "M001",
+              "name": "Amoxicillin capsules",
+              "specification": "0.25 g x 24",
+              "stock": 150,
+              "expiryDate": "2025-06-30"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "patient-register": {
+      "title": "Registration",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "register-form",
+          "type": "Form",
+          "props": {
+            "title": "Patient registration",
+            "fields": [
+              {
+                "key": "name",
+                "label": "Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "gender",
+                "label": "Gender",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "age",
+                "label": "Age",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "phone",
+                "label": "Phone",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "medical-records": {
+      "title": "Records",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "record-table",
+          "type": "Table",
+          "props": {
+            "title": "Medical records",
+            "columns": [
+              {
+                "key": "recordId",
+                "title": "Record ID",
+                "dataIndex": "recordId"
+              },
+              {
+                "key": "patientName",
+                "title": "Patient",
+                "dataIndex": "patientName"
+              },
+              {
+                "key": "department",
+                "title": "Department",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "Provider",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "visitDate",
+                "title": "Visit date",
+                "dataIndex": "visitDate"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "recordId": "MR20240107001",
+              "patientName": "Alex Chen",
+              "department": "Internal medicine",
+              "doctor": "Dr. Lee",
+              "visitDate": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "doctors": {
+      "title": "Providers",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "doctor-table",
+          "type": "Table",
+          "props": {
+            "title": "Clinical staff",
+            "columns": [
+              {
+                "key": "doctorId",
+                "title": "Staff ID",
+                "dataIndex": "doctorId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "department",
+                "title": "Department",
+                "dataIndex": "department"
+              },
+              {
+                "key": "title",
+                "title": "Title",
+                "dataIndex": "title"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "doctorId": "D001",
+              "name": "Dr. Lee",
+              "department": "Internal medicine",
+              "title": "Attending physician",
+              "status": "On duty"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "workbenchApi": {
+    "endpoint_not_found": "API endpoint not found: {{endpointKey}}",
+    "data_fetch_success": "Data fetched successfully",
+    "get_workbench_success": "Workbench details fetched successfully",
+    "get_workbench_failed": "Failed to get workbench details",
+    "get_app_config_success": "App configuration fetched successfully",
+    "get_app_config_failed": "Failed to get app configuration",
+    "get_page_config_success": "Page configuration fetched successfully",
+    "page_config_not_found": "Page configuration {{pageId}} not found",
+    "data_source_undefined": "Data source is undefined",
+    "unsupported_data_source_type": "Unsupported data source type: {{type}}",
+    "get_workbenches_failed": "Failed to get workbench list",
+    "workbench": "Workbench",
+    "create_workbench_failed": "Failed to create workbench",
+    "update_workbench_failed": "Failed to update workbench",
+    "delete_workbench_failed": "Failed to delete workbench",
+    "toggle_workbench_status_failed": "Failed to toggle workbench status",
+    "restore_workbench_version_failed": "Failed to restore workbench version",
+    "get_datasets_failed": "Failed to get dataset list",
+    "get_dataset_failed": "Failed to get dataset details",
+    "update_app_config_failed": "Failed to update app configuration",
+    "update_page_failed": "Failed to update page configuration",
+    "update_app_config_partial_failed": "Failed to update app configuration",
+    "get_versions_failed": "Failed to get workbench version list",
+    "response_data_empty": "Response data is empty",
+    "delete_dataset_data_failed": "Failed to delete dataset data"
+  }
+}
+

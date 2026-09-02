@@ -1,0 +1,494 @@
+{
+  "appConfig": {
+    "name": "房地产管理系统",
+    "description": "房地产行业管理系统，包含房源管理、客户管理、合同管理、财务管理等功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "数据概览",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "properties",
+          "title": "房源管理",
+          "icon": "Building",
+          "children": [
+            {
+              "key": "property-list",
+              "title": "房源列表",
+              "icon": "List",
+              "linkedPage": "property-list"
+            },
+            {
+              "key": "property-add",
+              "title": "添加房源",
+              "icon": "Plus",
+              "linkedPage": "property-add"
+            }
+          ]
+        },
+        {
+          "key": "customers",
+          "title": "客户管理",
+          "icon": "Users",
+          "linkedPage": "customers"
+        },
+        {
+          "key": "contracts",
+          "title": "合同管理",
+          "icon": "FileText",
+          "linkedPage": "contracts"
+        },
+        {
+          "key": "finance",
+          "title": "财务管理",
+          "icon": "DollarSign",
+          "linkedPage": "finance"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "数据概览",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-properties",
+                "title": "房源总数",
+                "value": 256,
+                "icon": "Building",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "available-properties",
+                "title": "可租房源",
+                "value": 89,
+                "icon": "Home",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "monthly-revenue",
+                "title": "本月收入",
+                "value": 1250000,
+                "icon": "DollarSign",
+                "trend": {
+                  "value": 8.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                },
+                "prefix": "¥"
+              },
+              {
+                "key": "pending-contracts",
+                "title": "待签合同",
+                "value": 15,
+                "icon": "FileText",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "revenue-chart",
+          "type": "Chart",
+          "props": {
+            "title": "收入趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "month": "2024-01", "revenue": 1200000 },
+            { "month": "2024-02", "revenue": 1350000 },
+            { "month": "2024-03", "revenue": 1280000 },
+            { "month": "2024-04", "revenue": 1420000 },
+            { "month": "2024-05", "revenue": 1380000 },
+            { "month": "2024-06", "revenue": 1500000 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-contracts",
+          "type": "Table",
+          "props": {
+            "title": "最近合同",
+            "columns": [
+              {
+                "key": "contractId",
+                "title": "合同编号",
+                "dataIndex": "contractId"
+              },
+              {
+                "key": "property",
+                "title": "房源",
+                "dataIndex": "property"
+              },
+              {
+                "key": "customer",
+                "title": "客户",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "contractId": "CT20240107001",
+              "property": "XX小区 3-201",
+              "customer": "张三",
+              "amount": 3500,
+              "status": "已签约"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "property-list": {
+      "title": "房源列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "property-table",
+          "type": "Table",
+          "props": {
+            "title": "房源列表",
+            "columns": [
+              {
+                "key": "propertyId",
+                "title": "房源编号",
+                "dataIndex": "propertyId"
+              },
+              {
+                "key": "address",
+                "title": "地址",
+                "dataIndex": "address"
+              },
+              {
+                "key": "type",
+                "title": "类型",
+                "dataIndex": "type"
+              },
+              {
+                "key": "area",
+                "title": "面积",
+                "dataIndex": "area",
+                "suffix": "㎡"
+              },
+              {
+                "key": "rent",
+                "title": "租金",
+                "dataIndex": "rent",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "添加房源",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "propertyId": "P001",
+              "address": "XX小区 3-201",
+              "type": "两室一厅",
+              "area": 85,
+              "rent": 3500,
+              "status": "已出租"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "property-add": {
+      "title": "添加房源",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "property-form",
+          "type": "Form",
+          "props": {
+            "title": "房源信息",
+            "fields": [
+              {
+                "key": "address",
+                "label": "地址",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "type",
+                "label": "类型",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "area",
+                "label": "面积",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "rent",
+                "label": "租金",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "customers": {
+      "title": "客户管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "customer-table",
+          "type": "Table",
+          "props": {
+            "title": "客户列表",
+            "columns": [
+              {
+                "key": "customerId",
+                "title": "客户ID",
+                "dataIndex": "customerId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "phone",
+                "title": "联系电话",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "propertyCount",
+                "title": "房源数",
+                "dataIndex": "propertyCount"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "customerId": "C001",
+              "name": "张三",
+              "phone": "138****8888",
+              "propertyCount": 2
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "contracts": {
+      "title": "合同管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "contract-table",
+          "type": "Table",
+          "props": {
+            "title": "合同列表",
+            "columns": [
+              {
+                "key": "contractId",
+                "title": "合同编号",
+                "dataIndex": "contractId"
+              },
+              {
+                "key": "property",
+                "title": "房源",
+                "dataIndex": "property"
+              },
+              {
+                "key": "customer",
+                "title": "客户",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "contractId": "CT20240107001",
+              "property": "XX小区 3-201",
+              "customer": "张三",
+              "amount": 3500,
+              "status": "已签约"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "finance": {
+      "title": "财务管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "finance-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "monthly-revenue",
+                "title": "本月收入",
+                "value": 1250000,
+                "icon": "DollarSign",
+                "prefix": "¥"
+              },
+              {
+                "key": "pending-payment",
+                "title": "待收款项",
+                "value": 125000,
+                "icon": "Clock",
+                "prefix": "¥"
+              },
+              {
+                "key": "total-contracts",
+                "title": "合同总数",
+                "value": 256,
+                "icon": "FileText"
+              },
+              {
+                "key": "active-contracts",
+                "title": "有效合同",
+                "value": 189,
+                "icon": "CheckCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "finance-table",
+          "type": "Table",
+          "props": {
+            "title": "财务明细",
+            "columns": [
+              {
+                "key": "date",
+                "title": "日期",
+                "dataIndex": "date"
+              },
+              {
+                "key": "type",
+                "title": "类型",
+                "dataIndex": "type"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "description",
+                "title": "说明",
+                "dataIndex": "description"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "date": "2024-01-07",
+              "type": "租金收入",
+              "amount": 3500,
+              "description": "XX小区 3-201"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

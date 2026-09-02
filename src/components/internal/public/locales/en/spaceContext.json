@@ -1,0 +1,38 @@
+{
+  "roles": {
+    "administrator": "Administrator",
+    "admin": "Admin",
+    "member": "Member",
+    "viewer": "Viewer"
+  },
+  "errors": {
+    "fetch_spaces_failed": "Failed to fetch spaces",
+    "fetch_spaces_error": "Error occurred while fetching space list",
+    "switch_space_failed": "Failed to switch space",
+    "switch_space_error": "Error occurred while switching space, please try again",
+    "fetch_space_details_failed": "Failed to fetch space details",
+    "fetch_space_details_error": "Error occurred while fetching space details",
+    "fetch_agent_details_failed": "Failed to fetch agent details",
+    "invalid_space_id": "Invalid space ID",
+    "space_not_found": "Space not found"
+  },
+  "success": {
+    "space_switch_success": "Space switched successfully",
+    "permissions_updated": "Space permissions updated successfully"
+  },
+  "logs": {
+    "current_space_deleted": "Current space has been deleted, automatically switching to safe space",
+    "saved_space_id_invalid": "Saved space ID is invalid, will select default space",
+    "auto_switch_space": "Automatically switching to space",
+    "permissions_update_success": "Space permissions updated successfully",
+    "permissions_update_failed": "Permission manager update failed",
+    "invalid_space_detected": "Invalid space ID detected, attempting to switch to valid space",
+    "auto_switch_to_space": "Automatically switching to space"
+  },
+  "messages": {
+    "loading_spaces": "Loading spaces...",
+    "switching_space": "Switching space...",
+    "loading_members": "Loading space members..."
+  },
+  "hooks": {}
+}

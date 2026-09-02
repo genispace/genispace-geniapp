@@ -1,0 +1,45 @@
+{
+  "batch_revoke_error": "Revoke failed",
+  "batch_revoke_success_message": "All selected keys have been revoked",
+  "batch_revoke_success": "Revoke successful",
+  "batch_revoke_partial": "Partially revoked successfully",
+  "batch_revoke_partial_message": "{{success}} keys revoked successfully, {{failed}} keys failed to revoke",
+  "revoke_error": "Revoke failed",
+  "revoke_success_message": "API key has been revoked",
+  "revoke_success": "Revoke successful",
+  "update_error": "Update failed",
+  "update_success_message": "API key has been updated",
+  "update_success": "Update successful",
+  "create_error": "Create failed",
+  "create_success_message": "API key created successfully",
+  "create_success": "Create successful",
+  "fetch_error_message": "Unable to load API key list",
+  "fetch_error": "Fetch failed",
+  "permissions": {
+    "read_agents": "Read Agents",
+    "write_agents": "Create/Modify Agents",
+    "read_tasks": "Read Tasks",
+    "write_tasks": "Create/Modify Tasks",
+    "read_knowledge": "Read Knowledge Base",
+    "write_knowledge": "Create/Modify Knowledge Base"
+  },
+  "status": {
+    "none": "None",
+    "revoked": "Revoked",
+    "expired": "Expired",
+    "active": "Active"
+  },
+  "errors": {
+    "api_failed": "API returned failed status",
+    "fetch_failed": "Failed to fetch API key list",
+    "name_required": "Key name cannot be empty",
+    "create_failed": "Failed to create API key",
+    "update_failed": "Failed to update API key",
+    "revoke_failed": "Failed to revoke API key",
+    "batch_revoke_failed": "Failed to batch revoke API keys",
+    "get_stats_failed": "Failed to get key usage statistics",
+    "get_space_keys_failed": "Failed to get space API keys",
+    "get_member_keys_failed": "Failed to get member API keys",
+    "revoke_member_key_failed": "Failed to revoke member API key"
+  }
+}

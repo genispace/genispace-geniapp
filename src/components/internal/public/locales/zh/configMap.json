@@ -1,0 +1,21 @@
+{
+  "errors": {
+    "get_list_failed": "获取ConfigMap列表失败",
+    "get_failed": "获取ConfigMap失败",
+    "create_failed": "创建ConfigMap失败",
+    "update_failed": "更新ConfigMap失败",
+    "get_default_failed": "获取默认ConfigMap失败",
+    "ensure_default_failed": "确保默认ConfigMap失败",
+    "duplicate_failed": "复制ConfigMap失败",
+    "set_default_failed": "设置默认ConfigMap失败",
+    "unset_default_failed": "取消默认ConfigMap失败",
+    "export_yaml_failed": "导出YAML失败",
+    "import_yaml_failed": "导入YAML失败",
+    "get_variables_failed": "获取配置变量失败",
+    "get_variable_failed": "获取配置变量失败",
+    "create_variable_failed": "创建配置变量失败",
+    "update_variable_failed": "更新配置变量失败",
+    "batch_upsert_failed": "批量操作配置变量失败"
+  }
+}
+

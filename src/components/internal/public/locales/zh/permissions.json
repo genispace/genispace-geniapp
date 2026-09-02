@@ -1,0 +1,61 @@
+{
+  "tree": {
+    "title": "权限配置",
+    "searchPlaceholder": "搜索权限...",
+    "noPermissions": "暂无权限数据",
+    "noSearchResults": "未找到匹配的权限",
+    "resourceTypes": {
+      "user": "用户管理",
+      "member": "成员管理",
+      "agent": "智能体",
+      "operator": "操作员",
+      "knowledge": "知识库",
+      "task": "任务管理",
+      "setting": "空间设置",
+      "dataset": "数据集",
+      "model": "算子管理",
+      "billing": "计费管理",
+      "apikey": "API密钥",
+      "notification": "通知管理",
+      "workflow": "工作流",
+      "analytics": "数据分析",
+      "config": "配置管理",
+      "system_setting": "系统设置",
+      "coupon": "优惠券",
+      "subscription": "订阅管理",
+      "audit_log": "审计日志",
+      "contact": "联系管理",
+      "dashboard": "仪表板",
+      "issue_report": "问题报告",
+      "partner": "合作伙伴",
+      "subscription_order": "订阅订单",
+      "survey": "调研管理",
+      "token": "令牌管理",
+      "worker": "工单管理",
+      "space": "空间管理"
+    },
+    "permissionTypes": {
+      "read": "查看",
+      "write": "编辑",
+      "delete": "删除",
+      "admin": "管理",
+      "owner": "拥有者"
+    },
+    "scopes": {
+      "system": "系统权限",
+      "personal": "个人权限",
+      "permissions": "项权限",
+      "modules": "个模块",
+      "space": "空间权限"
+    },
+    "status": {
+      "default": "默认",
+      "locked": "锁定"
+    },
+    "actions": {
+      "selectAll": "全选",
+      "expandAll": "展开全部",
+      "collapseAll": "收起全部"
+    }
+  }
+}

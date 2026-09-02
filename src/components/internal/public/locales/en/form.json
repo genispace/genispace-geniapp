@@ -1,0 +1,27 @@
+{
+  "task_execute_dialog_a11y": "Fill in task parameters, then click execute",
+  "validation_error": "Validation Failed",
+  "upload_required": "Please upload {{field}}",
+  "field_required": "Please fill in {{field}}",
+  "debug": {
+    "page_params": "Page Params",
+    "form_mode": "Form Mode",
+    "form_title": "Form Title",
+    "data_source": "Data Source",
+    "dataset_config": "Dataset Config",
+    "parameter_config": "Parameter Config",
+    "loaded_data": "Loaded Data",
+    "referenced_field": "Referenced field",
+    "exists": "✅ Exists",
+    "not_exists": "❌ Not Exists",
+    "configured": "✅ Configured",
+    "not_configured": "❌ Not Configured",
+    "visible": "👁️ Visible",
+    "hidden": "🙈 Hidden",
+    "dataset_field": "💾 Dataset Field",
+    "custom_field": "📝 Custom Field",
+    "condition": "Condition",
+    "delete_condition": "Delete Condition"
+  }
+}
+

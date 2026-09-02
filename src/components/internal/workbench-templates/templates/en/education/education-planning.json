@@ -1,0 +1,2604 @@
+{
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "layout": {
+        "type": "custom",
+        "preset": "top1-bottom2-left-large",
+        "componentPositions": {
+          "recent-students": {
+            "area": "bottom-left",
+            "order": 0
+          },
+          "statistics-group": {
+            "area": "top",
+            "order": 0
+          },
+          "recent-reports-chart": {
+            "area": "bottom-right",
+            "order": 1
+          },
+          "component_1761229875147_vjjjyn2fs": {
+            "area": "bottom-right",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "statistics-group",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-students",
+                "icon": "Users",
+                "title": "Total Students",
+                "trend": {
+                  "type": "up",
+                  "value": 12,
+                  "status": "success",
+                  "suffix": "%",
+                  "description": "vs last month"
+                },
+                "value": 156
+              },
+              {
+                "key": "satisfaction-rate",
+                "icon": "Star",
+                "title": "New Students This Month",
+                "trend": {
+                  "type": "up",
+                  "value": 3,
+                  "status": "success",
+                  "suffix": "%",
+                  "description": "vs last quarter"
+                },
+                "value": 23
+              },
+              {
+                "key": "completed-reports",
+                "icon": "CheckCircle",
+                "title": "Completed Reports",
+                "trend": {
+                  "type": "up",
+                  "value": 8,
+                  "status": "success",
+                  "suffix": "",
+                  "description": "this week"
+                },
+                "value": 89
+              },
+              {
+                "key": "pending-reports",
+                "icon": "Clock",
+                "title": "Pending Reports",
+                "trend": {
+                  "type": "down",
+                  "value": 5,
+                  "status": "success",
+                  "suffix": "",
+                  "description": "vs yesterday"
+                },
+                "value": 12
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "recent-students",
+          "type": "DataGridCard",
+          "props": {
+            "title": "Recent Consultation Students",
+            "columns": [
+              {
+                "title": "Name",
+                "primary": true,
+                "dataIndex": "name"
+              },
+              {
+                "title": "Grade",
+                "dataIndex": "grade",
+                "secondary": true
+              },
+              {
+                "title": "Target Country/Region",
+                "dataIndex": "target"
+              },
+              {
+                "title": "Status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "On hold": "red",
+                      "In consultation": "blue",
+                      "Completed": "green",
+                      "Planning": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "title": "Consultant",
+                "dataIndex": "consultant"
+              }
+            ],
+            "pagination": {
+              "pageSize": 5,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "gpa": "3.8",
+              "name": "Ethan Miller",
+              "grade": "Grade 11",
+              "status": "In consultation",
+              "target": "United States",
+              "createdAt": "2025-01-15",
+              "consultant": "Ms. Patterson"
+            },
+            {
+              "id": "2",
+              "gpa": "3.9",
+              "name": "Olivia Bennett",
+              "grade": "Grade 12",
+              "status": "Planning",
+              "target": "United Kingdom",
+              "createdAt": "2025-01-12",
+              "consultant": "Mr. Sullivan"
+            },
+            {
+              "id": "3",
+              "gpa": "3.7",
+              "name": "Marcus Thompson",
+              "grade": "Grade 11",
+              "status": "Completed",
+              "target": "Canada",
+              "createdAt": "2025-01-10",
+              "consultant": "Mr. Foster"
+            },
+            {
+              "id": "4",
+              "gpa": "3.6",
+              "name": "Sophia Reed",
+              "grade": "Grade 10",
+              "status": "In consultation",
+              "target": "Australia",
+              "createdAt": "2025-01-08",
+              "consultant": "Ms. Patterson"
+            },
+            {
+              "id": "5",
+              "gpa": "4.0",
+              "name": "Jackson Brooks",
+              "grade": "Grade 12",
+              "status": "Planning",
+              "target": "United States",
+              "createdAt": "2025-01-05",
+              "consultant": "Mr. Sullivan"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-reports-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Report Generation Trend",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "count",
+            "chartType": "line"
+          },
+          "mockData": [
+            {
+              "date": "01-15",
+              "count": 8
+            },
+            {
+              "date": "01-16",
+              "count": 12
+            },
+            {
+              "date": "01-17",
+              "count": 15
+            },
+            {
+              "date": "01-18",
+              "count": 10
+            },
+            {
+              "date": "01-19",
+              "count": 18
+            },
+            {
+              "date": "01-20",
+              "count": 16
+            },
+            {
+              "date": "01-21",
+              "count": 20
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "component_1761229875147_vjjjyn2fs",
+          "type": "Chart",
+          "props": {
+            "meta": {
+              "date": {
+                "alias": "Date"
+              },
+              "value": {
+                "alias": "Value"
+              }
+            },
+            "title": "New student trend",
+            "height": 300,
+            "xField": "date",
+            "yField": "value",
+            "chartType": "line"
+          },
+          "mockData": [
+            {
+              "name": "Product A",
+              "value": 5,
+              "percentage": 35
+            },
+            {
+              "name": "Product B",
+              "value": 12,
+              "percentage": 25
+            },
+            {
+              "name": "Product C",
+              "value": 10,
+              "percentage": 20
+            },
+            {
+              "name": "Product D",
+              "value": 20,
+              "percentage": 20
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "report-list": {
+      "title": "Report list",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "report-table",
+          "type": "Table",
+          "props": {
+            "title": "College planning report management",
+            "rowKey": "id",
+            "actions": [
+              {
+                "id": "view-report",
+                "type": "navigate",
+                "label": "View",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "reportId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "report-editor"
+                },
+                "variant": "link"
+              },
+              {
+                "id": "edit-report",
+                "type": "navigate",
+                "label": "Edit",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "reportId",
+                      "value": "id",
+                      "source": "column"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "edit",
+                      "source": "static"
+                    }
+                  ],
+                  "targetPage": "report-editor"
+                },
+                "variant": "default"
+              },
+              {
+                "id": "export-pdf",
+                "type": "custom",
+                "label": "Export PDF",
+                "variant": "default"
+              }
+            ],
+            "columns": [
+              {
+                "key": "reportNo",
+                "title": "Report number",
+                "dataIndex": "reportNo",
+                "searchable": true
+              },
+              {
+                "key": "studentName",
+                "title": "Student name",
+                "dataIndex": "studentName",
+                "searchable": true
+              },
+              {
+                "key": "reportType",
+                "title": "Report type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Full report": "blue",
+                      "Summary report": "green"
+                    }
+                  }
+                },
+                "dataIndex": "reportType"
+              },
+              {
+                "key": "status",
+                "title": "Generation status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Delivered": "gold",
+                      "Completed": "green",
+                      "Revision needed": "blue",
+                      "Generating": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "createdAt",
+                "title": "Created at",
+                "sorter": true,
+                "dataIndex": "createdAt"
+              },
+              {
+                "key": "completedAt",
+                "title": "Completed at",
+                "dataIndex": "completedAt"
+              },
+              {
+                "key": "consultant",
+                "title": "Consultant",
+                "dataIndex": "consultant"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            },
+            "showSearch": true,
+            "showRefresh": true,
+            "showToolbar": true,
+            "enableExport": true
+          },
+          "mockData": [
+            {
+              "id": "RPT001",
+              "status": "Completed",
+              "reportNo": "RPT-2025-001",
+              "createdAt": "2025-01-15 10:30",
+              "consultant": "Ms. Patterson",
+              "reportType": "Full report",
+              "completedAt": "2025-01-18 16:45",
+              "studentName": "Ethan Miller"
+            },
+            {
+              "id": "RPT002",
+              "status": "Revision needed",
+              "reportNo": "RPT-2025-002",
+              "createdAt": "2025-01-16 09:15",
+              "consultant": "Mr. Sullivan",
+              "reportType": "Full report",
+              "completedAt": "2025-01-19 14:20",
+              "studentName": "Olivia Bennett"
+            },
+            {
+              "id": "RPT003",
+              "status": "Delivered",
+              "reportNo": "RPT-2025-003",
+              "createdAt": "2025-01-17 11:00",
+              "consultant": "Mr. Foster",
+              "reportType": "Summary report",
+              "completedAt": "2025-01-17 11:30",
+              "studentName": "Marcus Thompson"
+            },
+            {
+              "id": "RPT004",
+              "status": "Generating",
+              "reportNo": "RPT-2025-004",
+              "createdAt": "2025-01-20 08:45",
+              "consultant": "Ms. Patterson",
+              "reportType": "Full report",
+              "completedAt": null,
+              "studentName": "Sophia Reed"
+            },
+            {
+              "id": "RPT005",
+              "status": "Completed",
+              "reportNo": "RPT-2025-005",
+              "createdAt": "2025-01-18 14:20",
+              "consultant": "Mr. Sullivan",
+              "reportType": "Full report",
+              "completedAt": "2025-01-21 10:15",
+              "studentName": "Jackson Brooks"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "student-list": {
+      "title": "Student list",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "component_1761234349491_d90ovbxkl": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "student-table",
+          "type": "Table",
+          "props": {
+            "title": "Student information management",
+            "rowKey": "id",
+            "actions": [
+              {
+                "id": "view-detail",
+                "type": "navigate",
+                "label": "View details",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "studentId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "student-detail"
+                },
+                "variant": "link"
+              },
+              {
+                "id": "generate-report",
+                "type": "navigate",
+                "label": "Generate report",
+                "config": {
+                  "parameters": [
+                    {
+                      "key": "studentId",
+                      "value": "id",
+                      "source": "column"
+                    }
+                  ],
+                  "targetPage": "report-generator"
+                },
+                "variant": "default"
+              }
+            ],
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "Student name",
+                "editable": true,
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "gender",
+                "title": "Gender",
+                "editable": true,
+                "dataIndex": "gender"
+              },
+              {
+                "key": "grade",
+                "title": "Grade",
+                "editable": true,
+                "dataIndex": "grade",
+                "filterable": true
+              },
+              {
+                "key": "gpa",
+                "title": "GPA",
+                "sorter": true,
+                "editable": true,
+                "dataIndex": "gpa"
+              },
+              {
+                "key": "target",
+                "title": "Target Country/Region",
+                "editable": true,
+                "dataIndex": "target",
+                "filterable": true
+              },
+              {
+                "key": "major",
+                "title": "Intended major",
+                "editable": true,
+                "dataIndex": "major"
+              },
+              {
+                "key": "languageScore",
+                "title": "TOEFL / IELTS",
+                "editable": true,
+                "dataIndex": "languageScore"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "On hold": "red",
+                      "In consultation": "blue",
+                      "Completed": "green",
+                      "Planning": "orange"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "consultant",
+                "title": "Consultant",
+                "dataIndex": "consultant"
+              },
+              {
+                "key": "createdAt",
+                "title": "Created at",
+                "sorter": true,
+                "dataIndex": "createdAt"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "showSearch": true,
+            "showRefresh": true,
+            "showToolbar": true,
+            "enableExport": true
+          },
+          "mockData": [
+            {
+              "id": "STU001",
+              "gpa": "3.8",
+              "name": "Ethan Miller",
+              "grade": "Grade 11",
+              "major": "Computer Science",
+              "gender": "Male",
+              "status": "In consultation",
+              "target": "United States",
+              "createdAt": "2025-01-15",
+              "consultant": "Ms. Patterson",
+              "languageScore": "TOEFL 105"
+            },
+            {
+              "id": "STU002",
+              "gpa": "3.9",
+              "name": "Olivia Bennett",
+              "grade": "Grade 12",
+              "major": "Business Administration",
+              "gender": "Female",
+              "status": "Planning",
+              "target": "United Kingdom",
+              "createdAt": "2025-01-12",
+              "consultant": "Mr. Sullivan",
+              "languageScore": "IELTS 7.5"
+            },
+            {
+              "id": "STU003",
+              "gpa": "3.7",
+              "name": "Marcus Thompson",
+              "grade": "Grade 11",
+              "major": "Engineering",
+              "gender": "Male",
+              "status": "Completed",
+              "target": "Canada",
+              "createdAt": "2025-01-10",
+              "consultant": "Mr. Foster",
+              "languageScore": "TOEFL 98"
+            },
+            {
+              "id": "STU004",
+              "gpa": "3.6",
+              "name": "Sophia Reed",
+              "grade": "Grade 10",
+              "major": "Psychology",
+              "gender": "Female",
+              "status": "In consultation",
+              "target": "Australia",
+              "createdAt": "2025-01-08",
+              "consultant": "Ms. Patterson",
+              "languageScore": "IELTS 6.5"
+            },
+            {
+              "id": "STU005",
+              "gpa": "4.0",
+              "name": "Jackson Brooks",
+              "grade": "Grade 12",
+              "major": "Economics",
+              "gender": "Male",
+              "status": "Planning",
+              "target": "United States",
+              "createdAt": "2025-01-05",
+              "consultant": "Mr. Sullivan",
+              "languageScore": "TOEFL 110"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "component_1761234349491_d90ovbxkl",
+          "type": "TaskInput",
+          "props": {
+            "title": "Import student information",
+            "taskId": "12345678-1234-4abc-9def-123456789abc",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "Fill in the task parameters and run",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "This is sample PDF content for demonstration.\n\nThe document includes:\n- Project overview\n- Technical specifications\n- Implementation plan\n- Risk assessment",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "Import",
+            "showOptionalInputs": false
+          }
+        }
+      ]
+    },
+    "report-editor": {
+      "title": "Report editor",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "report-sections",
+          "type": "Tabs",
+          "props": {
+            "items": [
+              {
+                "key": "base-info",
+                "label": "Cover",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Student name",
+                        "required": true,
+                        "placeholder": "Enter student name",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 1,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "gender",
+                        "type": "radio",
+                        "label": "Gender",
+                        "options": [
+                          {
+                            "label": "Male",
+                            "value": "male"
+                          },
+                          {
+                            "label": "Female",
+                            "value": "female"
+                          }
+                        ],
+                        "required": true,
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 1,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "country",
+                        "type": "text",
+                        "label": "Nationality",
+                        "required": false,
+                        "placeholder": "e.g. China",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 2,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "school",
+                        "type": "text",
+                        "label": "Current school",
+                        "required": true,
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 3,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "graduation-year",
+                        "type": "text",
+                        "label": "Graduation year",
+                        "required": false,
+                        "placeholder": "e.g. 2026",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 2,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "gpa",
+                        "type": "number",
+                        "label": "GPA",
+                        "required": true,
+                        "placeholder": "4.0 scale",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 3,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "courseSystem",
+                        "type": "text",
+                        "label": "Curriculum system",
+                        "required": false,
+                        "placeholder": "",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 4,
+                            "column": 2,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "intendedMajor",
+                        "type": "text",
+                        "label": "Intended major",
+                        "placeholder": "e.g. Computer Science, Business",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 4,
+                            "column": 1,
+                            "colSpan": 1,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "intendedSchools",
+                        "type": "textarea",
+                        "label": "Target schools",
+                        "placeholder": "List target universities",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 5,
+                            "column": 1,
+                            "colSpan": 2,
+                            "rowSpan": 1
+                          }
+                        }
+                      },
+                      {
+                        "name": "personalGrowthPlan",
+                        "type": "textarea",
+                        "label": "Personal growth and future plan",
+                        "placeholder": "Describe goals and plans",
+                        "layoutConfig": {
+                          "gridPosition": {
+                            "row": 6,
+                            "column": 1,
+                            "colSpan": 2,
+                            "rowSpan": 1
+                          }
+                        }
+                      }
+                    ],
+                    "layout": "vertical",
+                    "actions": [
+                      {
+                        "id": "save",
+                        "type": "submit",
+                        "label": "Save",
+                        "variant": "default"
+                      },
+                      {
+                        "id": "generate-report",
+                        "type": "navigate",
+                        "label": "Generate report",
+                        "config": {
+                          "targetPage": "report-generator"
+                        },
+                        "variant": "default"
+                      }
+                    ]
+                  },
+                  "mockData": {
+                    "gpa": "3.8",
+                    "name": "Ethan Miller",
+                    "grade": "grade-11",
+                    "notes": "The student is especially interested in AI and machine learning.",
+                    "awards": "Provincial first prize, National Olympiad in Informatics",
+                    "budget": "50",
+                    "gender": "male",
+                    "school": "Beijing No. 4 High School",
+                    "birthday": "2007-05-15",
+                    "satScore": "1450",
+                    "interests": "Programming, robotics, Go",
+                    "activities": "Captain of school robotics club; participant in National Olympiad in Informatics",
+                    "consultant": "consultant-1",
+                    "englishName": "Ethan Miller",
+                    "languageTest": "TOEFL",
+                    "intendedMajor": "Computer Science",
+                    "languageScore": "105",
+                    "targetCountry": [
+                      "USA",
+                      "UK"
+                    ],
+                    "familyBackground": "Both parents work in IT.",
+                    "courseSystem": "A-Level",
+                    "graduation-year": "2024",
+                    "country": "China",
+                    "intendedSchools": "1. MIT\n2. Stanford University",
+                    "strengthsAndPotential": "1. Strong awards record\n2. Relevant certificates",
+                    "personalGrowthPlan": "My study-abroad journey aims to grow academically, professionally, and personally. Academically, I will deepen expertise in my chosen field, use campus resources, and build research and critical-thinking skills. Professionally, I plan to gain experience through internships and activities and build a network for an international career. Personally, I want to engage with diverse communities, improve cross-cultural communication, and build resilience. I will reflect regularly and adjust my plan as I learn."
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "summary",
+                "label": "Report summary",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "summary",
+                        "rows": 8,
+                        "type": "textarea",
+                        "label": "Summary (300–500 words)"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "summary": "This is sample summary text for demonstration.\nA strong summary should cover the student profile, target schools, application timeline, required materials, and admissions criteria.\nGood writing is coherent, well connected, clear, specific, and concise."
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "student-profile",
+                "label": "Student profile",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "strengths",
+                        "type": "textarea",
+                        "label": "Core strengths"
+                      },
+                      {
+                        "name": "interests",
+                        "type": "textarea",
+                        "label": "Interest tags"
+                      },
+                      {
+                        "name": "improvement",
+                        "type": "textarea",
+                        "label": "Areas to improve"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "strengths": "Highlights strong logical thinking, creativity, self-directed learning, and teamwork.",
+                    "interests": "Shows diverse interests in technology and innovation, arts, and sports.",
+                    "improvement": "Notes room to grow in time management, verbal communication, and interdisciplinary integration."
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "strategy",
+                "label": "Application strategy",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "strategy",
+                        "rows": 10,
+                        "type": "textarea",
+                        "label": "Strategy details"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "strategy": "This is sample application strategy text for demonstration.\nIt should tie together strengths, interests, areas to improve, target schools, timeline, materials, and admissions requirements.\nKeep the narrative coherent, connected, clear, specific, and concise."
+                  },
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "majors",
+                "label": "Recommended majors",
+                "component": {
+                  "type": "Table",
+                  "props": {
+                    "rowKey": "id",
+                    "columns": [
+                      {
+                        "key": "name",
+                        "title": "Major",
+                        "dataIndex": "name"
+                      },
+                      {
+                        "key": "zykc",
+                        "title": "Key courses",
+                        "dataIndex": "zykc"
+                      },
+                      {
+                        "key": "reason",
+                        "title": "Rationale",
+                        "dataIndex": "reason"
+                      },
+                      {
+                        "key": "career",
+                        "title": "Career outlook",
+                        "dataIndex": "career"
+                      }
+                    ]
+                  },
+                  "mockData": [
+                    {
+                      "id": "1",
+                      "name": "Computer Science",
+                      "zykc": "Data structures, algorithms, computer networks, operating systems, software engineering, databases",
+                      "career": "Software engineer, AI researcher, data scientist",
+                      "reason": "Aligns with strong programming and robotics interests plus solid math performance."
+                    },
+                    {
+                      "id": "2",
+                      "name": "Data Science",
+                      "zykc": "Data processing, visualization, mining, machine learning, and deep learning",
+                      "career": "Data analyst, ML engineer, business intelligence analyst",
+                      "reason": "Strong math foundation and clear interest in analytics and AI."
+                    },
+                    {
+                      "id": "3",
+                      "name": "Artificial Intelligence",
+                      "zykc": "AI, machine learning, deep learning, NLP, computer vision, image processing",
+                      "career": "AI engineer, research scientist, technical consultant",
+                      "reason": "Competition experience in informatics and deep interest in machine learning."
+                    }
+                  ],
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "schools",
+                "label": "Recommended schools",
+                "component": {
+                  "type": "Table",
+                  "props": {
+                    "rowKey": "id",
+                    "columns": [
+                      {
+                        "key": "tier",
+                        "title": "Tier",
+                        "render": {
+                          "type": "Tag",
+                          "props": {
+                            "color": {
+                              "Target": "blue",
+                              "Safety": "green",
+                              "Reach": "orange"
+                            }
+                          }
+                        },
+                        "dataIndex": "tier"
+                      },
+                      {
+                        "key": "name",
+                        "title": "School",
+                        "dataIndex": "name"
+                      },
+                      {
+                        "key": "ranking",
+                        "title": "Ranking",
+                        "dataIndex": "ranking"
+                      },
+                      {
+                        "key": "reason",
+                        "title": "Rationale",
+                        "dataIndex": "reason"
+                      },
+                      {
+                        "key": "acceptance",
+                        "title": "Acceptance rate",
+                        "dataIndex": "acceptance"
+                      }
+                    ]
+                  },
+                  "mockData": [
+                    {
+                      "id": "1",
+                      "name": "MIT",
+                      "reason": "Overall strength: world-leading in science and engineering with intense rigor and research.\nFit: Excellent for students aiming at top-tier STEM, research, or tech entrepreneurship.\nLocation: Cambridge, MA, next to Boston—strong in education, biotech, and tech; cold winters and high cost of living.\nAlumni: Extremely influential across technology and startups.\nWebsite: https://www.mit.edu/",
+                      "tier": "Reach",
+                      "ranking": "QS #1",
+                      "acceptance": "3.2%"
+                    },
+                    {
+                      "id": "2",
+                      "name": "Stanford University",
+                      "reason": "Overall strength: consistently top-ranked with outstanding balance across STEM, humanities, business, and medicine.\nFit: Strong for innovation, entrepreneurship, and interdisciplinary study; CS and EE closely tied to Silicon Valley.\nLocation: Heart of Silicon Valley—unmatched internship and startup access; high cost of living.\nAlumni: Deep networks across tech and venture capital.\nWebsite: https://www.stanford.edu/",
+                      "tier": "Reach",
+                      "ranking": "QS #3",
+                      "acceptance": "3.9%"
+                    },
+                    {
+                      "id": "3",
+                      "name": "Carnegie Mellon University",
+                      "reason": "Overall strength: elite private research university, especially renowned for computer science, engineering, and the arts.\nFit: Ideal for students targeting CS, robotics, AI, or drama/design at a very high level.\nLocation: Pittsburgh, PA—affordable compared with the coasts; smaller tech hub than SF or Boston.\nAlumni: Highly respected in software, AI, and robotics.\nWebsite: https://www.cmu.edu/",
+                      "tier": "Reach",
+                      "ranking": "QS #52",
+                      "acceptance": "11%"
+                    },
+                    {
+                      "id": "4",
+                      "name": "UC Berkeley",
+                      "reason": "Overall strength: top public research university with world-class programs in CS, engineering, and many other fields.\nFit: Strong match for rigorous technical majors and research-oriented students.\nLocation: Berkeley, CA, near San Francisco and Silicon Valley; competitive housing and cost of living.\nAlumni: Large, powerful network across tech, academia, and public service.\nWebsite: https://www.berkeley.edu/",
+                      "tier": "Target",
+                      "ranking": "QS #10",
+                      "acceptance": "14.5%"
+                    },
+                    {
+                      "id": "5",
+                      "name": "University of Illinois Urbana-Champaign",
+                      "reason": "Overall strength: leading public university with flagship engineering and CS programs.\nFit: Excellent value and outcomes for engineering, CS, and related fields.\nLocation: Champaign–Urbana, IL—college-town setting; farther from major coastal cities.\nAlumni: Very strong pipeline into top technology companies.\nWebsite: https://illinois.edu/",
+                      "tier": "Target",
+                      "ranking": "QS #64",
+                      "acceptance": "45%"
+                    },
+                    {
+                      "id": "6",
+                      "name": "University of Washington",
+                      "reason": "Overall strength: highly ranked public university with standout CS, medicine, and life sciences.\nFit: Close ties to Seattle’s tech industry (Amazon, Microsoft, etc.); some majors are capacity-constrained.\nLocation: Seattle, WA—major tech hub; rainy climate.\nAlumni: Strong presence across Pacific Northwest technology firms.\nWebsite: https://www.washington.edu",
+                      "tier": "Target",
+                      "ranking": "QS #63",
+                      "acceptance": "48%"
+                    },
+                    {
+                      "id": "7",
+                      "name": "Purdue University",
+                      "reason": "Overall strength: well-known for engineering, technology, and agriculture.\nFit: Strong practical training in aerospace, mechanical, industrial, and computer engineering.\nLocation: West Lafayette, IN—classic college town; lower cost of living than coastal cities.\nAlumni: Highly regarded in manufacturing and aerospace industries.\nWebsite: https://www.purdue.edu/",
+                      "tier": "Safety",
+                      "ranking": "QS #99",
+                      "acceptance": "53%"
+                    },
+                    {
+                      "id": "8",
+                      "name": "Ohio State University",
+                      "reason": "Overall strength: one of the largest U.S. public universities with broad national strength across disciplines.\nFit: Strong business, engineering, and social sciences with many pathways and majors.\nLocation: Columbus, OH—growing Midwest city with moderate cost of living.\nAlumni: Very large, active alumni base across the United States.\nWebsite: https://www.osu.edu/",
+                      "tier": "Safety",
+                      "ranking": "QS #140",
+                      "acceptance": "57%"
+                    }
+                  ],
+                  "useMockData": true
+                }
+              },
+              {
+                "key": "competitiveness",
+                "label": "Competitiveness",
+                "components": [
+                  {
+                    "id": "basic-radar",
+                    "type": "RadarChart",
+                    "props": {
+                      "title": "Six-dimension competency report",
+                      "height": 400,
+                      "angleField": "subject",
+                      "radiusField": "value",
+                      "showTooltip": true,
+                      "showLegend": true,
+                      "showDataView": true,
+                      "gridLevels": 5,
+                      "meta": {
+                        "value": {
+                          "alias": "Score",
+                          "formatter": "(value) => `${value} pts`"
+                        }
+                      }
+                    },
+                    "mockData": [
+                      {
+                        "subject": "GPA",
+                        "value": 4
+                      },
+                      {
+                        "subject": "Language",
+                        "value": 5
+                      },
+                      {
+                        "subject": "Activities",
+                        "value": 2
+                      },
+                      {
+                        "subject": "Awards",
+                        "value": 2
+                      },
+                      {
+                        "subject": "SAT/ACT",
+                        "value": 0
+                      }
+                    ],
+                    "useMockData": true
+                  },
+                  {
+                    "type": "Form",
+                    "props": {
+                      "fields": [
+                        {
+                          "name": "analysis",
+                          "rows": 10,
+                          "type": "textarea",
+                          "label": "Analysis"
+                        }
+                      ],
+                      "layout": "vertical"
+                    },
+                    "mockData": {
+                      "analysis": "Based on the student profile, the following schools are a strong fit:\n1. MIT\n2. Stanford University\n3. Carnegie Mellon University\n4. UC Berkeley\n5. University of Illinois Urbana-Champaign\n6. University of Washington\n7. Purdue University\n8. Ohio State University"
+                    },
+                    "useMockData": true
+                  }
+                ]
+              },
+              {
+                "key": "planning",
+                "label": "Planning recommendations",
+                "component": {
+                  "type": "Form",
+                  "props": {
+                    "fields": [
+                      {
+                        "name": "academic",
+                        "type": "textarea",
+                        "label": "Academic plan"
+                      },
+                      {
+                        "name": "exam",
+                        "type": "textarea",
+                        "label": "Test plan"
+                      },
+                      {
+                        "name": "background",
+                        "type": "textarea",
+                        "label": "Profile building"
+                      }
+                    ],
+                    "layout": "vertical"
+                  },
+                  "mockData": {
+                    "academic": "Based on the student profile, the following schools are a strong fit:\n1. MIT\n2. Stanford University\n3. Carnegie Mellon University\n4. UC Berkeley\n5. University of Illinois Urbana-Champaign\n6. University of Washington\n7. Purdue University\n8. Ohio State University",
+                    "exam": "Based on the student profile, align standardized tests with target countries and program requirements.",
+                    "background": "Based on the student profile, deepen activities and leadership that support the intended major."
+                  },
+                  "useMockData": true
+                }
+              }
+            ],
+            "defaultActiveKey": "base-info"
+          }
+        }
+      ]
+    },
+    "student-detail": {
+      "title": "Student details",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "component_1761234349491_d90oaaaaa",
+          "type": "TaskInput",
+          "props": {
+            "title": "Import student information",
+            "taskId": "12345678-1234-4abc-9def-1234567aaaaa",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "Fill in the task parameters and run",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "This is sample PDF content for demonstration.\n\nThe document includes:\n- Project overview\n- Technical specifications\n- Implementation plan\n- Risk assessment",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-23T16:21:24.033Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "Import",
+            "showOptionalInputs": false
+          }
+        },
+        {
+          "id": "student-info-form",
+          "type": "Form",
+          "props": {
+            "title": "Basic student information",
+            "fields": [
+              {
+                "name": "name",
+                "type": "text",
+                "label": "Student name",
+                "required": true,
+                "placeholder": "Enter student name",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "englishName",
+                "type": "text",
+                "label": "English name",
+                "placeholder": "Enter English name",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "gender",
+                "type": "radio",
+                "label": "Gender",
+                "options": [
+                  {
+                    "label": "Male",
+                    "value": "male"
+                  },
+                  {
+                    "label": "Female",
+                    "value": "female"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "birthday",
+                "type": "date",
+                "label": "Date of birth",
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "grade",
+                "type": "select",
+                "label": "Current grade",
+                "options": [
+                  {
+                    "label": "Grade 10",
+                    "value": "grade-10"
+                  },
+                  {
+                    "label": "Grade 11",
+                    "value": "grade-11"
+                  },
+                  {
+                    "label": "Grade 12",
+                    "value": "grade-12"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "school",
+                "type": "text",
+                "label": "Current school",
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "country",
+                "type": "text",
+                "label": "Nationality",
+                "required": false,
+                "placeholder": "e.g. China",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 9,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "graduation-year",
+                "type": "text",
+                "label": "Graduation year",
+                "required": false,
+                "placeholder": "e.g. 2026",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 9,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "gpa",
+                "type": "number",
+                "label": "GPA",
+                "required": true,
+                "placeholder": "4.0 scale",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "targetCountry",
+                "type": "select",
+                "label": "Target Country/Region",
+                "options": [
+                  {
+                    "label": "United States",
+                    "value": "USA"
+                  },
+                  {
+                    "label": "United Kingdom",
+                    "value": "UK"
+                  },
+                  {
+                    "label": "Canada",
+                    "value": "Canada"
+                  },
+                  {
+                    "label": "Australia",
+                    "value": "Australia"
+                  }
+                ],
+                "multiple": true,
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "intendedMajor",
+                "type": "text",
+                "label": "Intended major",
+                "placeholder": "e.g. Computer Science, Business",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "languageTest",
+                "type": "select",
+                "label": "Language test type",
+                "options": [
+                  {
+                    "label": "TOEFL",
+                    "value": "TOEFL"
+                  },
+                  {
+                    "label": "IELTS",
+                    "value": "IELTS"
+                  }
+                ],
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "languageScore",
+                "type": "number",
+                "label": "Language test score",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 6,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "satScore",
+                "type": "number",
+                "label": "SAT score",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 6,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "actScore",
+                "type": "number",
+                "label": "ACT score",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 7,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "interests",
+                "type": "textarea",
+                "label": "Hobbies and interests",
+                "placeholder": "Describe hobbies and interests",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 10,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "activities",
+                "type": "textarea",
+                "label": "Extracurricular activities",
+                "placeholder": "Describe extracurricular activities",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 11,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "awards",
+                "type": "textarea",
+                "label": "Awards and honors",
+                "placeholder": "List awards and honors",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 12,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "familyBackground",
+                "type": "textarea",
+                "label": "Family background",
+                "placeholder": "Briefly describe family background",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 13,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "budget",
+                "type": "number",
+                "label": "Study-abroad budget (10k CNY / year)",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 7,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "consultant",
+                "type": "select",
+                "label": "Consultant",
+                "options": [
+                  {
+                    "label": "Ms. Patterson",
+                    "value": "consultant-1"
+                  },
+                  {
+                    "label": "Mr. Sullivan",
+                    "value": "consultant-2"
+                  },
+                  {
+                    "label": "Mr. Foster",
+                    "value": "consultant-3"
+                  }
+                ],
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 8,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "courseSystem",
+                "type": "text",
+                "label": "Curriculum system",
+                "required": false,
+                "placeholder": "",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 8,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "intendedSchools",
+                "type": "textarea",
+                "label": "Target schools",
+                "placeholder": "List target universities",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 14,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "strengthsAndPotential",
+                "type": "textarea",
+                "label": "Strengths and potential",
+                "placeholder": "Describe strengths and potential",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 15,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "personalGrowthPlan",
+                "type": "textarea",
+                "label": "Personal growth and future plan",
+                "placeholder": "Describe goals and plans",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 16,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "notes",
+                "type": "textarea",
+                "label": "Notes",
+                "placeholder": "Additional notes",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 17,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              }
+            ],
+            "layout": "vertical",
+            "actions": [
+              {
+                "id": "save",
+                "type": "submit",
+                "label": "Save",
+                "variant": "default"
+              },
+              {
+                "id": "generate-report",
+                "type": "navigate",
+                "label": "Generate report",
+                "config": {
+                  "targetPage": "report-generator"
+                },
+                "variant": "default"
+              }
+            ],
+            "displayConfig": {
+              "columns": 2,
+              "showCard": true
+            }
+          },
+          "mockData": {
+            "gpa": "3.8",
+            "name": "Ethan Miller",
+            "grade": "grade-11",
+            "notes": "The student is especially interested in AI and machine learning.",
+            "awards": "Provincial first prize, National Olympiad in Informatics",
+            "budget": "50",
+            "gender": "male",
+            "school": "Beijing No. 4 High School",
+            "birthday": "2007-05-15",
+            "satScore": "1450",
+            "interests": "Programming, robotics, Go",
+            "activities": "Captain of school robotics club; participant in National Olympiad in Informatics",
+            "consultant": "consultant-1",
+            "englishName": "Ethan Miller",
+            "languageTest": "TOEFL",
+            "intendedMajor": "Computer Science",
+            "languageScore": "105",
+            "targetCountry": [
+              "USA",
+              "UK"
+            ],
+            "familyBackground": "Both parents work in IT.",
+            "courseSystem": "A-Level",
+            "graduation-year": "2024",
+            "country": "China",
+            "intendedSchools": "1. MIT\n2. Stanford University",
+            "strengthsAndPotential": "1. Strong awards record\n2. Relevant certificates",
+            "personalGrowthPlan": "My study-abroad journey aims to grow academically, professionally, and personally. Academically, I will deepen expertise in my chosen field, use campus resources, and build research and critical-thinking skills. Professionally, I plan to gain experience through internships and activities and build a network for an international career. Personally, I want to engage with diverse communities, improve cross-cultural communication, and build resilience. I will reflect regularly and adjust my plan as I learn."
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "major-management": {
+      "title": "Major management",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "major-table",
+          "type": "Table",
+          "props": {
+            "title": "Major information",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "Major",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "category",
+                "title": "Category",
+                "dataIndex": "category",
+                "filterable": true
+              },
+              {
+                "key": "field",
+                "title": "Field",
+                "dataIndex": "field"
+              },
+              {
+                "key": "employment_outlook",
+                "title": "Employment outlook",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Fair": "orange",
+                      "Excellent": "green",
+                      "Good": "blue"
+                    }
+                  }
+                },
+                "dataIndex": "employment_outlook"
+              },
+              {
+                "key": "avg_salary",
+                "title": "Avg. starting salary (USD)",
+                "sorter": true,
+                "dataIndex": "avg_salary"
+              },
+              {
+                "key": "updated_at",
+                "title": "Updated at",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "Computer Science",
+              "field": "Computing",
+              "category": "Engineering & Technology",
+              "avg_salary": "95000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "Excellent"
+            },
+            {
+              "id": "2",
+              "name": "Data Science",
+              "field": "Computing",
+              "category": "Engineering & Technology",
+              "avg_salary": "100000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "Excellent"
+            },
+            {
+              "id": "3",
+              "name": "Business Administration",
+              "field": "Management",
+              "category": "Business",
+              "avg_salary": "75000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "Good"
+            },
+            {
+              "id": "4",
+              "name": "Psychology",
+              "field": "Psychology",
+              "category": "Social Sciences",
+              "avg_salary": "55000",
+              "updated_at": "2025-01-15",
+              "employment_outlook": "Good"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "major-stats",
+          "type": "Chart",
+          "props": {
+            "title": "Major category distribution",
+            "height": 300,
+            "xField": "category",
+            "yField": "count",
+            "chartType": "pie",
+            "angleField": "count"
+          },
+          "mockData": [
+            {
+              "count": 45,
+              "category": "Engineering & Technology"
+            },
+            {
+              "count": 32,
+              "category": "Business"
+            },
+            {
+              "count": 28,
+              "category": "Social Sciences"
+            },
+            {
+              "count": 25,
+              "category": "Natural Sciences"
+            },
+            {
+              "count": 20,
+              "category": "Humanities & Arts"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "report-generator": {
+      "title": "Generate college planning report",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "component_1761268401474_dcpn6txrb": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "report-config-form",
+          "type": "Form",
+          "props": {
+            "title": "Report generation settings",
+            "fields": [
+              {
+                "name": "studentId",
+                "type": "select",
+                "label": "Select student",
+                "options": [
+                  {
+                    "label": "Ethan Miller (STU001)",
+                    "value": "STU001"
+                  },
+                  {
+                    "label": "Olivia Bennett (STU002)",
+                    "value": "STU002"
+                  },
+                  {
+                    "label": "Marcus Thompson (STU003)",
+                    "value": "STU003"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "reportType",
+                "type": "radio",
+                "label": "Report type",
+                "options": [
+                  {
+                    "label": "Full report (1–3 days)",
+                    "value": "full"
+                  },
+                  {
+                    "label": "Summary report (~30 seconds)",
+                    "value": "summary"
+                  }
+                ],
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 1,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "targetCountries",
+                "type": "select",
+                "label": "Target Country/Region",
+                "options": [
+                  {
+                    "label": "United States",
+                    "value": "USA"
+                  },
+                  {
+                    "label": "United Kingdom",
+                    "value": "UK"
+                  },
+                  {
+                    "label": "Canada",
+                    "value": "Canada"
+                  },
+                  {
+                    "label": "Australia",
+                    "value": "Australia"
+                  }
+                ],
+                "multiple": true,
+                "required": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "majorPreferences",
+                "type": "select",
+                "label": "Major preferences (up to 3)",
+                "options": [
+                  {
+                    "label": "Computer Science",
+                    "value": "CS"
+                  },
+                  {
+                    "label": "Data Science",
+                    "value": "DS"
+                  },
+                  {
+                    "label": "Artificial Intelligence",
+                    "value": "AI"
+                  },
+                  {
+                    "label": "Business Analytics",
+                    "value": "BA"
+                  },
+                  {
+                    "label": "Economics",
+                    "value": "ECON"
+                  }
+                ],
+                "multiple": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 2,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "schoolCount",
+                "type": "number",
+                "label": "Number of recommended schools",
+                "required": true,
+                "placeholder": "Suggest 12–15",
+                "defaultValue": 12,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "schoolTier",
+                "type": "text",
+                "label": "School tier mix",
+                "placeholder": "e.g. 3 reach, 6 target, 3 safety",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 3,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "includeFinancialAid",
+                "type": "switch",
+                "label": "Include scholarship information",
+                "defaultValue": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 1,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "includeCareerPath",
+                "type": "switch",
+                "label": "Include career path analysis",
+                "defaultValue": true,
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 4,
+                    "column": 2,
+                    "colSpan": 1,
+                    "rowSpan": 1
+                  }
+                }
+              },
+              {
+                "name": "specialRequirements",
+                "type": "textarea",
+                "label": "Special requirements",
+                "placeholder": "e.g. school preferences, program focus",
+                "layoutConfig": {
+                  "gridPosition": {
+                    "row": 5,
+                    "column": 1,
+                    "colSpan": 2,
+                    "rowSpan": 1
+                  }
+                }
+              }
+            ],
+            "layout": "vertical",
+            "actions": [
+              {
+                "id": "generate",
+                "type": "submit",
+                "label": "Generate report",
+                "variant": "default"
+              },
+              {
+                "id": "cancel",
+                "type": "custom",
+                "label": "Cancel",
+                "variant": "outline"
+              }
+            ],
+            "displayConfig": {
+              "columns": 2,
+              "showCard": true
+            }
+          },
+          "mockData": {
+            "studentId": "STU001",
+            "targetCountries": "US",
+            "majorPreferences": "AI",
+            "schoolCount": 15,
+            "schoolTier": "3 reach, 6 target, 3 safety",
+            "includeFinancialAid": 1,
+            "includeCareerPath": 1,
+            "specialRequirements": "Green campus, convenient transport, good living conditions, strong courses and teaching, rich curriculum.",
+            "reportType": "full"
+          },
+          "useMockData": true
+        },
+        {
+          "id": "component_1761268401474_dcpn6txrb",
+          "type": "TaskInput",
+          "props": {
+            "title": "Generate report",
+            "taskId": "mock-0ed77c18-8303-4174-bfb2-a8ba9db8aee5",
+            "compact": false,
+            "showTitle": true,
+            "autoSubmit": false,
+            "description": "Fill in the task parameters and run",
+            "useMockData": true,
+            "mockFileData": {
+              "files": [
+                {
+                  "url": "/mock-files/sample-document.pdf",
+                  "name": "sample-document.pdf",
+                  "size": 1024000,
+                  "type": "application/pdf",
+                  "content": "This is sample PDF content for demonstration.\n\nThe document includes:\n- Project overview\n- Technical specifications\n- Implementation plan\n- Risk assessment",
+                  "lastModified": "2025-10-24T01:13:35.028Z"
+                },
+                {
+                  "url": "/mock-files/data.csv",
+                  "name": "data.csv",
+                  "size": 512000,
+                  "type": "text/csv",
+                  "content": "name,age,city,department\nJohn,25,New York,Engineering\nJane,30,London,Marketing\nBob,35,Tokyo,Sales\nAlice,28,Paris,Design",
+                  "lastModified": "2025-10-24T01:13:35.028Z"
+                }
+              ],
+              "enabled": true
+            },
+            "showDescription": true,
+            "submitButtonText": "Generate",
+            "showOptionalInputs": false
+          }
+        }
+      ]
+    },
+    "school-management": {
+      "title": "School management",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "school-tree",
+          "type": "Tree",
+          "props": {
+            "label": "name",
+            "title": "School categories",
+            "height": 300,
+            "addable": true,
+            "sortKey": "sort_order",
+            "editable": true,
+            "keyField": "id",
+            "showIcon": true,
+            "deletable": true,
+            "parentKey": "parent_id",
+            "showCount": true,
+            "searchable": true,
+            "defaultExpandLevel": 2
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "United States",
+              "parent_id": null,
+              "sort_order": 1
+            },
+            {
+              "id": "2",
+              "name": "Ivy League",
+              "parent_id": "1",
+              "sort_order": 1
+            },
+            {
+              "id": "3",
+              "name": "Harvard University",
+              "ranking": "1",
+              "parent_id": "2",
+              "sort_order": 1,
+              "acceptance_rate": "3.4%"
+            },
+            {
+              "id": "4",
+              "name": "Yale University",
+              "ranking": "5",
+              "parent_id": "2",
+              "sort_order": 2,
+              "acceptance_rate": "4.6%"
+            },
+            {
+              "id": "5",
+              "name": "Public universities",
+              "parent_id": "1",
+              "sort_order": 2
+            },
+            {
+              "id": "6",
+              "name": "UC Berkeley",
+              "ranking": "15",
+              "parent_id": "5",
+              "sort_order": 1,
+              "acceptance_rate": "14.5%"
+            },
+            {
+              "id": "7",
+              "name": "United Kingdom",
+              "parent_id": null,
+              "sort_order": 2
+            },
+            {
+              "id": "8",
+              "name": "G5 universities",
+              "parent_id": "7",
+              "sort_order": 1
+            },
+            {
+              "id": "9",
+              "name": "University of Cambridge",
+              "ranking": "2",
+              "parent_id": "8",
+              "sort_order": 1,
+              "acceptance_rate": "18.8%"
+            },
+            {
+              "id": "10",
+              "name": "University of Oxford",
+              "ranking": "4",
+              "parent_id": "8",
+              "sort_order": 2,
+              "acceptance_rate": "17.5%"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "school-detail-table",
+          "type": "Table",
+          "props": {
+            "title": "School details",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "School",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "country",
+                "title": "Country / region",
+                "dataIndex": "country"
+              },
+              {
+                "key": "qs_ranking",
+                "title": "QS ranking",
+                "sorter": true,
+                "dataIndex": "qs_ranking"
+              },
+              {
+                "key": "acceptance_rate",
+                "title": "Acceptance rate",
+                "dataIndex": "acceptance_rate"
+              },
+              {
+                "key": "tuition",
+                "title": "Tuition (USD / year)",
+                "dataIndex": "tuition"
+              },
+              {
+                "key": "updated_at",
+                "title": "Updated at",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "Harvard University",
+              "country": "United States",
+              "tuition": "57261",
+              "qs_ranking": "1",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "3.4%"
+            },
+            {
+              "id": "2",
+              "name": "Stanford University",
+              "country": "United States",
+              "tuition": "56169",
+              "qs_ranking": "3",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "3.9%"
+            },
+            {
+              "id": "3",
+              "name": "University of Cambridge",
+              "country": "United Kingdom",
+              "tuition": "38000",
+              "qs_ranking": "2",
+              "updated_at": "2025-01-15",
+              "acceptance_rate": "18.8%"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "template-management": {
+      "title": "Report template management",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "template-table",
+          "type": "Table",
+          "props": {
+            "title": "Report templates",
+            "rowKey": "id",
+            "addable": true,
+            "columns": [
+              {
+                "key": "name",
+                "title": "Template name",
+                "dataIndex": "name",
+                "searchable": true
+              },
+              {
+                "key": "type",
+                "title": "Template type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Full report": "blue",
+                      "Summary report": "green"
+                    }
+                  }
+                },
+                "dataIndex": "type"
+              },
+              {
+                "key": "countries",
+                "title": "Countries",
+                "dataIndex": "countries"
+              },
+              {
+                "key": "version",
+                "title": "Version",
+                "dataIndex": "version"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Disabled": "red",
+                      "Active": "green"
+                    }
+                  }
+                },
+                "dataIndex": "status"
+              },
+              {
+                "key": "updated_at",
+                "title": "Updated at",
+                "dataIndex": "updated_at"
+              }
+            ],
+            "editable": true,
+            "deletable": true,
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "US undergraduate full report template",
+              "type": "Full report",
+              "status": "Active",
+              "version": "v2.0",
+              "countries": "United States",
+              "updated_at": "2025-01-10"
+            },
+            {
+              "id": "2",
+              "name": "UK graduate full report template",
+              "type": "Full report",
+              "status": "Active",
+              "version": "v1.5",
+              "countries": "United Kingdom",
+              "updated_at": "2025-01-08"
+            },
+            {
+              "id": "3",
+              "name": "General summary report template",
+              "type": "Summary report",
+              "status": "Active",
+              "version": "v1.0",
+              "countries": "Global",
+              "updated_at": "2025-01-05"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  },
+  "appConfig": {
+    "logo": "",
+    "name": "Education Planning Workbench",
+    "version": "1.0.0",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "icon": "Home",
+          "title": "Dashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "students",
+          "icon": "Users",
+          "title": "Students",
+          "children": [
+            {
+              "key": "student-list",
+              "icon": "List",
+              "title": "Student list",
+              "linkedPage": "student-list"
+            },
+            {
+              "key": "student-detail",
+              "icon": "User",
+              "title": "Student details",
+              "linkedPage": "student-detail"
+            }
+          ]
+        },
+        {
+          "key": "reports",
+          "icon": "FileText",
+          "title": "Reports",
+          "children": [
+            {
+              "key": "report-list",
+              "icon": "List",
+              "title": "Report list",
+              "linkedPage": "report-list"
+            },
+            {
+              "key": "report-generator",
+              "icon": "Plus",
+              "title": "Generate report",
+              "linkedPage": "report-generator"
+            },
+            {
+              "key": "report-editor",
+              "icon": "Edit",
+              "title": "Report editor",
+              "linkedPage": "report-editor"
+            }
+          ]
+        },
+        {
+          "key": "admin",
+          "icon": "Settings",
+          "title": "Admin",
+          "children": [
+            {
+              "key": "school-management",
+              "icon": "Building",
+              "title": "School management",
+              "linkedPage": "school-management"
+            },
+            {
+              "key": "major-management",
+              "icon": "BookOpen",
+              "title": "Major management",
+              "linkedPage": "major-management"
+            },
+            {
+              "key": "template-management",
+              "icon": "FileText",
+              "title": "Template management",
+              "linkedPage": "template-management"
+            }
+          ]
+        }
+      ]
+    },
+    "defaultPage": "dashboard",
+    "description": "AI-assisted college planning workbench"
+  }
+}

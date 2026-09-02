@@ -1,0 +1,64 @@
+/* GeniSpace Workbench – imports shared base, only app-specific overrides below */
+@import '../../../../packages/shared-ui/src/styles/base.css';
+
+/* Workbench-specific layout grid system */
+@import './layoutSystem.css';
+@import './editableCanvas.css';
+
+/* dnd-kit-sortable-tree ships light-only `.dnd-sortable-tree_simple_tree-item`
+   (`border: 1px solid #dedede`, …). Theme `--border` in dark (~15% L) matches dialog
+   `neutral-800`, so strokes vanish — use zinc-600 (≈ #52525b), analogous to `#dedede` on white.
+   Full border + !important wins over bundled CSS. */
+.dark .navigation-tree-sortable .dnd-sortable-tree_simple_tree-item {
+  border: 1px solid rgb(82 82 91) !important;
+  color: hsl(var(--foreground));
+}
+
+.dark .navigation-tree-sortable .dnd-sortable-tree_simple_handle {
+  filter: invert(1);
+  opacity: 0.72;
+}
+
+.dark .navigation-tree-sortable .dnd-sortable-tree_simple_tree-item-collapse_button {
+  filter: invert(1);
+  opacity: 0.72;
+}
+
+/* DragOverlay clones are portaled to `document.body` (see dnd-kit SortableTree createPortal),
+   so they never sit under `.navigation-tree-sortable` — theme these globally in dark mode. */
+.dark .dnd-sortable-tree_simple_clone > .dnd-sortable-tree_simple_tree-item {
+  border: 1px solid rgb(82 82 91) !important;
+  color: hsl(var(--foreground));
+}
+
+.dark .dnd-sortable-tree_simple_clone .dnd-sortable-tree_simple_handle {
+  filter: invert(1);
+  opacity: 0.72;
+}
+
+.dark .dnd-sortable-tree_simple_clone .dnd-sortable-tree_simple_tree-item-collapse_button {
+  filter: invert(1);
+  opacity: 0.72;
+}
+
+/* Kill page rubber-band / sway on touch+drag (both axes — the mobile shell should feel
+   fixed, with only the inner <main> content scrolling, never the page/body itself). */
+html,
+body {
+  overscroll-behavior: none;
+}
+.workbench-mobile-layout {
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+/* Mobile workbench page scroller: keep vertical scroll but hide the scrollbar. */
+.mobile-no-scrollbar {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE / old Edge */
+}
+.mobile-no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;               /* WebKit (Chrome/Safari) */
+}

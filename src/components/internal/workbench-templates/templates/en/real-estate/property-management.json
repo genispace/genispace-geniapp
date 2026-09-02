@@ -1,0 +1,512 @@
+{
+  "appConfig": {
+    "name": "Property Management System",
+    "description": "Real estate management system with listings, clients, contracts, and finance",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "Overview",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "properties",
+          "title": "Listings",
+          "icon": "Building",
+          "children": [
+            {
+              "key": "property-list",
+              "title": "Listing catalog",
+              "icon": "List",
+              "linkedPage": "property-list"
+            },
+            {
+              "key": "property-add",
+              "title": "Add listing",
+              "icon": "Plus",
+              "linkedPage": "property-add"
+            }
+          ]
+        },
+        {
+          "key": "customers",
+          "title": "Clients",
+          "icon": "Users",
+          "linkedPage": "customers"
+        },
+        {
+          "key": "contracts",
+          "title": "Contracts",
+          "icon": "FileText",
+          "linkedPage": "contracts"
+        },
+        {
+          "key": "finance",
+          "title": "Finance",
+          "icon": "DollarSign",
+          "linkedPage": "finance"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Overview",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-properties",
+                "title": "Total listings",
+                "value": 256,
+                "icon": "Building",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              },
+              {
+                "key": "available-properties",
+                "title": "Available",
+                "value": 89,
+                "icon": "Home",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              },
+              {
+                "key": "monthly-revenue",
+                "title": "Revenue (MTD)",
+                "value": 1250000,
+                "icon": "DollarSign",
+                "trend": {
+                  "value": 8.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last month"
+                },
+                "prefix": "¥"
+              },
+              {
+                "key": "pending-contracts",
+                "title": "Pending signature",
+                "value": 15,
+                "icon": "FileText",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "revenue-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Revenue trend",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "month": "2024-01",
+              "revenue": 1200000
+            },
+            {
+              "month": "2024-02",
+              "revenue": 1350000
+            },
+            {
+              "month": "2024-03",
+              "revenue": 1280000
+            },
+            {
+              "month": "2024-04",
+              "revenue": 1420000
+            },
+            {
+              "month": "2024-05",
+              "revenue": 1380000
+            },
+            {
+              "month": "2024-06",
+              "revenue": 1500000
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-contracts",
+          "type": "Table",
+          "props": {
+            "title": "Recent contracts",
+            "columns": [
+              {
+                "key": "contractId",
+                "title": "Contract ID",
+                "dataIndex": "contractId"
+              },
+              {
+                "key": "property",
+                "title": "Property",
+                "dataIndex": "property"
+              },
+              {
+                "key": "customer",
+                "title": "Client",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "Amount",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "contractId": "CT20240107001",
+              "property": "Riverside Gardens 3-201",
+              "customer": "Alex Chen",
+              "amount": 3500,
+              "status": "Signed"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "property-list": {
+      "title": "Listing catalog",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "property-table",
+          "type": "Table",
+          "props": {
+            "title": "Listing catalog",
+            "columns": [
+              {
+                "key": "propertyId",
+                "title": "Listing ID",
+                "dataIndex": "propertyId"
+              },
+              {
+                "key": "address",
+                "title": "Address",
+                "dataIndex": "address"
+              },
+              {
+                "key": "type",
+                "title": "Type",
+                "dataIndex": "type"
+              },
+              {
+                "key": "area",
+                "title": "Area",
+                "dataIndex": "area",
+                "suffix": "㎡"
+              },
+              {
+                "key": "rent",
+                "title": "Rent",
+                "dataIndex": "rent",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "Add listing",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "propertyId": "P001",
+              "address": "Riverside Gardens 3-201",
+              "type": "2 bed, 1 bath",
+              "area": 85,
+              "rent": 3500,
+              "status": "Leased"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "property-add": {
+      "title": "Add listing",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "property-form",
+          "type": "Form",
+          "props": {
+            "title": "Listing details",
+            "fields": [
+              {
+                "key": "address",
+                "label": "Address",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "type",
+                "label": "Type",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "area",
+                "label": "Area",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "rent",
+                "label": "Rent",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "customers": {
+      "title": "Clients",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "customer-table",
+          "type": "Table",
+          "props": {
+            "title": "Client list",
+            "columns": [
+              {
+                "key": "customerId",
+                "title": "Client ID",
+                "dataIndex": "customerId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "phone",
+                "title": "Phone",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "propertyCount",
+                "title": "Listings",
+                "dataIndex": "propertyCount"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "customerId": "C001",
+              "name": "Alex Chen",
+              "phone": "138****8888",
+              "propertyCount": 2
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "contracts": {
+      "title": "Contracts",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "contract-table",
+          "type": "Table",
+          "props": {
+            "title": "Contract list",
+            "columns": [
+              {
+                "key": "contractId",
+                "title": "Contract ID",
+                "dataIndex": "contractId"
+              },
+              {
+                "key": "property",
+                "title": "Property",
+                "dataIndex": "property"
+              },
+              {
+                "key": "customer",
+                "title": "Client",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "Amount",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "contractId": "CT20240107001",
+              "property": "Riverside Gardens 3-201",
+              "customer": "Alex Chen",
+              "amount": 3500,
+              "status": "Signed"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "finance": {
+      "title": "Finance",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "finance-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "monthly-revenue",
+                "title": "Revenue (MTD)",
+                "value": 1250000,
+                "icon": "DollarSign",
+                "prefix": "¥"
+              },
+              {
+                "key": "pending-payment",
+                "title": "Receivables",
+                "value": 125000,
+                "icon": "Clock",
+                "prefix": "¥"
+              },
+              {
+                "key": "total-contracts",
+                "title": "Total contracts",
+                "value": 256,
+                "icon": "FileText"
+              },
+              {
+                "key": "active-contracts",
+                "title": "Active contracts",
+                "value": 189,
+                "icon": "CheckCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "finance-table",
+          "type": "Table",
+          "props": {
+            "title": "Ledger",
+            "columns": [
+              {
+                "key": "date",
+                "title": "Date",
+                "dataIndex": "date"
+              },
+              {
+                "key": "type",
+                "title": "Type",
+                "dataIndex": "type"
+              },
+              {
+                "key": "amount",
+                "title": "Amount",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "description",
+                "title": "Description",
+                "dataIndex": "description"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "date": "2024-01-07",
+              "type": "Rent income",
+              "amount": 3500,
+              "description": "Riverside Gardens 3-201"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

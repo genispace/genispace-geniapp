@@ -1,0 +1,359 @@
+.grid-24 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.grid-24-fill {
+  height: 100%;
+  flex: 1;
+}
+
+.grid-24-fill .grid-24-inner {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+.grid-24-fill .grid-24-cell > * {
+  height: 100%;
+  min-height: 0;
+}
+
+.grid-24-fill .grid-24-cell--fit-content {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  align-self: stretch;
+}
+
+.grid-24-fill .grid-24-cell--fit-content > * {
+  height: auto;
+  min-height: 0;
+}
+
+/* StatisticGroup in fullscreen: single-row groups use auto row height; scale inner content with viewport */
+.statistic-group--fullscreen {
+  gap: clamp(0.375rem, 0.8vh, 1rem);
+}
+
+.statistic-group--fullscreen .statistic-card {
+  min-height: 0;
+}
+
+.statistic-group--fullscreen .statistic-content {
+  padding: clamp(0.5rem, 1.1vh, 1.5rem) clamp(0.625rem, 1.2vh, 1rem);
+}
+
+.statistic-group--fullscreen .statistic-title {
+  font-size: clamp(0.6875rem, 1.35vh, 0.875rem);
+  line-height: 1.25;
+}
+
+.statistic-group--fullscreen .statistic-value {
+  font-size: clamp(1rem, 3vh, 1.875rem);
+  line-height: 1.1;
+}
+
+.statistic-group--fullscreen .statistic-icon {
+  padding: clamp(0.375rem, 0.75vh, 0.75rem);
+}
+
+.statistic-group--fullscreen .statistic-icon svg {
+  width: clamp(1rem, 2.2vh, 1.5rem);
+  height: clamp(1rem, 2.2vh, 1.5rem);
+}
+
+.grid-24-inner {
+  display: grid;
+  width: 100%;
+  min-height: 0;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+}
+
+.grid-24-cell {
+  min-width: 0;
+  min-height: 0;
+  border-radius: 0.375rem;
+  transition: box-shadow 0.2s;
+}
+
+@media (min-width: 640px) {
+  .grid-24-cell:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+}
+
+@media (max-width: 639px) {
+  .grid-24-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid-24-cell {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+}
+
+.grid-24-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: hsl(var(--muted) / 0.45);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.dark .grid-24-editor {
+  background: hsl(var(--muted) / 0.35);
+}
+
+.grid-24-editor-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: hsl(var(--card));
+  border: 1px dashed hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 300px;
+  overflow: auto;
+}
+
+.dark .grid-24-editor-canvas {
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+.grid-24-editor-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  position: relative;
+  background-image: linear-gradient(to right, hsl(var(--border) / 0.65) 1px, transparent 1px);
+  background-size: calc(100% / 24) 100%;
+}
+
+.dark .grid-24-editor-grid {
+  background-image: linear-gradient(to right, hsl(var(--border) / 0.85) 1px, transparent 1px);
+}
+
+.grid-24-editor-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: 0 1px 2px hsl(var(--foreground) / 0.06);
+  cursor: grab;
+  font-weight: 500;
+  font-size: 0.875rem;
+  min-height: 48px;
+  padding: 0.5rem;
+  text-align: center;
+  word-break: break-word;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.grid-24-editor-component:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-color: hsl(var(--border));
+  box-shadow:
+    0 1px 2px hsl(var(--foreground) / 0.06),
+    0 4px 14px hsl(var(--foreground) / 0.08);
+}
+
+.dark .grid-24-editor-component:hover {
+  box-shadow:
+    0 1px 2px hsl(0 0% 0% / 0.35),
+    0 6px 18px hsl(0 0% 0% / 0.45);
+}
+
+.grid-24-editor-component.dragging {
+  opacity: 0.55;
+  cursor: grabbing;
+}
+
+.grid-24-editor-component.selected {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-color: hsl(var(--primary));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+.grid-24-editor-component.overlap-warning {
+  background: hsl(var(--destructive) / 0.14);
+  color: hsl(var(--destructive));
+  border-color: hsl(var(--destructive) / 0.55);
+}
+
+.dark .grid-24-editor-component.overlap-warning {
+  background: hsl(var(--destructive) / 0.22);
+  color: hsl(var(--destructive));
+  border-color: hsl(var(--destructive) / 0.65);
+}
+
+.grid-24-overlap-warning {
+  padding: 0.5rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #ef4444;
+  border-radius: 0.375rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.dark .grid-24-overlap-warning {
+  background: rgb(127 29 29 / 0.25);
+  color: #fecaca;
+  border-color: rgb(127 29 29);
+}
+
+.grid-24-property-panel {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  max-height: 90vh;
+  overflow: auto;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow:
+    0 4px 20px hsl(var(--foreground) / 0.08),
+    0 0 0 1px hsl(var(--border) / 0.4);
+  padding: 1rem;
+  z-index: 100;
+}
+
+.dark .grid-24-property-panel {
+  box-shadow:
+    0 8px 28px hsl(0 0% 0% / 0.55),
+    0 0 0 1px hsl(var(--border) / 0.5);
+}
+
+.grid-24-property-panel-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.dark .grid-24-property-panel-title {
+  border-color: hsl(var(--border));
+}
+
+.grid-24-property-field {
+  margin-bottom: 0.75rem;
+}
+
+.grid-24-property-field label {
+  display: block;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.25rem;
+}
+
+.grid-24-property-field input {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid hsl(var(--input));
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.875rem;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.dark .grid-24-property-field input {
+  background: hsl(var(--background));
+  border-color: hsl(var(--input));
+  color: hsl(var(--foreground));
+}
+
+.grid-24-property-field input:focus {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.25);
+}
+
+.grid-24-nesting-warning {
+  padding: 0.75rem 1rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.375rem;
+  color: #92400e;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.dark .grid-24-nesting-warning {
+  background: rgb(113 63 18 / 0.25);
+  color: #fcd34d;
+  border-color: rgb(180 83 9);
+}
+
+.grid-24-cell-droppable {
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  min-height: 8px;
+}
+
+.grid-24-cell-droppable.is-over {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+}
+
+/* Sizing capability model: fill-mode cells render at EXACTLY the edited band
+   height (inline px from Grid24Renderer) and stretch the component into it —
+   the component's flex chain provides internal scrolling. */
+.grid-24-cell--fill {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.grid-24-cell--fill > * {
+  flex: 1 1 0%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* StatisticGroup cards must consume the fill band — otherwise content-sized
+   cards leave a transparent strip under the row inside a taller cell. */
+.grid-24-cell--fill .statistic-group {
+  flex: 1 1 0%;
+  height: 100%;
+  min-height: 0;
+  align-content: stretch;
+  align-items: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+.grid-24-cell--fill .statistic-group > .statistic-card {
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+}
+
+/* Narrow-desktop stacked fallback (<640px media query stacks cells): the
+   desktop band height must yield — inline px would clip stacked content. */
+@media (max-width: 639px) {
+  .grid-24-cell--fill {
+    height: auto !important;
+    overflow: visible;
+  }
+}

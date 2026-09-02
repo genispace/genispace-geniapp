@@ -1,0 +1,773 @@
+/* 统一的3x3网格布局系统样式 */
+
+.layout-grid {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  min-height: 400px;
+}
+
+/* 全垂直布局 */
+.layout-all-vertical {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-template-areas: "top";
+}
+
+/* 上1下3布局 */
+.layout-top1-bottom3 {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "top top top"
+    "bottom-left bottom-center bottom-right";
+}
+
+/* 上1下2布局 */
+.layout-top1-bottom2 {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "top top top"
+    "bottom-left bottom-left bottom-right";
+}
+
+/* 上1下2布局 - 左右等分 */
+.layout-top1-bottom2-equal {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "top top"
+    "bottom-left bottom-right";
+}
+
+/* 左1右2布局 */
+.layout-left1-right2 {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "left right-top right-top"
+    "left right-bottom right-bottom";
+}
+
+/* 上1下2-左小右大布局 */
+.layout-top1-bottom2-left-large {
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "top top"
+    "bottom-left bottom-right";
+}
+
+/* 看板布局 - 采用8px网格系统和视觉平衡原则 */
+.layout-dashboard-layout {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas: 
+    "header header header"
+    "top top top"
+    "middle-left middle-center middle-right"
+    "bottom-left bottom-left bottom-right"
+    "bottom-second bottom-second bottom-second";
+  gap: 1rem; /* 16px - 对齐设计规范 MD 间距 */
+  padding: 0; /* 页面级布局不应有内边距 */
+  background: transparent; /* 页面级布局使用透明背景 */
+  align-items: start; /* 内容顶部对齐，避免拉伸 */
+}
+
+/* 左大右小布局 - 顶部和底部横跨全部，左侧3/4右侧1/4 */
+.layout-left3-right1 {
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 
+    "top top"
+    "left right"
+    "bottom bottom";
+}
+
+/* 看板布局区域样式优化 - 统一所有区域为简洁样式 */
+.layout-dashboard-layout .layout-area-header,
+.layout-dashboard-layout .layout-area-top,
+.layout-dashboard-layout .layout-area-middle-left,
+.layout-dashboard-layout .layout-area-middle-center,
+.layout-dashboard-layout .layout-area-middle-right,
+.layout-dashboard-layout .layout-area-bottom,
+.layout-dashboard-layout .layout-area-bottom-left,
+.layout-dashboard-layout .layout-area-bottom-right,
+.layout-dashboard-layout .layout-area-bottom-second {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  min-height: 0; /* 由内容决定高度 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card/Container容器内的看板布局 - 参考全垂直布局样式，去掉灰色背景和内边距 */
+.layout-dashboard-in-card {
+  gap: 1rem !important; /* 与全垂直布局保持一致 */
+  padding: 0 !important; /* 去掉内边距 */
+  background: transparent !important; /* 去掉灰色背景 */
+  /* .layout-grid defaults to min-height:400px for page dashboards — that floor
+     must not apply inside Card/Container or short children leave a huge empty band. */
+  min-height: 0 !important;
+}
+
+/* Nested layout grids inside Card / Container — hug children, no page floor. */
+.layout-grid--in-container {
+  min-height: 0 !important;
+}
+
+/* Card/Container容器内的看板布局区域 - 去掉所有装饰样式，像全垂直布局一样简洁 */
+.layout-dashboard-in-card .layout-area-header,
+.layout-dashboard-in-card .layout-area-top,
+.layout-dashboard-in-card .layout-area-middle-left,
+.layout-dashboard-in-card .layout-area-middle-center,
+.layout-dashboard-in-card .layout-area-middle-right,
+.layout-dashboard-in-card .layout-area-bottom,
+.layout-dashboard-in-card .layout-area-bottom-left,
+.layout-dashboard-in-card .layout-area-bottom-right,
+.layout-dashboard-in-card .layout-area-bottom-second {
+  padding: 0 !important; /* 去掉内边距 */
+  background: transparent !important; /* 去掉背景色 */
+  border: none !important; /* 去掉边框 */
+  border-radius: 0 !important; /* 去掉圆角 */
+  box-shadow: none !important; /* 去掉阴影 */
+}
+
+/* 优化dashboard布局中的图表卡片样式 - 保留边框，移除重复阴影 */
+.layout-dashboard-layout .layout-area-middle-left .chart-renderer,
+.layout-dashboard-layout .layout-area-middle-center .chart-renderer,
+.layout-dashboard-layout .layout-area-middle-right .chart-renderer,
+.layout-dashboard-layout .layout-area-bottom-left .chart-renderer,
+.layout-dashboard-layout .layout-area-bottom-right .chart-renderer,
+.layout-dashboard-layout .layout-area-bottom-second .chart-renderer {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* 优化图表内容区域的内边距 */
+.layout-dashboard-layout .chart-content {
+  padding-top: 0.75rem; /* 12px - 减少顶部间距 */
+}
+
+/* 优化图表头部样式 */
+.layout-dashboard-layout .chart-header {
+  padding-bottom: 0.75rem; /* 12px - 统一底部间距 */
+  margin-bottom: 0.5rem; /* 8px - 与内容区的间距 */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark .layout-dashboard-layout .chart-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * 折线图附加统计标签：纵向间距与「标题到首行标签」一致
+ * - 行距 = --chart-additional-stats-row-gap（与 chart-header 底部内边距同基准 0.75rem）
+ * - dashboard 下去掉 header 与 content 的叠加大间距，仅保留 header 的 padding-bottom 作为标题到首行的距离
+ */
+.chart-renderer.chart-has-additional-stats .chart-additional-stats {
+  column-gap: 1.5rem;
+  row-gap: var(--chart-additional-stats-row-gap, 0.75rem);
+}
+
+.layout-dashboard-layout .chart-renderer.chart-has-additional-stats {
+  --chart-additional-stats-row-gap: 0.75rem;
+}
+
+.layout-dashboard-layout .chart-renderer.chart-has-additional-stats .chart-header {
+  margin-bottom: 0 !important;
+}
+
+.layout-dashboard-layout .chart-renderer.chart-has-additional-stats .chart-content.chart-line-stats-unified {
+  padding-top: 0 !important;
+}
+
+/* ECharts 条形图 / 折线 / 饼图 / 漏斗 / 仪表盘等紧凑模式：进一步压缩头部与内容区上下留白 */
+.chart-renderer.chart-bar-compact .chart-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.chart-renderer.chart-bar-compact .chart-content {
+  padding-top: 0 !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.layout-dashboard-layout .chart-renderer.chart-bar-compact .chart-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.layout-dashboard-layout .chart-renderer.chart-bar-compact .chart-content {
+  padding-top: 0 !important;
+  padding-bottom: 0.35rem !important;
+}
+
+/* 区域样式 */
+.layout-area {
+  min-height: 120px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+
+.dark .layout-area {
+  border-color: #404040;
+  background: #252525;
+}
+
+.layout-area:hover {
+  border-color: #262626; /* 品牌主色 */
+  background: #f5f5f5;
+}
+
+.dark .layout-area:hover {
+  border-color: #525252; /* 品牌主色浅色 */
+  background: #2a2a2a;
+}
+
+.layout-area.drag-over {
+  border-color: #262626; /* 品牌主色 */
+  background: #f0f0f0;
+  box-shadow: 0 0 0 4px rgba(38, 38, 38, 0.1);
+}
+
+/* 具体区域定位 */
+.layout-area-top {
+  grid-area: top;
+}
+
+.layout-area-bottom {
+  grid-area: bottom;
+}
+
+.layout-area-bottom-left {
+  grid-area: bottom-left;
+}
+
+.layout-area-bottom-center {
+  grid-area: bottom-center;
+}
+
+.layout-area-bottom-right {
+  grid-area: bottom-right;
+}
+
+.layout-area-bottom-second {
+  grid-area: bottom-second;
+}
+
+.layout-area-left {
+  grid-area: left;
+}
+
+.layout-area-left-top {
+  grid-area: left-top;
+}
+
+.layout-area-left-center {
+  grid-area: left-center;
+}
+
+.layout-area-left-bottom {
+  grid-area: left-bottom;
+}
+
+.layout-area-right {
+  grid-area: right;
+}
+
+.layout-area-right-top {
+  grid-area: right-top;
+}
+
+.layout-area-right-bottom {
+  grid-area: right-bottom;
+}
+
+.layout-area-header {
+  grid-area: header;
+}
+
+.layout-area-middle-left {
+  grid-area: middle-left;
+}
+
+.layout-area-middle-center {
+  grid-area: middle-center;
+}
+
+.layout-area-middle-right {
+  grid-area: middle-right;
+}
+
+.layout-area-middle {
+  grid-area: middle;
+}
+
+/* 空区域提示 */
+.layout-area-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.layout-area-empty .icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .layout-grid {
+    gap: 0.5rem;
+    min-height: 300px;
+  }
+  
+  .layout-area {
+    min-height: 80px;
+    padding: 0.75rem;
+  }
+  
+  /* 小屏幕下的布局调整 */
+  .layout-top1-bottom3,
+  .layout-top1-bottom2,
+  .layout-top1-bottom2-equal,
+  .layout-top1-bottom2-left-large {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+  
+  .layout-top1-bottom3 {
+    grid-template-areas: 
+      "top"
+      "bottom-left"
+      "bottom-center"
+      "bottom-right";
+  }
+  
+  .layout-top1-bottom2,
+  .layout-top1-bottom2-equal {
+    grid-template-areas: 
+      "top"
+      "bottom-left"
+      "bottom-right";
+  }
+  
+  .layout-top1-bottom2-left-large {
+    grid-template-areas: 
+      "top"
+      "bottom-left"
+      "bottom-right";
+  }
+  
+  .layout-left1-right2 {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "left"
+      "right-top"
+      "right-bottom";
+  }
+}
+
+/* 窄容器（真实移动端或工作室手机预览框）：
+   预览框是宽桌面视口内的 390px 容器，上方的 media query 不会命中，
+   因此按类名复刻其规则；复合选择器 + !important 保证压过各 preset 的列定义 */
+.layout-grid.layout-grid--narrow {
+  grid-template-columns: 1fr !important;
+  gap: 0.5rem;
+  min-height: 300px;
+}
+
+.layout-grid--narrow .layout-area {
+  min-height: 80px;
+  padding: 0.75rem;
+}
+
+.layout-grid--narrow.layout-top1-bottom3,
+.layout-grid--narrow.layout-top1-bottom2,
+.layout-grid--narrow.layout-top1-bottom2-equal,
+.layout-grid--narrow.layout-top1-bottom2-left-large {
+  grid-template-rows: auto auto auto auto;
+}
+
+.layout-grid--narrow.layout-top1-bottom3 {
+  grid-template-areas:
+    "top"
+    "bottom-left"
+    "bottom-center"
+    "bottom-right";
+}
+
+.layout-grid--narrow.layout-top1-bottom2,
+.layout-grid--narrow.layout-top1-bottom2-equal {
+  grid-template-areas:
+    "top"
+    "bottom-left"
+    "bottom-right";
+}
+
+.layout-grid--narrow.layout-top1-bottom2-left-large {
+  grid-template-areas:
+    "top"
+    "bottom-left"
+    "bottom-right";
+}
+
+.layout-grid--narrow.layout-left1-right2 {
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "left"
+    "right-top"
+    "right-bottom";
+}
+
+/* 以下两个 preset 未被上方 768px 断点覆盖，但单列 !important 生效后
+   多列 grid-template-areas 会失效，须一并堆叠 */
+.layout-grid--narrow.layout-left3-right1 {
+  grid-template-rows: auto;
+  grid-template-areas:
+    "top"
+    "left"
+    "right"
+    "bottom";
+}
+
+.layout-grid--narrow.layout-dashboard-layout {
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header"
+    "top"
+    "middle-left"
+    "middle-center"
+    "middle-right"
+    "bottom-left"
+    "bottom-right"
+    "bottom-second";
+}
+
+/* 预览模式样式 */
+.layout-preview {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  background: white;
+}
+
+.layout-preview .layout-area {
+  min-height: 60px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.layout-preview .layout-area-empty {
+  font-size: 0.75rem;
+}
+
+.layout-preview .layout-area-empty .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* 🆕 Form组件布局样式 */
+
+/* 字段容器基础样式 */
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+/* 标签位置样式 */
+.form-field-container.label-left {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-field-container.label-right {
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-field-container.label-bottom {
+  flex-direction: column-reverse;
+}
+
+.form-field-container.label-none {
+  gap: 0;
+}
+
+/* 标签样式增强 - 符合设计指南 v2.0 */
+.form-field-label {
+  font-size: 1rem; /* 14px 基准，Body Large / Title Small */
+  font-weight: 500;
+  color: rgb(64 64 64); /* neutral-700, Ink Medium */
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.dark .form-field-label {
+  color: rgb(163 163 163); /* neutral-400 */
+}
+
+.form-field-label.required::after {
+  content: ' *';
+  color: rgb(239 68 68);
+}
+
+/* 左右标签的特殊处理 */
+.form-field-container.label-left .form-field-label,
+.form-field-container.label-right .form-field-label {
+  min-width: fit-content;
+}
+
+/* 内嵌标签样式 */
+.form-field-input-with-inline-label {
+  position: relative;
+}
+
+.form-field-input-with-inline-label input,
+.form-field-input-with-inline-label textarea {
+  padding-left: 12px;
+}
+
+/* 操作按钮布局样式 */
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.form-actions.position-top {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.form-actions.position-left {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 16px;
+  margin-top: 0;
+}
+
+.form-actions.position-right {
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 16px;
+  margin-top: 0;
+}
+
+.form-actions.position-inline {
+  margin-top: 0;
+  align-items: center;
+}
+
+/* 按钮对齐方式 */
+.form-actions.align-left {
+  justify-content: flex-start;
+}
+
+.form-actions.align-center {
+  justify-content: center;
+}
+
+.form-actions.align-right {
+  justify-content: flex-end;
+}
+
+.form-actions.align-space-between {
+  justify-content: space-between;
+}
+
+/* 悬浮按钮样式 */
+.form-actions.position-floating {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  margin: 0;
+  border: 1px solid rgb(229 229 229);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.dark .form-actions.position-floating {
+  background: rgb(23 23 23);
+  border-color: rgb(64 64 64);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.form-actions.position-floating.trigger-hover {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.form-actions.position-floating.trigger-hover:hover,
+.form-actions.position-floating.trigger-hover.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 悬浮位置样式 */
+.form-actions.floating-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+.form-actions.floating-top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.form-actions.floating-bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.form-actions.floating-bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+/* 网格布局增强 */
+.form-content.layout-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* 网格预览样式 */
+.form-grid-preview {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 2px dashed rgb(203 213 225);
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 200px;
+}
+
+.dark .form-grid-preview {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  border-color: rgb(64 64 64);
+}
+
+.form-grid-cell {
+  background: rgb(248 250 252);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  color: rgb(100 116 139);
+  font-size: 0.875rem; /* 12.25px @ 14px 基准，符合 Body Medium */
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(226 232 240);
+  transition: all 0.2s ease;
+}
+
+.dark .form-grid-cell {
+  background: rgb(30 41 59);
+  border-color: rgb(51 65 85);
+  color: rgb(148 163 184);
+}
+
+.form-grid-cell:hover {
+  background: rgb(241 245 249);
+  border-color: rgb(38 38 38); /* 品牌主色 */
+}
+
+.dark .form-grid-cell:hover {
+  background: rgb(51 65 85);
+  border-color: rgb(82 82 82); /* 品牌主色浅色 */
+}
+
+/* 拖拽相关样式 - 符合设计指南 v2.0 */
+.form-field-dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+.form-grid-drop-zone {
+  border: 2px dashed rgb(38 38 38); /* 品牌主色 */
+  background: rgb(245 245 245);
+  border-radius: 6px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(38 38 38); /* 品牌主色 */
+  font-size: 0.875rem; /* 12.25px @ 14px 基准，符合 Body Medium */
+  font-weight: 500;
+}
+
+.dark .form-grid-drop-zone {
+  background: rgb(38 38 38);
+  color: rgb(163 163 163); /* neutral-400 */
+}
+
+/* 表单容器样式增强 */
+.form-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+.form-content.layout-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.form-content.layout-flex .form-field-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+  .form-actions.position-left,
+  .form-actions.position-right {
+    flex-direction: row;
+    margin: 16px 0 0 0;
+  }
+  
+  .form-actions.position-floating {
+    position: relative;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    background: transparent;
+  }
+  
+  .form-content.layout-flex .form-field-container {
+    min-width: 100%;
+  }
+  
+  .form-field-container.label-left,
+  .form-field-container.label-right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+} 

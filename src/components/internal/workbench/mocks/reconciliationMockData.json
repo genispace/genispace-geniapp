@@ -1,0 +1,1516 @@
+{
+  "appConfig": {
+    "name": "财务智能对账系统",
+    "description": "基于GeniSpace平台的财务智能对账系统，支持银行日记账和银行流水的自动匹配和差异分析",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "对账管理首页",
+          "icon": "Dashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "baseline-tables",
+          "title": "对账基准管理",
+          "icon": "Database",
+          "linkedPage": "baseline-tables"
+        },
+        {
+          "key": "create-task",
+          "title": "创建对账任务",
+          "icon": "PlusCircle",
+          "linkedPage": "create-task"
+        },
+        {
+          "key": "reconciliation-result",
+          "title": "对账结果详情",
+          "icon": "FileCheck",
+          "linkedPage": "reconciliation-result"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "对账管理首页",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "dashboard-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "totalTasks",
+                "title": "总对账任务",
+                "value": 25,
+                "icon": "FileText",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "completedThisMonth",
+                "title": "本月完成",
+                "value": 18,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "个",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "averageMatchRate",
+                "title": "平均匹配率",
+                "value": 96.67,
+                "icon": "TrendingUp",
+                "trend": {
+                  "value": 2.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "pendingDifferences",
+                "title": "待处理差异",
+                "value": 8,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "个",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "recent-tasks-table",
+          "type": "Table",
+          "props": {
+            "title": "最近对账任务",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "pagination": {
+              "pageSize": 10
+            },
+            "columns": [
+              {
+                "title": "任务名称",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true,
+                "primary": true
+              },
+              {
+                "title": "对账基准",
+                "dataIndex": "baselineTableName",
+                "key": "baselineTableName",
+                "searchable": true
+              },
+              {
+                "title": "对账日期",
+                "dataIndex": "reconciliationDate",
+                "key": "reconciliationDate",
+                "render": {
+                  "type": "Date",
+                  "props": {
+                    "format": "YYYY-MM-DD"
+                  }
+                }
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "completed": "green",
+                      "processing": "blue",
+                      "pending": "orange",
+                      "failed": "red"
+                    },
+                    "text": {
+                      "completed": "已完成",
+                      "processing": "处理中",
+                      "pending": "待处理",
+                      "failed": "失败"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "匹配率",
+                "dataIndex": "matchRate",
+                "key": "matchRate",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "status": "matchRate >= 95 ? 'success' : matchRate >= 80 ? 'normal' : 'exception'",
+                    "showInfo": true,
+                    "format": "(percent) => `${percent}%`"
+                  }
+                }
+              },
+              {
+                "title": "操作",
+                "key": "actions",
+                "render": {
+                  "type": "Actions",
+                  "props": {
+                    "actions": [
+                      {
+                        "key": "view",
+                        "label": "查看",
+                        "icon": "Eye"
+                      },
+                      {
+                        "key": "export",
+                        "label": "导出",
+                        "icon": "Download"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "task_001",
+              "name": "2024年1月对账",
+              "baselineTableName": "工行核心户-海丰米业基地",
+              "reconciliationDate": "2024-01-31",
+              "status": "completed",
+              "matchRate": 96.67
+            },
+            {
+              "id": "task_002",
+              "name": "2024年2月对账",
+              "baselineTableName": "建行直联户-江杨农产品",
+              "reconciliationDate": "2024-02-29",
+              "status": "completed",
+              "matchRate": 94.23
+            },
+            {
+              "id": "task_003",
+              "name": "2024年3月对账",
+              "baselineTableName": "工行核心户-海丰米业基地",
+              "reconciliationDate": "2024-03-31",
+              "status": "processing",
+              "matchRate": 0
+            },
+            {
+              "id": "task_004",
+              "name": "2024年4月对账",
+              "baselineTableName": "非直联户-浙江汇诚通用",
+              "reconciliationDate": "2024-04-30",
+              "status": "pending",
+              "matchRate": 0
+            },
+            {
+              "id": "task_005",
+              "name": "2023年12月对账",
+              "baselineTableName": "工行核心户-海丰米业基地",
+              "reconciliationDate": "2023-12-31",
+              "status": "completed",
+              "matchRate": 98.12
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "match-rate-chart",
+          "type": "Chart",
+          "props": {
+            "title": "匹配率趋势（最近30天）",
+            "chartType": "line",
+            "xField": "date",
+            "yField": "matchRate",
+            "height": 300,
+            "meta": {
+              "date": {
+                "alias": "日期"
+              },
+              "matchRate": {
+                "alias": "匹配率",
+                "formatter": "(value) => `${value}%`"
+              }
+            },
+            "smooth": true,
+            "point": {
+              "size": 4
+            }
+          },
+          "mockData": [
+            { "date": "2024-01-01", "matchRate": 95.2 },
+            { "date": "2024-01-05", "matchRate": 96.1 },
+            { "date": "2024-01-10", "matchRate": 94.8 },
+            { "date": "2024-01-15", "matchRate": 96.7 },
+            { "date": "2024-01-20", "matchRate": 97.3 },
+            { "date": "2024-01-25", "matchRate": 96.5 },
+            { "date": "2024-01-30", "matchRate": 96.9 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "baseline-tables": {
+      "title": "对账基准管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "baseline-tables-table",
+          "type": "Table",
+          "props": {
+            "title": "基准数据源列表",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "账户名称",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true,
+                "primary": true
+              },
+              {
+                "title": "类型",
+                "dataIndex": "type",
+                "key": "type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "bank_statement": "blue",
+                      "accounting_record": "green"
+                    },
+                    "text": {
+                      "bank_statement": "银行流水",
+                      "accounting_record": "银行日记账"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "记录数",
+                "dataIndex": "recordCount",
+                "key": "recordCount",
+                "render": {
+                  "type": "Number",
+                  "props": {
+                    "format": "thousand"
+                  }
+                }
+              },
+              {
+                "title": "最后更新",
+                "dataIndex": "lastUpdated",
+                "key": "lastUpdated",
+                "render": {
+                  "type": "Date",
+                  "props": {
+                    "format": "YYYY-MM-DD HH:mm"
+                  }
+                }
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default"
+                    },
+                    "text": {
+                      "active": "启用",
+                      "inactive": "停用"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "操作",
+                "key": "actions",
+                "render": {
+                  "type": "Actions",
+                  "props": {
+                    "actions": [
+                      {
+                        "key": "view",
+                        "label": "查看",
+                        "icon": "Eye"
+                      },
+                      {
+                        "key": "edit",
+                        "label": "编辑",
+                        "icon": "Edit"
+                      },
+                      {
+                        "key": "setDefault",
+                        "label": "设为默认",
+                        "icon": "Star"
+                      },
+                      {
+                        "key": "delete",
+                        "label": "删除",
+                        "icon": "Trash2",
+                        "danger": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "baseline_001",
+              "name": "工行核心户-海丰米业基地",
+              "type": "bank_statement",
+              "recordCount": 150,
+              "lastUpdated": "2024-01-15 10:30:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_002",
+              "name": "建行直联户-江杨农产品",
+              "type": "bank_statement",
+              "recordCount": 89,
+              "lastUpdated": "2024-02-10 14:20:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_003",
+              "name": "非直联户-浙江汇诚通用",
+              "type": "accounting_record",
+              "recordCount": 234,
+              "lastUpdated": "2024-03-05 09:15:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_004",
+              "name": "工行一般户-测试账户",
+              "type": "bank_statement",
+              "recordCount": 67,
+              "lastUpdated": "2024-01-20 16:45:00",
+              "status": "inactive"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "create-task": {
+      "title": "创建对账任务",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "reconciliation-workflow",
+          "type": "WorkflowComponent",
+          "props": {
+            "agentId": "reconciliation-agent-id",
+            "useMockData": true,
+            "steps": [
+              {
+                "id": "select-baseline",
+                "title": "步骤1：选择对账基准",
+                "description": "从数据源列表中选择对账基准（银行日记账或银行流水），或查看基准数据预览",
+                "icon": "Database",
+                "component": "datasource-selector",
+                "config": {
+                  "datasource-selector": {
+                    "title": "选择对账基准",
+                    "description": "请选择用于对账的基准数据源（银行日记账或银行流水）。通常选择银行日记账作为基准，与银行流水进行比对。",
+                    "showPreview": true,
+                    "previewLimit": 10
+                  }
+                }
+              },
+              {
+                "id": "upload-file",
+                "title": "步骤2：上传对账文件",
+                "description": "上传需要与对账基准比对的文件（Excel或PDF格式）。如果基准是银行日记账，则上传银行流水；如果基准是银行流水，则上传银行日记账。",
+                "icon": "Upload",
+                "component": "upload",
+                "config": {
+                  "upload": {
+                    "accept": ".xls,.xlsx,.pdf",
+                    "maxSize": 52428800,
+                    "preview": true,
+                    "buttonText": "选择对账文件",
+                    "placeholder": "支持格式：Excel (.xls, .xlsx)、PDF"
+                  }
+                }
+              },
+              {
+                "id": "field-mapping",
+                "title": "步骤3：字段映射配置",
+                "description": "配置对账文件的字段映射关系",
+                "icon": "Settings",
+                "component": "form",
+                "config": {
+                  "form": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "transactionDateField": {
+                          "type": "string",
+                          "title": "交易日期字段",
+                          "description": "选择对账文件中的交易日期字段"
+                        },
+                        "amountField": {
+                          "type": "string",
+                          "title": "金额字段",
+                          "description": "选择对账文件中的金额字段"
+                        },
+                        "counterpartyField": {
+                          "type": "string",
+                          "title": "对方户名字段",
+                          "description": "选择对账文件中的对方户名字段"
+                        },
+                        "summaryField": {
+                          "type": "string",
+                          "title": "摘要字段",
+                          "description": "选择对账文件中的摘要字段"
+                        }
+                      },
+                      "required": ["transactionDateField", "amountField"]
+                    },
+                    "layout": "vertical"
+                  }
+                }
+              },
+              {
+                "id": "match-config",
+                "title": "步骤4：配置匹配规则",
+                "description": "设置匹配的容差和规则",
+                "icon": "Sliders",
+                "component": "form",
+                "config": {
+                  "form": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "amountTolerance": {
+                          "type": "number",
+                          "title": "金额容差（元）",
+                          "description": "允许的金额差异范围，默认0.01元",
+                          "default": 0.01,
+                          "minimum": 0,
+                          "maximum": 1000
+                        },
+                        "dateTolerance": {
+                          "type": "integer",
+                          "title": "日期容差（天）",
+                          "description": "允许的日期差异范围，默认3天",
+                          "default": 3,
+                          "minimum": 0,
+                          "maximum": 30
+                        },
+                        "minMatchScore": {
+                          "type": "integer",
+                          "title": "最低匹配得分",
+                          "description": "最低匹配得分阈值，默认70分",
+                          "default": 70,
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": ["amountTolerance", "dateTolerance", "minMatchScore"]
+                    },
+                    "layout": "vertical"
+                  }
+                }
+              },
+              {
+                "id": "execute",
+                "title": "步骤5：执行对账",
+                "description": "执行对账匹配，查看实时进度和结果",
+                "icon": "Play",
+                "component": "progress",
+                "config": {
+                  "progress": {
+                    "showProgress": true,
+                    "showLogs": true,
+                    "autoNext": true
+                  }
+                }
+              },
+              {
+                "id": "result",
+                "title": "步骤6：查看结果",
+                "description": "查看对账结果、差异分析和未匹配记录",
+                "icon": "FileCheck",
+                "component": "result",
+                "config": {
+                  "result": {
+                    "showSummary": true,
+                    "showMatches": true,
+                    "showDifferences": true,
+                    "showUnmatched": true
+                  }
+                }
+              }
+            ],
+            "transforms": {
+              "transformStepData": {
+                "type": "function",
+                "code": "// 步骤间数据转换逻辑\nif (stepId === 'select-baseline') {\n  return {\n    ...data,\n    baselineDatasourceId: data.datasourceId,\n    baselineTableName: data.name,\n    baselineTableType: data.type\n  };\n}\nif (stepId === 'upload-file') {\n  return {\n    ...data,\n    fileId: data.id,\n    fileName: data.name,\n    fileType: data.type\n  };\n}\nif (stepId === 'field-mapping') {\n  return {\n    ...data,\n    fieldMapping: {\n      transactionDate: data.transactionDateField,\n      amount: data.amountField,\n      counterparty: data.counterpartyField,\n      summary: data.summaryField\n    }\n  };\n}\nif (stepId === 'match-config') {\n  return {\n    ...data,\n    config: {\n      amountTolerance: data.amountTolerance,\n      dateTolerance: data.dateTolerance,\n      minMatchScore: data.minMatchScore\n    }\n  };\n}\nreturn data;"
+              },
+              "prepareStepOutput": {
+                "type": "function",
+                "code": "// 准备步骤输出数据\nif (stepId === 'execute') {\n  return {\n    ...data,\n    executionId: data.id,\n    status: data.status,\n    progress: data.progress,\n    logs: data.logs\n  };\n}\nif (stepId === 'result') {\n  return {\n    ...data,\n    taskId: data.taskId,\n    summary: data.summary,\n    matches: data.matches,\n    differences: data.differences,\n    unmatched: data.unmatched\n  };\n}\nreturn data;"
+              },
+              "validateStepData": {
+                "type": "function",
+                "code": "// 验证步骤数据\nconst errors = [];\nif (stepId === 'select-baseline') {\n  if (!data.datasourceId) errors.push('请选择对账基准');\n}\nif (stepId === 'upload-file') {\n  if (!data.id) errors.push('请上传对账文件');\n}\nif (stepId === 'field-mapping') {\n  if (!data.transactionDateField) errors.push('请选择交易日期字段');\n  if (!data.amountField) errors.push('请选择金额字段');\n}\nif (stepId === 'match-config') {\n  if (data.amountTolerance < 0) errors.push('金额容差不能为负数');\n  if (data.dateTolerance < 0) errors.push('日期容差不能为负数');\n  if (data.minMatchScore < 0 || data.minMatchScore > 100) errors.push('最低匹配得分必须在0-100之间');\n}\nreturn { valid: errors.length === 0, errors };"
+              }
+            }
+          },
+          "mockData": {
+            "select-baseline": {
+              "datasourceId": "baseline_001",
+              "name": "工行核心户-海丰米业基地",
+              "type": "bank_statement",
+              "preview": [
+                {
+                  "transaction_date": "2024-01-15",
+                  "amount": 10000.00,
+                  "balance": 500000.00,
+                  "counterparty_name": "供应商A",
+                  "summary": "货款",
+                  "reference_number": "REF001"
+                }
+              ]
+            },
+            "upload-file": {
+              "id": "file_001",
+              "name": "2024年1月银行账单.xls",
+              "type": "application/vnd.ms-excel",
+              "size": 102400
+            },
+            "field-mapping": {
+              "transactionDateField": "交易日期",
+              "amountField": "金额",
+              "counterpartyField": "对方户名",
+              "summaryField": "摘要"
+            },
+            "match-config": {
+              "amountTolerance": 0.01,
+              "dateTolerance": 3,
+              "minMatchScore": 70
+            },
+            "execute": {
+              "id": "exec_001",
+              "status": "completed",
+              "progress": 100,
+              "logs": [
+                "开始执行对账...",
+                "加载基准数据源数据：150条记录",
+                "解析对账文件：148条记录",
+                "执行智能匹配...",
+                "匹配完成：145条记录已匹配",
+                "识别差异：12条差异记录",
+                "对账完成"
+              ]
+            },
+            "result": {
+              "taskId": "task_001",
+              "summary": {
+                "totalBaselineRecords": 150,
+                "totalReconciliationRecords": 148,
+                "matchedCount": 145,
+                "unmatchedBaselineCount": 5,
+                "unmatchedReconciliationCount": 3,
+                "differenceCount": 12,
+                "matchRate": 96.67,
+                "oneToManyMatches": 3,
+                "reversalMatches": 2,
+                "feeAllocations": 5,
+                "largeAmountTransactions": 1,
+                "crossMonthMatches": 2
+              },
+              "matches": [
+                {
+                  "id": "match_001",
+                  "baselineRecord": {
+                    "date": "2024-01-15",
+                    "amount": 10000.00,
+                    "counterparty": "供应商A",
+                    "summary": "货款"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-15",
+                    "amount": 10000.00,
+                    "counterparty": "供应商A",
+                    "summary": "货款"
+                  },
+                  "matchScore": 98.5,
+                  "matchStatus": "matched",
+                  "matchType": "exact"
+                },
+                {
+                  "id": "match_one_to_many_001",
+                  "baselineRecord": {
+                    "date": "2024-01-20",
+                    "amount": 50000.00,
+                    "counterparty": "供应商H",
+                    "summary": "货款"
+                  },
+                  "reconciliationRecords": [
+                    {
+                      "date": "2024-01-20",
+                      "amount": 30000.00,
+                      "counterparty": "供应商H",
+                      "summary": "货款-订单001"
+                    },
+                    {
+                      "date": "2024-01-20",
+                      "amount": 20000.00,
+                      "counterparty": "供应商H",
+                      "summary": "货款-订单002"
+                    }
+                  ],
+                  "matchScore": 95.0,
+                  "matchStatus": "matched",
+                  "matchType": "one_to_many"
+                },
+                {
+                  "id": "match_reversal_001",
+                  "baselineRecord": {
+                    "date": "2024-01-25",
+                    "amount": -5000.00,
+                    "counterparty": "供应商J",
+                    "summary": "冲正-货款"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-25",
+                    "amount": -5000.00,
+                    "counterparty": "供应商J",
+                    "summary": "红字冲销"
+                  },
+                  "matchScore": 98.0,
+                  "matchStatus": "matched",
+                  "matchType": "reversal"
+                }
+              ],
+              "differences": [
+                {
+                  "id": "diff_001",
+                  "type": "amount_mismatch",
+                  "baselineRecord": {
+                    "date": "2024-01-16",
+                    "amount": 5000.00
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-16",
+                    "amount": 5010.50
+                  },
+                  "differenceAmount": 10.50,
+                  "severity": "error"
+                },
+                {
+                  "id": "diff_fee_001",
+                  "type": "fee_allocation",
+                  "baselineRecord": {
+                    "date": "2024-01-22",
+                    "amount": 10000.00,
+                    "counterparty": "供应商I",
+                    "summary": "货款"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-22",
+                    "amount": 10010.00,
+                    "counterparty": "供应商I",
+                    "summary": "货款"
+                  },
+                  "differenceAmount": 10.00,
+                  "description": "银行手续费",
+                  "severity": "normal"
+                },
+                {
+                  "id": "diff_large_001",
+                  "type": "large_amount",
+                  "baselineRecord": {
+                    "date": "2024-01-28",
+                    "amount": 150000.00,
+                    "counterparty": "供应商L",
+                    "summary": "大额货款"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-28",
+                    "amount": 150000.00,
+                    "counterparty": "供应商L",
+                    "summary": "大额货款"
+                  },
+                  "differenceAmount": 0,
+                  "description": "金额超过平均值3倍标准差",
+                  "severity": "warning"
+                },
+                {
+                  "id": "diff_cross_month_001",
+                  "type": "cross_month",
+                  "baselineRecord": {
+                    "date": "2024-01-31",
+                    "amount": 8000.00,
+                    "counterparty": "供应商N",
+                    "summary": "服务费"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-02-01",
+                    "amount": 8000.00,
+                    "counterparty": "供应商N",
+                    "summary": "服务费"
+                  },
+                  "differenceAmount": 0,
+                  "differenceDays": 1,
+                  "description": "日期跨月（1月31日 vs 2月1日）",
+                  "severity": "warning"
+                }
+              ],
+              "unmatched": {
+                "baseline": [
+                  {
+                    "date": "2024-01-20",
+                    "amount": 2000.00,
+                    "counterparty": "供应商B",
+                    "summary": "预付款"
+                  }
+                ],
+                "reconciliation": [
+                  {
+                    "date": "2024-01-25",
+                    "amount": 1500.00,
+                    "counterparty": "供应商C",
+                    "summary": "退款"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reconciliation-result": {
+      "title": "对账结果详情",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "result-summary",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "totalRecords",
+                "title": "总记录数",
+                "value": 150,
+                "icon": "FileText"
+              },
+              {
+                "key": "matchedCount",
+                "title": "匹配数",
+                "value": 145,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 96.67,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "匹配率"
+                }
+              },
+              {
+                "key": "unmatchedCount",
+                "title": "未匹配数",
+                "value": 8,
+                "icon": "AlertCircle",
+                "trend": {
+                  "value": 5.33,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "warning",
+                  "description": "未匹配率"
+                }
+              },
+              {
+                "key": "differenceCount",
+                "title": "差异数",
+                "value": 12,
+                "icon": "XCircle",
+                "trend": {
+                  "value": 8.0,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "error",
+                  "description": "差异率"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "match-results-table",
+          "type": "Table",
+          "props": {
+            "title": "匹配结果",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "columns": [
+              {
+                "title": "基准账记录",
+                "key": "baselineRecord",
+                "dataIndex": "baselineRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "对账记录",
+                "key": "reconciliationRecord",
+                "dataIndex": "reconciliationRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "匹配得分",
+                "dataIndex": "matchScore",
+                "key": "matchScore",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "status": "matchScore >= 95 ? 'success' : matchScore >= 80 ? 'normal' : 'exception'",
+                    "showInfo": true,
+                    "format": "(percent) => `${percent}%`"
+                  }
+                }
+              },
+              {
+                "title": "匹配状态",
+                "dataIndex": "matchStatus",
+                "key": "matchStatus",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "matched": "green",
+                      "unmatched": "orange"
+                    },
+                    "text": {
+                      "matched": "已匹配",
+                      "unmatched": "未匹配"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "匹配类型",
+                "dataIndex": "matchType",
+                "key": "matchType",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "exact": "green",
+                      "fuzzy": "blue",
+                      "one_to_many": "purple",
+                      "reversal": "orange"
+                    },
+                    "text": {
+                      "exact": "精确匹配",
+                      "fuzzy": "模糊匹配",
+                      "one_to_many": "一对多匹配",
+                      "reversal": "冲正交易"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "match_001",
+              "baselineRecord": {
+                "date": "2024-01-15",
+                "amount": 10000.00,
+                "counterparty": "供应商A",
+                "summary": "货款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-15",
+                "amount": 10000.00,
+                "counterparty": "供应商A",
+                "summary": "货款"
+              },
+              "matchScore": 98.5,
+              "matchStatus": "matched",
+              "matchType": "exact"
+            },
+            {
+              "id": "match_002",
+              "baselineRecord": {
+                "date": "2024-01-16",
+                "amount": 5000.00,
+                "counterparty": "供应商B",
+                "summary": "材料款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-17",
+                "amount": 5000.00,
+                "counterparty": "供应商B",
+                "summary": "材料款"
+              },
+              "matchScore": 85.2,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            },
+            {
+              "id": "match_003",
+              "baselineRecord": {
+                "date": "2024-01-18",
+                "amount": 8000.00,
+                "counterparty": "供应商C",
+                "summary": "服务费"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-18",
+                "amount": 8000.00,
+                "counterparty": "供应商C有限公司",
+                "summary": "服务费"
+              },
+              "matchScore": 92.3,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            },
+            {
+              "id": "match_004",
+              "baselineRecord": {
+                "date": "2024-01-20",
+                "amount": 50000.00,
+                "counterparty": "供应商H",
+                "summary": "货款"
+              },
+              "reconciliationRecords": [
+                {
+                  "date": "2024-01-20",
+                  "amount": 30000.00,
+                  "counterparty": "供应商H",
+                  "summary": "货款-订单001"
+                },
+                {
+                  "date": "2024-01-20",
+                  "amount": 20000.00,
+                  "counterparty": "供应商H",
+                  "summary": "货款-订单002"
+                }
+              ],
+              "matchScore": 95.0,
+              "matchStatus": "matched",
+              "matchType": "one_to_many"
+            },
+            {
+              "id": "match_005",
+              "baselineRecord": {
+                "date": "2024-01-25",
+                "amount": -5000.00,
+                "counterparty": "供应商J",
+                "summary": "冲正-货款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-25",
+                "amount": -5000.00,
+                "counterparty": "供应商J",
+                "summary": "红字冲销"
+              },
+              "matchScore": 98.0,
+              "matchStatus": "matched",
+              "matchType": "reversal"
+            },
+            {
+              "id": "match_006",
+              "baselineRecord": {
+                "date": "2024-01-31",
+                "amount": 12000.00,
+                "counterparty": "供应商K",
+                "summary": "材料款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-02-01",
+                "amount": 12000.00,
+                "counterparty": "供应商K",
+                "summary": "材料款"
+              },
+              "matchScore": 88.5,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "differences-table",
+          "type": "Table",
+          "props": {
+            "title": "差异分析",
+            "rowKey": "id",
+            "showSearch": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "columns": [
+              {
+                "title": "差异类型",
+                "dataIndex": "type",
+                "key": "type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "amount_mismatch": "red",
+                      "date_mismatch": "orange",
+                      "unmatched": "yellow",
+                      "fee_allocation": "blue",
+                      "large_amount": "red",
+                      "reversal": "orange",
+                      "cross_month": "cyan"
+                    },
+                    "text": {
+                      "amount_mismatch": "金额差异",
+                      "date_mismatch": "日期差异",
+                      "unmatched": "未匹配",
+                      "fee_allocation": "手续费分摊",
+                      "large_amount": "大额异常",
+                      "reversal": "冲正交易",
+                      "cross_month": "跨月差异"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "基准账记录",
+                "key": "baselineRecord",
+                "dataIndex": "baselineRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "对账记录",
+                "key": "reconciliationRecord",
+                "dataIndex": "reconciliationRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "差异金额",
+                "dataIndex": "differenceAmount",
+                "key": "differenceAmount",
+                "render": {
+                  "type": "Currency",
+                  "props": {
+                    "currency": "CNY",
+                    "showSign": true
+                  }
+                }
+              },
+              {
+                "title": "差异天数",
+                "dataIndex": "differenceDays",
+                "key": "differenceDays",
+                "render": {
+                  "type": "Number",
+                  "props": {
+                    "suffix": "天"
+                  }
+                }
+              },
+              {
+                "title": "严重程度",
+                "dataIndex": "severity",
+                "key": "severity",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "error": "red",
+                      "warning": "orange",
+                      "normal": "default"
+                    },
+                    "text": {
+                      "error": "严重",
+                      "warning": "警告",
+                      "normal": "正常"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "diff_001",
+              "type": "amount_mismatch",
+              "baselineRecord": {
+                "date": "2024-01-16",
+                "amount": 5000.00,
+                "counterparty": "供应商B"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-16",
+                "amount": 5010.50,
+                "counterparty": "供应商B"
+              },
+              "differenceAmount": 10.50,
+              "differenceDays": 0,
+              "severity": "error"
+            },
+            {
+              "id": "diff_002",
+              "type": "date_mismatch",
+              "baselineRecord": {
+                "date": "2024-01-20",
+                "amount": 3000.00,
+                "counterparty": "供应商D"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-23",
+                "amount": 3000.00,
+                "counterparty": "供应商D"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 3,
+              "severity": "warning"
+            },
+            {
+              "id": "diff_003",
+              "type": "unmatched",
+              "baselineRecord": {
+                "date": "2024-01-25",
+                "amount": 2000.00,
+                "counterparty": "供应商E"
+              },
+              "reconciliationRecord": null,
+              "differenceAmount": 2000.00,
+              "differenceDays": null,
+              "severity": "warning"
+            },
+            {
+              "id": "diff_004",
+              "type": "fee_allocation",
+              "baselineRecord": {
+                "date": "2024-01-22",
+                "amount": 10000.00,
+                "counterparty": "供应商I",
+                "summary": "货款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-22",
+                "amount": 10010.00,
+                "counterparty": "供应商I",
+                "summary": "货款"
+              },
+              "differenceAmount": 10.00,
+              "differenceDays": 0,
+              "description": "银行手续费",
+              "severity": "normal"
+            },
+            {
+              "id": "diff_005",
+              "type": "large_amount",
+              "baselineRecord": {
+                "date": "2024-01-28",
+                "amount": 150000.00,
+                "counterparty": "供应商L",
+                "summary": "大额货款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-28",
+                "amount": 150000.00,
+                "counterparty": "供应商L",
+                "summary": "大额货款"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 0,
+              "description": "金额超过平均值3倍标准差",
+              "severity": "warning"
+            },
+            {
+              "id": "diff_006",
+              "type": "reversal",
+              "baselineRecord": {
+                "date": "2024-01-26",
+                "amount": -3000.00,
+                "counterparty": "供应商M",
+                "summary": "冲正-材料款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-26",
+                "amount": -3000.00,
+                "counterparty": "供应商M",
+                "summary": "红字冲销-材料款"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 0,
+              "description": "冲正交易",
+              "severity": "normal"
+            },
+            {
+              "id": "diff_007",
+              "type": "cross_month",
+              "baselineRecord": {
+                "date": "2024-01-31",
+                "amount": 8000.00,
+                "counterparty": "供应商N",
+                "summary": "服务费"
+              },
+              "reconciliationRecord": {
+                "date": "2024-02-01",
+                "amount": 8000.00,
+                "counterparty": "供应商N",
+                "summary": "服务费"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 1,
+              "description": "日期跨月（1月31日 vs 2月1日）",
+              "severity": "warning"
+            },
+            {
+              "id": "diff_008",
+              "type": "fee_allocation",
+              "baselineRecord": {
+                "date": "2024-01-24",
+                "amount": 25000.00,
+                "counterparty": "供应商O",
+                "summary": "货款"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-24",
+                "amount": 25015.00,
+                "counterparty": "供应商O",
+                "summary": "货款"
+              },
+              "differenceAmount": 15.00,
+              "differenceDays": 0,
+              "description": "银行转账手续费",
+              "severity": "normal"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "unmatched-records-tabs",
+          "type": "Tabs",
+          "props": {
+            "defaultActiveKey": "baseline",
+            "type": "card"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "baseline",
+                "label": "未匹配的基准账记录"
+              },
+              "component": {
+                "type": "Table",
+                "id": "unmatched-baseline-table",
+                "props": {
+                  "title": "未匹配的基准账记录",
+                  "rowKey": "id",
+                  "columns": [
+                    {
+                      "title": "日期",
+                      "dataIndex": "date",
+                      "key": "date"
+                    },
+                    {
+                      "title": "金额",
+                      "dataIndex": "amount",
+                      "key": "amount",
+                      "render": {
+                        "type": "Currency",
+                        "props": {
+                          "currency": "CNY"
+                        }
+                      }
+                    },
+                    {
+                      "title": "对方户名",
+                      "dataIndex": "counterparty",
+                      "key": "counterparty"
+                    },
+                    {
+                      "title": "摘要",
+                      "dataIndex": "summary",
+                      "key": "summary"
+                    }
+                  ]
+                },
+                "mockData": [
+                  {
+                    "id": "unmatched_baseline_001",
+                    "date": "2024-01-20",
+                    "amount": 2000.00,
+                    "counterparty": "供应商B",
+                    "summary": "预付款"
+                  },
+                  {
+                    "id": "unmatched_baseline_002",
+                    "date": "2024-01-22",
+                    "amount": 1500.00,
+                    "counterparty": "供应商F",
+                    "summary": "材料款"
+                  }
+                ],
+                "useMockData": true
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "reconciliation",
+                "label": "未匹配的对账记录"
+              },
+              "component": {
+                "type": "Table",
+                "id": "unmatched-reconciliation-table",
+                "props": {
+                  "title": "未匹配的对账记录",
+                  "rowKey": "id",
+                  "columns": [
+                    {
+                      "title": "日期",
+                      "dataIndex": "date",
+                      "key": "date"
+                    },
+                    {
+                      "title": "金额",
+                      "dataIndex": "amount",
+                      "key": "amount",
+                      "render": {
+                        "type": "Currency",
+                        "props": {
+                          "currency": "CNY"
+                        }
+                      }
+                    },
+                    {
+                      "title": "对方户名",
+                      "dataIndex": "counterparty",
+                      "key": "counterparty"
+                    },
+                    {
+                      "title": "摘要",
+                      "dataIndex": "summary",
+                      "key": "summary"
+                    }
+                  ]
+                },
+                "mockData": [
+                  {
+                    "id": "unmatched_reconciliation_001",
+                    "date": "2024-01-25",
+                    "amount": 1500.00,
+                    "counterparty": "供应商C",
+                    "summary": "退款"
+                  },
+                  {
+                    "id": "unmatched_reconciliation_002",
+                    "date": "2024-01-28",
+                    "amount": 3000.00,
+                    "counterparty": "供应商G",
+                    "summary": "服务费"
+                  }
+                ],
+                "useMockData": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "match-rate-trend-chart",
+          "type": "Chart",
+          "props": {
+            "title": "匹配率趋势",
+            "chartType": "line",
+            "xField": "date",
+            "yField": "matchRate",
+            "height": 300,
+            "meta": {
+              "date": {
+                "alias": "日期"
+              },
+              "matchRate": {
+                "alias": "匹配率",
+                "formatter": "(value) => `${value}%`"
+              }
+            },
+            "smooth": true
+          },
+          "mockData": [
+            { "date": "2024-01-01", "matchRate": 95.2 },
+            { "date": "2024-01-05", "matchRate": 96.1 },
+            { "date": "2024-01-10", "matchRate": 94.8 },
+            { "date": "2024-01-15", "matchRate": 96.7 },
+            { "date": "2024-01-20", "matchRate": 97.3 },
+            { "date": "2024-01-25", "matchRate": 96.5 },
+            { "date": "2024-01-30", "matchRate": 96.9 }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

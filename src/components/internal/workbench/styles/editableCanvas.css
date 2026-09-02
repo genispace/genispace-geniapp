@@ -1,0 +1,243 @@
+/*
+ * Editable canvas (react-grid-layout) — Figma-style chrome.
+ * Handles are rendered by RGL per item; we restyle them as small rounded bars
+ * on the edges and dots on the corners, visible ONLY on the selected item
+ * (interaction is also gated per-item via isResizable, this is belt+braces).
+ */
+@import 'react-grid-layout/css/styles.css';
+
+.wb-editable-canvas .react-grid-item {
+  transition: none; /* Figma-like immediacy; RGL default eases everything */
+}
+
+.wb-editable-canvas .react-grid-item.react-grid-placeholder {
+  background: hsl(var(--primary) / 0.12);
+  border: 1.5px dashed hsl(var(--primary) / 0.7);
+  border-radius: 0.5rem;
+  opacity: 1;
+  z-index: 2;
+}
+
+/*
+ * Hover/selection rings for TOP-LEVEL canvas items live here, on the RGL item:
+ * the ComponentEditOverlay's Tailwind rings sit inside the item's content clip
+ * wrapper and would be clipped away. (Nested components keep the overlay rings.)
+ *
+ * The grid item is also the visual component frame in edit mode. Every root
+ * renderer receives that definite height, so adjacent selected items are
+ * separated only by the configured grid gap.
+ */
+.wb-editable-canvas .wb-canvas-item:hover {
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.4);
+}
+.wb-editable-canvas .wb-canvas-item.wb-canvas-selected {
+  box-shadow: 0 0 0 2px hsl(var(--primary));
+}
+/* foreground-derived so the lift cue survives dark mode (near-black rgba would
+   vanish on the dark canvas frame). GridItem enters 'dragging' on mousedown,
+   BEFORE the 3px threshold — the transition delay keeps quick clicks from
+   flashing the lift chrome. */
+.wb-editable-canvas .wb-canvas-item.react-draggable-dragging {
+  z-index: 30;
+  box-shadow: 0 0 0 2px hsl(var(--primary)), 0 8px 24px hsl(var(--foreground) / 0.18);
+  opacity: 0.92;
+  cursor: grabbing;
+  /* declared on the target state: delays entering the lift only — leaving it
+     (mouseup) and hover/selection ring changes stay instant */
+  transition: box-shadow 100ms ease 120ms, opacity 100ms ease 120ms;
+}
+
+.wb-editable-canvas .react-grid-item.resizing {
+  z-index: 30;
+}
+
+/* Resize handles: hidden unless the item is selected */
+.wb-editable-canvas .react-grid-item > .react-resizable-handle {
+  opacity: 0;
+  pointer-events: none;
+  background-image: none; /* drop RGL's corner arrow sprite */
+  width: auto;
+  height: auto;
+  transform: none;
+  margin: 0;
+  padding: 0;
+}
+.wb-editable-canvas .react-grid-item.wb-canvas-selected > .react-resizable-handle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Edge bars */
+.wb-editable-canvas .react-grid-item > .react-resizable-handle::after {
+  content: '';
+  position: absolute;
+  border: none;
+  background: hsl(var(--primary));
+  border-radius: 9999px;
+  box-shadow: 0 0 0 1.5px hsl(var(--background));
+}
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-n,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-s {
+  left: 50%;
+  width: 40px;
+  height: 8px;
+  margin-left: -20px;
+  cursor: ns-resize;
+}
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-n { top: -4px; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-s { bottom: -4px; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-n::after,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-s::after {
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+}
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-e,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-w {
+  top: 50%;
+  width: 8px;
+  height: 40px;
+  margin-top: -20px;
+  cursor: ew-resize;
+}
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-e { right: -4px; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-w { left: -4px; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-e::after,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-w::after {
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+}
+
+/* Corner dots */
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-se,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-sw,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-ne,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-nw {
+  width: 12px;
+  height: 12px;
+}
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-se { right: -5px; bottom: -5px; cursor: nwse-resize; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-sw { left: -5px; bottom: -5px; cursor: nesw-resize; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-ne { right: -5px; top: -5px; cursor: nesw-resize; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-nw { left: -5px; top: -5px; cursor: nwse-resize; }
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-se::after,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-sw::after,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-ne::after,
+.wb-editable-canvas .react-grid-item > .react-resizable-handle-nw::after {
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+}
+
+/*
+ * Resizing the cell IS resizing the component: stretch the component's outer
+ * container to fill the cell so the selection ring hugs the real component box
+ * (no phantom blank strip below natural-height content).
+ */
+.wb-editable-canvas .wb-canvas-cell-content > :not([data-component-edit-overlay]) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.wb-editable-canvas .wb-canvas-cell-content > [data-component-edit-overlay],
+.wb-editable-canvas .wb-canvas-cell-content > div > [data-component-edit-overlay] {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  /* Selection chrome is on .wb-canvas-item — kill overlay Tailwind rings so
+     we don't get a second box (reads as "double nesting" when content is
+     shorter than the RGL band). Nested overlays deeper in the tree keep rings. */
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  box-shadow: none !important;
+}
+.wb-editable-canvas .wb-canvas-cell-content > div > [data-component-edit-overlay] {
+  flex: 1;
+}
+/* Flex-1 chain through the overlay → PageComponentRenderer wrapper → root.
+   CRITICAL: do NOT set height:auto here. A column flex child with height:auto
+   does not form a definite containing block for percentage / 1fr descendants,
+   so StatisticGroup cards stayed content-sized and left a blank strip inside
+   the selection ring even at minH. height:100% + flex:1 makes the band height
+   definite all the way down. */
+.wb-editable-canvas .wb-canvas-cell-content > [data-component-edit-overlay] > :not([data-dnd-chip]),
+.wb-editable-canvas .wb-canvas-cell-content > div > [data-component-edit-overlay] > :not([data-dnd-chip]) {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.wb-editable-canvas .wb-canvas-cell-content > [data-component-edit-overlay] > :not([data-dnd-chip]) > :first-child,
+.wb-editable-canvas .wb-canvas-cell-content > div > [data-component-edit-overlay] > :not([data-dnd-chip]) > :first-child {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Fill-mode card shells: consume the cell height so the selection ring has
+   no blank strip under natural-sized content (StatisticGroup). */
+.wb-editable-canvas .wb-canvas-cell-content:not(.wb-measuring) {
+  display: flex;
+  flex-direction: column;
+}
+.wb-editable-canvas .wb-canvas-cell-content:not(.wb-measuring) > [data-component-edit-overlay],
+.wb-editable-canvas .wb-canvas-cell-content:not(.wb-measuring) > div > [data-component-edit-overlay] {
+  flex: 1 1 0%;
+}
+.wb-editable-canvas .wb-canvas-cell-content .statistic-group {
+  flex: 1 1 0% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  align-content: stretch !important;
+  align-items: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+}
+.wb-editable-canvas .wb-canvas-cell-content .statistic-group > .statistic-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  align-self: stretch !important;
+}
+
+/* Measurement probe: temporarily suspend the edit-frame stretch so offsetHeight
+   reports the component's natural height instead of echoing the grid band. */
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring {
+  height: auto !important;
+}
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > :not([data-component-edit-overlay]),
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > [data-component-edit-overlay],
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > div > [data-component-edit-overlay],
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > [data-component-edit-overlay] > :not([data-dnd-chip]),
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > div > [data-component-edit-overlay] > :not([data-dnd-chip]),
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > [data-component-edit-overlay] > :not([data-dnd-chip]) > :first-child,
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring > div > [data-component-edit-overlay] > :not([data-dnd-chip]) > :first-child {
+  height: auto !important;
+  min-height: 0 !important;
+  flex: none !important;
+}
+/* StatisticGroup has explicit fill rules, which must also yield to the probe. */
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring .statistic-group {
+  height: auto !important;
+  grid-auto-rows: auto !important;
+}
+.wb-editable-canvas .wb-canvas-cell-content.wb-measuring .statistic-group > .statistic-card {
+  height: auto !important;
+}
+
+/* Palette drop ghost cell */
+.wb-canvas-drop-ghost {
+  position: absolute;
+  background: hsl(var(--primary) / 0.10);
+  border: 1.5px dashed hsl(var(--primary) / 0.7);
+  border-radius: 0.5rem;
+  pointer-events: none;
+  z-index: 5;
+}

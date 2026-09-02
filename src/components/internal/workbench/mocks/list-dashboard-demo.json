@@ -1,0 +1,239 @@
+{
+  "appConfig": {
+    "name": "List 看板 Demo",
+    "description": "Subtask List / Top SKUs / Top Stores 三张设计图 List 组件演示",
+    "defaultPage": "page-list-dashboard-demo",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "list-dashboard-demo",
+          "title": "List 看板演示",
+          "icon": "List",
+          "linkedPage": "page-list-dashboard-demo"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "page-list-dashboard-demo": {
+      "title": "List 看板增强演示",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "comp-subtask-list",
+          "type": "List",
+          "props": {
+            "title": "Subtask List",
+            "rowKey": "id",
+            "selectionType": "none",
+            "split": true,
+            "showRefresh": false,
+            "itemLayoutConfig": { "template": "progress-task" },
+            "columns": [
+              { "dataIndex": "taskName", "slotType": "title" },
+              {
+                "dataIndex": "taskType",
+                "slotType": "meta",
+                "render": {
+                  "type": "Tag",
+                  "colorMap": { "Chat Task": "purple", "Moments Task": "purple" },
+                  "props": { "variant": "pill", "tagSize": "xs" }
+                }
+              },
+              {
+                "dataIndex": "progress",
+                "slotType": "progress",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "max": 100,
+                    "showPercent": true,
+                    "percentPosition": "right",
+                    "fullWidth": true,
+                    "barColor": "green",
+                    "size": "md"
+                  }
+                }
+              }
+            ]
+          },
+          "useMockData": true,
+          "mockData": [
+            { "id": "1", "taskName": "VIP生日关怀回访", "taskType": "Chat Task", "progress": 86 },
+            { "id": "2", "taskName": "新品上市朋友圈", "taskType": "Moments Task", "progress": 92 },
+            { "id": "3", "taskName": "沉睡会员唤醒", "taskType": "Chat Task", "progress": 54 },
+            { "id": "4", "taskName": "618预热推广", "taskType": "Moments Task", "progress": 76 },
+            { "id": "5", "taskName": "到店预约确认", "taskType": "Chat Task", "progress": 68 },
+            { "id": "6", "taskName": "新客首单跟进", "taskType": "Chat Task", "progress": 81 }
+          ]
+        },
+        {
+          "id": "comp-top-skus",
+          "type": "List",
+          "props": {
+            "title": "Top 10 SKUs by Sales",
+            "rowKey": "skuId",
+            "selectionType": "none",
+            "showRefresh": false,
+            "pagination": { "pageSize": 10 },
+            "defaultSort": [{ "field": "qty", "direction": "desc" }],
+            "itemLayoutConfig": {
+              "template": "ranking"
+            },
+            "columns": [
+              {
+                "dataIndex": "_rank",
+                "slotType": "prefix",
+                "render": {
+                  "type": "Rank",
+                  "props": {
+                    "rankSource": "index",
+                    "rankStyle": "circle",
+                    "topHighlight": 3,
+                    "topColor": "orange"
+                  }
+                }
+              },
+              {
+                "dataIndex": "name",
+                "slotType": "title",
+                "render": { "props": { "fontWeight": "semibold" } }
+              },
+              {
+                "dataIndex": "skuInfo",
+                "slotType": "subtitle",
+                "render": { "props": { "fontSize": "xs" } }
+              },
+              {
+                "dataIndex": "qty",
+                "slotType": "extra",
+                "lineRole": "primary",
+                "render": {
+                  "type": "Number",
+                  "props": { "format": "plain", "align": "right", "fontWeight": "semibold" }
+                }
+              },
+              {
+                "dataIndex": "amount",
+                "slotType": "extra",
+                "lineRole": "secondary",
+                "render": {
+                  "type": "Currency",
+                  "props": { "prefix": "¥", "align": "right", "fontSize": "xs" }
+                }
+              }
+            ]
+          },
+          "useMockData": true,
+          "mockData": [
+            {
+              "skuId": "SH2026010",
+              "name": "经典切尔西靴",
+              "skuInfo": "SH2026010 · 黑色/37",
+              "qty": 420,
+              "amount": 1280
+            },
+            {
+              "skuId": "SH2026011",
+              "name": "5050 长靴",
+              "skuInfo": "SH2026011 · 棕色/38",
+              "qty": 385,
+              "amount": 1580
+            },
+            {
+              "skuId": "SH2026012",
+              "name": "尖头高跟鞋",
+              "skuInfo": "SH2026012 · 裸色/36",
+              "qty": 310,
+              "amount": 980
+            },
+            {
+              "skuId": "SH2026013",
+              "name": "乐福鞋",
+              "skuInfo": "SH2026013 · 黑色/39",
+              "qty": 280,
+              "amount": 1180
+            }
+          ]
+        },
+        {
+          "id": "comp-top-stores",
+          "type": "List",
+          "props": {
+            "title": "Top 5 Stores",
+            "rowKey": "storeId",
+            "selectionType": "none",
+            "showRefresh": false,
+            "pagination": { "pageSize": 5 },
+            "defaultSort": [{ "field": "sales", "direction": "desc" }],
+            "itemLayoutConfig": {
+              "template": "ranking"
+            },
+            "columns": [
+              {
+                "dataIndex": "_rank",
+                "slotType": "prefix",
+                "render": {
+                  "type": "Rank",
+                  "props": {
+                    "rankSource": "index",
+                    "rankStyle": "rounded-square",
+                    "topHighlight": 3,
+                    "topColor": "gradient-orange"
+                  }
+                }
+              },
+              {
+                "dataIndex": "storeName",
+                "slotType": "title",
+                "render": { "props": { "fontWeight": "medium" } }
+              },
+              {
+                "dataIndex": "sales",
+                "slotType": "progress",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "relativeTo": "pageMax",
+                    "relativeField": "sales",
+                    "fullWidth": true,
+                    "barColor": "purple",
+                    "size": "sm"
+                  }
+                }
+              },
+              {
+                "dataIndex": "sales",
+                "slotType": "extra",
+                "lineRole": "primary",
+                "render": {
+                  "type": "Currency",
+                  "props": {
+                    "format": "compact",
+                    "prefix": "¥",
+                    "suffix": "w",
+                    "decimals": 1,
+                    "compactThreshold": 10000,
+                    "compactDivisor": 10000,
+                    "align": "right",
+                    "fontWeight": "medium"
+                  }
+                }
+              }
+            ]
+          },
+          "useMockData": true,
+          "mockData": [
+            { "storeId": "S001", "storeName": "上海南京西路店", "sales": 48000 },
+            { "storeId": "S002", "storeName": "北京 SKP 店", "sales": 42000 },
+            { "storeId": "S003", "storeName": "成都 IFS 店", "sales": 36000 },
+            { "storeId": "S004", "storeName": "广州太古汇店", "sales": 28000 },
+            { "storeId": "S005", "storeName": "深圳万象城店", "sales": 24000 },
+            { "storeId": "S006", "storeName": "杭州大厦店", "sales": 21000 }
+          ]
+        }
+      ]
+    }
+  }
+}

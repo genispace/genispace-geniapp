@@ -1,0 +1,750 @@
+{
+  "appConfig": {
+    "name": "示例项目工作台",
+    "description": "这是一个功能丰富的 Mock 数据示例项目，展示了工作台的各种组件和功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "title": "首页",
+          "icon": "Home",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "data",
+          "title": "数据管理",
+          "icon": "Database",
+          "children": [
+            {
+              "key": "data-list",
+              "title": "数据列表",
+              "icon": "List",
+              "linkedPage": "data-list"
+            },
+            {
+              "key": "data-grid",
+              "title": "数据网格",
+              "icon": "Grid",
+              "linkedPage": "data-grid"
+            }
+          ]
+        },
+        {
+          "key": "charts",
+          "title": "图表展示",
+          "icon": "BarChart3",
+          "linkedPage": "charts"
+        },
+        {
+          "key": "forms",
+          "title": "表单示例",
+          "icon": "FileText",
+          "linkedPage": "forms"
+        },
+        {
+          "key": "components",
+          "title": "组件展示",
+          "icon": "Layout",
+          "linkedPage": "components"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "工作台首页",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "welcome-title",
+          "type": "Title",
+          "props": {
+            "content": "欢迎使用示例工作台"
+          }
+        },
+        {
+          "id": "welcome-desc",
+          "type": "Paragraph",
+          "props": {
+            "content": "这是一个功能丰富的示例工作台，展示了各种组件类型和功能，包括数据统计、图表展示、表格管理、表单输入等。"
+          }
+        },
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total",
+                "title": "总数量",
+                "value": 1234,
+                "icon": "Database",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              },
+              {
+                "key": "active",
+                "title": "活跃数",
+                "value": 856,
+                "icon": "Activity",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上周"
+                }
+              },
+              {
+                "key": "pending",
+                "title": "待处理",
+                "value": 42,
+                "icon": "Clock",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "completed",
+                "title": "已完成",
+                "value": 336,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 8,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较上月"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "quick-actions",
+          "type": "Card",
+          "props": {
+            "title": "快捷操作",
+            "description": "常用功能快速入口"
+          },
+          "children": [
+            {
+              "id": "action-1",
+              "type": "Card",
+              "props": {
+                "title": "创建新项目",
+                "description": "快速创建新项目",
+                "icon": "Plus"
+              }
+            },
+            {
+              "id": "action-2",
+              "type": "Card",
+              "props": {
+                "title": "导入数据",
+                "description": "批量导入数据",
+                "icon": "Upload"
+              }
+            },
+            {
+              "id": "action-3",
+              "type": "Card",
+              "props": {
+                "title": "导出报告",
+                "description": "生成并导出报告",
+                "icon": "Download"
+              }
+            }
+          ]
+        },
+        {
+          "id": "recent-activity",
+          "type": "DataGridCard",
+          "props": {
+            "title": "最近活动",
+            "columns": [
+              {
+                "title": "操作",
+                "primary": true,
+                "dataIndex": "action"
+              },
+              {
+                "title": "用户",
+                "dataIndex": "user",
+                "secondary": true
+              },
+              {
+                "title": "时间",
+                "dataIndex": "time"
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "成功": "green",
+                      "失败": "red",
+                      "进行中": "blue"
+                    }
+                  }
+                }
+              }
+            ],
+            "pagination": {
+              "pageSize": 5,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "action": "创建项目",
+              "user": "张三",
+              "time": "2025-01-15 10:30",
+              "status": "成功"
+            },
+            {
+              "id": "2",
+              "action": "更新数据",
+              "user": "李四",
+              "time": "2025-01-15 09:15",
+              "status": "成功"
+            },
+            {
+              "id": "3",
+              "action": "导出报告",
+              "user": "王五",
+              "time": "2025-01-15 08:45",
+              "status": "进行中"
+            },
+            {
+              "id": "4",
+              "action": "删除记录",
+              "user": "赵六",
+              "time": "2025-01-14 16:20",
+              "status": "成功"
+            },
+            {
+              "id": "5",
+              "action": "导入数据",
+              "user": "钱七",
+              "time": "2025-01-14 14:10",
+              "status": "失败"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "trend-chart",
+          "type": "Chart",
+          "props": {
+            "title": "数据趋势图",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "value",
+            "seriesField": "category",
+            "showTooltip": true,
+            "showLegend": true,
+            "colors": ["#1890ff", "#52c41a", "#faad14"]
+          },
+          "mockData": [
+            { "date": "2025-01-01", "value": 120, "category": "访问量" },
+            { "date": "2025-01-02", "value": 132, "category": "访问量" },
+            { "date": "2025-01-03", "value": 145, "category": "访问量" },
+            { "date": "2025-01-04", "value": 138, "category": "访问量" },
+            { "date": "2025-01-05", "value": 156, "category": "访问量" },
+            { "date": "2025-01-01", "value": 80, "category": "转化率" },
+            { "date": "2025-01-02", "value": 85, "category": "转化率" },
+            { "date": "2025-01-03", "value": 92, "category": "转化率" },
+            { "date": "2025-01-04", "value": 88, "category": "转化率" },
+            { "date": "2025-01-05", "value": 95, "category": "转化率" },
+            { "date": "2025-01-01", "value": 45, "category": "活跃用户" },
+            { "date": "2025-01-02", "value": 48, "category": "活跃用户" },
+            { "date": "2025-01-03", "value": 52, "category": "活跃用户" },
+            { "date": "2025-01-04", "value": 50, "category": "活跃用户" },
+            { "date": "2025-01-05", "value": 55, "category": "活跃用户" }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "data-list": {
+      "title": "数据列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "data-table",
+          "type": "Table",
+          "props": {
+            "title": "数据管理",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "名称",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true
+              },
+              {
+                "title": "类型",
+                "dataIndex": "type",
+                "key": "type"
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default",
+                      "pending": "orange"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "创建时间",
+                "dataIndex": "createdAt",
+                "key": "createdAt"
+              },
+              {
+                "title": "操作",
+                "key": "action",
+                "render": {
+                  "type": "Action",
+                  "props": {
+                    "actions": [
+                      {
+                        "label": "编辑",
+                        "icon": "Edit",
+                        "onClick": "handleEdit"
+                      },
+                      {
+                        "label": "删除",
+                        "icon": "Trash",
+                        "onClick": "handleDelete",
+                        "danger": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "项目 A",
+              "type": "类型 A",
+              "status": "active",
+              "createdAt": "2025-01-15"
+            },
+            {
+              "id": "2",
+              "name": "项目 B",
+              "type": "类型 B",
+              "status": "active",
+              "createdAt": "2025-01-16"
+            },
+            {
+              "id": "3",
+              "name": "项目 C",
+              "type": "类型 A",
+              "status": "inactive",
+              "createdAt": "2025-01-17"
+            },
+            {
+              "id": "4",
+              "name": "项目 D",
+              "type": "类型 C",
+              "status": "pending",
+              "createdAt": "2025-01-18"
+            },
+            {
+              "id": "5",
+              "name": "项目 E",
+              "type": "类型 B",
+              "status": "active",
+              "createdAt": "2025-01-19"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "data-grid": {
+      "title": "数据网格",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "data-grid-card",
+          "type": "DataGridCard",
+          "props": {
+            "title": "数据网格卡片",
+            "columns": [
+              {
+                "title": "名称",
+                "primary": true,
+                "dataIndex": "name"
+              },
+              {
+                "title": "分类",
+                "dataIndex": "category",
+                "secondary": true
+              },
+              {
+                "title": "数量",
+                "dataIndex": "count"
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "正常": "green",
+                      "警告": "orange",
+                      "异常": "red"
+                    }
+                  }
+                }
+              }
+            ],
+            "pagination": {
+              "pageSize": 10,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "数据项 1",
+              "category": "分类 A",
+              "count": 100,
+              "status": "正常"
+            },
+            {
+              "id": "2",
+              "name": "数据项 2",
+              "category": "分类 B",
+              "count": 200,
+              "status": "正常"
+            },
+            {
+              "id": "3",
+              "name": "数据项 3",
+              "category": "分类 A",
+              "count": 50,
+              "status": "警告"
+            },
+            {
+              "id": "4",
+              "name": "数据项 4",
+              "category": "分类 C",
+              "count": 300,
+              "status": "正常"
+            },
+            {
+              "id": "5",
+              "name": "数据项 5",
+              "category": "分类 B",
+              "count": 25,
+              "status": "异常"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "charts": {
+      "title": "图表展示",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "chart-title",
+          "type": "Title",
+          "props": {
+            "content": "图表组件展示"
+          }
+        },
+        {
+          "id": "line-chart",
+          "type": "Chart",
+          "props": {
+            "title": "折线图示例",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "value",
+            "seriesField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "date": "1月", "value": 100, "type": "销售额" },
+            { "date": "2月", "value": 120, "type": "销售额" },
+            { "date": "3月", "value": 150, "type": "销售额" },
+            { "date": "4月", "value": 140, "type": "销售额" },
+            { "date": "5月", "value": 180, "type": "销售额" },
+            { "date": "1月", "value": 80, "type": "成本" },
+            { "date": "2月", "value": 90, "type": "成本" },
+            { "date": "3月", "value": 100, "type": "成本" },
+            { "date": "4月", "value": 95, "type": "成本" },
+            { "date": "5月", "value": 110, "type": "成本" }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "bar-chart",
+          "type": "Chart",
+          "props": {
+            "title": "柱状图示例",
+            "height": 300,
+            "xField": "category",
+            "yField": "value",
+            "seriesField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "category": "Q1", "value": 120, "type": "产品A" },
+            { "category": "Q2", "value": 150, "type": "产品A" },
+            { "category": "Q3", "value": 180, "type": "产品A" },
+            { "category": "Q4", "value": 200, "type": "产品A" },
+            { "category": "Q1", "value": 100, "type": "产品B" },
+            { "category": "Q2", "value": 130, "type": "产品B" },
+            { "category": "Q3", "value": 160, "type": "产品B" },
+            { "category": "Q4", "value": 190, "type": "产品B" }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "pie-chart",
+          "type": "Chart",
+          "props": {
+            "title": "饼图示例",
+            "height": 300,
+            "angleField": "value",
+            "colorField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "type": "类型A", "value": 30 },
+            { "type": "类型B", "value": 25 },
+            { "type": "类型C", "value": 20 },
+            { "type": "类型D", "value": 15 },
+            { "type": "类型E", "value": 10 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "forms": {
+      "title": "表单示例",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "form-title",
+          "type": "Title",
+          "props": {
+            "content": "表单组件展示"
+          }
+        },
+        {
+          "id": "form-desc",
+          "type": "Paragraph",
+          "props": {
+            "content": "以下展示了各种表单组件的使用方式，包括文本输入、选择器、日期选择等。"
+          }
+        },
+        {
+          "id": "example-form",
+          "type": "Form",
+          "props": {
+            "title": "示例表单",
+            "layout": "vertical",
+            "fields": [
+              {
+                "name": "name",
+                "label": "名称",
+                "type": "input",
+                "required": true,
+                "placeholder": "请输入名称"
+              },
+              {
+                "name": "type",
+                "label": "类型",
+                "type": "select",
+                "required": true,
+                "options": [
+                  { "label": "类型A", "value": "typeA" },
+                  { "label": "类型B", "value": "typeB" },
+                  { "label": "类型C", "value": "typeC" }
+                ]
+              },
+              {
+                "name": "date",
+                "label": "日期",
+                "type": "date",
+                "required": true
+              },
+              {
+                "name": "description",
+                "label": "描述",
+                "type": "textarea",
+                "placeholder": "请输入描述信息"
+              },
+              {
+                "name": "status",
+                "label": "状态",
+                "type": "radio",
+                "options": [
+                  { "label": "启用", "value": "active" },
+                  { "label": "禁用", "value": "inactive" }
+                ]
+              }
+            ],
+            "submitText": "提交",
+            "cancelText": "取消"
+          }
+        }
+      ]
+    },
+    "components": {
+      "title": "组件展示",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "components-title",
+          "type": "Title",
+          "props": {
+            "content": "组件库展示"
+          }
+        },
+        {
+          "id": "card-examples",
+          "type": "Container",
+          "props": {
+            "title": "卡片组件",
+            "layout": "grid",
+            "grid": {
+              "cols": 3
+            }
+          },
+          "children": [
+            {
+              "id": "card-1",
+              "type": "Card",
+              "props": {
+                "title": "卡片 1",
+                "description": "这是一个基础卡片组件"
+              }
+            },
+            {
+              "id": "card-2",
+              "type": "Card",
+              "props": {
+                "title": "卡片 2",
+                "description": "卡片可以包含各种内容"
+              }
+            },
+            {
+              "id": "card-3",
+              "type": "Card",
+              "props": {
+                "title": "卡片 3",
+                "description": "支持自定义样式和布局"
+              }
+            }
+          ]
+        },
+        {
+          "id": "text-examples",
+          "type": "Container",
+          "props": {
+            "title": "文本组件"
+          },
+          "children": [
+            {
+              "id": "title-example",
+              "type": "Title",
+              "props": {
+                "content": "这是一个标题组件"
+              }
+            },
+            {
+              "id": "paragraph-example",
+              "type": "Paragraph",
+              "props": {
+                "content": "这是一个段落组件，用于展示文本内容。支持多行文本和自定义样式。"
+              }
+            },
+            {
+              "id": "text-example",
+              "type": "Text",
+              "props": {
+                "content": "这是一个文本组件，用于展示简单的文本内容。",
+                "type": "secondary"
+              }
+            }
+          ]
+        },
+        {
+          "id": "list-example",
+          "type": "List",
+          "props": {
+            "title": "列表组件",
+            "dataSource": [
+              {
+                "title": "列表项 1",
+                "description": "这是第一个列表项的描述"
+              },
+              {
+                "title": "列表项 2",
+                "description": "这是第二个列表项的描述"
+              },
+              {
+                "title": "列表项 3",
+                "description": "这是第三个列表项的描述"
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,746 @@
+{
+  "appConfig": {
+    "name": "E-commerce Operations Workbench",
+    "description": "E-commerce operations: catalog, orders, inventory, customers, and analytics",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "Overview",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "products",
+          "title": "Catalog",
+          "icon": "Package",
+          "children": [
+            {
+              "key": "product-list",
+              "title": "Products",
+              "icon": "List",
+              "linkedPage": "product-list"
+            },
+            {
+              "key": "product-categories",
+              "title": "Categories",
+              "icon": "FolderTree",
+              "linkedPage": "product-categories"
+            },
+            {
+              "key": "product-add",
+              "title": "Add product",
+              "icon": "Plus",
+              "linkedPage": "product-add"
+            }
+          ]
+        },
+        {
+          "key": "orders",
+          "title": "Orders",
+          "icon": "ShoppingCart",
+          "children": [
+            {
+              "key": "order-list",
+              "title": "Order list",
+              "icon": "List",
+              "linkedPage": "order-list"
+            },
+            {
+              "key": "order-detail",
+              "title": "Order detail",
+              "icon": "FileText",
+              "linkedPage": "order-detail"
+            }
+          ]
+        },
+        {
+          "key": "inventory",
+          "title": "Inventory",
+          "icon": "Warehouse",
+          "linkedPage": "inventory"
+        },
+        {
+          "key": "customers",
+          "title": "Customers",
+          "icon": "Users",
+          "linkedPage": "customers"
+        },
+        {
+          "key": "analytics",
+          "title": "Analytics",
+          "icon": "BarChart3",
+          "linkedPage": "analytics"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Overview",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-sales",
+                "title": "Sales today",
+                "value": 125680,
+                "icon": "DollarSign",
+                "trend": {
+                  "value": 12.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                },
+                "prefix": "¥"
+              },
+              {
+                "key": "today-orders",
+                "title": "Orders today",
+                "value": 342,
+                "icon": "ShoppingCart",
+                "trend": {
+                  "value": 8.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "pending-orders",
+                "title": "Pending orders",
+                "value": 28,
+                "icon": "Clock",
+                "trend": {
+                  "value": 5,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "low-stock",
+                "title": "Low-stock SKUs",
+                "value": 15,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "warning",
+                  "description": "vs yesterday"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "sales-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Sales trend",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "sales": 120000
+            },
+            {
+              "date": "2024-01-02",
+              "sales": 135000
+            },
+            {
+              "date": "2024-01-03",
+              "sales": 128000
+            },
+            {
+              "date": "2024-01-04",
+              "sales": 142000
+            },
+            {
+              "date": "2024-01-05",
+              "sales": 138000
+            },
+            {
+              "date": "2024-01-06",
+              "sales": 150000
+            },
+            {
+              "date": "2024-01-07",
+              "sales": 145000
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-orders",
+          "type": "Table",
+          "props": {
+            "title": "Recent orders",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "Order #",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "customer",
+                "title": "Customer",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "Amount",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "createTime",
+                "title": "Placed at",
+                "dataIndex": "createTime"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "ORD20240107001",
+              "customer": "Alex Chen",
+              "amount": 299.0,
+              "status": "Paid",
+              "createTime": "2024-01-07 14:30:00"
+            },
+            {
+              "orderId": "ORD20240107002",
+              "customer": "Jordan Wu",
+              "amount": 1580.0,
+              "status": "Awaiting shipment",
+              "createTime": "2024-01-07 13:20:00"
+            },
+            {
+              "orderId": "ORD20240107003",
+              "customer": "Sam Wang",
+              "amount": 89.0,
+              "status": "Shipped",
+              "createTime": "2024-01-07 12:15:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-list": {
+      "title": "Products",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "product-table",
+          "type": "Table",
+          "props": {
+            "title": "Products",
+            "columns": [
+              {
+                "key": "productId",
+                "title": "Product ID",
+                "dataIndex": "productId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "category",
+                "title": "Category",
+                "dataIndex": "category"
+              },
+              {
+                "key": "price",
+                "title": "Price",
+                "dataIndex": "price",
+                "render": "currency"
+              },
+              {
+                "key": "stock",
+                "title": "Stock",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "Add product",
+                "type": "primary",
+                "icon": "Plus"
+              },
+              {
+                "key": "export",
+                "label": "Export",
+                "type": "default",
+                "icon": "Download"
+              }
+            ],
+            "rowActions": [
+              {
+                "key": "edit",
+                "label": "Edit",
+                "icon": "Edit"
+              },
+              {
+                "key": "delete",
+                "label": "Delete",
+                "icon": "Trash2",
+                "danger": true
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "productId": "P001",
+              "name": "Smartphone",
+              "category": "Electronics",
+              "price": 2999.0,
+              "stock": 150,
+              "status": "Active"
+            },
+            {
+              "productId": "P002",
+              "name": "Wireless earbuds",
+              "category": "Electronics",
+              "price": 299.0,
+              "stock": 45,
+              "status": "Active"
+            },
+            {
+              "productId": "P003",
+              "name": "Running shoes",
+              "category": "Apparel",
+              "price": 599.0,
+              "stock": 8,
+              "status": "Low stock"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "order-list": {
+      "title": "Order list",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-table",
+          "type": "Table",
+          "props": {
+            "title": "Order list",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "Order #",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "customer",
+                "title": "Customer",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "products",
+                "title": "Items",
+                "dataIndex": "products"
+              },
+              {
+                "key": "amount",
+                "title": "Amount",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "createTime",
+                "title": "Placed at",
+                "dataIndex": "createTime"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "ORD20240107001",
+              "customer": "Alex Chen",
+              "products": "Smartphone x1",
+              "amount": 2999.0,
+              "status": "Paid",
+              "createTime": "2024-01-07 14:30:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "inventory": {
+      "title": "Inventory",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "inventory-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-products",
+                "title": "SKUs",
+                "value": 1250,
+                "icon": "Package"
+              },
+              {
+                "key": "total-stock",
+                "title": "Total units",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "Low stock",
+                "value": 15,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "out-of-stock",
+                "title": "Out of stock",
+                "value": 3,
+                "icon": "XCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "inventory-table",
+          "type": "Table",
+          "props": {
+            "title": "Stock detail",
+            "columns": [
+              {
+                "key": "productId",
+                "title": "Product ID",
+                "dataIndex": "productId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "currentStock",
+                "title": "On hand",
+                "dataIndex": "currentStock"
+              },
+              {
+                "key": "minStock",
+                "title": "Reorder point",
+                "dataIndex": "minStock"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "productId": "P001",
+              "name": "Smartphone",
+              "currentStock": 150,
+              "minStock": 50,
+              "status": "OK"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analytics": {
+      "title": "Analytics",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "sales-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Sales and orders",
+            "chartType": "line",
+            "height": 400
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "sales": 120000,
+              "orders": 320
+            },
+            {
+              "date": "2024-01-02",
+              "sales": 135000,
+              "orders": 350
+            },
+            {
+              "date": "2024-01-03",
+              "sales": 128000,
+              "orders": 340
+            },
+            {
+              "date": "2024-01-04",
+              "sales": 142000,
+              "orders": 380
+            },
+            {
+              "date": "2024-01-05",
+              "sales": 138000,
+              "orders": 365
+            },
+            {
+              "date": "2024-01-06",
+              "sales": 150000,
+              "orders": 400
+            },
+            {
+              "date": "2024-01-07",
+              "sales": 145000,
+              "orders": 390
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "category-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Sales by category",
+            "chartType": "pie",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "category": "Electronics",
+              "value": 45
+            },
+            {
+              "category": "Apparel",
+              "value": 30
+            },
+            {
+              "category": "Home",
+              "value": 15
+            },
+            {
+              "category": "Other",
+              "value": 10
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-categories": {
+      "title": "Categories",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "category-table",
+          "type": "Table",
+          "props": {
+            "title": "Categories",
+            "columns": [
+              {
+                "key": "categoryId",
+                "title": "Category ID",
+                "dataIndex": "categoryId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "productCount",
+                "title": "Products",
+                "dataIndex": "productCount"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "categoryId": "C001",
+              "name": "Electronics",
+              "productCount": 125,
+              "status": "Active"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-add": {
+      "title": "Add product",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "product-form",
+          "type": "Form",
+          "props": {
+            "title": "Product details",
+            "fields": [
+              {
+                "key": "name",
+                "label": "Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "category",
+                "label": "Category",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "price",
+                "label": "Price",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "stock",
+                "label": "Stock",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "order-detail": {
+      "title": "Order detail",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-detail-card",
+          "type": "Card",
+          "props": {
+            "title": "Order summary"
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "customers": {
+      "title": "Customers",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "customer-table",
+          "type": "Table",
+          "props": {
+            "title": "Customers",
+            "columns": [
+              {
+                "key": "customerId",
+                "title": "Customer ID",
+                "dataIndex": "customerId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "phone",
+                "title": "Phone",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "orderCount",
+                "title": "Orders",
+                "dataIndex": "orderCount"
+              },
+              {
+                "key": "totalAmount",
+                "title": "Lifetime value",
+                "dataIndex": "totalAmount",
+                "render": "currency"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "customerId": "C001",
+              "name": "Alex Chen",
+              "phone": "138****8888",
+              "orderCount": 15,
+              "totalAmount": 12580
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

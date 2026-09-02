@@ -1,0 +1,713 @@
+{
+  "appConfig": {
+    "name": "Production Management System",
+    "description": "Manufacturing operations: production plans, equipment, quality, and inventory",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "Production overview",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "production",
+          "title": "Production",
+          "icon": "Factory",
+          "children": [
+            {
+              "key": "production-plan",
+              "title": "Plans",
+              "icon": "Calendar",
+              "linkedPage": "production-plan"
+            },
+            {
+              "key": "production-orders",
+              "title": "Work orders",
+              "icon": "FileText",
+              "linkedPage": "production-orders"
+            }
+          ]
+        },
+        {
+          "key": "equipment",
+          "title": "Equipment",
+          "icon": "Cog",
+          "linkedPage": "equipment"
+        },
+        {
+          "key": "quality",
+          "title": "Quality",
+          "icon": "CheckCircle",
+          "linkedPage": "quality"
+        },
+        {
+          "key": "inventory",
+          "title": "Inventory",
+          "icon": "Warehouse",
+          "linkedPage": "inventory"
+        },
+        {
+          "key": "analytics",
+          "title": "Analytics",
+          "icon": "BarChart3",
+          "linkedPage": "analytics"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Production overview",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-production",
+                "title": "Output today",
+                "value": 1250,
+                "icon": "Package",
+                "trend": {
+                  "value": 8.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                },
+                "suffix": " pcs"
+              },
+              {
+                "key": "production-rate",
+                "title": "Efficiency",
+                "value": 92.5,
+                "icon": "TrendingUp",
+                "trend": {
+                  "value": 2.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "equipment-status",
+                "title": "Asset utilization",
+                "value": 88,
+                "icon": "Cog",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "defect-rate",
+                "title": "Defect rate",
+                "value": 0.8,
+                "icon": "AlertCircle",
+                "trend": {
+                  "value": 0.2,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs yesterday"
+                },
+                "suffix": "%"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "production-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Output trend",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "production": 1200
+            },
+            {
+              "date": "2024-01-02",
+              "production": 1350
+            },
+            {
+              "date": "2024-01-03",
+              "production": 1280
+            },
+            {
+              "date": "2024-01-04",
+              "production": 1420
+            },
+            {
+              "date": "2024-01-05",
+              "production": 1380
+            },
+            {
+              "date": "2024-01-06",
+              "production": 1500
+            },
+            {
+              "date": "2024-01-07",
+              "production": 1450
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "equipment-status",
+          "type": "Table",
+          "props": {
+            "title": "Equipment status",
+            "columns": [
+              {
+                "key": "equipmentId",
+                "title": "Asset ID",
+                "dataIndex": "equipmentId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "utilization",
+                "title": "Utilization",
+                "dataIndex": "utilization",
+                "suffix": "%"
+              },
+              {
+                "key": "lastMaintenance",
+                "title": "Last PM",
+                "dataIndex": "lastMaintenance"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "equipmentId": "EQ001",
+              "name": "Injection molder 01",
+              "status": "Running",
+              "utilization": 92,
+              "lastMaintenance": "2024-01-01"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "production-plan": {
+      "title": "Plans",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "plan-table",
+          "type": "Table",
+          "props": {
+            "title": "Production plans",
+            "columns": [
+              {
+                "key": "planId",
+                "title": "Plan ID",
+                "dataIndex": "planId"
+              },
+              {
+                "key": "product",
+                "title": "Product",
+                "dataIndex": "product"
+              },
+              {
+                "key": "quantity",
+                "title": "Planned qty",
+                "dataIndex": "quantity"
+              },
+              {
+                "key": "startDate",
+                "title": "Start",
+                "dataIndex": "startDate"
+              },
+              {
+                "key": "endDate",
+                "title": "End",
+                "dataIndex": "endDate"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "New plan",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "planId": "PLAN20240107001",
+              "product": "Product A",
+              "quantity": 5000,
+              "startDate": "2024-01-08",
+              "endDate": "2024-01-15",
+              "status": "In progress"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "equipment": {
+      "title": "Equipment",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "equipment-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-equipment",
+                "title": "Total assets",
+                "value": 125,
+                "icon": "Cog"
+              },
+              {
+                "key": "running",
+                "title": "Running",
+                "value": 110,
+                "icon": "PlayCircle"
+              },
+              {
+                "key": "maintenance",
+                "title": "Maintenance",
+                "value": 10,
+                "icon": "Wrench"
+              },
+              {
+                "key": "fault",
+                "title": "Down",
+                "value": 5,
+                "icon": "AlertCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "equipment-table",
+          "type": "Table",
+          "props": {
+            "title": "Equipment list",
+            "columns": [
+              {
+                "key": "equipmentId",
+                "title": "Asset ID",
+                "dataIndex": "equipmentId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "type",
+                "title": "Type",
+                "dataIndex": "type"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "location",
+                "title": "Location",
+                "dataIndex": "location"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "equipmentId": "EQ001",
+              "name": "Injection molder 01",
+              "type": "Injection molding",
+              "status": "Running",
+              "location": "Shop A-01"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "production-orders": {
+      "title": "Work orders",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-table",
+          "type": "Table",
+          "props": {
+            "title": "Work orders",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "Order ID",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "product",
+                "title": "Product",
+                "dataIndex": "product"
+              },
+              {
+                "key": "quantity",
+                "title": "Qty",
+                "dataIndex": "quantity"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "deadline",
+                "title": "Due date",
+                "dataIndex": "deadline"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "PO20240107001",
+              "product": "Product A",
+              "quantity": 5000,
+              "status": "In production",
+              "deadline": "2024-01-15"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "quality": {
+      "title": "Quality",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "quality-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-inspections",
+                "title": "Inspections",
+                "value": 1250,
+                "icon": "CheckCircle"
+              },
+              {
+                "key": "qualified",
+                "title": "Passed",
+                "value": 1180,
+                "icon": "CheckCircle2"
+              },
+              {
+                "key": "defective",
+                "title": "Failed",
+                "value": 70,
+                "icon": "XCircle"
+              },
+              {
+                "key": "qualify-rate",
+                "title": "Yield",
+                "value": 94.4,
+                "icon": "TrendingUp",
+                "suffix": "%"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "quality-table",
+          "type": "Table",
+          "props": {
+            "title": "Inspection log",
+            "columns": [
+              {
+                "key": "inspectionId",
+                "title": "Inspection ID",
+                "dataIndex": "inspectionId"
+              },
+              {
+                "key": "product",
+                "title": "Product",
+                "dataIndex": "product"
+              },
+              {
+                "key": "result",
+                "title": "Result",
+                "dataIndex": "result",
+                "render": "tag"
+              },
+              {
+                "key": "inspector",
+                "title": "Inspector",
+                "dataIndex": "inspector"
+              },
+              {
+                "key": "inspectionDate",
+                "title": "Date",
+                "dataIndex": "inspectionDate"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "inspectionId": "QC20240107001",
+              "product": "Product A",
+              "result": "Pass",
+              "inspector": "Sam Zhang",
+              "inspectionDate": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "inventory": {
+      "title": "Inventory",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "inventory-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-materials",
+                "title": "SKUs",
+                "value": 1250,
+                "icon": "Package"
+              },
+              {
+                "key": "total-stock",
+                "title": "Total on hand",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "Low stock",
+                "value": 15,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "out-of-stock",
+                "title": "Stockouts",
+                "value": 3,
+                "icon": "XCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "inventory-table",
+          "type": "Table",
+          "props": {
+            "title": "Stock detail",
+            "columns": [
+              {
+                "key": "materialId",
+                "title": "Material ID",
+                "dataIndex": "materialId"
+              },
+              {
+                "key": "name",
+                "title": "Name",
+                "dataIndex": "name"
+              },
+              {
+                "key": "stock",
+                "title": "On hand",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "unit",
+                "title": "Unit",
+                "dataIndex": "unit"
+              },
+              {
+                "key": "status",
+                "title": "Status",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "materialId": "M001",
+              "name": "Raw material A",
+              "stock": 1500,
+              "unit": "kg",
+              "status": "OK"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analytics": {
+      "title": "Analytics",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "production-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Output vs efficiency",
+            "chartType": "line",
+            "height": 400
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "production": 1200,
+              "efficiency": 90
+            },
+            {
+              "date": "2024-01-02",
+              "production": 1350,
+              "efficiency": 92
+            },
+            {
+              "date": "2024-01-03",
+              "production": 1280,
+              "efficiency": 91
+            },
+            {
+              "date": "2024-01-04",
+              "production": 1420,
+              "efficiency": 93
+            },
+            {
+              "date": "2024-01-05",
+              "production": 1380,
+              "efficiency": 92
+            },
+            {
+              "date": "2024-01-06",
+              "production": 1500,
+              "efficiency": 94
+            },
+            {
+              "date": "2024-01-07",
+              "production": 1450,
+              "efficiency": 93
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "defect-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Defect rate trend",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "defectRate": 1.2
+            },
+            {
+              "date": "2024-01-02",
+              "defectRate": 1.0
+            },
+            {
+              "date": "2024-01-03",
+              "defectRate": 0.9
+            },
+            {
+              "date": "2024-01-04",
+              "defectRate": 0.8
+            },
+            {
+              "date": "2024-01-05",
+              "defectRate": 0.85
+            },
+            {
+              "date": "2024-01-06",
+              "defectRate": 0.75
+            },
+            {
+              "date": "2024-01-07",
+              "defectRate": 0.8
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

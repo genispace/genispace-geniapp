@@ -17,14 +17,14 @@ frontend/                         geniapp/                         applications/
 - `frontend/packages/shared-*` belongs only to the platform frontend and is never a GeniApp dependency.
 - `@genispace/geniapp` is the public UI/runtime/build contract used by built-in, custom and Workbench-exported GeniApps.
 - [`@genispace/sdk`](https://www.npmjs.com/package/@genispace/sdk) is the public platform API SDK. This package does not duplicate its HTTP/SSE clients.
-- `@genispace/geniapp@0.2.0` requires exactly `@genispace/sdk@3.1.0`. The SDK version is part of the GeniApp runtime contract and is checked before packing or publishing.
+- `@genispace/geniapp@0.4.0` requires exactly `@genispace/sdk@3.1.0`. The SDK version is part of the GeniApp runtime contract and is checked before packing or publishing.
 
 ## Install
 
 Install both public packages from npm. GeniApp releases pin their supported SDK version exactly, so applications should use the matching SDK version shown below.
 
 ```bash
-pnpm add @genispace/geniapp@0.3.0 @genispace/sdk@3.1.0 react react-dom react-router-dom i18next react-i18next
+pnpm add @genispace/geniapp@0.4.0 @genispace/sdk@3.1.0 react react-dom react-router-dom i18next react-i18next
 ```
 
 ## Public entries
@@ -42,8 +42,9 @@ pnpm add @genispace/geniapp@0.3.0 @genispace/sdk@3.1.0 react react-dom react-rou
 | `@genispace/geniapp/dashboard` | stable | Dashboard filters, KPI and chart patterns |
 | `@genispace/geniapp/case-workspace` | stable | Case workspace contract |
 | `@genispace/geniapp/task-workspace` | stable | Task workspace contract |
-| `@genispace/geniapp/workbench` | stable | Versioned renderer for GeniApps exported from Workbench |
-| `@genispace/geniapp/workbench/styles.css` | stable | Responsive shell and component styles for exported Workbench apps |
+| `@genispace/geniapp/components` | stable | Exact Workbench view renderer and runtime providers for every GeniApp |
+| `@genispace/geniapp/components/renderers/*` | stable | Developer-facing component-family entry points such as `table`, `form` and `chart` |
+| `@genispace/geniapp/components/styles.css` | stable | Shared component, layout, mobile and appearance styles |
 
 Only symbols exported by these entries are public. Files below `src/` and `dist/` are implementation details and cannot be imported through package exports.
 
@@ -97,17 +98,41 @@ The stylesheet contains the platform light/dark semantic tokens, local fonts, re
 
 ### Workbench export runtime
 
-Workbench exports pin an exact GeniApp version and keep each page and component in a separate source module. The public runtime renders that portable configuration without importing the private Workbench editor:
+Workbench exports pin an exact GeniApp version and keep each page and component in a separate React/TypeScript module. The public component runtime is the same implementation used by Workbench view mode and does not import the private editor:
 
-```ts
-import { mountWorkbench } from '@genispace/geniapp/workbench';
-import '@genispace/geniapp/workbench/styles.css';
+```tsx
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import {
+  GeniAppComponentProvider,
+  GeniAppWorkbench,
+  createPlatformHostAdapters,
+} from '@genispace/geniapp/components';
+import '@genispace/geniapp/components/styles.css';
 import workbenchConfig from './config/workbench.config';
 
-mountWorkbench(document.getElementById('root')!, workbenchConfig);
+createRoot(document.getElementById('root')!).render(
+  <BrowserRouter>
+    <GeniAppComponentProvider
+      applicationId="customer-operations"
+      adapters={createPlatformHostAdapters({
+        applicationIdentifier: 'customer-operations',
+        datasourceIdentifiers: workbenchConfig.geniappRuntime?.datasourceIdentifiers,
+      })}
+      locale={localStorage.getItem('i18nextLng') || navigator.language}
+      localeMetadata={workbenchConfig.metadata}
+      themeId={workbenchConfig.themeId}
+    >
+      <GeniAppWorkbench
+        identifier="customer-operations"
+        config={workbenchConfig}
+      />
+    </GeniAppComponentProvider>
+  </BrowserRouter>,
+);
 ```
 
-The runtime owns portable component behavior, desktop/mobile navigation, the theme bridge and the locale bridge. Exported component modules own application-specific props, data and custom styles, so developers can edit or replace one component without reading a monolithic snapshot. The exported prebuilt bundle remains frozen to the same runtime version recorded in `contracts/workbench-export.lock.json`.
+The runtime owns the exact component behavior, layout, mobile adaptation, platform adapters, theme bridge and locale bridge. Exported component modules own application-specific props, data and custom styles, so developers can edit or replace one component without reading a monolithic snapshot. There is no legacy `workbench` package entry: the export feature was not released before the `components` contract became official.
 
 ## Vite
 
@@ -153,7 +178,7 @@ pnpm pack:check
 
 - Follow semantic versioning. Removing or changing an exported symbol, Shell message, CSS token or manifest/build behavior is a breaking change.
 - Applications pin an exact version in release lockfiles. Renovation is explicit and tested.
-- Each GeniApp package release pins one exact `genispace` SDK peer version. Supporting another SDK version requires a reviewed GeniApp release, even when the SDK change is otherwise backward compatible.
+- Each GeniApp package release pins one exact `@genispace/sdk` peer version. Supporting another SDK version requires a reviewed GeniApp release, even when the SDK change is otherwise backward compatible.
 - Publish from a clean Git tag with npm provenance after CI, package-name ownership and the MIT license are approved.
 - The old `frontend-packages` repository is retired and retained only as a read-only historical checkout. No active application or platform frontend resolves code from it.
 - The complete ownership decision, cutover procedure and acceptance evidence are documented in [`docs/ARCHITECTURE_AND_MIGRATION.md`](docs/ARCHITECTURE_AND_MIGRATION.md).

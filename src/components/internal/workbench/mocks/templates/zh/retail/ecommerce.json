@@ -1,0 +1,685 @@
+{
+  "appConfig": {
+    "name": "电商运营工作台",
+    "description": "电商行业运营管理平台，包含商品管理、订单处理、库存管理、数据分析等功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "数据概览",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "products",
+          "title": "商品管理",
+          "icon": "Package",
+          "children": [
+            {
+              "key": "product-list",
+              "title": "商品列表",
+              "icon": "List",
+              "linkedPage": "product-list"
+            },
+            {
+              "key": "product-categories",
+              "title": "分类管理",
+              "icon": "FolderTree",
+              "linkedPage": "product-categories"
+            },
+            {
+              "key": "product-add",
+              "title": "添加商品",
+              "icon": "Plus",
+              "linkedPage": "product-add"
+            }
+          ]
+        },
+        {
+          "key": "orders",
+          "title": "订单管理",
+          "icon": "ShoppingCart",
+          "children": [
+            {
+              "key": "order-list",
+              "title": "订单列表",
+              "icon": "List",
+              "linkedPage": "order-list"
+            },
+            {
+              "key": "order-detail",
+              "title": "订单详情",
+              "icon": "FileText",
+              "linkedPage": "order-detail"
+            }
+          ]
+        },
+        {
+          "key": "inventory",
+          "title": "库存管理",
+          "icon": "Warehouse",
+          "linkedPage": "inventory"
+        },
+        {
+          "key": "customers",
+          "title": "客户管理",
+          "icon": "Users",
+          "linkedPage": "customers"
+        },
+        {
+          "key": "analytics",
+          "title": "数据分析",
+          "icon": "BarChart3",
+          "linkedPage": "analytics"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "数据概览",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-sales",
+                "title": "今日销售额",
+                "value": 125680,
+                "icon": "DollarSign",
+                "trend": {
+                  "value": 12.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "prefix": "¥"
+              },
+              {
+                "key": "today-orders",
+                "title": "今日订单数",
+                "value": 342,
+                "icon": "ShoppingCart",
+                "trend": {
+                  "value": 8.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "pending-orders",
+                "title": "待处理订单",
+                "value": 28,
+                "icon": "Clock",
+                "trend": {
+                  "value": 5,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "low-stock",
+                "title": "低库存商品",
+                "value": 15,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "warning",
+                  "description": "较昨日"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "sales-chart",
+          "type": "Chart",
+          "props": {
+            "title": "销售趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "date": "2024-01-01", "sales": 120000 },
+            { "date": "2024-01-02", "sales": 135000 },
+            { "date": "2024-01-03", "sales": 128000 },
+            { "date": "2024-01-04", "sales": 142000 },
+            { "date": "2024-01-05", "sales": 138000 },
+            { "date": "2024-01-06", "sales": 150000 },
+            { "date": "2024-01-07", "sales": 145000 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-orders",
+          "type": "Table",
+          "props": {
+            "title": "最近订单",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "订单号",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "customer",
+                "title": "客户",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "createTime",
+                "title": "下单时间",
+                "dataIndex": "createTime"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "ORD20240107001",
+              "customer": "张三",
+              "amount": 299.00,
+              "status": "已支付",
+              "createTime": "2024-01-07 14:30:00"
+            },
+            {
+              "orderId": "ORD20240107002",
+              "customer": "李四",
+              "amount": 1580.00,
+              "status": "待发货",
+              "createTime": "2024-01-07 13:20:00"
+            },
+            {
+              "orderId": "ORD20240107003",
+              "customer": "王五",
+              "amount": 89.00,
+              "status": "已发货",
+              "createTime": "2024-01-07 12:15:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-list": {
+      "title": "商品列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "product-table",
+          "type": "Table",
+          "props": {
+            "title": "商品列表",
+            "columns": [
+              {
+                "key": "productId",
+                "title": "商品ID",
+                "dataIndex": "productId"
+              },
+              {
+                "key": "name",
+                "title": "商品名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "category",
+                "title": "分类",
+                "dataIndex": "category"
+              },
+              {
+                "key": "price",
+                "title": "价格",
+                "dataIndex": "price",
+                "render": "currency"
+              },
+              {
+                "key": "stock",
+                "title": "库存",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "添加商品",
+                "type": "primary",
+                "icon": "Plus"
+              },
+              {
+                "key": "export",
+                "label": "导出",
+                "type": "default",
+                "icon": "Download"
+              }
+            ],
+            "rowActions": [
+              {
+                "key": "edit",
+                "label": "编辑",
+                "icon": "Edit"
+              },
+              {
+                "key": "delete",
+                "label": "删除",
+                "icon": "Trash2",
+                "danger": true
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "productId": "P001",
+              "name": "智能手机",
+              "category": "电子产品",
+              "price": 2999.00,
+              "stock": 150,
+              "status": "在售"
+            },
+            {
+              "productId": "P002",
+              "name": "无线耳机",
+              "category": "电子产品",
+              "price": 299.00,
+              "stock": 45,
+              "status": "在售"
+            },
+            {
+              "productId": "P003",
+              "name": "运动鞋",
+              "category": "服装鞋帽",
+              "price": 599.00,
+              "stock": 8,
+              "status": "低库存"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "order-list": {
+      "title": "订单列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-table",
+          "type": "Table",
+          "props": {
+            "title": "订单列表",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "订单号",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "customer",
+                "title": "客户",
+                "dataIndex": "customer"
+              },
+              {
+                "key": "products",
+                "title": "商品",
+                "dataIndex": "products"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "createTime",
+                "title": "下单时间",
+                "dataIndex": "createTime"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "ORD20240107001",
+              "customer": "张三",
+              "products": "智能手机 x1",
+              "amount": 2999.00,
+              "status": "已支付",
+              "createTime": "2024-01-07 14:30:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "inventory": {
+      "title": "库存管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "inventory-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-products",
+                "title": "商品总数",
+                "value": 1250,
+                "icon": "Package"
+              },
+              {
+                "key": "total-stock",
+                "title": "总库存量",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "低库存商品",
+                "value": 15,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "out-of-stock",
+                "title": "缺货商品",
+                "value": 3,
+                "icon": "XCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "inventory-table",
+          "type": "Table",
+          "props": {
+            "title": "库存明细",
+            "columns": [
+              {
+                "key": "productId",
+                "title": "商品ID",
+                "dataIndex": "productId"
+              },
+              {
+                "key": "name",
+                "title": "商品名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "currentStock",
+                "title": "当前库存",
+                "dataIndex": "currentStock"
+              },
+              {
+                "key": "minStock",
+                "title": "最低库存",
+                "dataIndex": "minStock"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "productId": "P001",
+              "name": "智能手机",
+              "currentStock": 150,
+              "minStock": 50,
+              "status": "正常"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analytics": {
+      "title": "数据分析",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "sales-chart",
+          "type": "Chart",
+          "props": {
+            "title": "销售趋势分析",
+            "chartType": "line",
+            "height": 400
+          },
+          "mockData": [
+            { "date": "2024-01-01", "sales": 120000, "orders": 320 },
+            { "date": "2024-01-02", "sales": 135000, "orders": 350 },
+            { "date": "2024-01-03", "sales": 128000, "orders": 340 },
+            { "date": "2024-01-04", "sales": 142000, "orders": 380 },
+            { "date": "2024-01-05", "sales": 138000, "orders": 365 },
+            { "date": "2024-01-06", "sales": 150000, "orders": 400 },
+            { "date": "2024-01-07", "sales": 145000, "orders": 390 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "category-chart",
+          "type": "Chart",
+          "props": {
+            "title": "分类销售占比",
+            "chartType": "pie",
+            "height": 300
+          },
+          "mockData": [
+            { "category": "电子产品", "value": 45 },
+            { "category": "服装鞋帽", "value": 30 },
+            { "category": "家居用品", "value": 15 },
+            { "category": "其他", "value": 10 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-categories": {
+      "title": "分类管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "category-table",
+          "type": "Table",
+          "props": {
+            "title": "商品分类",
+            "columns": [
+              {
+                "key": "categoryId",
+                "title": "分类ID",
+                "dataIndex": "categoryId"
+              },
+              {
+                "key": "name",
+                "title": "分类名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "productCount",
+                "title": "商品数量",
+                "dataIndex": "productCount"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "categoryId": "C001",
+              "name": "电子产品",
+              "productCount": 125,
+              "status": "启用"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "product-add": {
+      "title": "添加商品",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "product-form",
+          "type": "Form",
+          "props": {
+            "title": "商品信息",
+            "fields": [
+              {
+                "key": "name",
+                "label": "商品名称",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "category",
+                "label": "分类",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "price",
+                "label": "价格",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "stock",
+                "label": "库存",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "order-detail": {
+      "title": "订单详情",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-detail-card",
+          "type": "Card",
+          "props": {
+            "title": "订单信息"
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "customers": {
+      "title": "客户管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "customer-table",
+          "type": "Table",
+          "props": {
+            "title": "客户列表",
+            "columns": [
+              {
+                "key": "customerId",
+                "title": "客户ID",
+                "dataIndex": "customerId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "phone",
+                "title": "联系电话",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "orderCount",
+                "title": "订单数",
+                "dataIndex": "orderCount"
+              },
+              {
+                "key": "totalAmount",
+                "title": "累计消费",
+                "dataIndex": "totalAmount",
+                "render": "currency"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "customerId": "C001",
+              "name": "张三",
+              "phone": "138****8888",
+              "orderCount": 15,
+              "totalAmount": 12580
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

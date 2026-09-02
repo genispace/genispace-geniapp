@@ -1,0 +1,45 @@
+{
+  "batch_revoke_error": "撤销失败",
+  "batch_revoke_success_message": "所有选中的密钥已撤销",
+  "batch_revoke_success": "撤销成功",
+  "batch_revoke_partial": "部分撤销成功",
+  "batch_revoke_partial_message": "{{success}} 个密钥撤销成功，{{failed}} 个密钥撤销失败",
+  "revoke_error": "撤销失败",
+  "revoke_success_message": "API密钥已撤销",
+  "revoke_success": "撤销成功",
+  "update_error": "更新失败",
+  "update_success_message": "API密钥已更新",
+  "update_success": "更新成功",
+  "create_error": "创建失败",
+  "create_success_message": "API密钥创建成功",
+  "create_success": "创建成功",
+  "fetch_error_message": "无法加载API密钥列表",
+  "fetch_error": "获取失败",
+  "permissions": {
+    "read_agents": "读取智能体",
+    "write_agents": "创建/修改智能体",
+    "read_tasks": "读取任务",
+    "write_tasks": "创建/修改任务",
+    "read_knowledge": "读取知识库",
+    "write_knowledge": "创建/修改知识库"
+  },
+  "status": {
+    "none": "无",
+    "revoked": "已撤销",
+    "expired": "已过期",
+    "active": "生效中"
+  },
+  "errors": {
+    "api_failed": "API返回失败状态",
+    "fetch_failed": "获取API密钥列表失败",
+    "name_required": "密钥名称不能为空",
+    "create_failed": "创建API密钥失败",
+    "update_failed": "更新API密钥失败",
+    "revoke_failed": "撤销API密钥失败",
+    "batch_revoke_failed": "批量撤销API密钥失败",
+    "get_stats_failed": "获取密钥使用统计失败",
+    "get_space_keys_failed": "获取空间API密钥失败",
+    "get_member_keys_failed": "获取成员API密钥失败",
+    "revoke_member_key_failed": "撤销成员API密钥失败"
+  }
+}

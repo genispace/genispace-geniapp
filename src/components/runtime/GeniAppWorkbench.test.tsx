@@ -7,11 +7,19 @@ import { GeniAppWorkbench, type GeniAppWorkbenchConfig } from './GeniAppWorkbenc
 const config = {
   appConfig: {
     appId: 'acceptance-app',
+    name: 'Acceptance app',
     navigation: {
       items: [
         { key: 'overview-nav', title: { en: 'Overview', zh: '概览' }, icon: 'Home', linkedPage: 'overview' },
         { key: 'orders-nav', title: { en: 'Orders', zh: '订单' }, icon: 'List', linkedPage: 'orders' },
       ],
+    },
+  },
+  metadata: {
+    locales: {
+      zh: {
+        appConfig: { name: '验收应用' },
+      },
     },
   },
   pages: {
@@ -29,7 +37,11 @@ const config = {
 function renderApplication(locale = 'zh') {
   return render(
     <MemoryRouter initialEntries={['/acceptance-app/overview?_nav=overview-nav']}>
-      <GeniAppComponentProvider applicationId="acceptance-app" locale={locale}>
+      <GeniAppComponentProvider
+        applicationId="acceptance-app"
+        locale={locale}
+        localeMetadata={config.metadata}
+      >
         <GeniAppWorkbench identifier="acceptance-app" name="Acceptance app" config={config} />
       </GeniAppComponentProvider>
     </MemoryRouter>,
@@ -45,6 +57,7 @@ describe('GeniAppWorkbench', () => {
     renderApplication();
 
     expect(await screen.findByRole('navigation', { name: 'Application navigation' })).toBeInTheDocument();
+    expect(screen.getByText('验收应用')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '概览' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByText('Overview content')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '深色' })).toBeInTheDocument();
@@ -52,6 +65,7 @@ describe('GeniAppWorkbench', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'English' }));
     expect(await screen.findByRole('button', { name: 'Overview' })).toBeInTheDocument();
+    expect(screen.getByText('Acceptance app')).toBeInTheDocument();
     expect(document.documentElement).toHaveAttribute('lang', 'en-US');
 
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));

@@ -233,7 +233,9 @@ export function GeniAppWorkbench({
   const visibleWhenContext = useVisibleWhenContext(parsePageParams(location.search));
   const { language, localizeAppConfig, resolveBilingualText } = useWorkbenchConfigLocale();
   const pages = config.pages ?? {};
-  const localizedAppConfig = localizeAppConfig(config.appConfig as unknown as Record<string, unknown>) as unknown as WorkbenchConfig['appConfig'];
+  const localizedAppConfig = localizeAppConfig(
+    config.appConfig as unknown as Record<string, unknown>,
+  ) as unknown as WorkbenchConfig['appConfig'] & { name?: string };
   const navigationItems = localizedAppConfig?.navigation?.items ?? [];
   const visibleNavigation = useMemo(
     () => filterNavigationItemsForMember(
@@ -297,7 +299,7 @@ export function GeniAppWorkbench({
     isLoading: false,
     urlParams: parsePageParams(location.search),
   }] : [];
-  const appName = name || config.name || localizedAppConfig?.appId || identifier;
+  const appName = localizedAppConfig?.name || name || config.name || localizedAppConfig?.appId || identifier;
   const content = (
     <div className="h-dvh min-h-0 w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950">
       <MultiPageRenderer

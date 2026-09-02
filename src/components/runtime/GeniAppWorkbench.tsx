@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Globe2, Moon, PanelsTopLeft, Sun } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -136,13 +136,19 @@ function NavigationRows({
 function RuntimeControls() {
   const { i18n } = useTranslation();
   const isChinese = i18n.language.startsWith('zh');
-  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+  const [isDark, setIsDark] = useState(
+    () => typeof document !== 'undefined' && document.documentElement.classList.contains('dark'),
+  );
   const switchLanguage = () => {
     const next = isChinese ? 'en' : 'zh';
     localStorage.setItem('i18nextLng', next);
     void i18n.changeLanguage(next);
   };
-  const switchTheme = () => setTheme(isDark ? 'light' : 'dark');
+  const switchTheme = () => {
+    const nextIsDark = !isDark;
+    setTheme(nextIsDark ? 'dark' : 'light');
+    setIsDark(nextIsDark);
+  };
 
   return (
     <div className="space-y-1">

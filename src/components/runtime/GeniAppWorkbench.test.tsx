@@ -56,6 +56,7 @@ describe('GeniAppWorkbench', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     await waitFor(() => expect(document.documentElement).toHaveClass('dark'));
+    expect(screen.getByRole('button', { name: 'Light' })).toBeInTheDocument();
   });
 
   it('uses Workbench bottom navigation in an explicit mobile session', async () => {

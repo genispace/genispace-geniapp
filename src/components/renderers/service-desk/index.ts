@@ -1,2 +1,1 @@
-export { default as ServiceDeskReporterRenderer } from '../../internal/workbench/components/renderers/ServiceDeskReporterRenderer';
-
+export { default as ServiceDeskReporterRenderer } from './ServiceDeskReporterRenderer';

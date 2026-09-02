@@ -262,7 +262,7 @@ sequenceDiagram
 | `applications` | 52 个第一方 GeniApp 全部改用 `@genispace/geniapp`，移除共享源码 alias |
 | `applications-custom` | 开发脚手架改用公开包合同 |
 | `applications-brightfood` | 实际客户应用改用公开包合同并通过回归 |
-| Workbench 导出 | 使用 `geniappContractVersion: 0.4.0`，保留结构化源码、预构建 dist 和完整平台合同的自包含下载 |
+| Workbench 导出 | 使用 `geniappContractVersion: 0.5.0`，保留具体 renderer 源码、预构建 dist 和完整平台合同的自包含下载 |
 | `frontend-packages` | 标记只读废止；现役仓库不再消费其源码 |
 
 ## 7. 验收标准与本地结果

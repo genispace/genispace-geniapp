@@ -1,2 +1,1 @@
-export { default as FilterPanelRenderer } from '../../internal/workbench/components/renderers/FilterPanelRenderer';
-
+export { default as FilterPanelRenderer } from './FilterPanelRenderer';

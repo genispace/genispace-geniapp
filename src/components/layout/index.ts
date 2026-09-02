@@ -1,6 +1,6 @@
-export { default as PageRenderer } from '../internal/workbench/components/PageLayoutRenderer';
-export { default as Grid24Renderer } from '../internal/workbench/components/Grid24Renderer';
-export { MultiPageRenderer } from '../internal/workbench/components/MultiPageRenderer';
-export { PageFullscreenProvider, usePageFullscreen } from '../internal/workbench/contexts/PageFullscreenContext';
-export * from '../internal/workbench/utils/layoutSystem';
-export * from '../internal/workbench/utils/grid24LayoutSystem';
+export { default as PageRenderer } from '../runtime/PageRenderer';
+export { default as Grid24Renderer } from './Grid24Renderer';
+export { MultiPageRenderer } from '../runtime/MultiPageRenderer';
+export { PageFullscreenProvider, usePageFullscreen } from '../contexts/PageFullscreenContext';
+export * from '../utils/layoutSystem';
+export * from '../utils/grid24LayoutSystem';

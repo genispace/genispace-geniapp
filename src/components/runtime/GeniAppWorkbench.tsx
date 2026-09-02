@@ -135,9 +135,10 @@ function NavigationRows({
 
 function RuntimeControls() {
   const { i18n } = useTranslation();
+  const isChinese = i18n.language.startsWith('zh');
   const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const switchLanguage = () => {
-    const next = i18n.language.startsWith('zh') ? 'en' : 'zh';
+    const next = isChinese ? 'en' : 'zh';
     localStorage.setItem('i18nextLng', next);
     void i18n.changeLanguage(next);
   };
@@ -151,7 +152,7 @@ function RuntimeControls() {
         className="flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
       >
         <Globe2 className="h-4 w-4" />
-        <span>{i18n.language.startsWith('zh') ? 'English' : '中文'}</span>
+        <span>{isChinese ? 'English' : '中文'}</span>
       </button>
       <button
         type="button"
@@ -159,7 +160,7 @@ function RuntimeControls() {
         className="flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
       >
         {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        <span>{isDark ? 'Light' : 'Dark'}</span>
+        <span>{isDark ? (isChinese ? '浅色' : 'Light') : (isChinese ? '深色' : 'Dark')}</span>
       </button>
     </div>
   );
@@ -224,7 +225,7 @@ export function GeniAppWorkbench({
   const viewport = useViewport();
   const { currentUser } = useCurrentUser();
   const visibleWhenContext = useVisibleWhenContext(parsePageParams(location.search));
-  const { localizeAppConfig, resolveBilingualText } = useWorkbenchConfigLocale();
+  const { language, localizeAppConfig, resolveBilingualText } = useWorkbenchConfigLocale();
   const pages = config.pages ?? {};
   const localizedAppConfig = localizeAppConfig(config.appConfig as unknown as Record<string, unknown>) as unknown as WorkbenchConfig['appConfig'];
   const navigationItems = localizedAppConfig?.navigation?.items ?? [];
@@ -257,6 +258,10 @@ export function GeniAppWorkbench({
     if (!pageId) return;
     goToPage(pageId, { ...(item.pageParameters ?? {}), _nav: item.key });
   }, [goToPage]);
+
+  useEffect(() => {
+    document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en-US';
+  }, [language]);
 
   useEffect(() => {
     if (pathnamePageId(location.pathname, pages) || !activePageId) return;

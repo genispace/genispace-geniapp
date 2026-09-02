@@ -28,6 +28,13 @@ export interface GeniAppWorkbenchConfig extends WorkbenchConfig {
   description?: string;
   geniappRuntime?: {
     datasourceIdentifiers?: Record<string, string>;
+    datasetIdentifiers?: Record<string, string>;
+    agentIdentifiers?: Record<string, string>;
+    taskIdentifiers?: Record<string, string>;
+    workflowIdentifiers?: Record<string, string>;
+    operatorIdentifiers?: Record<string, string>;
+    knowledgeBaseIdentifiers?: Record<string, string>;
+    skillIdentifiers?: Record<string, string>;
   };
 }
 

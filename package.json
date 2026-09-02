@@ -1,6 +1,6 @@
 {
   "name": "@genispace/geniapp",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Public runtime, UI, Shell protocol and build contracts for GeniSpace applications",
   "type": "module",
   "license": "MIT",
@@ -227,6 +227,10 @@
     "./components/mobile": {
       "types": "./dist/components/mobile/index.d.ts",
       "import": "./dist/components/mobile.js"
+    },
+    "./components/release": {
+      "types": "./dist/components/release/index.d.ts",
+      "import": "./dist/components/release.js"
     },
     "./components/testing": {
       "types": "./dist/components/testing/index.d.ts",

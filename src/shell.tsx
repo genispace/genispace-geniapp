@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import {
   GENISPACE_SHELL_INIT_APPLIED_EVENT,
   GENISPACE_SHELL_SESSION_API_KEY,
+  GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY,
 } from './hooks';
 import { setLanguage, setTheme } from './utils';
 
@@ -15,6 +16,10 @@ export type GeniAppShellContext = {
   applicationId?: string | null;
   identifier: string | null;
   pinnedVersion: string | null;
+  stableVersion?: string | null;
+  previewVersion?: string | null;
+  effectiveVersion?: string | null;
+  releaseChannel?: 'stable' | 'preview';
   apiPublicBaseUrl?: string | null;
   accessToken?: string | null;
   locale?: string;
@@ -134,6 +139,7 @@ export function GeniAppShellBridge({
         });
 
         setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_API_KEY, context.apiPublicBaseUrl);
+        setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY, context.applicationId);
         if (accessTokenStorageKey) setStorageValue(localStorage, accessTokenStorageKey, context.accessToken);
 
         onApplicationId?.(context.applicationId || null);

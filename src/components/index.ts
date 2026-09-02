@@ -23,3 +23,4 @@ export type * from './types/components';
 export type * from './types/databaseDataSource';
 export type * from './types/datasource';
 export type * from './types/parameters';
+export * from './release';

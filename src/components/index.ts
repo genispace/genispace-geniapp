@@ -1,6 +1,8 @@
 export { default as ComponentRenderer } from './runtime/ComponentRenderer';
 export { default as PageRenderer } from './runtime/PageRenderer';
+export type { RenderPageComponent, RenderPageComponentContext } from './runtime/PageRenderer';
 export { MultiPageRenderer } from './runtime/MultiPageRenderer';
+export type { RenderGeniAppPage, RenderGeniAppPageContext } from './runtime/MultiPageRenderer';
 export { default as Grid24Renderer } from './layout/Grid24Renderer';
 export { ParameterProvider, useParameterContext } from './contexts/ParameterContext';
 export { GeniAppComponentProvider } from './runtime/GeniAppComponentProvider';

@@ -66,6 +66,20 @@ const ADOPTION_GRID24_CONFIG: Grid24LayoutConfig = {
   components: [],
 };
 
+export interface RenderPageComponentContext {
+  appConfig: any;
+  pageParams?: ParameterRecord;
+  pageId?: string;
+  tabId?: string;
+  keyPrefix: string;
+}
+
+export type RenderPageComponent = (
+  component: any,
+  index: number,
+  context: RenderPageComponentContext,
+) => React.ReactNode;
+
 interface PageLayoutRendererProps {
   components: any[];
   appConfig: any;
@@ -73,6 +87,7 @@ interface PageLayoutRendererProps {
   pageParams?: ParameterRecord;
   pageId?: string;
   tabId?: string;
+  renderComponent?: RenderPageComponent;
 }
 
 const PageLayoutRenderer: React.FC<PageLayoutRendererProps> = ({
@@ -81,7 +96,8 @@ const PageLayoutRenderer: React.FC<PageLayoutRendererProps> = ({
   layoutConfig,
   pageParams,
   pageId,
-  tabId
+  tabId,
+  renderComponent: renderApplicationComponent,
 }) => {
   // Narrow flow (real mobile OR phone frame) drives every layout branch below
   // — legacy preset pages stack in the frame exactly as on a device. The raw
@@ -126,17 +142,28 @@ const PageLayoutRenderer: React.FC<PageLayoutRendererProps> = ({
   const stickyFilterFirst =
     backEnabled && components[0]?.type === 'FilterPanel' && Boolean(components[0]?.props?.sticky);
 
-  const renderComponent = useCallback((component: any, index: number, keyPrefix: string = '') => (
-    <PageComponentRenderer 
-      key={`${keyPrefix}${component.id || component.type}-${index}`}
-      component={component}
-      appConfig={appConfig}
-      pageParams={pageParams}
-      pageId={pageId}
-      tabId={tabId}
-      nestingLevel={0}
-    />
-  ), [appConfig, pageParams, pageId, tabId]);
+  const renderComponent = useCallback((component: any, index: number, keyPrefix: string = '') => {
+    if (renderApplicationComponent) {
+      return renderApplicationComponent(component, index, {
+        appConfig,
+        pageParams,
+        pageId,
+        tabId,
+        keyPrefix,
+      });
+    }
+    return (
+      <PageComponentRenderer
+        key={`${keyPrefix}${component.id || component.type}-${index}`}
+        component={component}
+        appConfig={appConfig}
+        pageParams={pageParams}
+        pageId={pageId}
+        tabId={tabId}
+        nestingLevel={0}
+      />
+    );
+  }, [appConfig, pageParams, pageId, renderApplicationComponent, tabId]);
 
   const mapLegacyArea = (area: string): GridArea => {
     const mapping: Record<string, GridArea> = {

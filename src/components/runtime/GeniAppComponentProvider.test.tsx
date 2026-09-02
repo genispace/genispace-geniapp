@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { GeniAppComponentProvider } from './GeniAppComponentProvider';
 import { MultiPageRenderer } from './MultiPageRenderer';
+import PageRenderer from './PageRenderer';
 
 const page = {
   components: [
@@ -74,5 +75,28 @@ describe('GeniAppComponentProvider', () => {
     expect(document.getElementById('inkOnyx-theme-css')).not.toBeNull();
     unmount();
     expect(document.documentElement).not.toHaveAttribute('data-theme');
+  });
+
+  it('uses application-owned component modules inside the exact page layout', async () => {
+    render(
+      <MemoryRouter>
+        <GeniAppComponentProvider applicationId="source-app" locale="en">
+          <PageRenderer
+            components={page.components}
+            appConfig={{}}
+            pageId="overview"
+            renderComponent={(component, index, context) => (
+              <div key={`${context.keyPrefix}${component.id}-${index}`}>
+                source:{component.id}:{context.pageId}
+              </div>
+            )}
+          />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('source:localized-title:overview')).toBeInTheDocument();
+    expect(screen.getByText('source:styled-content:overview')).toBeInTheDocument();
+    expect(screen.queryByText('Operations overview')).not.toBeInTheDocument();
   });
 });

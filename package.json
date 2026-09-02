@@ -1,6 +1,6 @@
 {
   "name": "@genispace/geniapp",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Public runtime, UI, Shell protocol and build contracts for GeniSpace applications",
   "type": "module",
   "license": "MIT",

@@ -6,7 +6,7 @@ import { AppSidebar } from '../../ui/components/features/app/Sidebar';
 import { cn } from '../../utils/utils/cn';
 import { setTheme } from '../../utils/cookieSettings';
 import { GeniAppShellBridge } from '../../shell';
-import { MultiPageRenderer } from './MultiPageRenderer';
+import { MultiPageRenderer, type RenderGeniAppPage } from './MultiPageRenderer';
 import { renderLucideIcon } from '../utils/iconUtils';
 import {
   filterNavigationItemsForMember,
@@ -38,6 +38,7 @@ export interface GeniAppWorkbenchProps {
   allowedShellOrigins?: string[];
   headerIcon?: ReactNode;
   showRuntimeControls?: boolean;
+  renderPage?: RenderGeniAppPage;
 }
 
 function parsePageParams(search: string): Record<string, unknown> {
@@ -209,6 +210,7 @@ export function GeniAppWorkbench({
   allowedShellOrigins,
   headerIcon,
   showRuntimeControls = true,
+  renderPage,
 }: GeniAppWorkbenchProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -280,7 +282,12 @@ export function GeniAppWorkbench({
   const appName = name || config.name || localizedAppConfig?.appId || identifier;
   const content = (
     <div className="h-dvh min-h-0 w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950">
-      <MultiPageRenderer tabs={tab} activeTabId={tab[0]?.id ?? null} appConfig={localizedAppConfig} />
+      <MultiPageRenderer
+        tabs={tab}
+        activeTabId={tab[0]?.id ?? null}
+        appConfig={localizedAppConfig}
+        renderPage={renderPage}
+      />
     </div>
   );
 

@@ -20,6 +20,7 @@ import { usePageFullscreen } from '../contexts/PageFullscreenContext';
 import { TabActivityProvider } from '../contexts/TabActivityContext';
 import { PageComingSoonOverlay } from './PageComingSoonOverlay';
 import { applyCustomStyles } from '@/utils/styleUtils';
+import type { ParameterRecord } from '../types/parameters';
 
 const ParameterDebugPanel: React.FC = () => {
 
@@ -97,15 +98,26 @@ const ParameterDebugPanel: React.FC = () => {
   // );
 };
 
+export interface RenderGeniAppPageContext {
+  pageId: string;
+  tabId: string;
+  pageConfig: PageConfigType;
+  appConfig: any;
+  pageParams: ParameterRecord;
+}
+
+export type RenderGeniAppPage = (context: RenderGeniAppPageContext) => React.ReactNode;
+
 interface TabContentProps {
   tab: TabItem;
   appConfig: any;
   availableParameters: Array<{ label: string; value: string; type?: string }>;
   isEmpty: boolean;
   isTabActive?: boolean;
+  renderPage?: RenderGeniAppPage;
 }
 
-const TabContent = memo<TabContentProps>(({ tab, appConfig, availableParameters, isEmpty, isTabActive = true }) => {
+const TabContent = memo<TabContentProps>(({ tab, appConfig, availableParameters, isEmpty, isTabActive = true, renderPage }) => {
   const { t } = useTranslation(['workbench', 'common']);
   const rawPageConfig = tab.pageConfig as PageConfigType;
   const pageConfig = useLocalizedPageConfig(tab.pageId, rawPageConfig) ?? rawPageConfig;
@@ -188,6 +200,14 @@ const TabContent = memo<TabContentProps>(({ tab, appConfig, availableParameters,
                   </div>
                 </div>
               </div>
+            ) : renderPage ? (
+              renderPage({
+                pageId: tab.pageId,
+                tabId: tab.id,
+                pageConfig,
+                appConfig,
+                pageParams: tab.urlParams || {},
+              })
             ) : (
               <PageLayoutRenderer
                 key={`layout-${tab.id}`}
@@ -244,13 +264,15 @@ interface MultiPageRendererProps {
   activeTabId: string | null;
   appConfig: any;
   availableParameters?: Array<{ label: string; value: string; type?: string }>;
+  renderPage?: RenderGeniAppPage;
 }
 
 export const MultiPageRenderer: React.FC<MultiPageRendererProps> = ({
   tabs,
   activeTabId,
   appConfig,
-  availableParameters = []
+  availableParameters = [],
+  renderPage,
 }) => {
   const { t } = useTranslation(['workbench', 'common']);
   const isMobileViewport = isMobileWorkbenchViewport();
@@ -438,6 +460,7 @@ export const MultiPageRenderer: React.FC<MultiPageRendererProps> = ({
                 availableParameters={availableParameters}
                 isEmpty={!(tab.pageConfig as PageConfigType)?.components?.length}
                 isTabActive={isActive}
+                renderPage={renderPage}
               />
             )}
           </div>

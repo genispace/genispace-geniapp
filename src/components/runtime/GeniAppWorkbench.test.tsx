@@ -67,4 +67,24 @@ describe('GeniAppWorkbench', () => {
     expect(await screen.findByText('Orders content')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Orders' })).toHaveAttribute('aria-current', 'page');
   });
+
+  it('keeps the standard shell while rendering application-owned page source', async () => {
+    render(
+      <MemoryRouter initialEntries={['/acceptance-app/overview']}>
+        <GeniAppComponentProvider applicationId="acceptance-app" locale="en">
+          <GeniAppWorkbench
+            identifier="acceptance-app"
+            config={config}
+            renderPage={({ pageId, pageParams }) => (
+              <div data-testid="application-page">{pageId}:{String(pageParams._nav || '')}</div>
+            )}
+          />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByRole('navigation', { name: 'Application navigation' })).toBeInTheDocument();
+    expect(screen.getByTestId('application-page')).toHaveTextContent('overview:');
+    expect(screen.queryByText('Overview content')).not.toBeInTheDocument();
+  });
 });

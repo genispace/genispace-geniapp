@@ -1,9 +1,10 @@
 {
   "frontendRepository": "genispace/frontend",
-  "frontendCommit": "d26c10d7aa373685764b499d714d692018495030",
+  "frontendCommit": "955af96635bd9301d7c595ef08cadce62f2b3bec",
   "frontendBranch": "develop",
   "scope": "Workbench published/view renderer and runtime dependencies",
   "intentionalDeltas": [
-    "components/edit-mode is replaced by a view-only boundary outside the copied runtime"
+    "public import paths follow component-family directories",
+    "components/edit-mode is replaced by runtime/runtime-mode.tsx view-only invariants"
   ]
 }

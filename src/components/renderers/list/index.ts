@@ -1,2 +1,1 @@
-export { ListRenderer } from '../../internal/workbench/components/renderers/ListRenderers';
-
+export { ListRenderer } from './ListRenderers';

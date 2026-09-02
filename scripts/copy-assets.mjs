@@ -8,7 +8,7 @@ const output = path.join(root, 'dist');
 
 mkdirSync(path.join(output, 'styles'), { recursive: true });
 mkdirSync(path.join(output, 'components', 'ui'), { recursive: true });
-mkdirSync(path.join(output, 'components', 'internal', 'workbench', 'styles'), { recursive: true });
+mkdirSync(path.join(output, 'components', 'styles'), { recursive: true });
 for (const file of ['base.css', 'reduced-motion.css', 'tailwind-preset.js']) {
   copyFileSync(path.join(source, 'styles', file), path.join(output, 'styles', file));
 }
@@ -19,8 +19,8 @@ copyFileSync(
 );
 for (const file of ['layoutSystem.css', 'grid24.css']) {
   copyFileSync(
-    path.join(root, 'src', 'components', 'internal', 'workbench', 'styles', file),
-    path.join(output, 'components', 'internal', 'workbench', 'styles', file),
+    path.join(root, 'src', 'components', 'styles', file),
+    path.join(output, 'components', 'styles', file),
   );
 }
 const componentsCss = readFileSync(path.join(root, 'src', 'components', 'styles.css'), 'utf8')

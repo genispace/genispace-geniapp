@@ -1,2 +1,1 @@
-export { default as EChartsChartRenderer } from '../../internal/workbench/components/renderers/EChartsChartRenderer';
-
+export { default as EChartsChartRenderer } from './EChartsChartRenderer';

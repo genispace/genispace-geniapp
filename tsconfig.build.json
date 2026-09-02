@@ -46,7 +46,7 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/__tests__/**",
-    "src/components/internal/workbench/locales/types.ts",
-    "src/components/internal/workbench/mocks/**"
+    "src/components/locales/types.ts",
+    "src/components/mocks/**"
   ]
 }

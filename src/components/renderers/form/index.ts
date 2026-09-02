@@ -1,2 +1,2 @@
-export { default as FormRenderer } from '../../internal/workbench/components/renderers/FormRenderer';
-
+export { default as FormRenderer } from './FormRenderer';
+export { default as FileUploadDropzone } from './FileUploadDropzone';

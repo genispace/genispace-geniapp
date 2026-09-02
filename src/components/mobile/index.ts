@@ -1,4 +1,4 @@
-export { MobileFlowLayoutProvider, useMobileFlowLayout } from '../internal/workbench/components/mobileFlowLayoutContext';
-export { ViewportProvider, useViewport } from '../internal/workbench/contexts/ViewportContext';
-export { useMobileViewport } from '../internal/workbench/hooks/useMobileViewport';
-export * from '../internal/workbench/mobile/components/ComponentAdapter';
+export { MobileFlowLayoutProvider, useMobileFlowLayout } from './mobileFlowLayoutContext';
+export { ViewportProvider, useViewport } from '../contexts/ViewportContext';
+export { useMobileViewport } from '../hooks/useMobileViewport';
+export * from './components/ComponentAdapter';

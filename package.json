@@ -1,6 +1,6 @@
 {
   "name": "@genispace/geniapp",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Public runtime, UI, Shell protocol and build contracts for GeniSpace applications",
   "type": "module",
   "license": "MIT",
@@ -100,6 +100,18 @@
       "types": "./dist/components/renderers/table/index.d.ts",
       "import": "./dist/components/renderers/table.js"
     },
+    "./components/renderers/editable-table": {
+      "types": "./dist/components/renderers/editable-table/index.d.ts",
+      "import": "./dist/components/renderers/editable-table.js"
+    },
+    "./components/renderers/analytics-table": {
+      "types": "./dist/components/renderers/analytics-table/index.d.ts",
+      "import": "./dist/components/renderers/analytics-table.js"
+    },
+    "./components/renderers/data-grid-card": {
+      "types": "./dist/components/renderers/data-grid-card/index.d.ts",
+      "import": "./dist/components/renderers/data-grid-card.js"
+    },
     "./components/renderers/form": {
       "types": "./dist/components/renderers/form/index.d.ts",
       "import": "./dist/components/renderers/form.js"
@@ -107,6 +119,14 @@
     "./components/renderers/chart": {
       "types": "./dist/components/renderers/chart/index.d.ts",
       "import": "./dist/components/renderers/chart.js"
+    },
+    "./components/renderers/radar-chart": {
+      "types": "./dist/components/renderers/radar-chart/index.d.ts",
+      "import": "./dist/components/renderers/radar-chart.js"
+    },
+    "./components/renderers/map-chart": {
+      "types": "./dist/components/renderers/map-chart/index.d.ts",
+      "import": "./dist/components/renderers/map-chart.js"
     },
     "./components/renderers/echarts": {
       "types": "./dist/components/renderers/echarts/index.d.ts",
@@ -116,6 +136,10 @@
       "types": "./dist/components/renderers/statistics/index.d.ts",
       "import": "./dist/components/renderers/statistics.js"
     },
+    "./components/renderers/typography": {
+      "types": "./dist/components/renderers/typography/index.d.ts",
+      "import": "./dist/components/renderers/typography.js"
+    },
     "./components/renderers/tabs": {
       "types": "./dist/components/renderers/tabs/index.d.ts",
       "import": "./dist/components/renderers/tabs.js"
@@ -123,6 +147,42 @@
     "./components/renderers/container": {
       "types": "./dist/components/renderers/container/index.d.ts",
       "import": "./dist/components/renderers/container.js"
+    },
+    "./components/renderers/card": {
+      "types": "./dist/components/renderers/card/index.d.ts",
+      "import": "./dist/components/renderers/card.js"
+    },
+    "./components/renderers/hero-card": {
+      "types": "./dist/components/renderers/hero-card/index.d.ts",
+      "import": "./dist/components/renderers/hero-card.js"
+    },
+    "./components/renderers/metric-carousel": {
+      "types": "./dist/components/renderers/metric-carousel/index.d.ts",
+      "import": "./dist/components/renderers/metric-carousel.js"
+    },
+    "./components/renderers/collapse-panel": {
+      "types": "./dist/components/renderers/collapse-panel/index.d.ts",
+      "import": "./dist/components/renderers/collapse-panel.js"
+    },
+    "./components/renderers/product-report": {
+      "types": "./dist/components/renderers/product-report/index.d.ts",
+      "import": "./dist/components/renderers/product-report.js"
+    },
+    "./components/renderers/product-detail": {
+      "types": "./dist/components/renderers/product-detail/index.d.ts",
+      "import": "./dist/components/renderers/product-detail.js"
+    },
+    "./components/renderers/tile-grid": {
+      "types": "./dist/components/renderers/tile-grid/index.d.ts",
+      "import": "./dist/components/renderers/tile-grid.js"
+    },
+    "./components/renderers/ring-stat": {
+      "types": "./dist/components/renderers/ring-stat/index.d.ts",
+      "import": "./dist/components/renderers/ring-stat.js"
+    },
+    "./components/renderers/navigation": {
+      "types": "./dist/components/renderers/navigation/index.d.ts",
+      "import": "./dist/components/renderers/navigation.js"
     },
     "./components/renderers/list": {
       "types": "./dist/components/renderers/list/index.d.ts",

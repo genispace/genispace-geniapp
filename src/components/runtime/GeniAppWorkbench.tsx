@@ -6,22 +6,22 @@ import { AppSidebar } from '../../ui/components/features/app/Sidebar';
 import { cn } from '../../utils/utils/cn';
 import { setTheme } from '../../utils/cookieSettings';
 import { GeniAppShellBridge } from '../../shell';
-import { MultiPageRenderer } from '../internal/workbench/components/MultiPageRenderer';
-import { renderLucideIcon } from '../internal/workbench/utils/iconUtils';
+import { MultiPageRenderer } from './MultiPageRenderer';
+import { renderLucideIcon } from '../utils/iconUtils';
 import {
   filterNavigationItemsForMember,
   getNavigationTargetPageId,
   resolveDefaultWorkbenchLanding,
   serializeWorkbenchUrlSearchParams,
-} from '../internal/workbench/utils/navigationUtils';
-import { resolveMobileBottomNavTabs } from '../internal/workbench/mobile/utils/mobileBottomNav';
-import { ParameterUtils } from '../internal/workbench/utils/parameterUtils';
-import { useWorkbenchConfigLocale } from '../internal/workbench/contexts/WorkbenchConfigLocaleContext';
-import { useViewport } from '../internal/workbench/contexts/ViewportContext';
-import { useCurrentUser } from '../internal/workbench/hooks/useCurrentUser';
-import { useVisibleWhenContext } from '../internal/workbench/hooks/useVisibleWhenContext';
-import type { WorkbenchConfig } from '../internal/workbench/types/components';
-import type { NavigationItem } from '../internal/workbench/types';
+} from '../utils/navigationUtils';
+import { resolveMobileBottomNavTabs } from '../mobile/utils/mobileBottomNav';
+import { ParameterUtils } from '../utils/parameterUtils';
+import { useWorkbenchConfigLocale } from '../contexts/WorkbenchConfigLocaleContext';
+import { useViewport } from '../contexts/ViewportContext';
+import { useCurrentUser } from '../hooks/useCurrentUser';
+import { useVisibleWhenContext } from '../hooks/useVisibleWhenContext';
+import type { WorkbenchConfig } from '../types/components';
+import type { NavigationItem } from '../types';
 
 export interface GeniAppWorkbenchConfig extends WorkbenchConfig {
   name?: string;

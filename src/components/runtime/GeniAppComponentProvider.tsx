@@ -3,13 +3,13 @@ import { I18nextProvider } from 'react-i18next';
 import type { i18n as I18nInstance } from 'i18next';
 import { configureGeniAppHostAdapters } from '../adapters/host';
 import type { GeniAppHostAdapters } from '../types/host-adapters';
-import { WorkbenchConfigLocaleProvider } from '../internal/workbench/contexts/WorkbenchConfigLocaleContext';
-import { WorkbenchThemeProvider } from '../internal/workbench/contexts/WorkbenchThemeContext';
-import { ViewportProvider } from '../internal/workbench/contexts/ViewportContext';
-import { PageFullscreenProvider } from '../internal/workbench/contexts/PageFullscreenContext';
-import { MobileFlowLayoutProvider } from '../internal/workbench/components/mobileFlowLayoutContext';
+import { WorkbenchConfigLocaleProvider } from '../contexts/WorkbenchConfigLocaleContext';
+import { WorkbenchThemeProvider } from '../contexts/WorkbenchThemeContext';
+import { ViewportProvider } from '../contexts/ViewportContext';
+import { PageFullscreenProvider } from '../contexts/PageFullscreenContext';
+import { MobileFlowLayoutProvider } from '../mobile/mobileFlowLayoutContext';
 import { createGeniAppI18n, normalizeGeniAppLocale } from './i18n';
-import { useViewport } from '../internal/workbench/contexts/ViewportContext';
+import { useViewport } from '../contexts/ViewportContext';
 
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 

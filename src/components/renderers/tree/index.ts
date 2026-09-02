@@ -1,2 +1,1 @@
-export { default as TreeRenderer } from '../../internal/workbench/components/renderers/SimpleTreeRenderer';
-
+export { default as TreeRenderer } from './SimpleTreeRenderer';

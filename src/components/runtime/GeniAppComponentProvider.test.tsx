@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { GeniAppComponentProvider } from './GeniAppComponentProvider';
-import { MultiPageRenderer } from '../internal/workbench/components/MultiPageRenderer';
+import { MultiPageRenderer } from './MultiPageRenderer';
 
 const page = {
   components: [

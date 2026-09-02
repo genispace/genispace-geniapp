@@ -1,5 +1,5 @@
 export {
-  default as TypographyRenderer,
+  TypographyRenderer,
   TextRenderer,
   TitleRenderer,
   ParagraphRenderer,

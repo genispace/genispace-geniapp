@@ -14,6 +14,7 @@ export default defineConfig({
       '@genispace/shared-utils': path.resolve(root, 'src/components/internal/shared-utils/index.ts'),
       '@genispace/workbench-templates': path.resolve(root, 'src/components/internal/workbench-templates/index.ts'),
       '@genispace/geniapp/components/adapters/host': path.resolve(root, 'src/components/adapters/host.ts'),
+      '@genispace/geniapp/utils': path.resolve(root, 'src/utils.ts'),
     },
   },
   test: {

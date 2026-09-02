@@ -1,0 +1,21 @@
+{
+  "errors": {
+    "get_list_failed": "Failed to get ConfigMap list",
+    "get_failed": "Failed to get ConfigMap",
+    "create_failed": "Failed to create ConfigMap",
+    "update_failed": "Failed to update ConfigMap",
+    "get_default_failed": "Failed to get default ConfigMap",
+    "ensure_default_failed": "Failed to ensure default ConfigMap",
+    "duplicate_failed": "Failed to duplicate ConfigMap",
+    "set_default_failed": "Failed to set default ConfigMap",
+    "unset_default_failed": "Failed to unset default ConfigMap",
+    "export_yaml_failed": "Failed to export YAML",
+    "import_yaml_failed": "Failed to import YAML",
+    "get_variables_failed": "Failed to get config variables",
+    "get_variable_failed": "Failed to get config variable",
+    "create_variable_failed": "Failed to create config variable",
+    "update_variable_failed": "Failed to update config variable",
+    "batch_upsert_failed": "Failed to batch upsert config variables"
+  }
+}
+

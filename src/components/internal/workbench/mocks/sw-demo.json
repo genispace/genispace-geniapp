@@ -1,0 +1,1262 @@
+{
+    "pages": {
+        "page-crm": {
+            "title": "会员CRM分析",
+            "layout": "fluid",
+            "components": [
+                {
+                    "id": "comp-title-3",
+                    "type": "Title",
+                    "props": {
+                        "align": "center",
+                        "level": 1,
+                        "content": "C. 会员与 CRM（Mock · 活动维度见 vw_sw_board_c_campaign_perf_daily）"
+                    }
+                },
+                {
+                    "id": "comp-container-crm-metrics",
+                    "type": "Container",
+                    "props": {
+                        "grid": {
+                            "cols": 3
+                        },
+                        "title": "会员核心指标",
+                        "layout": "grid"
+                    },
+                    "children": [
+                        {
+                            "id": "comp-stat-new-members",
+                            "type": "StatisticGroup",
+                            "props": {
+                                "grid": {
+                                    "cols": 1
+                                },
+                                "items": [
+                                    {
+                                        "key": "new-members",
+                                        "icon": "Plus",
+                                        "title": "新增会员",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 15.2,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "description": "较上月增长"
+                                        },
+                                        "value": 3580
+                                    }
+                                ]
+                            },
+                            "useMockData": true
+                        },
+                        {
+                            "id": "comp-stat-repeat-buy",
+                            "type": "StatisticGroup",
+                            "props": {
+                                "grid": {
+                                    "cols": 1
+                                },
+                                "items": [
+                                    {
+                                        "key": "repeat-buy",
+                                        "icon": "Activity",
+                                        "title": "复购率",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 2.8,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "description": "较上月提升"
+                                        },
+                                        "value": 32.5
+                                    }
+                                ]
+                            },
+                            "useMockData": true
+                        },
+                        {
+                            "id": "comp-stat-member-contribution",
+                            "type": "StatisticGroup",
+                            "props": {
+                                "grid": {
+                                    "cols": 1
+                                },
+                                "items": [
+                                    {
+                                        "key": "member-contribution",
+                                        "icon": "Target",
+                                        "title": "会员贡献占比",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 4.5,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "description": "较上月提升"
+                                        },
+                                        "value": 68.5
+                                    }
+                                ]
+                            },
+                            "useMockData": true
+                        }
+                    ]
+                },
+                {
+                    "id": "comp-chart-funnel",
+                    "type": "Chart",
+                    "props": {
+                        "title": "会员转化漏斗",
+                        "colors": [
+                            "#b7eb8f",
+                            "#69c0ff",
+                            "#1890ff",
+                            "#722ed1"
+                        ],
+                        "height": 400,
+                        "xField": "stage",
+                        "yField": "count",
+                        "showLegend": false,
+                        "showTooltip": true
+                    },
+                    "mockData": [
+                        {
+                            "count": 100000,
+                            "stage": "曝光"
+                        },
+                        {
+                            "count": 45000,
+                            "stage": "访问"
+                        },
+                        {
+                            "count": 8500,
+                            "stage": "注册"
+                        },
+                        {
+                            "count": 3580,
+                            "stage": "首单"
+                        },
+                        {
+                            "count": 1163,
+                            "stage": "复购"
+                        }
+                    ],
+                    "useMockData": true
+                },
+                {
+                    "id": "comp-list-events",
+                    "type": "List",
+                    "props": {
+                        "title": "近期营销活动"
+                    },
+                    "mockData": [
+                        {
+                            "title": "春季大促活动",
+                            "description": "3月1日-3月15日，全场8折"
+                        },
+                        {
+                            "title": "会员专享日",
+                            "description": "每月15日会员双倍积分"
+                        },
+                        {
+                            "title": "新品首发会",
+                            "description": "3月20日新品首发，老会员优先选购"
+                        }
+                    ],
+                    "useMockData": true
+                }
+            ]
+        },
+        "page-store": {
+            "title": "门店动作管理",
+            "layout": "fluid",
+            "components": [
+                {
+                    "id": "comp-title-4",
+                    "type": "Title",
+                    "props": {
+                        "align": "center",
+                        "level": 1,
+                        "content": "D. 门店动作（Mock · 外链可接 vw_sw_board_d_quick_links）"
+                    }
+                },
+                {
+                    "id": "comp-container-actions",
+                    "type": "Container",
+                    "props": {
+                        "grid": {
+                            "cols": 4
+                        },
+                        "title": "门店快捷工具",
+                        "layout": "flex"
+                    },
+                    "children": [
+                        {
+                            "id": "card-checkin",
+                            "type": "Card",
+                            "props": {
+                                "icon": "Clock",
+                                "title": "门店打卡",
+                                "description": "每日签到打卡"
+                            }
+                        },
+                        {
+                            "id": "card-confirm",
+                            "type": "Card",
+                            "props": {
+                                "icon": "CheckCircle",
+                                "title": "任务确认",
+                                "description": "待办任务确认"
+                            }
+                        },
+                        {
+                            "id": "card-report",
+                            "type": "Card",
+                            "props": {
+                                "icon": "Upload",
+                                "title": "快捷上报",
+                                "description": "异常情况上报"
+                            }
+                        },
+                        {
+                            "id": "card-link",
+                            "type": "Card",
+                            "props": {
+                                "icon": "Layout",
+                                "title": "系统链接",
+                                "description": "常用系统跳转"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "comp-table-todo",
+                    "type": "Table",
+                    "props": {
+                        "title": "待办事项列表",
+                        "rowKey": "todoId",
+                        "addable": true,
+                        "columns": [
+                            {
+                                "key": "todoId",
+                                "title": "待办编号",
+                                "dataIndex": "todoId",
+                                "searchable": true
+                            },
+                            {
+                                "key": "content",
+                                "title": "任务内容",
+                                "dataIndex": "content",
+                                "searchable": true
+                            },
+                            {
+                                "key": "storeId",
+                                "title": "门店",
+                                "dataIndex": "storeId",
+                                "searchable": false
+                            },
+                            {
+                                "key": "deadline",
+                                "title": "截止时间",
+                                "dataIndex": "deadline",
+                                "searchable": false
+                            },
+                            {
+                                "key": "status",
+                                "title": "状态",
+                                "dataIndex": "status",
+                                "searchable": false
+                            }
+                        ],
+                        "editable": true,
+                        "deletable": true,
+                        "showToolbar": true,
+                        "showRefresh": true
+                    },
+                    "mockData": [
+                        {
+                            "status": "待处理",
+                            "todoId": "T001",
+                            "content": "陈列检查",
+                            "storeId": "S001",
+                            "deadline": "2024-03-15"
+                        },
+                        {
+                            "status": "进行中",
+                            "todoId": "T002",
+                            "content": "库存盘点",
+                            "storeId": "S002",
+                            "deadline": "2024-03-16"
+                        },
+                        {
+                            "status": "已完成",
+                            "todoId": "T003",
+                            "content": "促销活动执行",
+                            "storeId": "S003",
+                            "deadline": "2024-03-17"
+                        },
+                        {
+                            "status": "待处理",
+                            "todoId": "T004",
+                            "content": "设备维护",
+                            "storeId": "S004",
+                            "deadline": "2024-03-18"
+                        }
+                    ],
+                    "useMockData": true
+                },
+                {
+                    "id": "comp-chart-status",
+                    "type": "Chart",
+                    "props": {
+                        "title": "任务状态统计",
+                        "colors": [
+                            "#52c41a",
+                            "#faad14",
+                            "#1890ff",
+                            "#d9d9d9"
+                        ],
+                        "height": 300,
+                        "angleField": "status",
+                        "colorField": "status",
+                        "showLegend": true,
+                        "showTooltip": true
+                    },
+                    "mockData": [
+                        {
+                            "value": 45,
+                            "status": "待处理"
+                        },
+                        {
+                            "value": 28,
+                            "status": "进行中"
+                        },
+                        {
+                            "value": 65,
+                            "status": "已完成"
+                        },
+                        {
+                            "value": 12,
+                            "status": "已取消"
+                        }
+                    ],
+                    "useMockData": true
+                }
+            ]
+        },
+        "page-product": {
+            "title": "商品销售结构分析",
+            "layout": "fluid",
+            "components": [
+                {
+                    "id": "comp-title-2",
+                    "type": "Title",
+                    "props": {
+                        "align": "center",
+                        "level": 1,
+                        "content": "B. 商品与销售结构（Mock · 对齐 vw_sw_board_b_*）"
+                    }
+                },
+                {
+                    "id": "comp-container-category",
+                    "type": "Container",
+                    "props": {
+                        "grid": {
+                            "cols": 2
+                        },
+                        "title": "品类销售占比",
+                        "layout": "grid"
+                    },
+                    "children": [
+                        {
+                            "id": "comp-chart-pie",
+                            "type": "Chart",
+                            "props": {
+                                "title": "品类销售占比",
+                                "colors": [
+                                    "#1890ff",
+                                    "#52c41a",
+                                    "#faad14",
+                                    "#722ed1",
+                                    "#eb2f96"
+                                ],
+                                "height": 350,
+                                "angleField": "category",
+                                "colorField": "category",
+                                "showLegend": true,
+                                "showTooltip": true
+                            },
+                            "mockData": [
+                                {
+                                    "value": 35.2,
+                                    "category": "男装"
+                                },
+                                {
+                                    "value": 42.8,
+                                    "category": "女装"
+                                },
+                                {
+                                    "value": 12.5,
+                                    "category": "童装"
+                                },
+                                {
+                                    "value": 6.3,
+                                    "category": "配件"
+                                },
+                                {
+                                    "value": 3.2,
+                                    "category": "鞋包"
+                                }
+                            ],
+                            "useMockData": true
+                        },
+                        {
+                            "id": "comp-chart-bar",
+                            "type": "Chart",
+                            "props": {
+                                "title": "畅销商品TOP10",
+                                "height": 350,
+                                "xField": "productName",
+                                "yField": "volume",
+                                "showLegend": false,
+                                "showTooltip": true
+                            },
+                            "mockData": [
+                                {
+                                    "volume": 1250,
+                                    "productName": "经典款衬衫"
+                                },
+                                {
+                                    "volume": 1180,
+                                    "productName": "休闲裤A款"
+                                },
+                                {
+                                    "volume": 1050,
+                                    "productName": "连衣裙B款"
+                                },
+                                {
+                                    "volume": 980,
+                                    "productName": "卫衣C款"
+                                },
+                                {
+                                    "volume": 920,
+                                    "productName": "牛仔裤D款"
+                                },
+                                {
+                                    "volume": 850,
+                                    "productName": "T恤E款"
+                                },
+                                {
+                                    "volume": 780,
+                                    "productName": "风衣F款"
+                                },
+                                {
+                                    "volume": 720,
+                                    "productName": "毛衣G款"
+                                },
+                                {
+                                    "volume": 680,
+                                    "productName": "外套H款"
+                                },
+                                {
+                                    "volume": 650,
+                                    "productName": "夹克I款"
+                                }
+                            ],
+                            "useMockData": true
+                        }
+                    ]
+                },
+                {
+                    "id": "comp-table-detail",
+                    "type": "Table",
+                    "props": {
+                        "title": "款/色/码销售明细",
+                        "rowKey": "skuId",
+                        "columns": [
+                            {
+                                "key": "skuId",
+                                "title": "SKU编号",
+                                "dataIndex": "skuId",
+                                "searchable": true
+                            },
+                            {
+                                "key": "style",
+                                "title": "款式",
+                                "dataIndex": "style",
+                                "searchable": false
+                            },
+                            {
+                                "key": "color",
+                                "title": "颜色",
+                                "dataIndex": "color",
+                                "searchable": false
+                            },
+                            {
+                                "key": "size",
+                                "title": "尺码",
+                                "dataIndex": "size",
+                                "searchable": false
+                            },
+                            {
+                                "key": "volume",
+                                "title": "销量",
+                                "dataIndex": "volume",
+                                "searchable": false
+                            },
+                            {
+                                "key": "status",
+                                "title": "状态",
+                                "dataIndex": "status",
+                                "searchable": false
+                            }
+                        ],
+                        "showToolbar": true,
+                        "showRefresh": true
+                    },
+                    "mockData": [
+                        {
+                            "size": "M",
+                            "color": "黑色",
+                            "skuId": "SKU001",
+                            "style": "经典款",
+                            "status": "正常",
+                            "volume": 150
+                        },
+                        {
+                            "size": "L",
+                            "color": "白色",
+                            "skuId": "SKU002",
+                            "style": "经典款",
+                            "status": "正常",
+                            "volume": 120
+                        },
+                        {
+                            "size": "XL",
+                            "color": "蓝色",
+                            "skuId": "SKU003",
+                            "style": "时尚款",
+                            "status": "断码",
+                            "volume": 85
+                        },
+                        {
+                            "size": "S",
+                            "color": "灰色",
+                            "skuId": "SKU004",
+                            "style": "经典款",
+                            "status": "正常",
+                            "volume": 200
+                        },
+                        {
+                            "size": "M",
+                            "color": "红色",
+                            "skuId": "SKU005",
+                            "style": "潮流款",
+                            "status": "滞销",
+                            "volume": 50
+                        }
+                    ],
+                    "useMockData": true
+                }
+            ]
+        },
+        "page-overview": {
+            "title": "经营总览",
+            "layout": {
+                "gap": 16,
+                "type": "grid-24",
+                "preset": "custom",
+                "rowGap": 16,
+                "columns": 24,
+                "rowHeight": 50,
+                "components": [
+                    {
+                        "id": "comp-title-1",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 0
+                    },
+                    {
+                        "id": "comp-statistic-1",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 1
+                    },
+                    {
+                        "id": "comp-chart-sales-trend",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 7
+                    },
+                    {
+                        "id": "comp-chart-passenger-exits",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 8
+                    },
+                    {
+                        "id": "comp-table-achievement-dual",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 4
+                    },
+                    {
+                        "id": "comp-table-store-rank",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 5
+                    },
+                    {
+                        "id": "comp-card-alert",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 6
+                    },
+                    {
+                        "id": "component_1779070130462_h473uvmcp",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 2
+                    },
+                    {
+                        "id": "component_1779070149509_8ogmhyvrg",
+                        "colSpan": 24,
+                        "rowSpan": 1,
+                        "colStart": 0,
+                        "rowStart": 3
+                    }
+                ]
+            },
+            "components": [
+                {
+                    "id": "comp-title-1",
+                    "type": "Title",
+                    "props": {
+                        "align": "center",
+                        "level": 1,
+                        "content": "A. 经营总览（Mock · 对齐 SW-DEMO/sql 视图 vw_sw_board_a_*）"
+                    }
+                },
+                {
+                    "id": "comp-statistic-1",
+                    "type": "StatisticGroup",
+                    "props": {
+                        "grid": {
+                            "cols": 4
+                        },
+                        "items": [
+                            {
+                                "key": "sales-revenue",
+                                "icon": "TrendingUp",
+                                "title": "销售额",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 12.5,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": false,
+                                    "description": "较上月增长"
+                                },
+                                "value": 2856000,
+                                "statisticType": "column",
+                                "statisticField": "sales_amount"
+                            },
+                            {
+                                "key": "sales-volume",
+                                "icon": "Activity",
+                                "title": "销量",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 8.3,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": false,
+                                    "description": "较上月增长"
+                                },
+                                "value": 15420,
+                                "statisticType": "column",
+                                "statisticField": "sales_qty"
+                            },
+                            {
+                                "key": "avg-discount",
+                                "icon": "Target",
+                                "title": "平均折扣",
+                                "trend": {
+                                    "type": "down",
+                                    "value": -0.5,
+                                    "status": "warning",
+                                    "suffix": "折",
+                                    "enabled": false,
+                                    "description": "较上月下降"
+                                },
+                                "value": 7.8,
+                                "statisticType": "column",
+                                "statisticField": "discount_amount"
+                            },
+                            {
+                                "key": "target-rate",
+                                "icon": "CheckCircle",
+                                "title": "目标达成率",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 3.2,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": false,
+                                    "description": "较上月提升"
+                                },
+                                "value": 94.2,
+                                "statisticType": "column",
+                                "statisticField": "avg_discount_rate_nonzero"
+                            }
+                        ],
+                        "databaseDataSourceConfig": {
+                            "type": "database-datasource",
+                            "parameters": {},
+                            "datasourceId": "d6c30b85-db1f-4c8f-a4c5-7800bcc866fc",
+                            "outputFields": [],
+                            "datasourceName": "01.经营总览-统计组",
+                            "parameterTypes": {}
+                        }
+                    },
+                    "useMockData": true
+                },
+                {
+                    "id": "comp-chart-sales-trend",
+                    "type": "Chart",
+                    "props": {
+                        "title": "销售额趋势（近30天）",
+                        "colors": [
+                            "#1890ff",
+                            "#52c41a",
+                            "#faad14"
+                        ],
+                        "height": 350,
+                        "smooth": true,
+                        "xField": "date",
+                        "yField": "value",
+                        "showLegend": true,
+                        "seriesField": "type",
+                        "showTooltip": true
+                    },
+                    "mockData": [
+                        {
+                            "date": "2024-01-01",
+                            "type": "销售额",
+                            "value": 85000
+                        },
+                        {
+                            "date": "2024-01-05",
+                            "type": "销售额",
+                            "value": 92000
+                        },
+                        {
+                            "date": "2024-01-10",
+                            "type": "销售额",
+                            "value": 88000
+                        },
+                        {
+                            "date": "2024-01-15",
+                            "type": "销售额",
+                            "value": 95000
+                        },
+                        {
+                            "date": "2024-01-20",
+                            "type": "销售额",
+                            "value": 98000
+                        },
+                        {
+                            "date": "2024-01-25",
+                            "type": "销售额",
+                            "value": 102000
+                        },
+                        {
+                            "date": "2024-01-30",
+                            "type": "销售额",
+                            "value": 105000
+                        }
+                    ],
+                    "useMockData": true
+                },
+                {
+                    "id": "comp-chart-passenger-exits",
+                    "type": "Chart",
+                    "props": {
+                        "title": "客流 exits（站点，示意 sw_passenger_flow）",
+                        "colors": [
+                            "#597ef7"
+                        ],
+                        "height": 320,
+                        "xField": "siteName",
+                        "yField": "exits",
+                        "showLegend": false,
+                        "showTooltip": true
+                    },
+                    "mockData": [
+                        {
+                            "exits": 441,
+                            "siteName": "SW HK CWB SOGO"
+                        },
+                        {
+                            "exits": 78,
+                            "siteName": "南京德基广场"
+                        },
+                        {
+                            "exits": 101,
+                            "siteName": "北京八达岭奥莱"
+                        },
+                        {
+                            "exits": 155,
+                            "siteName": "上海比斯特"
+                        },
+                        {
+                            "exits": 54,
+                            "siteName": "SW HK HARBOR CITY"
+                        }
+                    ],
+                    "useMockData": true
+                },
+                {
+                    "id": "comp-table-achievement-dual",
+                    "type": "Table",
+                    "props": {
+                        "title": "达成率对照",
+                        "rowKey": "storeCode",
+                        "columns": [
+                            {
+                                "key": "storeCode",
+                                "title": "门店编码",
+                                "dataIndex": "storecode",
+                                "searchable": true
+                            },
+                            {
+                                "key": "businessDate",
+                                "title": "业务日",
+                                "dataIndex": "businessdate",
+                                "searchable": false
+                            },
+                            {
+                                "key": "actualSales",
+                                "title": "实销金额",
+                                "dataIndex": "actualsales",
+                                "searchable": false
+                            },
+                            {
+                                "key": "financeTarget",
+                                "title": "财务日目标",
+                                "dataIndex": "financetarget",
+                                "searchable": false
+                            },
+                            {
+                                "key": "achFinance",
+                                "title": "达成率(财务)",
+                                "dataIndex": "achfinance",
+                                "searchable": false
+                            },
+                            {
+                                "key": "smiTarget",
+                                "title": "SMI日目标",
+                                "dataIndex": "smitarget",
+                                "searchable": false
+                            },
+                            {
+                                "key": "achSmi",
+                                "title": "达成率(SMI)",
+                                "dataIndex": "achsmi",
+                                "searchable": false
+                            }
+                        ],
+                        "showToolbar": true,
+                        "showRefresh": true
+                    },
+                    "mockData": [
+                        {
+                            "achSmi": 3.6332,
+                            "smiTarget": 41900,
+                            "storeCode": "H001",
+                            "achFinance": 3.6332,
+                            "actualSales": 152280,
+                            "businessDate": "2026-05-09",
+                            "financeTarget": 41900
+                        },
+                        {
+                            "achSmi": 17.884,
+                            "smiTarget": 5000,
+                            "storeCode": "R012",
+                            "achFinance": 17.884,
+                            "actualSales": 89420,
+                            "businessDate": "2026-05-09",
+                            "financeTarget": 5000
+                        },
+                        {
+                            "achSmi": 3.36,
+                            "smiTarget": 20000,
+                            "storeCode": "R047",
+                            "achFinance": 3.36,
+                            "actualSales": 67200,
+                            "businessDate": "2026-05-09",
+                            "financeTarget": 20000
+                        }
+                    ],
+                    "useMockData": true,
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "parameters": {
+                            "limit": "20",
+                            "offset": "0"
+                        },
+                        "datasourceId": "4b9a4584-44c4-4751-9b41-cb642db42c0d",
+                        "outputFields": [],
+                        "datasourceName": "05.经营总览-达成率对照",
+                        "parameterTypes": {
+                            "limit": "number",
+                            "offset": "number"
+                        }
+                    }
+                },
+                {
+                    "id": "comp-table-store-rank",
+                    "type": "Table",
+                    "props": {
+                        "title": "门店销售额排行 TOP10",
+                        "rowKey": "storeId",
+                        "columns": [
+                            {
+                                "key": "column-rank_by_sales_amount-1778831733823",
+                                "align": "left",
+                                "title": "排名",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "rank_by_sales_amount",
+                                "fieldType": "DOUBLE",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-region-1778831733823",
+                                "align": "left",
+                                "title": "区域",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "region",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-store_code-1778831733823",
+                                "align": "left",
+                                "title": "门店编码",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "store_code",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-sales_qty-1778831733823",
+                                "align": "left",
+                                "title": "销售数量",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "sales_qty",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-sales_amount-1778831733823",
+                                "align": "left",
+                                "title": "销售金额",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "sales_amount",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            }
+                        ],
+                        "showToolbar": true,
+                        "showRefresh": true
+                    },
+                    "mockData": [
+                        {
+                            "rate": 105.2,
+                            "region": "华北区",
+                            "storeId": "S001",
+                            "storeName": "北京朝阳旗舰店",
+                            "salesAmount": 285000
+                        },
+                        {
+                            "rate": 102.8,
+                            "region": "华东区",
+                            "storeId": "S002",
+                            "storeName": "上海静安店",
+                            "salesAmount": 268000
+                        },
+                        {
+                            "rate": 98.5,
+                            "region": "华南区",
+                            "storeId": "S003",
+                            "storeName": "广州天河店",
+                            "salesAmount": 245000
+                        },
+                        {
+                            "rate": 96.3,
+                            "region": "华南区",
+                            "storeId": "S004",
+                            "storeName": "深圳南山店",
+                            "salesAmount": 232000
+                        },
+                        {
+                            "rate": 94.1,
+                            "region": "西南区",
+                            "storeId": "S005",
+                            "storeName": "成都春熙路店",
+                            "salesAmount": 218000
+                        }
+                    ],
+                    "useMockData": false,
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "parameters": {},
+                        "datasourceId": "2227adea-404e-4560-8cb6-0a3b5e3400d5",
+                        "outputFields": [],
+                        "datasourceName": "02.门店销售额排行TOP10",
+                        "parameterTypes": {}
+                    }
+                },
+                {
+                    "id": "comp-card-alert",
+                    "type": "Card",
+                    "props": {
+                        "icon": "AlertTriangle",
+                        "title": "异常提醒",
+                        "description": "近期需关注的销售异常情况"
+                    },
+                    "children": [
+                        {
+                            "id": "alert-item-1",
+                            "type": "Paragraph",
+                            "props": {
+                                "align": "left",
+                                "content": "⚠️ A区三家门店客流同比下降超过15%，建议跟进原因"
+                            }
+                        },
+                        {
+                            "id": "alert-item-2",
+                            "type": "Paragraph",
+                            "props": {
+                                "align": "left",
+                                "content": "⚠️ B类商品库存周转天数超过60天，需关注补货策略"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "component_1779070130462_h473uvmcp",
+                    "type": "EChartsChart",
+                    "props": {
+                        "data": [],
+                        "title": "销售额趋势（近30天）",
+                        "height": 400,
+                        "gaugeMax": 100,
+                        "gaugeMin": 0,
+                        "chartType": "line",
+                        "funnelGap": 2,
+                        "lineStack": false,
+                        "nameField": "date",
+                        "funnelSort": "descending",
+                        "lineSmooth": false,
+                        "valueField": "value",
+                        "gaugeLabelX": 50,
+                        "gaugeLabelY": 90,
+                        "gaugeRadius": 95,
+                        "customStyles": {},
+                        "gaugeCenterX": 50,
+                        "gaugeCenterY": 65,
+                        "categoryField": "type",
+                        "lineAreaStyle": false,
+                        "barOrientation": "vertical",
+                        "lineCumulative": false,
+                        "multiLineStack": false,
+                        "additionalStats": [],
+                        "barGradientMode": "topToBottom",
+                        "barNumberFormat": "thousands",
+                        "gaugeShowDetail": true,
+                        "gaugeTrackColor": "#94a3b8",
+                        "chartColorScheme": "default",
+                        "gaugeArcEndAngle": -45,
+                        "gaugeSplitNumber": 10,
+                        "xAxisLabelRotate": "auto",
+                        "gaugeArcStartAngle": 225,
+                        "gaugeLabelFontSize": 14,
+                        "gaugeTitleFontSize": 20,
+                        "gaugeTrackGradient": true,
+                        "xAxisLabelInterval": "auto",
+                        "barValueDisplayMode": "value",
+                        "headerLabelFontSize": 14,
+                        "xAxisLabelMaxLength": 12,
+                        "gaugeLabelFontWeight": 400,
+                        "gaugeTitleFontWeight": 400,
+                        "gaugeDetailFontWeight": 400,
+                        "gaugeProgressBarColor": "#a855f7",
+                        "headerLabelFontWeight": 400,
+                        "additionalStatsPosition": "chartTopLeft",
+                        "gaugeTitleOffsetCenterX": 0,
+                        "gaugeTitleOffsetCenterY": -20,
+                        "gaugeDetailOffsetCenterX": 0,
+                        "gaugeDetailOffsetCenterY": 0,
+                        "gaugeProgressRingCenterY": 50,
+                        "horizontalBarShowPercent": true,
+                        "additionalStatsFontFamily": "Noto Sans SC",
+                        "additionalStatsFontWeight": 500,
+                        "gaugeProgressRingLineWidth": 18,
+                        "horizontalBarLabelPosition": "follow",
+                        "additionalStatsNumberFormat": "thousands",
+                        "additionalStatsShowLegendSquare": false,
+                        "gaugeProgressRingDrawOffsetPercent": 0,
+                        "gaugeProgressRingCanvasLabelPosition": "ringCenter",
+                        "gaugeProgressRingCanvasLabelEdgePercent": 8
+                    },
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "parameters": {},
+                        "datasourceId": "a34fdbc7-c22e-4777-9527-5e8385b97940",
+                        "outputFields": [],
+                        "datasourceName": "03.经营总览-销售额趋势30天",
+                        "parameterTypes": {}
+                    }
+                },
+                {
+                    "id": "component_1779070149509_8ogmhyvrg",
+                    "type": "EChartsChart",
+                    "props": {
+                        "data": [],
+                        "title": "客流 exits",
+                        "height": 400,
+                        "gaugeMax": 100,
+                        "gaugeMin": 0,
+                        "chartType": "line",
+                        "funnelGap": 2,
+                        "lineStack": false,
+                        "nameField": "sitename",
+                        "funnelSort": "descending",
+                        "lineSmooth": false,
+                        "valueField": "exits",
+                        "gaugeLabelX": 50,
+                        "gaugeLabelY": 90,
+                        "gaugeRadius": 95,
+                        "customStyles": {},
+                        "gaugeCenterX": 50,
+                        "gaugeCenterY": 65,
+                        "categoryField": "",
+                        "lineAreaStyle": false,
+                        "barOrientation": "vertical",
+                        "lineCumulative": false,
+                        "multiLineStack": false,
+                        "additionalStats": [],
+                        "barGradientMode": "topToBottom",
+                        "barNumberFormat": "thousands",
+                        "gaugeShowDetail": true,
+                        "gaugeTrackColor": "#94a3b8",
+                        "chartColorScheme": "default",
+                        "gaugeArcEndAngle": -45,
+                        "gaugeSplitNumber": 10,
+                        "xAxisLabelRotate": "auto",
+                        "gaugeArcStartAngle": 225,
+                        "gaugeLabelFontSize": 14,
+                        "gaugeTitleFontSize": 20,
+                        "gaugeTrackGradient": true,
+                        "xAxisLabelInterval": "auto",
+                        "barValueDisplayMode": "value",
+                        "headerLabelFontSize": 14,
+                        "xAxisLabelMaxLength": 12,
+                        "gaugeLabelFontWeight": 400,
+                        "gaugeTitleFontWeight": 400,
+                        "gaugeDetailFontWeight": 400,
+                        "gaugeProgressBarColor": "#a855f7",
+                        "headerLabelFontWeight": 400,
+                        "additionalStatsPosition": "chartTopLeft",
+                        "gaugeTitleOffsetCenterX": 0,
+                        "gaugeTitleOffsetCenterY": -20,
+                        "gaugeDetailOffsetCenterX": 0,
+                        "gaugeDetailOffsetCenterY": 0,
+                        "gaugeProgressRingCenterY": 50,
+                        "horizontalBarShowPercent": true,
+                        "additionalStatsFontFamily": "Noto Sans SC",
+                        "additionalStatsFontWeight": 500,
+                        "gaugeProgressRingLineWidth": 18,
+                        "horizontalBarLabelPosition": "follow",
+                        "additionalStatsNumberFormat": "thousands",
+                        "additionalStatsShowLegendSquare": false,
+                        "gaugeProgressRingDrawOffsetPercent": 0,
+                        "gaugeProgressRingCanvasLabelPosition": "ringCenter",
+                        "gaugeProgressRingCanvasLabelEdgePercent": 8
+                    },
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "parameters": {},
+                        "datasourceId": "8aa78f63-ec53-4bb7-a92a-ae87110cac4e",
+                        "outputFields": [],
+                        "datasourceName": "04.经营总览-客流",
+                        "parameterTypes": {}
+                    }
+                }
+            ]
+        }
+    },
+    "appConfig": {
+        "name": "SW-DEMO 门店四看板",
+        "version": "1.0.0",
+        "navigation": {
+            "mode": "side",
+            "items": [
+                {
+                    "key": "nav-overview",
+                    "icon": "BarChart3",
+                    "title": "经营总览",
+                    "linkedPage": "page-overview"
+                },
+                {
+                    "key": "nav-product",
+                    "icon": "PieChart",
+                    "title": "商品销售",
+                    "linkedPage": "page-product"
+                },
+                {
+                    "key": "nav-crm",
+                    "icon": "Users",
+                    "title": "会员CRM",
+                    "linkedPage": "page-crm"
+                },
+                {
+                    "key": "nav-store",
+                    "icon": "List",
+                    "title": "门店动作",
+                    "linkedPage": "page-store"
+                }
+            ]
+        },
+        "defaultPage": "page-overview",
+        "description": "遵循 workbench mocks 结构（pages + appConfig）。Table、EChartsChart、Form、DataGridCard 等的数据库数据源在组件根级 databaseDataSourceConfig（type 取值 database-datasource）；StatisticGroup 的全局数据源在 props.databaseDataSourceConfig。关闭 useMockData 后数据库配置生效；List 勿在 props 中写 dataSource 行数据。表格工具栏用 props.showToolbar。demo URL 需在 apps/workbench/src/mocks/index.ts 注册 mockRegistry（见 mocks/README.md）。"
+    }
+}

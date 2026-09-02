@@ -1,0 +1,237 @@
+{
+  "pages": {
+    "page-list-enhanced-demo": {
+      "title": "List 组件增强示例",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "comp-title-list-demo",
+          "type": "Title",
+          "props": {
+            "align": "center",
+            "level": 1,
+            "content": "List 组件增强能力演示（Mock 数据）"
+          }
+        },
+        {
+          "id": "comp-paragraph-list-demo-hint",
+          "type": "Paragraph",
+          "props": {
+            "content": "本页演示：列槽位、行/工具栏操作、单选多选、排序、分页、导出、参数通信。将本 JSON 合并到工作台 pages 后，在编辑器中打开「List 组件增强示例」页面即可联调。"
+          }
+        },
+        {
+          "id": "comp-list-enhanced-stores",
+          "type": "List",
+          "props": {
+            "title": "门店经营列表",
+            "rowKey": "id",
+            "selectionType": "multiple",
+            "showToolbar": true,
+            "showRefresh": true,
+            "showRowActions": "hover",
+            "enableSort": true,
+            "enableExport": true,
+            "pagination": true,
+            "pageSize": 5,
+            "defaultSort": [{ "field": "sales", "direction": "desc" }],
+            "columns": [
+              {
+                "dataIndex": "storeName",
+                "title": "门店",
+                "slotType": "title",
+                "render": { "type": "default" }
+              },
+              {
+                "dataIndex": "region",
+                "title": "区域",
+                "slotType": "subtitle",
+                "render": { "type": "default" }
+              },
+              {
+                "dataIndex": "summary",
+                "title": "摘要",
+                "slotType": "description",
+                "render": { "type": "default" }
+              },
+              {
+                "dataIndex": "status",
+                "title": "状态",
+                "slotType": "tags",
+                "render": {
+                  "type": "Tag",
+                  "colorMap": {
+                    "达标": "green",
+                    "预警": "orange",
+                    "落后": "red"
+                  }
+                }
+              },
+              {
+                "dataIndex": "sales",
+                "title": "销售额",
+                "slotType": "custom",
+                "render": { "type": "default" }
+              },
+              {
+                "dataIndex": "achieveRate",
+                "title": "达成率",
+                "slotType": "custom",
+                "render": {
+                  "type": "Progress",
+                  "props": { "max": 100 }
+                }
+              }
+            ],
+            "actions": [
+              {
+                "id": "action_refresh_toolbar",
+                "label": "批量刷新",
+                "icon": "RefreshCw",
+                "type": "navigate",
+                "position": "global",
+                "variant": "outline",
+                "config": {
+                  "targetPage": "page-list-enhanced-demo"
+                }
+              },
+              {
+                "id": "action_export_hint",
+                "label": "说明",
+                "icon": "Info",
+                "type": "navigate",
+                "position": "global",
+                "variant": "ghost",
+                "config": {
+                  "targetPage": "page-list-enhanced-demo"
+                }
+              },
+              {
+                "id": "action_view_row",
+                "label": "查看",
+                "icon": "Eye",
+                "type": "navigate",
+                "position": "row",
+                "variant": "ghost",
+                "config": {
+                  "targetPage": "page-list-enhanced-demo",
+                  "parameterMapping": {
+                    "storeId": {
+                      "source": "column",
+                      "value": "id"
+                    },
+                    "storeName": {
+                      "source": "column",
+                      "value": "storeName"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "parameterConfig": {
+            "enableParameterReceiving": true,
+            "enableParameterBroadcasting": true,
+            "parameterMapping": {
+              "selectedRowData": {
+                "source": "component",
+                "field": "selectedRowData"
+              },
+              "selectedRowIds": {
+                "source": "component",
+                "field": "selectedRowIds"
+              }
+            }
+          },
+          "componentParameterConfig": {
+            "listenToParameters": [],
+            "broadcastParameters": ["selectedRowData", "selectedRowIds"]
+          },
+          "mockData": [
+            {
+              "id": "S001",
+              "storeName": "上海南京西路店",
+              "region": "华东 · 上海",
+              "summary": "本周客流稳定，客单价同比 +8%",
+              "status": "达标",
+              "sales": 1285000,
+              "achieveRate": 102
+            },
+            {
+              "id": "S002",
+              "storeName": "北京 SKP 店",
+              "region": "华北 · 北京",
+              "summary": "周末促销拉动明显",
+              "status": "达标",
+              "sales": 1150000,
+              "achieveRate": 98
+            },
+            {
+              "id": "S003",
+              "storeName": "成都 IFS 店",
+              "region": "西南 · 成都",
+              "summary": "新品占比提升，需关注库存",
+              "status": "预警",
+              "sales": 860000,
+              "achieveRate": 87
+            },
+            {
+              "id": "S004",
+              "storeName": "广州太古汇店",
+              "region": "华南 · 广州",
+              "summary": "会员复购率下降",
+              "status": "落后",
+              "sales": 720000,
+              "achieveRate": 76
+            },
+            {
+              "id": "S005",
+              "storeName": "深圳万象城店",
+              "region": "华南 · 深圳",
+              "summary": "陈列调整完成，待观察转化",
+              "status": "预警",
+              "sales": 690000,
+              "achieveRate": 82
+            },
+            {
+              "id": "S006",
+              "storeName": "杭州大厦店",
+              "region": "华东 · 杭州",
+              "summary": "线上引流活动效果良好",
+              "status": "达标",
+              "sales": 640000,
+              "achieveRate": 95
+            },
+            {
+              "id": "S007",
+              "storeName": "西安赛格店",
+              "region": "西北 · 西安",
+              "summary": "人效达标，坪效略低",
+              "status": "预警",
+              "sales": 510000,
+              "achieveRate": 84
+            },
+            {
+              "id": "S008",
+              "storeName": "武汉国际广场店",
+              "region": "华中 · 武汉",
+              "summary": "竞品促销冲击，需跟进对策",
+              "status": "落后",
+              "sales": 480000,
+              "achieveRate": 71
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "comp-text-selection-hint",
+          "type": "Text",
+          "props": {
+            "type": "secondary",
+            "content": "提示：勾选列表行后，selectedRowData / selectedRowIds 会通过参数广播供同页其他组件使用。"
+          }
+        }
+      ]
+    }
+  }
+}

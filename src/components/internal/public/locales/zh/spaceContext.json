@@ -1,0 +1,38 @@
+{
+  "roles": {
+    "administrator": "管理员",
+    "admin": "管理员",
+    "member": "成员",
+    "viewer": "查看者"
+  },
+  "errors": {
+    "fetch_spaces_failed": "获取空间列表失败",
+    "fetch_spaces_error": "获取空间列表时发生错误",
+    "switch_space_failed": "切换空间失败",
+    "switch_space_error": "切换空间时发生错误，请重试",
+    "fetch_space_details_failed": "获取空间详情失败",
+    "fetch_space_details_error": "获取空间详情时发生错误",
+    "fetch_agent_details_failed": "获取智能体详情失败",
+    "invalid_space_id": "无效的空间ID",
+    "space_not_found": "空间未找到"
+  },
+  "success": {
+    "space_switch_success": "空间切换成功",
+    "permissions_updated": "空间权限更新成功"
+  },
+  "logs": {
+    "current_space_deleted": "当前空间已被删除，自动切换到安全空间",
+    "saved_space_id_invalid": "保存的空间ID无效，将选择默认空间",
+    "auto_switch_space": "自动切换到空间",
+    "permissions_update_success": "空间权限更新成功",
+    "permissions_update_failed": "权限管理器更新失败",
+    "invalid_space_detected": "检测到无效空间ID，尝试切换到有效空间",
+    "auto_switch_to_space": "自动切换到空间"
+  },
+  "messages": {
+    "loading_spaces": "加载空间中...",
+    "switching_space": "切换空间中...",
+    "loading_members": "加载空间成员中..."
+  },
+  "hooks": {}
+}

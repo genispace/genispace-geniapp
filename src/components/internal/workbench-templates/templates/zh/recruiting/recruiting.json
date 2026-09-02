@@ -1,0 +1,1145 @@
+{
+  "appConfig": {
+    "appId": "recruiting-app",
+    "logo": "/logo.png",
+    "theme": "recruiting",
+    "layout": {
+      "type": "industry",
+      "headerActions": ["switchIndustry", "userProfile", "help"],
+      "menuPosition": "mix"
+    },
+    "navigation": {
+      "items": [
+        {
+          "key": "dashboard",
+          "path": "/workbench/recruiting/dashboard",
+          "title": "工作台",
+          "icon": "dashboard",
+          "linkedPage": "dashboard",
+          "pageParameters": {
+            "view": "overview",
+            "period": "month",
+            "showStats": true
+          }
+        },
+        {
+          "key": "candidates",
+          "path": "/workbench/recruiting/candidates",
+          "title": "候选人搜索",
+          "icon": "search",
+          "linkedPage": "candidates",
+          "pageParameters": {
+            "status": "active",
+            "source": "all",
+            "pageSize": 20
+          }
+        },
+        {
+          "key": "clients",
+          "path": "/workbench/recruiting/clients",
+          "title": "客户管理",
+          "icon": "team",
+          "linkedPage": "clients",
+          "pageParameters": {
+            "type": "active",
+            "sortBy": "created_at",
+            "includeArchived": false
+          }
+        },
+        {
+          "key": "jobs",
+          "path": "/workbench/recruiting/jobs",
+          "title": "职位管理",
+          "icon": "solution",
+          "linkedPage": "jobs",
+          "pageParameters": {
+            "status": "open",
+            "category": "all",
+            "urgency": "high"
+          }
+        },
+        {
+          "key": "reports",
+          "path": "/workbench/recruiting/reports",
+          "title": "报表分析",
+          "icon": "bar-chart",
+          "linkedPage": "reports",
+          "pageParameters": {
+            "reportType": "recruiting",
+            "dateRange": "last_30_days",
+            "groupBy": "week",
+            "includeSubMetrics": true
+          }
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "猎头工作台",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "StatisticGroup",
+          "id": "dashboardStats",
+          "grid": { "cols": 4 },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_001",
+            "params": {
+              "filter": "date >= '2024-04-01'",
+              "limit": 4,
+              "outputFields": ["key", "title", "value", "icon", "trend"]
+            }
+          },
+          "mockData": [
+            {
+              "key": "candidates",
+              "title": "今日候选人",
+              "value": 18,
+              "icon": "user",
+              "trend": {
+                "value": 12,
+                "type": "up",
+                "suffix": "%",
+                "status": "success",
+                "description": "较上周"
+              }
+            },
+            {
+              "key": "jobs",
+              "title": "开放职位",
+              "value": 24,
+              "icon": "solution",
+              "trend": {
+                "value": 5,
+                "type": "up",
+                "suffix": "个",
+                "status": "success",
+                "description": "本周新增"
+              }
+            },
+            {
+              "key": "clients",
+              "title": "活跃客户",
+              "value": 12,
+              "icon": "team",
+              "trend": {
+                "value": 8,
+                "type": "up",
+                "suffix": "%",
+                "status": "success",
+                "description": "较上月"
+              }
+            },
+            {
+              "key": "hires",
+              "title": "本月入职",
+              "value": 6,
+              "icon": "check-circle",
+              "trend": {
+                "value": 3,
+                "suffix": "人",
+                "type": "up",
+                "status": "success",
+                "description": "待确认"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "id": "listGroup",
+          "props": {
+            "layout": "grid",
+            "cols": [1, 1],
+            "gutter": 16
+          },
+          "children": [
+            {
+              "type": "DataGridCard",
+              "id": "candidateList",
+              "props": {
+                "title": "热门候选人",
+                "pagination": false,
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "title": "姓名",
+                    "dataIndex": "name",
+                    "key": "name",
+                    "primary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "职位",
+                    "dataIndex": "position",
+                    "key": "position",
+                    "secondary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "匹配度",
+                    "dataIndex": "matchRate",
+                    "key": "matchRate",
+                    "render": {
+                      "type": "Progress",
+                      "props": {
+                        "status": "matchRate >= 90 ? 'success' : matchRate >= 70 ? 'normal' : 'exception'",
+                        "showInfo": true,
+                        "size": "small"
+                      }
+                    }
+                  },
+                  {
+                    "title": "状态",
+                    "dataIndex": "status",
+                    "key": "status",
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "interviewing": "blue",
+                          "matching": "orange",
+                          "offered": "green",
+                          "default": "default"
+                        }
+                      },
+                      "text": {
+                        "interviewing": "面试中",
+                        "matching": "匹配中",
+                        "offered": "已发offer",
+                        "default": "待处理"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dataSource": {
+                "type": "dataset",
+                "datasetId": "ds_002",
+                "params": {
+                  "filter": "status in ['interviewing', 'matching', 'offered']",
+                  "limit": 5,
+                  "offset": 0,
+                  "outputFields": ["id", "name", "position", "matchRate", "status"]
+                }
+              },
+              "mockData": [
+                { "id": 1, "name": "张小明", "position": "高级前端工程师", "matchRate": 92, "status": "interviewing" },
+                { "id": 2, "name": "李四", "position": "产品经理", "matchRate": 85, "status": "matching" },
+                { "id": 3, "name": "王五", "position": "UX设计师", "matchRate": 78, "status": "offered" },
+                { "id": 4, "name": "赵六", "position": "全栈工程师", "matchRate": 95, "status": "pending" }
+              ]
+            },
+            {
+              "type": "DataGridCard",
+              "id": "jobList",
+              "props": {
+                "title": "招聘职位",
+                "pagination": false,
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "title": "职位名称",
+                    "dataIndex": "title",
+                    "key": "title",
+                    "primary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "客户公司",
+                    "dataIndex": "client",
+                    "key": "client",
+                    "secondary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "招聘人数",
+                    "dataIndex": "count",
+                    "key": "count"
+                  },
+                  {
+                    "title": "状态",
+                    "dataIndex": "status",
+                    "key": "status",
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "active": "green",
+                          "pending": "orange",
+                          "closed": "red"
+                        }
+                      },
+                      "text": {
+                        "active": "招聘中",
+                        "pending": "待处理",
+                        "closed": "已关闭"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dataSource": {
+                "type": "dataset",
+                "datasetId": "ds_003",
+                "params": {
+                  "filter": "status != 'closed'",
+                  "limit": 5,
+                  "offset": 0,
+                  "outputFields": ["id", "title", "client", "count", "status", "candidates"]
+                }
+              },
+              "mockData": [
+                { "id": 1, "title": "高级前端工程师", "client": "腾讯科技", "count": 2, "status": "active", "candidates": 8 },
+                { "id": 2, "title": "产品经理", "client": "阿里巴巴", "count": 1, "status": "active", "candidates": 5 },
+                { "id": 3, "title": "UX设计师", "client": "字节跳动", "count": 3, "status": "pending", "candidates": 10 },
+                { "id": 4, "title": "全栈工程师", "client": "百度", "count": 2, "status": "closed", "candidates": 0 }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Tabs",
+          "id": "recruitingProgress",
+          "props": {
+            "defaultActiveKey": "all",
+            "type": "card",
+            "size": "large"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "all",
+                "label": "全部进度"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "allProgress",
+                "dataSource": {
+                  "type": "dataset",  
+                  "datasetId": "ds_005",
+                  "params": {
+                    "filter": "type = 'all'",
+                    "limit": 100,
+                    "outputFields": ["stage", "count"]
+                  }
+                },
+                "mockData": [
+                  { "stage": "简历筛选", "count": 120 },
+                  { "stage": "初试", "count": 80 },
+                  { "stage": "复试", "count": 45 },
+                  { "stage": "终面", "count": 25 },
+                  { "stage": "Offer", "count": 15 },
+                  { "stage": "入职", "count": 8 }
+                ],
+                "props": {
+                  "chartType": "column",
+                  "title": "招聘进度统计",
+                  "xField": "stage",
+                  "yField": "count",
+                  "height": 300,
+                  "meta": {
+                    "stage": { "alias": "阶段" },
+                    "count": { "alias": "数量" }
+                  },
+                  "label": {
+                    "text": "count",
+                    "position": "top",
+                    "style": {
+                      "fill": "#666"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "highPriority",
+                "label": "高优先级"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "highPriorityProgress",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_005",
+                  "params": {
+                    "filter": "type = 'high_priority'",
+                    "limit": 100,
+                    "outputFields": ["date", "count"]
+                  }
+                },
+                "mockData": [
+                  { "date": "周一", "count": 25 },
+                  { "date": "周二", "count": 38 },
+                  { "date": "周三", "count": 52 },
+                  { "date": "周四", "count": 65 },
+                  { "date": "周五", "count": 78 },
+                  { "date": "周六", "count": 90 },
+                  { "date": "周日", "count": 102 }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "高优先级职位进度",
+                  "xField": "date",
+                  "yField": "count",
+                  "height": 300,
+                  "meta": {
+                    "date": { "alias": "日期" },
+                    "count": { "alias": "数量" }
+                  },
+                  "smooth": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "candidates": {
+      "title": "候选人搜索",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "TaskInputRenderer",
+          "id": "resumeAnalysisTask",
+          "props": {
+            "taskId": "b88f5b4f-93f7-493e-be82-202d9dd15bc0",
+            "className": "mb-6"
+          },
+          "mockTitle": "候选人简历分析录入",
+          "mockDescription": "上传简历文档，系统会自动分析并提取关键信息"
+        },
+        {
+          "type": "Table",
+          "id": "candidatesTable",
+          "props": {
+            "title": "候选人列表",
+            "pagination": { 
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "搜索姓名、职位、技能...",
+            "searchValue": "前端",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "姓名",
+                "dataIndex": "name",
+                "key": "name",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "职位",
+                "dataIndex": "position",
+                "key": "position",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "工作经验",
+                "dataIndex": "experience",
+                "key": "experience",
+                "sorter": true,
+                "editable": true
+              },
+              {
+                "title": "学历",
+                "dataIndex": "education",
+                "key": "education",
+                "editable": true,
+                "filterable": true,
+                "filterOptions": [
+                  { "text": "本科", "value": "本科" },
+                  { "text": "硕士", "value": "硕士" }
+                ]
+              },
+              {
+                "title": "技能",
+                "dataIndex": "skills",
+                "key": "skills",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "interviewing": "blue",
+                      "offered": "gold"
+                    }
+                  },
+                  "text": {
+                    "active": "活跃",
+                    "interviewing": "面试中",
+                    "offered": "已发offer"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_002",
+            "params": {
+              "filter": "status in ['active', 'interviewing', 'offered']",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": ["id", "name", "position", "experience", "education", "skills", "status"]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "name": "张小明",
+              "position": "高级前端工程师",
+              "experience": 5,
+              "education": "本科",
+              "skills": ["React", "TypeScript", "Node.js", "Vue"],
+              "location": "上海",
+              "salary": "25-35K",
+              "status": "active",
+              "matchRate": 92,
+              "lastUpdate": "2024-04-15"
+            },
+            {
+              "id": 2,
+              "name": "李四",
+              "position": "前端开发工程师",
+              "experience": 3,
+              "education": "硕士",
+              "skills": ["Vue", "JavaScript", "HTML/CSS"],
+              "location": "北京",
+              "salary": "20-30K",
+              "status": "interviewing",
+              "matchRate": 85,
+              "lastUpdate": "2024-04-12"
+            },
+            {
+              "id": 3,
+              "name": "王五",
+              "position": "全栈工程师",
+              "experience": 4,
+              "education": "本科",
+              "skills": ["React", "Node.js", "MongoDB"],
+              "location": "广州",
+              "salary": "25-35K",
+              "status": "active",
+              "matchRate": 88,
+              "lastUpdate": "2024-04-18"
+            },
+            {
+              "id": 4,
+              "name": "赵六",
+              "position": "前端架构师",
+              "experience": 7,
+              "education": "硕士",
+              "skills": ["React", "TypeScript", "Webpack", "Node.js"],
+              "location": "深圳",
+              "salary": "35-45K",
+              "status": "interviewing",
+              "matchRate": 95,
+              "lastUpdate": "2024-04-10"
+            },
+            {
+              "id": 5,
+              "name": "钱七",
+              "position": "前端开发工程师",
+              "experience": 2,
+              "education": "本科",
+              "skills": ["Vue", "JavaScript", "HTML/CSS"],
+              "location": "上海",
+              "salary": "15-25K",
+              "status": "active",
+              "matchRate": 78,
+              "lastUpdate": "2024-04-08"
+            },
+            {
+              "id": 6,
+              "name": "孙八",
+              "position": "高级后端工程师",
+              "experience": 6,
+              "education": "硕士",
+              "skills": ["Java", "Spring Boot", "MySQL", "Redis"],
+              "location": "杭州",
+              "salary": "30-45K",
+              "status": "passive",
+              "matchRate": 90,
+              "lastUpdate": "2024-04-05"
+            },
+            {
+              "id": 7,
+              "name": "周九",
+              "position": "DevOps工程师",
+              "experience": 5,
+              "education": "本科",
+              "skills": ["Docker", "Kubernetes", "Jenkins", "AWS"],
+              "location": "北京",
+              "salary": "25-35K",
+              "status": "contacted",
+              "matchRate": 87,
+              "lastUpdate": "2024-04-16"
+            },
+            {
+              "id": 8,
+              "name": "吴十",
+              "position": "数据工程师",
+              "experience": 4,
+              "education": "硕士",
+              "skills": ["Python", "Spark", "Hadoop", "SQL"],
+              "location": "深圳",
+              "salary": "25-40K",
+              "status": "new",
+              "matchRate": 82,
+              "lastUpdate": "2024-04-19"
+            },
+            {
+              "id": 9,
+              "name": "郑十一",
+              "position": "测试开发工程师",
+              "experience": 3,
+              "education": "本科",
+              "skills": ["Python", "Selenium", "JMeter", "TestNG"],
+              "location": "成都",
+              "salary": "18-28K",
+              "status": "active",
+              "matchRate": 85,
+              "lastUpdate": "2024-04-17"
+            },
+            {
+              "id": 10,
+              "name": "刘十二",
+              "position": "产品经理",
+              "experience": 5,
+              "education": "硕士",
+              "skills": ["产品规划", "用户研究", "数据分析", "项目管理"],
+              "location": "上海",
+              "salary": "25-35K",
+              "status": "interviewing",
+              "matchRate": 89,
+              "lastUpdate": "2024-04-14"
+            }
+          ]
+        }
+      ]
+    },
+    "clients": {
+      "title": "客户管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Table",
+          "id": "clientsTable",
+          "props": {
+            "title": "客户列表",
+            "pagination": { 
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "搜索公司名称、联系人、行业...",
+            "searchValue": "科技",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "公司名称",
+                "dataIndex": "name",
+                "key": "name",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "行业",
+                "dataIndex": "industry",
+                "key": "industry",
+                "filterable": true,
+                "editable": true,
+                "filterOptions": [
+                  { "text": "互联网", "value": "互联网" },
+                  { "text": "金融", "value": "金融" }
+                ]
+              },
+              {
+                "title": "所在地",
+                "dataIndex": "location",
+                "key": "location",
+                "searchable": true,
+                "filterable": true,
+                "editable": true
+              },
+              {
+                "title": "联系人",
+                "dataIndex": "contact",
+                "key": "contact",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default",
+                      "vip": "gold"
+                    }
+                  },
+                  "text": {
+                    "active": "活跃",
+                    "inactive": "不活跃",
+                    "vip": "VIP"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_004",
+            "params": {
+              "filter": "status in ['active', 'vip']",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": ["id", "name", "industry", "location", "contact", "status"]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "name": "腾讯科技",
+              "industry": "互联网",
+              "location": "深圳",
+              "size": "大型",
+              "contact": "张总监",
+              "phone": "13800138000",
+              "email": "hr@tencent.example.com",
+              "website": "www.tencent.example.com",
+              "status": "active",
+              "openPositions": 8,
+              "totalHires": 12
+            },
+            {
+              "id": 2,
+              "name": "阿里巴巴",
+              "industry": "互联网",
+              "location": "杭州",
+              "size": "大型",
+              "contact": "李经理",
+              "phone": "13900139000",
+              "email": "hr@alibaba.example.com",
+              "website": "www.alibaba.example.com",
+              "status": "vip",
+              "openPositions": 5,
+              "totalHires": 18
+            },
+            {
+              "id": 3,
+              "name": "字节跳动",
+              "industry": "互联网",
+              "location": "北京",
+              "size": "大型",
+              "contact": "王主管",
+              "phone": "13700137000",
+              "email": "hr@bytedance.example.com",
+              "website": "www.bytedance.example.com",
+              "status": "active",
+              "openPositions": 6,
+              "totalHires": 8
+            },
+            {
+              "id": 4,
+              "name": "百度科技",
+              "industry": "互联网",
+              "location": "北京",
+              "size": "大型",
+              "contact": "刘总",
+              "phone": "13600136000",
+              "email": "hr@baidu.example.com",
+              "website": "www.baidu.example.com",
+              "status": "active",
+              "openPositions": 4,
+              "totalHires": 5
+            },
+            {
+              "id": 5,
+              "name": "美团科技",
+              "industry": "互联网",
+              "location": "北京",
+              "size": "大型",
+              "contact": "赵经理",
+              "phone": "13500135000",
+              "email": "hr@meituan.example.com",
+              "website": "www.meituan.example.com",
+              "status": "vip",
+              "openPositions": 7,
+              "totalHires": 10
+            }
+          ]
+        }
+      ]
+    },
+    "jobs": {
+      "title": "职位管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Table",
+          "id": "jobsTable",
+          "props": {
+            "title": "职位列表",
+            "pagination": { 
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "搜索职位名称、客户公司...",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "职位名称",
+                "dataIndex": "title",
+                "key": "title",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "客户公司",
+                "dataIndex": "client",
+                "key": "client",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "招聘人数",
+                "dataIndex": "count",
+                "key": "count",
+                "sorter": true,
+                "editable": true
+              },
+              {
+                "title": "状态",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "pending": "orange",
+                      "closed": "red"
+                    }
+                  },
+                  "text": {
+                    "active": "招聘中",
+                    "pending": "待处理",
+                    "closed": "已关闭"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_003",
+            "params": {
+              "filter": "status != 'closed'",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": ["id", "title", "client", "count", "status"]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "title": "高级前端工程师",
+              "client": "腾讯科技",
+              "count": 2,
+              "status": "active"
+            },
+            {
+              "id": 2,
+              "title": "产品经理",
+              "client": "阿里巴巴",
+              "count": 1,
+              "status": "active"
+            },
+            {
+              "id": 3,
+              "title": "UX设计师",
+              "client": "字节跳动",
+              "count": 3,
+              "status": "pending"
+            },
+            {
+              "id": 4,
+              "title": "全栈工程师",
+              "client": "百度",
+              "count": 2,
+              "status": "closed"
+            },
+            {
+              "id": 5,
+              "title": "数据分析师",
+              "client": "华为",
+              "count": 2,
+              "status": "active"
+            }
+          ]
+        }
+      ]
+    },
+    "reports": {
+      "title": "报表分析",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Tabs",
+          "id": "reportsTabs",
+          "props": {
+            "defaultActiveKey": "client",
+            "type": "card"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "client",
+                "label": "客户报表"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "clientReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_006",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": ["company", "count", "status"]
+                  }
+                },
+                "mockData": [
+                  { "company": "腾讯", "count": 15, "status": "进行中" },
+                  { "company": "腾讯", "count": 8, "status": "已完成" },
+                  { "company": "阿里", "count": 12, "status": "进行中" },
+                  { "company": "阿里", "count": 5, "status": "已完成" },
+                  { "company": "字节", "count": 10, "status": "进行中" },
+                  { "company": "字节", "count": 3, "status": "已完成" },
+                  { "company": "美团", "count": 8, "status": "进行中" },
+                  { "company": "美团", "count": 4, "status": "已完成" },
+                  { "company": "百度", "count": 6, "status": "进行中" },
+                  { "company": "百度", "count": 2, "status": "已完成" }
+                ],
+                "props": {
+                  "chartType": "column",
+                  "title": "客户招聘情况",
+                  "xField": "company",
+                  "yField": "count",
+                  "seriesField": "status",
+                  "height": 400,
+                  "meta": {
+                    "company": { "alias": "公司名称" },
+                    "count": { "alias": "职位数量" },
+                    "status": { "alias": "状态" }
+                  },
+                  "isGroup": true,
+                  "isStack": false,
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "consultant",
+                "label": "顾问业绩"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "consultantReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_007",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": ["month", "张顾问", "李顾问", "王顾问"]
+                  }
+                },
+                "mockData": [
+                  { "month": "1月", "张顾问": 45, "李顾问": 28, "王顾问": 35 },
+                  { "month": "2月", "张顾问": 32, "李顾问": 42, "王顾问": 30 },
+                  { "month": "3月", "张顾问": 38, "李顾问": 24, "王顾问": 47 },
+                  { "month": "4月", "张顾问": 42, "李顾问": 35, "王顾问": 41 },
+                  { "month": "5月", "张顾问": 50, "李顾问": 45, "王顾问": 38 },
+                  { "month": "6月", "张顾问": 55, "李顾问": 48, "王顾问": 42 }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "顾问月度业绩",
+                  "xField": "month",
+                  "yField": ["张顾问", "李顾问", "王顾问"],
+                  "height": 400,
+                  "meta": {
+                    "张顾问": { "alias": "张顾问" },
+                    "李顾问": { "alias": "李顾问" },
+                    "王顾问": { "alias": "王顾问" }
+                  },
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "industry",
+                "label": "行业分布"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "industryReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_008",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": ["name", "value", "description"]
+                  }
+                },
+                "mockData": [
+                  { "name": "互联网", "value": 45, "description": "包括技术、产品、运营等岗位" },
+                  { "name": "金融", "value": 25, "description": "包括银行、证券、保险等行业" },
+                  { "name": "医疗健康", "value": 12, "description": "包括医疗器械、生物科技等" },
+                  { "name": "教育", "value": 8, "description": "包括K12、高等教育、职业教育" },
+                  { "name": "其他", "value": 10, "description": "包括制造、零售等其他行业" }
+                ],
+                "props": {
+                  "chartType": "pie",
+                  "title": "各行业招聘占比",
+                  "angleField": "value",
+                  "colorField": "name",
+                  "height": 400,
+                  "radius": 0.8,
+                  "meta": {
+                    "value": { "alias": "占比" },
+                    "name": { "alias": "行业" }
+                  },
+                  "label": {
+                    "type": "outer",
+                    "content": "{name}: {percentage}"
+                  },
+                  "tooltip": {
+                    "formatter": "{name}: {value}%\n{description}"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "trend",
+                "label": "招聘趋势"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "trendReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_009",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": ["date", "interviews", "offers", "hires"]
+                  }
+                },
+                "mockData": [
+                  { "date": "2024-01", "interviews": 45, "offers": 12, "hires": 8 },
+                  { "date": "2024-02", "interviews": 52, "offers": 15, "hires": 10 },
+                  { "date": "2024-03", "interviews": 48, "offers": 18, "hires": 12 },
+                  { "date": "2024-04", "interviews": 60, "offers": 20, "hires": 15 },
+                  { "date": "2024-05", "interviews": 55, "offers": 22, "hires": 16 }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "招聘效果趋势",
+                  "xField": "date",
+                  "yField": ["interviews", "offers", "hires"],
+                  "height": 400,
+                  "meta": {
+                    "interviews": { "alias": "面试数" },
+                    "offers": { "alias": "Offer数" },
+                    "hires": { "alias": "入职数" }
+                  },
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+} 

@@ -1,0 +1,643 @@
+{
+  "appConfig": {
+    "name": "生产管理系统",
+    "description": "制造业生产管理系统，包含生产计划、设备管理、质量管理、库存管理等功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "生产概览",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "production",
+          "title": "生产管理",
+          "icon": "Factory",
+          "children": [
+            {
+              "key": "production-plan",
+              "title": "生产计划",
+              "icon": "Calendar",
+              "linkedPage": "production-plan"
+            },
+            {
+              "key": "production-orders",
+              "title": "生产订单",
+              "icon": "FileText",
+              "linkedPage": "production-orders"
+            }
+          ]
+        },
+        {
+          "key": "equipment",
+          "title": "设备管理",
+          "icon": "Cog",
+          "linkedPage": "equipment"
+        },
+        {
+          "key": "quality",
+          "title": "质量管理",
+          "icon": "CheckCircle",
+          "linkedPage": "quality"
+        },
+        {
+          "key": "inventory",
+          "title": "库存管理",
+          "icon": "Warehouse",
+          "linkedPage": "inventory"
+        },
+        {
+          "key": "analytics",
+          "title": "生产分析",
+          "icon": "BarChart3",
+          "linkedPage": "analytics"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "生产概览",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-production",
+                "title": "今日产量",
+                "value": 1250,
+                "icon": "Package",
+                "trend": {
+                  "value": 8.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "suffix": "件"
+              },
+              {
+                "key": "production-rate",
+                "title": "生产效率",
+                "value": 92.5,
+                "icon": "TrendingUp",
+                "trend": {
+                  "value": 2.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "equipment-status",
+                "title": "设备运行率",
+                "value": 88,
+                "icon": "Cog",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "defect-rate",
+                "title": "不良品率",
+                "value": 0.8,
+                "icon": "AlertCircle",
+                "trend": {
+                  "value": 0.2,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "suffix": "%"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "production-chart",
+          "type": "Chart",
+          "props": {
+            "title": "产量趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "date": "2024-01-01", "production": 1200 },
+            { "date": "2024-01-02", "production": 1350 },
+            { "date": "2024-01-03", "production": 1280 },
+            { "date": "2024-01-04", "production": 1420 },
+            { "date": "2024-01-05", "production": 1380 },
+            { "date": "2024-01-06", "production": 1500 },
+            { "date": "2024-01-07", "production": 1450 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "equipment-status",
+          "type": "Table",
+          "props": {
+            "title": "设备状态",
+            "columns": [
+              {
+                "key": "equipmentId",
+                "title": "设备编号",
+                "dataIndex": "equipmentId"
+              },
+              {
+                "key": "name",
+                "title": "设备名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "utilization",
+                "title": "利用率",
+                "dataIndex": "utilization",
+                "suffix": "%"
+              },
+              {
+                "key": "lastMaintenance",
+                "title": "上次维护",
+                "dataIndex": "lastMaintenance"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "equipmentId": "EQ001",
+              "name": "注塑机-01",
+              "status": "运行中",
+              "utilization": 92,
+              "lastMaintenance": "2024-01-01"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "production-plan": {
+      "title": "生产计划",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "plan-table",
+          "type": "Table",
+          "props": {
+            "title": "生产计划",
+            "columns": [
+              {
+                "key": "planId",
+                "title": "计划编号",
+                "dataIndex": "planId"
+              },
+              {
+                "key": "product",
+                "title": "产品",
+                "dataIndex": "product"
+              },
+              {
+                "key": "quantity",
+                "title": "计划数量",
+                "dataIndex": "quantity"
+              },
+              {
+                "key": "startDate",
+                "title": "开始日期",
+                "dataIndex": "startDate"
+              },
+              {
+                "key": "endDate",
+                "title": "完成日期",
+                "dataIndex": "endDate"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "新建计划",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "planId": "PLAN20240107001",
+              "product": "产品A",
+              "quantity": 5000,
+              "startDate": "2024-01-08",
+              "endDate": "2024-01-15",
+              "status": "进行中"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "equipment": {
+      "title": "设备管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "equipment-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-equipment",
+                "title": "设备总数",
+                "value": 125,
+                "icon": "Cog"
+              },
+              {
+                "key": "running",
+                "title": "运行中",
+                "value": 110,
+                "icon": "PlayCircle"
+              },
+              {
+                "key": "maintenance",
+                "title": "维护中",
+                "value": 10,
+                "icon": "Wrench"
+              },
+              {
+                "key": "fault",
+                "title": "故障",
+                "value": 5,
+                "icon": "AlertCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "equipment-table",
+          "type": "Table",
+          "props": {
+            "title": "设备列表",
+            "columns": [
+              {
+                "key": "equipmentId",
+                "title": "设备编号",
+                "dataIndex": "equipmentId"
+              },
+              {
+                "key": "name",
+                "title": "设备名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "type",
+                "title": "设备类型",
+                "dataIndex": "type"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "location",
+                "title": "位置",
+                "dataIndex": "location"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "equipmentId": "EQ001",
+              "name": "注塑机-01",
+              "type": "注塑机",
+              "status": "运行中",
+              "location": "车间A-01"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "production-orders": {
+      "title": "生产订单",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-table",
+          "type": "Table",
+          "props": {
+            "title": "生产订单列表",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "订单编号",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "product",
+                "title": "产品",
+                "dataIndex": "product"
+              },
+              {
+                "key": "quantity",
+                "title": "数量",
+                "dataIndex": "quantity"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "deadline",
+                "title": "交期",
+                "dataIndex": "deadline"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "PO20240107001",
+              "product": "产品A",
+              "quantity": 5000,
+              "status": "生产中",
+              "deadline": "2024-01-15"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "quality": {
+      "title": "质量管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "quality-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-inspections",
+                "title": "检验总数",
+                "value": 1250,
+                "icon": "CheckCircle"
+              },
+              {
+                "key": "qualified",
+                "title": "合格数",
+                "value": 1180,
+                "icon": "CheckCircle2"
+              },
+              {
+                "key": "defective",
+                "title": "不良数",
+                "value": 70,
+                "icon": "XCircle"
+              },
+              {
+                "key": "qualify-rate",
+                "title": "合格率",
+                "value": 94.4,
+                "icon": "TrendingUp",
+                "suffix": "%"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "quality-table",
+          "type": "Table",
+          "props": {
+            "title": "质量检验记录",
+            "columns": [
+              {
+                "key": "inspectionId",
+                "title": "检验编号",
+                "dataIndex": "inspectionId"
+              },
+              {
+                "key": "product",
+                "title": "产品",
+                "dataIndex": "product"
+              },
+              {
+                "key": "result",
+                "title": "检验结果",
+                "dataIndex": "result",
+                "render": "tag"
+              },
+              {
+                "key": "inspector",
+                "title": "检验员",
+                "dataIndex": "inspector"
+              },
+              {
+                "key": "inspectionDate",
+                "title": "检验日期",
+                "dataIndex": "inspectionDate"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "inspectionId": "QC20240107001",
+              "product": "产品A",
+              "result": "合格",
+              "inspector": "张检验",
+              "inspectionDate": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "inventory": {
+      "title": "库存管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "inventory-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-materials",
+                "title": "物料总数",
+                "value": 1250,
+                "icon": "Package"
+              },
+              {
+                "key": "total-stock",
+                "title": "总库存量",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "低库存物料",
+                "value": 15,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "out-of-stock",
+                "title": "缺货物料",
+                "value": 3,
+                "icon": "XCircle"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "inventory-table",
+          "type": "Table",
+          "props": {
+            "title": "库存明细",
+            "columns": [
+              {
+                "key": "materialId",
+                "title": "物料编号",
+                "dataIndex": "materialId"
+              },
+              {
+                "key": "name",
+                "title": "物料名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "stock",
+                "title": "库存",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "unit",
+                "title": "单位",
+                "dataIndex": "unit"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "materialId": "M001",
+              "name": "原材料A",
+              "stock": 1500,
+              "unit": "kg",
+              "status": "正常"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analytics": {
+      "title": "生产分析",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "production-chart",
+          "type": "Chart",
+          "props": {
+            "title": "产量趋势分析",
+            "chartType": "line",
+            "height": 400
+          },
+          "mockData": [
+            { "date": "2024-01-01", "production": 1200, "efficiency": 90 },
+            { "date": "2024-01-02", "production": 1350, "efficiency": 92 },
+            { "date": "2024-01-03", "production": 1280, "efficiency": 91 },
+            { "date": "2024-01-04", "production": 1420, "efficiency": 93 },
+            { "date": "2024-01-05", "production": 1380, "efficiency": 92 },
+            { "date": "2024-01-06", "production": 1500, "efficiency": 94 },
+            { "date": "2024-01-07", "production": 1450, "efficiency": 93 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "defect-chart",
+          "type": "Chart",
+          "props": {
+            "title": "不良品率趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "date": "2024-01-01", "defectRate": 1.2 },
+            { "date": "2024-01-02", "defectRate": 1.0 },
+            { "date": "2024-01-03", "defectRate": 0.9 },
+            { "date": "2024-01-04", "defectRate": 0.8 },
+            { "date": "2024-01-05", "defectRate": 0.85 },
+            { "date": "2024-01-06", "defectRate": 0.75 },
+            { "date": "2024-01-07", "defectRate": 0.8 }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

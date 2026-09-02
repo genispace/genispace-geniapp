@@ -1,0 +1,7 @@
+{
+  "upload_success": "文件上传成功",
+  "upload_success_message": "文件已成功上传",
+  "upload_error": "文件上传失败",
+  "upload_error_message": "文件上传失败，请重试"
+}
+

@@ -1,0 +1,304 @@
+{
+  "appConfig": {
+    "name": "雷达图演示工作台",
+    "description": "展示雷达图组件的各种使用场景",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "仪表盘",
+          "icon": "Home",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "skills",
+          "title": "技能评估",
+          "icon": "Target",
+          "linkedPage": "skills"
+        },
+        {
+          "key": "performance",
+          "title": "性能对比",
+          "icon": "BarChart3",
+          "linkedPage": "performance"
+        },
+        {
+          "key": "analysis",
+          "title": "多维度分析",
+          "icon": "PieChart",
+          "linkedPage": "analysis"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "雷达图演示仪表盘",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "welcome-text",
+          "type": "Title",
+          "props": {
+            "content": "雷达图组件演示"
+          }
+        },
+        {
+          "id": "description",
+          "type": "Paragraph",
+          "props": {
+            "content": "这个工作台展示了雷达图组件的各种使用场景，包括技能评估、性能对比、多维度数据分析等。"
+          }
+        },
+        {
+          "id": "basic-radar",
+          "type": "RadarChart",
+          "props": {
+            "title": "基础雷达图示例",
+            "height": 400,
+            "angleField": "subject",
+            "radiusField": "value",
+            "showTooltip": true,
+            "showLegend": true,
+            "showDataView": true,
+            "meta": {
+              "value": {
+                "alias": "数值",
+                "formatter": null
+              }
+            }
+          },
+          "mockData": [
+            { "subject": "数学", "value": 85 },
+            { "subject": "英语", "value": 92 },
+            { "subject": "物理", "value": 78 },
+            { "subject": "化学", "value": 88 },
+            { "subject": "生物", "value": 90 },
+            { "subject": "历史", "value": 82 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "skills": {
+      "title": "技能评估雷达图",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "skills-title",
+          "type": "Title",
+          "props": {
+            "content": "技能评估雷达图"
+          }
+        },
+        {
+          "id": "skills-description",
+          "type": "Paragraph",
+          "props": {
+            "content": "展示不同开发者在各项技能上的评估结果，用于技能对比和成长规划。"
+          }
+        },
+        {
+          "id": "skills-radar",
+          "type": "RadarChart",
+          "props": {
+            "title": "开发者技能评估",
+            "height": 450,
+            "angleField": "skill",
+            "radiusField": ["frontend", "backend", "database", "devops"],
+            "colors": ["#6B8EBF", "#6FA68C", "#B89A6B", "#C7897D"],
+            "fillOpacity": 0.3,
+            "strokeWidth": 2,
+            "showTooltip": true,
+            "showLegend": true,
+            "showDataView": true,
+            "meta": {
+              "frontend": {
+                "alias": "前端开发",
+                "formatter": null
+              },
+              "backend": {
+                "alias": "后端开发",
+                "formatter": null
+              },
+              "database": {
+                "alias": "数据库",
+                "formatter": null
+              },
+              "devops": {
+                "alias": "运维部署",
+                "formatter": null
+              }
+            }
+          },
+          "mockData": [
+            { "skill": "JavaScript", "frontend": 90, "backend": 75, "database": 60, "devops": 45 },
+            { "skill": "TypeScript", "frontend": 85, "backend": 80, "database": 50, "devops": 40 },
+            { "skill": "React", "frontend": 95, "backend": 60, "database": 45, "devops": 35 },
+            { "skill": "Vue", "frontend": 88, "backend": 55, "database": 40, "devops": 30 },
+            { "skill": "Node.js", "frontend": 70, "backend": 92, "database": 75, "devops": 80 },
+            { "skill": "Python", "frontend": 50, "backend": 85, "database": 90, "devops": 85 },
+            { "skill": "Java", "frontend": 40, "backend": 88, "database": 85, "devops": 75 },
+            { "skill": "Go", "frontend": 35, "backend": 82, "database": 80, "devops": 90 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "performance": {
+      "title": "性能对比雷达图",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "performance-title",
+          "type": "Title",
+          "props": {
+            "content": "性能对比雷达图"
+          }
+        },
+        {
+          "id": "performance-description",
+          "type": "Paragraph",
+          "props": {
+            "content": "对比不同产品在各项性能指标上的表现，帮助做出产品选择决策。"
+          }
+        },
+        {
+          "id": "performance-radar",
+          "type": "RadarChart",
+          "props": {
+            "title": "产品性能对比",
+            "height": 450,
+            "angleField": "metric",
+            "radiusField": ["productA", "productB", "productC"],
+            "colors": ["#ff6b6b", "#4ecdc4", "#45b7d1"],
+            "fillOpacity": 0.2,
+            "strokeWidth": 3,
+            "showTooltip": true,
+            "showLegend": true,
+            "showDataView": true,
+            "meta": {
+              "productA": {
+                "alias": "产品A",
+                "formatter": null
+              },
+              "productB": {
+                "alias": "产品B",
+                "formatter": null
+              },
+              "productC": {
+                "alias": "产品C",
+                "formatter": null
+              }
+            }
+          },
+          "mockData": [
+            { "metric": "响应速度", "productA": 85, "productB": 92, "productC": 78 },
+            { "metric": "稳定性", "productA": 90, "productB": 88, "productC": 95 },
+            { "metric": "易用性", "productA": 75, "productB": 85, "productC": 82 },
+            { "metric": "功能完整性", "productA": 88, "productB": 90, "productC": 85 },
+            { "metric": "扩展性", "productA": 82, "productB": 78, "productC": 90 },
+            { "metric": "安全性", "productA": 95, "productB": 88, "productC": 92 },
+            { "metric": "性价比", "productA": 80, "productB": 85, "productC": 75 },
+            { "metric": "技术支持", "productA": 88, "productB": 90, "productC": 85 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analysis": {
+      "title": "多维度分析雷达图",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "analysis-title",
+          "type": "Title",
+          "props": {
+            "content": "多维度分析雷达图"
+          }
+        },
+        {
+          "id": "analysis-description",
+          "type": "Paragraph",
+          "props": {
+            "content": "展示复杂业务场景下的多维度数据分析，帮助理解数据间的关联关系。"
+          }
+        },
+        {
+          "id": "analysis-radar",
+          "type": "RadarChart",
+          "props": {
+            "title": "用户行为分析",
+            "height": 500,
+            "angleField": "dimension",
+            "radiusField": ["mobile", "desktop", "tablet"],
+            "colors": ["#ff9ff3", "#54a0ff", "#5f27cd"],
+            "fillOpacity": 0.25,
+            "strokeWidth": 2,
+            "showTooltip": true,
+            "showLegend": true,
+            "showDataView": true,
+            "meta": {
+              "mobile": {
+                "alias": "移动端",
+                "formatter": null
+              },
+              "desktop": {
+                "alias": "桌面端",
+                "formatter": null
+              },
+              "tablet": {
+                "alias": "平板端",
+                "formatter": null
+              }
+            }
+          },
+          "mockData": [
+            { "dimension": "日活跃用户", "mobile": 120, "desktop": 80, "tablet": 45 },
+            { "dimension": "月活跃用户", "mobile": 350, "desktop": 220, "tablet": 120 },
+            { "dimension": "用户留存率", "mobile": 75, "desktop": 85, "tablet": 78 },
+            { "dimension": "平均使用时长", "mobile": 45, "desktop": 120, "tablet": 90 },
+            { "dimension": "转化率", "mobile": 8.5, "desktop": 12.3, "tablet": 9.8 },
+            { "dimension": "用户满意度", "mobile": 4.2, "desktop": 4.6, "tablet": 4.4 },
+            { "dimension": "功能使用率", "mobile": 85, "desktop": 92, "tablet": 88 },
+            { "dimension": "分享传播率", "mobile": 15, "desktop": 8, "tablet": 12 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "simple-radar",
+          "type": "RadarChart",
+          "props": {
+            "title": "简化版雷达图",
+            "height": 350,
+            "angleField": "category",
+            "radiusField": "score",
+            "colors": ["#00d2d3"],
+            "fillOpacity": 0.4,
+            "strokeWidth": 2,
+            "showTooltip": true,
+            "showLegend": false,
+            "showDataView": false,
+            "meta": {
+              "score": {
+                "alias": "得分",
+                "formatter": null
+              }
+            }
+          },
+          "mockData": [
+            { "category": "创新性", "score": 85 },
+            { "category": "实用性", "score": 92 },
+            { "category": "美观性", "score": 78 },
+            { "category": "易用性", "score": 88 },
+            { "category": "性能", "score": 90 },
+            { "category": "稳定性", "score": 82 }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "error": "错误",
+  "missing_id": "缺少任务ID",
+  "submit_success": "提交成功",
+  "submit_success_message": "任务已成功提交",
+  "submit_error": "提交失败",
+  "submit_error_message": "任务提交失败",
+  "skip_port_mismatch_edge": "跳过端口类型不匹配的边: {{source}} -> {{target}}. 源端口{{sourcePort}}应为输出端口，目标端口{{targetPort}}应为输入端口",
+  "skip_invalid_node_edge": "跳过无效节点边: {{source}} -> {{target}}"
+}
+

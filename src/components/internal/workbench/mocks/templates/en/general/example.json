@@ -1,0 +1,750 @@
+{
+  "appConfig": {
+    "name": "Example Workbench",
+    "description": "A feature-rich Mock data example project showcasing various components and functionalities of the workbench",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "title": "Home",
+          "icon": "Home",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "data",
+          "title": "Data Management",
+          "icon": "Database",
+          "children": [
+            {
+              "key": "data-list",
+              "title": "Data List",
+              "icon": "List",
+              "linkedPage": "data-list"
+            },
+            {
+              "key": "data-grid",
+              "title": "Data Grid",
+              "icon": "Grid",
+              "linkedPage": "data-grid"
+            }
+          ]
+        },
+        {
+          "key": "charts",
+          "title": "Charts",
+          "icon": "BarChart3",
+          "linkedPage": "charts"
+        },
+        {
+          "key": "forms",
+          "title": "Form Examples",
+          "icon": "FileText",
+          "linkedPage": "forms"
+        },
+        {
+          "key": "components",
+          "title": "Components",
+          "icon": "Layout",
+          "linkedPage": "components"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "welcome-title",
+          "type": "Title",
+          "props": {
+            "content": "Welcome to Example Workbench"
+          }
+        },
+        {
+          "id": "welcome-desc",
+          "type": "Paragraph",
+          "props": {
+            "content": "This is a feature-rich example workbench showcasing various component types and functionalities, including data statistics, chart displays, table management, form inputs, and more."
+          }
+        },
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total",
+                "title": "Total",
+                "value": 1234,
+                "icon": "Database",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              },
+              {
+                "key": "active",
+                "title": "Active",
+                "value": 856,
+                "icon": "Activity",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last week"
+                }
+              },
+              {
+                "key": "pending",
+                "title": "Pending",
+                "value": 42,
+                "icon": "Clock",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs yesterday"
+                }
+              },
+              {
+                "key": "completed",
+                "title": "Completed",
+                "value": 336,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 8,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "quick-actions",
+          "type": "Card",
+          "props": {
+            "title": "Quick Actions",
+            "description": "Quick access to common functions"
+          },
+          "children": [
+            {
+              "id": "action-1",
+              "type": "Card",
+              "props": {
+                "title": "Create New Project",
+                "description": "Quickly create a new project",
+                "icon": "Plus"
+              }
+            },
+            {
+              "id": "action-2",
+              "type": "Card",
+              "props": {
+                "title": "Import Data",
+                "description": "Batch import data",
+                "icon": "Upload"
+              }
+            },
+            {
+              "id": "action-3",
+              "type": "Card",
+              "props": {
+                "title": "Export Report",
+                "description": "Generate and export reports",
+                "icon": "Download"
+              }
+            }
+          ]
+        },
+        {
+          "id": "recent-activity",
+          "type": "DataGridCard",
+          "props": {
+            "title": "Recent Activity",
+            "columns": [
+              {
+                "title": "Action",
+                "primary": true,
+                "dataIndex": "action"
+              },
+              {
+                "title": "User",
+                "dataIndex": "user",
+                "secondary": true
+              },
+              {
+                "title": "Time",
+                "dataIndex": "time"
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Success": "green",
+                      "Failed": "red",
+                      "In Progress": "blue"
+                    }
+                  }
+                }
+              }
+            ],
+            "pagination": {
+              "pageSize": 5,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "action": "Create Project",
+              "user": "John Doe",
+              "time": "2025-01-15 10:30",
+              "status": "Success"
+            },
+            {
+              "id": "2",
+              "action": "Update Data",
+              "user": "Jane Smith",
+              "time": "2025-01-15 09:15",
+              "status": "Success"
+            },
+            {
+              "id": "3",
+              "action": "Export Report",
+              "user": "Bob Johnson",
+              "time": "2025-01-15 08:45",
+              "status": "In Progress"
+            },
+            {
+              "id": "4",
+              "action": "Delete Record",
+              "user": "Alice Brown",
+              "time": "2025-01-14 16:20",
+              "status": "Success"
+            },
+            {
+              "id": "5",
+              "action": "Import Data",
+              "user": "Charlie Wilson",
+              "time": "2025-01-14 14:10",
+              "status": "Failed"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "trend-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Data Trend Chart",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "value",
+            "seriesField": "category",
+            "showTooltip": true,
+            "showLegend": true,
+            "colors": ["#1890ff", "#52c41a", "#faad14"]
+          },
+          "mockData": [
+            { "date": "2025-01-01", "value": 120, "category": "Visits" },
+            { "date": "2025-01-02", "value": 132, "category": "Visits" },
+            { "date": "2025-01-03", "value": 145, "category": "Visits" },
+            { "date": "2025-01-04", "value": 138, "category": "Visits" },
+            { "date": "2025-01-05", "value": 156, "category": "Visits" },
+            { "date": "2025-01-01", "value": 80, "category": "Conversion" },
+            { "date": "2025-01-02", "value": 85, "category": "Conversion" },
+            { "date": "2025-01-03", "value": 92, "category": "Conversion" },
+            { "date": "2025-01-04", "value": 88, "category": "Conversion" },
+            { "date": "2025-01-05", "value": 95, "category": "Conversion" },
+            { "date": "2025-01-01", "value": 45, "category": "Active Users" },
+            { "date": "2025-01-02", "value": 48, "category": "Active Users" },
+            { "date": "2025-01-03", "value": 52, "category": "Active Users" },
+            { "date": "2025-01-04", "value": 50, "category": "Active Users" },
+            { "date": "2025-01-05", "value": 55, "category": "Active Users" }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "data-list": {
+      "title": "Data List",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "data-table",
+          "type": "Table",
+          "props": {
+            "title": "Data Management",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "Name",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true
+              },
+              {
+                "title": "Type",
+                "dataIndex": "type",
+                "key": "type"
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default",
+                      "pending": "orange"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Created At",
+                "dataIndex": "createdAt",
+                "key": "createdAt"
+              },
+              {
+                "title": "Actions",
+                "key": "action",
+                "render": {
+                  "type": "Action",
+                  "props": {
+                    "actions": [
+                      {
+                        "label": "Edit",
+                        "icon": "Edit",
+                        "onClick": "handleEdit"
+                      },
+                      {
+                        "label": "Delete",
+                        "icon": "Trash",
+                        "onClick": "handleDelete",
+                        "danger": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "Project A",
+              "type": "Type A",
+              "status": "active",
+              "createdAt": "2025-01-15"
+            },
+            {
+              "id": "2",
+              "name": "Project B",
+              "type": "Type B",
+              "status": "active",
+              "createdAt": "2025-01-16"
+            },
+            {
+              "id": "3",
+              "name": "Project C",
+              "type": "Type A",
+              "status": "inactive",
+              "createdAt": "2025-01-17"
+            },
+            {
+              "id": "4",
+              "name": "Project D",
+              "type": "Type C",
+              "status": "pending",
+              "createdAt": "2025-01-18"
+            },
+            {
+              "id": "5",
+              "name": "Project E",
+              "type": "Type B",
+              "status": "active",
+              "createdAt": "2025-01-19"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "data-grid": {
+      "title": "Data Grid",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "data-grid-card",
+          "type": "DataGridCard",
+          "props": {
+            "title": "Data Grid Card",
+            "columns": [
+              {
+                "title": "Name",
+                "primary": true,
+                "dataIndex": "name"
+              },
+              {
+                "title": "Category",
+                "dataIndex": "category",
+                "secondary": true
+              },
+              {
+                "title": "Count",
+                "dataIndex": "count"
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "Normal": "green",
+                      "Warning": "orange",
+                      "Error": "red"
+                    }
+                  }
+                }
+              }
+            ],
+            "pagination": {
+              "pageSize": 10,
+              "showTotal": true
+            },
+            "showSearch": true,
+            "showRefresh": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "name": "Data Item 1",
+              "category": "Category A",
+              "count": 100,
+              "status": "Normal"
+            },
+            {
+              "id": "2",
+              "name": "Data Item 2",
+              "category": "Category B",
+              "count": 200,
+              "status": "Normal"
+            },
+            {
+              "id": "3",
+              "name": "Data Item 3",
+              "category": "Category A",
+              "count": 50,
+              "status": "Warning"
+            },
+            {
+              "id": "4",
+              "name": "Data Item 4",
+              "category": "Category C",
+              "count": 300,
+              "status": "Normal"
+            },
+            {
+              "id": "5",
+              "name": "Data Item 5",
+              "category": "Category B",
+              "count": 25,
+              "status": "Error"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "charts": {
+      "title": "Charts",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "chart-title",
+          "type": "Title",
+          "props": {
+            "content": "Chart Components"
+          }
+        },
+        {
+          "id": "line-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Line Chart Example",
+            "height": 300,
+            "smooth": true,
+            "xField": "date",
+            "yField": "value",
+            "seriesField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "date": "Jan", "value": 100, "type": "Sales" },
+            { "date": "Feb", "value": 120, "type": "Sales" },
+            { "date": "Mar", "value": 150, "type": "Sales" },
+            { "date": "Apr", "value": 140, "type": "Sales" },
+            { "date": "May", "value": 180, "type": "Sales" },
+            { "date": "Jan", "value": 80, "type": "Cost" },
+            { "date": "Feb", "value": 90, "type": "Cost" },
+            { "date": "Mar", "value": 100, "type": "Cost" },
+            { "date": "Apr", "value": 95, "type": "Cost" },
+            { "date": "May", "value": 110, "type": "Cost" }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "bar-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Bar Chart Example",
+            "height": 300,
+            "xField": "category",
+            "yField": "value",
+            "seriesField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "category": "Q1", "value": 120, "type": "Product A" },
+            { "category": "Q2", "value": 150, "type": "Product A" },
+            { "category": "Q3", "value": 180, "type": "Product A" },
+            { "category": "Q4", "value": 200, "type": "Product A" },
+            { "category": "Q1", "value": 100, "type": "Product B" },
+            { "category": "Q2", "value": 130, "type": "Product B" },
+            { "category": "Q3", "value": 160, "type": "Product B" },
+            { "category": "Q4", "value": 190, "type": "Product B" }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "pie-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Pie Chart Example",
+            "height": 300,
+            "angleField": "value",
+            "colorField": "type",
+            "showTooltip": true,
+            "showLegend": true
+          },
+          "mockData": [
+            { "type": "Type A", "value": 30 },
+            { "type": "Type B", "value": 25 },
+            { "type": "Type C", "value": 20 },
+            { "type": "Type D", "value": 15 },
+            { "type": "Type E", "value": 10 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "forms": {
+      "title": "Form Examples",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "form-title",
+          "type": "Title",
+          "props": {
+            "content": "Form Components"
+          }
+        },
+        {
+          "id": "form-desc",
+          "type": "Paragraph",
+          "props": {
+            "content": "The following showcases various form components including text inputs, selectors, date pickers, and more."
+          }
+        },
+        {
+          "id": "example-form",
+          "type": "Form",
+          "props": {
+            "title": "Example Form",
+            "layout": "vertical",
+            "fields": [
+              {
+                "name": "name",
+                "label": "Name",
+                "type": "input",
+                "required": true,
+                "placeholder": "Enter name"
+              },
+              {
+                "name": "type",
+                "label": "Type",
+                "type": "select",
+                "required": true,
+                "options": [
+                  { "label": "Type A", "value": "typeA" },
+                  { "label": "Type B", "value": "typeB" },
+                  { "label": "Type C", "value": "typeC" }
+                ]
+              },
+              {
+                "name": "date",
+                "label": "Date",
+                "type": "date",
+                "required": true
+              },
+              {
+                "name": "description",
+                "label": "Description",
+                "type": "textarea",
+                "placeholder": "Enter description"
+              },
+              {
+                "name": "status",
+                "label": "Status",
+                "type": "radio",
+                "options": [
+                  { "label": "Active", "value": "active" },
+                  { "label": "Inactive", "value": "inactive" }
+                ]
+              }
+            ],
+            "submitText": "Submit",
+            "cancelText": "Cancel"
+          }
+        }
+      ]
+    },
+    "components": {
+      "title": "Components",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "components-title",
+          "type": "Title",
+          "props": {
+            "content": "Component Library"
+          }
+        },
+        {
+          "id": "card-examples",
+          "type": "Container",
+          "props": {
+            "title": "Card Components",
+            "layout": "grid",
+            "grid": {
+              "cols": 3
+            }
+          },
+          "children": [
+            {
+              "id": "card-1",
+              "type": "Card",
+              "props": {
+                "title": "Card 1",
+                "description": "This is a basic card component"
+              }
+            },
+            {
+              "id": "card-2",
+              "type": "Card",
+              "props": {
+                "title": "Card 2",
+                "description": "Cards can contain various content"
+              }
+            },
+            {
+              "id": "card-3",
+              "type": "Card",
+              "props": {
+                "title": "Card 3",
+                "description": "Supports custom styles and layouts"
+              }
+            }
+          ]
+        },
+        {
+          "id": "text-examples",
+          "type": "Container",
+          "props": {
+            "title": "Text Components"
+          },
+          "children": [
+            {
+              "id": "title-example",
+              "type": "Title",
+              "props": {
+                "content": "This is a title component"
+              }
+            },
+            {
+              "id": "paragraph-example",
+              "type": "Paragraph",
+              "props": {
+                "content": "This is a paragraph component for displaying text content. Supports multi-line text and custom styles."
+              }
+            },
+            {
+              "id": "text-example",
+              "type": "Text",
+              "props": {
+                "content": "This is a text component for displaying simple text content.",
+                "type": "secondary"
+              }
+            }
+          ]
+        },
+        {
+          "id": "list-example",
+          "type": "List",
+          "props": {
+            "title": "List Component",
+            "dataSource": [
+              {
+                "title": "List Item 1",
+                "description": "Description for the first list item"
+              },
+              {
+                "title": "List Item 2",
+                "description": "Description for the second list item"
+              },
+              {
+                "title": "List Item 3",
+                "description": "Description for the third list item"
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+/* 共享 UI 组件库的样式文件 */
+/* 这里将包含所有 UI 组件的 Tailwind CSS 样式 */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* react-day-picker 多月份布局样式修复 */
+/* 确保 caption_start 和 caption_end 有相同的 margin 样式 */
+@layer components {
+  .rdp-caption_start,
+  .rdp-caption_end {
+    margin-top: 14px;
+    margin-bottom: 0px;
+  }
+}
+

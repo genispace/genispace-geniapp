@@ -1,0 +1,3835 @@
+{
+  "pages": {
+    "inbound-purchase": {
+      "title": "采购入库",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "purchase-inbound-card": {
+            "area": "top",
+            "order": 1
+          },
+          "purchase-inbound-table": {
+            "area": "top",
+            "order": 2
+          },
+          "component_inbound_fp_purchase": {
+            "area": "top",
+            "order": 0
+          },
+          "component_1775110113676_p59onfu4a": {
+            "area": "top",
+            "order": 3
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "purchase-inbound-card",
+          "type": "Card",
+          "props": {
+            "title": "采购入库",
+            "layout": {
+              "type": "custom",
+              "preset": "top1-bottom2-equal",
+              "componentPositions": {
+                "purchase-gauge-1": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "purchase-gauge-2": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "purchase-summary-cards": {
+                  "area": "top",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "purchase-summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total-qty",
+                    "icon": "activity",
+                    "title": "总数 (件)",
+                    "trend": {
+                      "suffix": "",
+                      "enabled": false,
+                      "upStyle": "success",
+                      "downStyle": "error",
+                      "description": "较上期",
+                      "trendCondition": ""
+                    },
+                    "value": 0,
+                    "statisticType": "column",
+                    "statisticField": "total-qty"
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "已收货 (件)",
+                    "trend": {
+                      "type": "up",
+                      "value": 8,
+                      "status": "success",
+                      "enabled": false
+                    },
+                    "value": 95,
+                    "statisticType": "column",
+                    "statisticField": "received-qty"
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "已上架 (件)",
+                    "trend": {
+                      "type": "up",
+                      "value": 12,
+                      "status": "success",
+                      "enabled": false
+                    },
+                    "value": 78,
+                    "statisticType": "column",
+                    "statisticField": "shelved-qty"
+                  },
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "在途未到仓",
+                    "trend": {
+                      "type": "up",
+                      "value": 5,
+                      "status": "warning",
+                      "enabled": false
+                    },
+                    "value": 120,
+                    "statisticType": "column",
+                    "statisticField": "unreceived_qty",
+                    "useCustomDataSource": true,
+                    "databaseDataSourceConfig": {
+                      "type": "database-datasource",
+                      "parameters": {},
+                      "datasourceId": "eb928184-6475-4166-b46e-39b5d603b9fd",
+                      "outputFields": [],
+                      "datasourceName": "02-采购-统计组-待收货",
+                      "parameterTypes": {}
+                    }
+                  }
+                ],
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "parameters": {
+                    "et": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_purchase_filter_1769393479482.endTime"
+                    },
+                    "st": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_purchase_filter_1769393479482.startTime"
+                    },
+                    "brand": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_purchase_filter_1769393507458"
+                    }
+                  },
+                  "datasourceId": "28d67984-e5bc-4618-a22a-460838afa681",
+                  "outputFields": [],
+                  "datasourceName": "入库-采购-统计组",
+                  "parameterTypes": {}
+                }
+              },
+              "useMockData": true
+            },
+            {
+              "id": "purchase-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "到货情况",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "received-name",
+                "gaugeValue": 82.5,
+                "showLegend": false,
+                "valueField": "receipt-completion-rate",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeLabelField": "received-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "sunset",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeLabelFontSize": 20,
+                "gaugeTrackGradient": false,
+                "gaugeDetailFontSize": 26,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#3B82F6",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+                "gaugeProgressRingCanvasLabelEdgePercent": 8
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 82.5
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "28d67984-e5bc-4618-a22a-460838afa681",
+                "outputFields": [],
+                "datasourceName": "02-采购-统计组",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "purchase-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "上架完成率",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "shelved-name",
+                "gaugeValue": 88.3,
+                "showLegend": false,
+                "valueField": "shelving-completion-rate",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeLabelField": "shelved-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "contrast",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeLabelFontSize": 20,
+                "gaugeTrackGradient": false,
+                "gaugeDetailFontSize": 26,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#27AE60",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+                "gaugeProgressRingCanvasLabelEdgePercent": 8
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 88.3
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_purchase_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "28d67984-e5bc-4618-a22a-460838afa681",
+                "outputFields": [],
+                "datasourceName": "02-采购-统计组",
+                "parameterTypes": {}
+              }
+            }
+          ]
+        },
+        {
+          "id": "component_inbound_fp_purchase",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "filter_1769393479482",
+                "type": "dateRange",
+                "label": "日期范围",
+                "options": [],
+                "multiple": false,
+                "placeholder": "Please select",
+                "quickSelect": true,
+                "defaultValue": "last7days",
+                "displayWidth": "200px",
+                "quickSelectItems": {
+                  "today": false,
+                  "yesterday": false
+                },
+                "specifiedEndTime": "16:59:59",
+                "useSpecifiedTime": true,
+                "specifiedStartTime": "17:00:00"
+              },
+              {
+                "key": "filter_1769393507458",
+                "type": "select",
+                "label": "品牌",
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "420146f9-0336-43f1-8440-9dbc85971803"
+                },
+                "placeholder": "请选择品牌",
+                "quickSelect": true,
+                "defaultValue": "",
+                "displayWidth": "140px",
+                "useFirstOptionAsDefault": false
+              }
+            ],
+            "presets": []
+          }
+        },
+        {
+          "id": "purchase-inbound-table",
+          "type": "Table",
+          "props": {
+            "title": "在途数据",
+            "rowKey": "id",
+            "addable": false,
+            "columns": [
+              {
+                "key": "column-id-1765954420287",
+                "align": "left",
+                "title": "主键ID",
+                "width": 150,
+                "hidden": true,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "id",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-purchase_source-1765954420287",
+                "align": "left",
+                "title": "采购来源",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "purchase_source",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-purchase_order_no-1765954420287",
+                "align": "left",
+                "title": "采购单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "purchase_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-purchase_order_qty-1765954420287",
+                "align": "left",
+                "title": "采购订单件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "purchase_order_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-received_qty-1765954420287",
+                "align": "left",
+                "title": "已收货件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "received_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_qty-1765954420287",
+                "align": "left",
+                "title": "已上架件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_progress-1765954420287",
+                "align": "left",
+                "title": "已上架完成进度（%）",
+                "width": 150,
+                "render": {
+                  "type": "Progress",
+                  "props": {}
+                },
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_progress",
+                "fieldType": "FLOAT",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "filterable": false,
+            "pagination": {
+              "pageSize": 10
+            },
+            "showSearch": false,
+            "showRefresh": true,
+            "showToolbar": false,
+            "enableExport": false,
+            "showSettings": false
+          },
+          "mockData": [
+            {
+              "id": "pi1",
+              "shelvedQty": 450,
+              "receivedQty": 480,
+              "purchaseSource": "供应商A",
+              "purchaseOrderNo": "PO-2025-001",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 500
+            },
+            {
+              "id": "pi2",
+              "shelvedQty": 280,
+              "receivedQty": 300,
+              "purchaseSource": "供应商B",
+              "purchaseOrderNo": "PO-2025-002",
+              "shelvedProgress": 93.3,
+              "purchaseOrderQty": 300
+            },
+            {
+              "id": "pi3",
+              "shelvedQty": 720,
+              "receivedQty": 750,
+              "purchaseSource": "供应商C",
+              "purchaseOrderNo": "PO-2025-003",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 800
+            },
+            {
+              "id": "pi4",
+              "shelvedQty": 0,
+              "receivedQty": 0,
+              "purchaseSource": "供应商D",
+              "purchaseOrderNo": "PO-2025-004",
+              "shelvedProgress": 0,
+              "purchaseOrderQty": 200
+            },
+            {
+              "id": "pi5",
+              "shelvedQty": 320,
+              "receivedQty": 350,
+              "purchaseSource": "供应商E",
+              "purchaseOrderNo": "PO-2025-005",
+              "shelvedProgress": 91.4,
+              "purchaseOrderQty": 350
+            },
+            {
+              "id": "pi6",
+              "shelvedQty": 180,
+              "receivedQty": 200,
+              "purchaseSource": "供应商F",
+              "purchaseOrderNo": "PO-2025-006",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 200
+            },
+            {
+              "id": "pi7",
+              "shelvedQty": 540,
+              "receivedQty": 580,
+              "purchaseSource": "供应商G",
+              "purchaseOrderNo": "PO-2025-007",
+              "shelvedProgress": 93.1,
+              "purchaseOrderQty": 580
+            }
+          ],
+          "useMockData": false,
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393479482.endTime",
+                "waitForValue": true
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393479482.startTime",
+                "waitForValue": true
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393507458",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "1495b2e4-b9b0-46d9-8dff-ff8bc8053539",
+            "outputFields": [],
+            "datasourceName": "02-采购-在途数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        },
+        {
+          "id": "component_1775110113676_p59onfu4a",
+          "type": "Table",
+          "props": {
+            "title": "异常数据",
+            "rowKey": "id",
+            "addable": false,
+            "columns": [
+              {
+                "key": "column-purchase_order_no-1775110551304",
+                "align": "left",
+                "title": "采购单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "purchase_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-purchase_order_qty-1775110551304",
+                "align": "left",
+                "title": "总数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "purchase_order_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-unreceived_qty-1775110551304",
+                "align": "left",
+                "title": "未收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "unreceived_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-received_qty-1775110551304",
+                "align": "left",
+                "title": "已收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "received_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_qty-1775110551304",
+                "align": "left",
+                "title": "已上架数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-order_status-1775110551304",
+                "align": "left",
+                "title": "订单状态",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "order_status",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-create_time-1775110551304",
+                "align": "left",
+                "title": "创建时间",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "create_time",
+                "fieldType": "DATE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "editable": false,
+            "sortable": true,
+            "deletable": false,
+            "filterable": false,
+            "pagination": {
+              "style": "default",
+              "current": 1,
+              "pageSize": 10,
+              "showTotal": true,
+              "showQuickJumper": false,
+              "showSizeChanger": true
+            },
+            "searchable": true,
+            "showSearch": false,
+            "showRefresh": true,
+            "showToolbar": false,
+            "useMockData": false,
+            "enableExport": false,
+            "showSettings": false,
+            "searchPlaceholder": "Search..."
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393479482.endTime",
+                "waitForValue": true
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393479482.startTime",
+                "waitForValue": true
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_purchase_filter_1769393507458",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "126f78e1-f37d-4b37-beab-11980f0bee98",
+            "outputFields": [],
+            "datasourceName": "02-采购-异常数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        }
+      ],
+      "fullscreen": {
+        "enabled": true
+      },
+      "autoRefresh": {
+        "enabled": false,
+        "interval": 30
+      },
+      "description": ""
+    },
+    "inbound-transfer": {
+      "title": "调拨入库",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "transfer-inbound-card": {
+            "area": "top",
+            "order": 1
+          },
+          "transfer-inbound-table": {
+            "area": "top",
+            "order": 2
+          },
+          "component_inbound_fp_transfer": {
+            "area": "top",
+            "order": 0
+          },
+          "component_1775111688077_o8mtcox0r": {
+            "area": "top",
+            "order": 3
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "transfer-inbound-card",
+          "type": "Card",
+          "props": {
+            "title": "门店退仓入库",
+            "layout": {
+              "type": "custom",
+              "preset": "top1-bottom2-equal",
+              "componentPositions": {
+                "transfer-gauge-1": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "transfer-gauge-2": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "transfer-summary-cards": {
+                  "area": "top",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "transfer-summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total-qty",
+                    "icon": "activity",
+                    "title": "总数（件）",
+                    "trend": {
+                      "suffix": "",
+                      "enabled": true,
+                      "upStyle": "success",
+                      "downStyle": "error",
+                      "description": "较上期",
+                      "trendCondition": ""
+                    },
+                    "value": 0,
+                    "statisticType": "column",
+                    "statisticField": "total-qty"
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "已收货（件）",
+                    "trend": {
+                      "type": "up",
+                      "value": 8,
+                      "status": "success"
+                    },
+                    "value": 95,
+                    "statisticType": "column",
+                    "statisticField": "received-qty"
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "已上架（件）",
+                    "trend": {
+                      "type": "up",
+                      "value": 12,
+                      "status": "success"
+                    },
+                    "value": 78,
+                    "statisticType": "column",
+                    "statisticField": "shelved-qty"
+                  },
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "在途未到仓",
+                    "trend": {
+                      "type": "up",
+                      "value": 5,
+                      "status": "warning",
+                      "enabled": false
+                    },
+                    "value": 120,
+                    "statisticType": "column",
+                    "statisticField": "unreceived_qty",
+                    "useCustomDataSource": true,
+                    "databaseDataSourceConfig": {
+                      "type": "database-datasource",
+                      "parameters": {},
+                      "datasourceId": "be53f534-2a1b-43e3-95f1-9aa611761b9c",
+                      "outputFields": [],
+                      "datasourceName": "02-门店-统计组-未收货",
+                      "parameterTypes": {}
+                    }
+                  }
+                ],
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "parameters": {
+                    "et": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_transfer_filter_1769393479482.endTime",
+                      "waitForValue": true
+                    },
+                    "st": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_transfer_filter_1769393479482.startTime",
+                      "waitForValue": true
+                    },
+                    "brand": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_transfer_filter_1769393507458",
+                      "waitForValue": true
+                    }
+                  },
+                  "datasourceId": "36a23577-1a93-4bec-878f-f6e5cbd40fca",
+                  "outputFields": [],
+                  "datasourceName": "02-门店-统计组",
+                  "parameterTypes": {}
+                }
+              },
+              "useMockData": true
+            },
+            {
+              "id": "transfer-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "到货情况",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "received-name",
+                "gaugeValue": 82.5,
+                "showLegend": false,
+                "valueField": "receipt-completion-rate",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeLabelField": "received-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "sunset",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeLabelFontSize": 20,
+                "gaugeTrackGradient": false,
+                "gaugeDetailFontSize": 26,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#3B82F6",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+                "gaugeProgressRingCanvasLabelEdgePercent": 8
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 82.5
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "36a23577-1a93-4bec-878f-f6e5cbd40fca",
+                "outputFields": [],
+                "datasourceName": "02-门店-统计组",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "transfer-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "上架完成率",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "shelved-name",
+                "gaugeValue": 88.3,
+                "showLegend": false,
+                "valueField": "shelving-completion-rate",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeLabelField": "shelved-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "contrast",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeLabelFontSize": 20,
+                "gaugeTrackGradient": false,
+                "gaugeDetailFontSize": 26,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#27AE60",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+                "gaugeProgressRingCanvasLabelEdgePercent": 8
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 88.3
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_transfer_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "36a23577-1a93-4bec-878f-f6e5cbd40fca",
+                "outputFields": [],
+                "datasourceName": "02-门店-统计组",
+                "parameterTypes": {}
+              }
+            }
+          ]
+        },
+        {
+          "id": "component_inbound_fp_transfer",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "filter_1769393479482",
+                "type": "dateRange",
+                "label": "日期范围",
+                "options": [],
+                "multiple": false,
+                "placeholder": "Please select",
+                "quickSelect": true,
+                "defaultValue": "last7days",
+                "displayWidth": "200px",
+                "quickSelectItems": {
+                  "today": false,
+                  "yesterday": false
+                },
+                "specifiedEndTime": "16:59:59",
+                "useSpecifiedTime": true,
+                "specifiedStartTime": "17:00:00"
+              },
+              {
+                "key": "filter_1769393507458",
+                "type": "select",
+                "label": "品牌",
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "420146f9-0336-43f1-8440-9dbc85971803"
+                },
+                "placeholder": "请选择品牌",
+                "quickSelect": true,
+                "defaultValue": "",
+                "displayWidth": "140px",
+                "useFirstOptionAsDefault": false
+              }
+            ],
+            "presets": []
+          }
+        },
+        {
+          "id": "transfer-inbound-table",
+          "type": "Table",
+          "props": {
+            "title": "在途数据",
+            "rowKey": "id",
+            "addable": false,
+            "columns": [
+              {
+                "key": "column-return_order_no-1775112044360",
+                "align": "left",
+                "title": "退货单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-return_order_qty-1775112044360",
+                "align": "left",
+                "title": "总数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_order_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-unreceived_qty-1775112044360",
+                "align": "left",
+                "title": "未收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "unreceived_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-received_qty-1775112044360",
+                "align": "left",
+                "title": "已收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "received_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_qty-1774368036819",
+                "align": "left",
+                "title": "已上架件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_progress-1774368036819",
+                "align": "left",
+                "title": "上架完成进度（%）",
+                "width": 150,
+                "render": {
+                  "type": "Progress",
+                  "props": {}
+                },
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_progress",
+                "fieldType": "INT32",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-remark-1774368036819",
+                "align": "left",
+                "title": "备注",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "remark",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-create_time-1774368036819",
+                "align": "left",
+                "title": "创建时间",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "create_time",
+                "fieldType": "DATE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "filterable": false,
+            "pagination": {
+              "pageSize": 10
+            },
+            "showSearch": false,
+            "showRefresh": true,
+            "showToolbar": false,
+            "enableExport": false,
+            "showSettings": false
+          },
+          "mockData": [
+            {
+              "id": "pi1",
+              "shelvedQty": 450,
+              "receivedQty": 480,
+              "purchaseSource": "供应商A",
+              "purchaseOrderNo": "PO-2025-001",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 500
+            },
+            {
+              "id": "pi2",
+              "shelvedQty": 280,
+              "receivedQty": 300,
+              "purchaseSource": "供应商B",
+              "purchaseOrderNo": "PO-2025-002",
+              "shelvedProgress": 93.3,
+              "purchaseOrderQty": 300
+            },
+            {
+              "id": "pi3",
+              "shelvedQty": 720,
+              "receivedQty": 750,
+              "purchaseSource": "供应商C",
+              "purchaseOrderNo": "PO-2025-003",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 800
+            },
+            {
+              "id": "pi4",
+              "shelvedQty": 0,
+              "receivedQty": 0,
+              "purchaseSource": "供应商D",
+              "purchaseOrderNo": "PO-2025-004",
+              "shelvedProgress": 0,
+              "purchaseOrderQty": 200
+            },
+            {
+              "id": "pi5",
+              "shelvedQty": 320,
+              "receivedQty": 350,
+              "purchaseSource": "供应商E",
+              "purchaseOrderNo": "PO-2025-005",
+              "shelvedProgress": 91.4,
+              "purchaseOrderQty": 350
+            },
+            {
+              "id": "pi6",
+              "shelvedQty": 180,
+              "receivedQty": 200,
+              "purchaseSource": "供应商F",
+              "purchaseOrderNo": "PO-2025-006",
+              "shelvedProgress": 90,
+              "purchaseOrderQty": 200
+            },
+            {
+              "id": "pi7",
+              "shelvedQty": 540,
+              "receivedQty": 580,
+              "purchaseSource": "供应商G",
+              "purchaseOrderNo": "PO-2025-007",
+              "shelvedProgress": 93.1,
+              "purchaseOrderQty": 580
+            }
+          ],
+          "useMockData": false,
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393479482.endTime",
+                "waitForValue": true
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393479482.startTime",
+                "waitForValue": true
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393507458",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "c851e82e-7b03-4651-af9b-309f6600ee13",
+            "outputFields": [],
+            "datasourceName": "02-门店-在途数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        },
+        {
+          "id": "component_1775111688077_o8mtcox0r",
+          "type": "Table",
+          "props": {
+            "title": "异常数据",
+            "rowKey": "id",
+            "addable": false,
+            "columns": [
+              {
+                "key": "column-return_order_no-1775111865675",
+                "align": "left",
+                "title": "退货单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-return_source-1775111865675",
+                "align": "left",
+                "title": "退货来源/门店名称",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_source",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-return_order_qty-1775111865675",
+                "align": "left",
+                "title": "总数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_order_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-unreceived_qty-1775111865675",
+                "align": "left",
+                "title": "未收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "unreceived_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-received_qty-1775111865675",
+                "align": "left",
+                "title": "已收货数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "received_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_qty-1775111865675",
+                "align": "left",
+                "title": "已上架数量",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-order_status-1775111865675",
+                "align": "left",
+                "title": "订单状态",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "order_status",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-create_time-1775111914386",
+                "align": "left",
+                "title": "创建时间",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "create_time",
+                "fieldType": "DATE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "editable": false,
+            "sortable": true,
+            "deletable": false,
+            "filterable": false,
+            "pagination": {
+              "style": "default",
+              "current": 1,
+              "pageSize": 10,
+              "showTotal": true,
+              "showQuickJumper": false,
+              "showSizeChanger": true
+            },
+            "searchable": true,
+            "showSearch": false,
+            "showRefresh": true,
+            "showToolbar": false,
+            "useMockData": false,
+            "enableExport": false,
+            "showSettings": false,
+            "searchPlaceholder": "Search..."
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393479482.endTime",
+                "waitForValue": true
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393479482.startTime",
+                "waitForValue": true
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_transfer_filter_1769393507458",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "4ccaab63-e02d-4dc6-a9bd-68d335656749",
+            "outputFields": [],
+            "datasourceName": "02-门店-异常数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        }
+      ],
+      "fullscreen": {
+        "enabled": true
+      },
+      "autoRefresh": {
+        "enabled": false,
+        "interval": 30
+      },
+      "description": ""
+    },
+    "page_1773737879842": {
+      "title": "看板",
+      "layout": {
+        "type": "custom",
+        "preset": "left3-right1",
+        "componentPositions": {
+          "component_1774353088384_eejtz9ch0": {
+            "area": "top",
+            "order": 0
+          },
+          "component_1775204116647_yu3o4qsuh": {
+            "area": "left",
+            "order": 0
+          },
+          "component_1775209683274_44hk9ri1i": {
+            "area": "right",
+            "order": 0
+          },
+          "component_1775222326795_iqgyifp5t": {
+            "area": "left",
+            "order": 1
+          },
+          "component_1775233232486_mgx2tc9aw": {
+            "area": "right",
+            "order": 1
+          },
+          "component_1775233251636_9d0n9fd7s": {
+            "area": "right",
+            "order": 2
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "component_1774353088384_eejtz9ch0",
+          "type": "Typography",
+          "props": {
+            "type": "paragraph",
+            "align": "left",
+            "color": "#000000",
+            "level": 1,
+            "content": "",
+            "fontSize": "14",
+            "contentSegments": [
+              {
+                "kind": "text",
+                "value": "看板B2C数据时间范围:            "
+              },
+              {
+                "kind": "text",
+                "color": "#3a76ee",
+                "value": "00:00~23:59                                   ",
+                "marginAfter": "12px"
+              },
+              {
+                "kind": "text",
+                "value": "看板B2B数据时间范围:    "
+              },
+              {
+                "kind": "text",
+                "color": "#3a76ee",
+                "value": "近48小时~今天17:00         ",
+                "marginAfter": "12px"
+              },
+              {
+                "kind": "text",
+                "value": "更新时间：    "
+              },
+              {
+                "kind": "database",
+                "color": "#3a76ee",
+                "field": "lst",
+                "value": "",
+                "fallback": "",
+                "statisticCondition": "",
+                "useCustomDataSource": true,
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "parameters": {
+                    "export_type": "all"
+                  },
+                  "datasourceId": "039b4491-978a-4ac1-b7c7-19dc6ffdc0ca",
+                  "outputFields": [],
+                  "datasourceName": "获取最后运行日期",
+                  "parameterTypes": {}
+                }
+              }
+            ],
+            "followPageRefresh": true
+          }
+        },
+        {
+          "id": "component_1775204116647_yu3o4qsuh",
+          "type": "EChartsChart",
+          "props": {
+            "data": [],
+            "title": "B2C发货完成",
+            "height": 235,
+            "gaugeMax": 100,
+            "gaugeMin": 0,
+            "chartType": "multiLine",
+            "funnelGap": 2,
+            "lineStack": true,
+            "nameField": "hour",
+            "funnelSort": "descending",
+            "lineSmooth": true,
+            "valueField": "value",
+            "gaugeLabelX": 50,
+            "gaugeLabelY": 90,
+            "gaugeRadius": 95,
+            "customStyles": {},
+            "gaugeCenterX": 50,
+            "gaugeCenterY": 65,
+            "showDataView": false,
+            "categoryField": "category",
+            "lineAreaStyle": false,
+            "lineXAxisType": "category",
+            "titleFontSize": 16,
+            "lineCumulative": false,
+            "lineShowSymbol": false,
+            "multiLineStack": false,
+            "additionalStats": [
+              {
+                "unit": "",
+                "field": "总数量"
+              },
+              {
+                "unit": "",
+                "field": "已出库",
+                "label": "单日完成率",
+                "ratio": {
+                  "unit": "%",
+                  "denominator": "总数量"
+                },
+                "displayContent": "ratio"
+              }
+            ],
+            "chartColorScheme": "logistics",
+            "gaugeSplitNumber": 10,
+            "gaugeLabelFontSize": 14,
+            "headerLabelFontSize": 14,
+            "headerLabelFontWeight": 400,
+            "additionalStatsFontBold": true,
+            "additionalStatsPosition": "headerRight",
+            "gaugeTitleOffsetCenterX": 0,
+            "gaugeTitleOffsetCenterY": -20,
+            "databaseDataSourceConfig": null,
+            "gaugeDetailOffsetCenterX": 0,
+            "gaugeDetailOffsetCenterY": 0,
+            "horizontalBarShowPercent": true,
+            "additionalStatsFontWeight": 700,
+            "horizontalBarLabelPosition": "follow",
+            "additionalStatsLabelFontSize": 16,
+            "additionalStatsShowLegendSquare": true,
+            "barGradientMode": "none",
+            "gaugeTrackGradient": false
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {},
+            "datasourceId": "a5337c5c-b260-47a3-b693-691ee379cf11",
+            "outputFields": [],
+            "datasourceName": "B2C - 按小时统计出库数量 - 当天",
+            "parameterTypes": {}
+          }
+        },
+        {
+          "id": "component_1775209683274_44hk9ri1i",
+          "type": "EChartsChart",
+          "props": {
+            "data": [],
+            "title": "B2B采购入库",
+            "height": 135,
+            "gaugeMax": 100,
+            "gaugeMin": 0,
+            "chartType": "gaugeProgressRing",
+            "nameField": "name",
+            "showLegend": false,
+            "valueField": "receipt-completion-rate",
+            "gaugeLabelX": 50,
+            "gaugeLabelY": 90,
+            "gaugeRadius": 60,
+            "showTooltip": true,
+            "customStyles": {},
+            "gaugeCenterX": 50,
+            "gaugeCenterY": 60,
+            "categoryField": "",
+            "titleFontSize": 16,
+            "additionalStats": [],
+            "gaugeLabelField": "title",
+            "gaugeShowDetail": true,
+            "gaugeTrackColor": "#94a3b8",
+            "chartColorScheme": "contrast",
+            "gaugeArcEndAngle": -270,
+            "gaugeDetailColor": "#333333",
+            "gaugeSplitNumber": 10,
+            "headerLabelColor": "#3B82F6",
+            "gaugeArcStartAngle": 90,
+            "gaugeLabelFontSize": 14,
+            "gaugeTrackGradient": false,
+            "gaugeDetailFontSize": 16,
+            "headerLabelFontSize": 16,
+            "gaugeLabelFontWeight": 700,
+            "gaugeDetailFontWeight": 700,
+            "gaugeProgressBarColor": "#3B82F6",
+            "headerLabelFontWeight": 400,
+            "gaugeTitleOffsetCenterX": 0,
+            "gaugeTitleOffsetCenterY": 0,
+            "databaseDataSourceConfig": null,
+            "gaugeDetailOffsetCenterX": 0,
+            "gaugeDetailOffsetCenterY": 0,
+            "gaugeProgressRingCenterY": 40,
+            "gaugeProgressRingLineWidth": 12,
+            "gaugeProgressRingDrawOffsetPercent": 5.5,
+            "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+            "gaugeProgressRingCanvasLabelEdgePercent": 8,
+            "barGradientMode": "none"
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {},
+            "datasourceId": "c4242d32-e021-4f0c-8d13-f3cb37e14b62",
+            "outputFields": [],
+            "datasourceName": "采购入库 - 收货完成率 - 7天",
+            "parameterTypes": {}
+          }
+        },
+        {
+          "id": "component_1775222326795_iqgyifp5t",
+          "type": "EChartsChart",
+          "props": {
+            "data": [],
+            "title": "客退入库收货完成",
+            "height": 235,
+            "gaugeMax": 100,
+            "gaugeMin": 0,
+            "chartType": "multiLine",
+            "funnelGap": 2,
+            "lineStack": false,
+            "nameField": "hour",
+            "funnelSort": "descending",
+            "lineSmooth": true,
+            "valueField": "value",
+            "gaugeLabelX": 50,
+            "gaugeLabelY": 90,
+            "gaugeRadius": 95,
+            "customStyles": {},
+            "gaugeCenterX": 50,
+            "gaugeCenterY": 65,
+            "categoryField": "category",
+            "lineAreaStyle": false,
+            "titleFontSize": 16,
+            "lineCumulative": false,
+            "multiLineStack": false,
+            "additionalStats": [
+              {
+                "unit": "单",
+                "field": "待上架"
+              },
+              {
+                "unit": "件",
+                "field": "已上架"
+              }
+            ],
+            "chartColorScheme": "logistics",
+            "gaugeSplitNumber": 10,
+            "gaugeLabelFontSize": 14,
+            "headerLabelFontSize": 14,
+            "headerLabelFontWeight": 400,
+            "additionalStatsPosition": "headerRight",
+            "gaugeTitleOffsetCenterX": 0,
+            "gaugeTitleOffsetCenterY": -20,
+            "databaseDataSourceConfig": null,
+            "gaugeDetailOffsetCenterX": 0,
+            "gaugeDetailOffsetCenterY": 0,
+            "horizontalBarShowPercent": true,
+            "additionalStatsFontWeight": 700,
+            "horizontalBarLabelPosition": "follow",
+            "additionalStatsLabelFontSize": 16,
+            "additionalStatsShowLegendSquare": true,
+            "barGradientMode": "none",
+            "gaugeTrackGradient": false
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {},
+            "datasourceId": "bc08c067-eb6b-47a8-8aba-a138de6b0df8",
+            "outputFields": [],
+            "datasourceName": "03-客退入库-收货数据-按小时统计-当天",
+            "parameterTypes": {}
+          }
+        },
+        {
+          "id": "component_1775233232486_mgx2tc9aw",
+          "type": "EChartsChart",
+          "props": {
+            "data": [],
+            "title": "B2B门店退仓入库",
+            "height": 135,
+            "gaugeMax": 100,
+            "gaugeMin": 0,
+            "chartType": "gaugeProgressRing",
+            "nameField": "name",
+            "showLegend": false,
+            "valueField": "receipt-completion-rate",
+            "gaugeLabelX": 50,
+            "gaugeLabelY": 90,
+            "gaugeRadius": 60,
+            "showTooltip": true,
+            "customStyles": {},
+            "gaugeCenterX": 50,
+            "gaugeCenterY": 60,
+            "categoryField": "",
+            "titleFontSize": 16,
+            "additionalStats": [],
+            "gaugeLabelField": "title",
+            "gaugeShowDetail": true,
+            "gaugeTrackColor": "#94a3b8",
+            "chartColorScheme": "ocean",
+            "gaugeArcEndAngle": -270,
+            "gaugeDetailColor": "#333333",
+            "gaugeSplitNumber": 10,
+            "headerLabelColor": "#3B82F6",
+            "gaugeArcStartAngle": 90,
+            "gaugeLabelFontSize": 14,
+            "gaugeTrackGradient": false,
+            "gaugeDetailFontSize": 16,
+            "headerLabelFontSize": 16,
+            "gaugeLabelFontWeight": 700,
+            "gaugeDetailFontWeight": 700,
+            "gaugeProgressBarColor": "#217A92",
+            "headerLabelFontWeight": 400,
+            "additionalStatsPosition": "chartTopLeft",
+            "gaugeTitleOffsetCenterX": 0,
+            "gaugeTitleOffsetCenterY": 0,
+            "databaseDataSourceConfig": null,
+            "gaugeDetailOffsetCenterX": 0,
+            "gaugeDetailOffsetCenterY": 0,
+            "gaugeProgressRingCenterY": 40,
+            "gaugeProgressRingLineWidth": 12,
+            "additionalStatsNumberFormat": "thousands",
+            "additionalStatsShowLegendSquare": false,
+            "gaugeProgressRingDrawOffsetPercent": 5.5,
+            "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+            "gaugeProgressRingCanvasLabelEdgePercent": 8,
+            "barGradientMode": "none"
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {},
+            "datasourceId": "2e474585-627e-42a5-8690-268ceff010ac",
+            "outputFields": [],
+            "datasourceName": "门店退仓 - 收货完成率 - 7天",
+            "parameterTypes": {}
+          }
+        },
+        {
+          "id": "component_1775233251636_9d0n9fd7s",
+          "type": "EChartsChart",
+          "props": {
+            "data": [],
+            "title": "B2B出库",
+            "height": 135,
+            "gaugeMax": 100,
+            "gaugeMin": 0,
+            "chartType": "gaugeProgressRing",
+            "nameField": "name",
+            "showLegend": false,
+            "valueField": "shipment-completion-rate",
+            "gaugeLabelX": 50,
+            "gaugeLabelY": 90,
+            "gaugeRadius": 60,
+            "showTooltip": true,
+            "customStyles": {},
+            "gaugeCenterX": 50,
+            "gaugeCenterY": 60,
+            "categoryField": "",
+            "titleFontSize": 16,
+            "additionalStats": [],
+            "gaugeLabelField": "title",
+            "gaugeShowDetail": true,
+            "gaugeTrackColor": "#94a3b8",
+            "chartColorScheme": "sunset",
+            "gaugeArcEndAngle": -270,
+            "gaugeDetailColor": "#333333",
+            "gaugeSplitNumber": 10,
+            "headerLabelColor": "#EC8F43",
+            "gaugeArcStartAngle": 90,
+            "gaugeLabelFontSize": 14,
+            "gaugeTrackGradient": false,
+            "gaugeDetailFontSize": 16,
+            "headerLabelFontSize": 16,
+            "gaugeLabelFontWeight": 700,
+            "gaugeDetailFontWeight": 700,
+            "gaugeProgressBarColor": "#EC8F43",
+            "headerLabelFontWeight": 400,
+            "additionalStatsPosition": "chartTopLeft",
+            "gaugeTitleOffsetCenterX": 0,
+            "gaugeTitleOffsetCenterY": 0,
+            "databaseDataSourceConfig": null,
+            "gaugeDetailOffsetCenterX": 0,
+            "gaugeDetailOffsetCenterY": 0,
+            "gaugeProgressRingCenterY": 40,
+            "gaugeProgressRingLineWidth": 12,
+            "additionalStatsNumberFormat": "thousands",
+            "additionalStatsShowLegendSquare": false,
+            "gaugeProgressRingDrawOffsetPercent": 5.5,
+            "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+            "gaugeProgressRingCanvasLabelEdgePercent": 8,
+            "barGradientMode": "none"
+          },
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {},
+            "datasourceId": "922d37e6-dd5a-49d1-b266-132070b6bf55",
+            "outputFields": [],
+            "datasourceName": "03-B2B-发货完成率-7天",
+            "parameterTypes": {}
+          }
+        }
+      ],
+      "fullscreen": {
+        "header": {
+          "enabled": true,
+          "textColor": "#FFFFFF",
+          "backgroundColor": "#0A5BD8",
+          "showRefreshRate": true,
+          "platformLogoPath": "https://work.genispace.cn/logo-white.svg",
+          "platformNameText": "GeniSpace",
+          "showPlatformLogo": true,
+          "showPlatformName": true,
+          "platformNameColor": "#FFFFFF",
+          "showWorkbenchLogo": false,
+          "showWorkbenchName": true,
+          "workbenchNameText": "联亚集团智能物流看板",
+          "platformNameFontSize": 14
+        },
+        "enabled": true,
+        "backgroundColor": "#0A5BD8"
+      },
+      "autoRefresh": {
+        "enabled": true,
+        "interval": 600
+      },
+      "description": "",
+      "pageSettings": {
+        "autoRefresh": {
+          "enabled": false,
+          "intervalMs": 60000
+        },
+        "enableFullscreen": true
+      }
+    },
+    "b2b-outbound-dashboard": {
+      "title": "B2B出库作业看板",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "b2b-card": {
+            "area": "top",
+            "order": 2
+          },
+          "filter-panel": {
+            "area": "top",
+            "order": 1
+          },
+          "component_1775117065269_3dm3vgejw": {
+            "area": "top",
+            "order": 3
+          },
+          "component_1775133086561_tactlkih3": {
+            "area": "top",
+            "order": 4
+          },
+          "component_1767168158995_14tz9s2ly_b2b": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "component_1767168158995_14tz9s2ly_b2b",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "filter_1767168183361",
+                "type": "dateRange",
+                "label": "日期范围",
+                "inline": false,
+                "options": [],
+                "multiple": false,
+                "placeholder": "",
+                "quickSelect": true,
+                "defaultValue": "last7days",
+                "displayWidth": "200px",
+                "quickSelectItems": {
+                  "today": false,
+                  "yesterday": false
+                },
+                "specifiedEndTime": "16:59:59",
+                "useSpecifiedTime": true,
+                "specifiedStartTime": "17:00:00"
+              },
+              {
+                "key": "filter_1767168332260",
+                "type": "select",
+                "label": "品牌选择",
+                "inline": false,
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "420146f9-0336-43f1-8440-9dbc85971803"
+                },
+                "placeholder": "请选择品牌",
+                "quickSelect": true,
+                "defaultValue": "",
+                "displayWidth": "140px"
+              }
+            ],
+            "presets": []
+          }
+        },
+        {
+          "id": "b2b-card",
+          "type": "Card",
+          "props": {
+            "title": "B2B 出库有效订单",
+            "layout": {
+              "type": "custom",
+              "preset": "top1-bottom2-equal",
+              "componentPositions": {
+                "b2b-brand-pie-chart": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "component_1774428368993_8nhq8nzja": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "component_1775101849159_f3cp0crwv": {
+                  "area": "top",
+                  "order": 0
+                },
+                "component_1775573444305_1pwzktz57": {
+                  "area": "bottom-left",
+                  "order": 1
+                },
+                "component_1775573458507_etv4kviop": {
+                  "area": "bottom-right",
+                  "order": 1
+                }
+              }
+            },
+            "shadow": "md",
+            "bordered": true,
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "component_1775101849159_f3cp0crwv",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total_orders",
+                    "icon": "package",
+                    "title": "总订单数",
+                    "trend": {
+                      "type": "up",
+                      "value": 8.5,
+                      "status": "success",
+                      "suffix": "%",
+                      "enabled": false,
+                      "description": "Increased by 8.5% compared to last month"
+                    },
+                    "value": 12847,
+                    "prefix": "",
+                    "suffix": "",
+                    "iconSize": 6,
+                    "iconColor": "none",
+                    "precision": 0,
+                    "statisticType": "column",
+                    "statisticField": "total-orders"
+                  },
+                  {
+                    "key": "total_qty",
+                    "icon": "star",
+                    "title": "总件数",
+                    "trend": {
+                      "type": "up",
+                      "value": 12.3,
+                      "status": "success",
+                      "suffix": "%",
+                      "enabled": false,
+                      "description": "Increased by 12.3% compared to last month"
+                    },
+                    "value": 245689.67,
+                    "prefix": "",
+                    "suffix": "",
+                    "iconSize": 6,
+                    "iconColor": "none",
+                    "precision": 2,
+                    "statisticType": "column",
+                    "statisticField": "total-qty"
+                  },
+                  {
+                    "key": "reviewed_rate",
+                    "icon": "check-square",
+                    "title": "出库完成率",
+                    "trend": {
+                      "type": "down",
+                      "value": 2.1,
+                      "status": "warning",
+                      "suffix": "%",
+                      "enabled": false,
+                      "description": "Decreased by 2.1% compared to last month"
+                    },
+                    "value": 3456,
+                    "prefix": "",
+                    "suffix": "%",
+                    "iconSize": 6,
+                    "iconColor": "none",
+                    "precision": 0,
+                    "valueColor": "red",
+                    "statisticType": "column",
+                    "statisticField": "reviewed_rate"
+                  },
+                  {
+                    "key": "avg-time",
+                    "icon": "clock",
+                    "title": "平均出库时长",
+                    "trend": {
+                      "type": "up",
+                      "value": 5.7,
+                      "status": "success",
+                      "suffix": "%",
+                      "enabled": false,
+                      "description": "Increased by 5.7% compared to last month"
+                    },
+                    "value": 18.42,
+                    "prefix": "",
+                    "suffix": "小时",
+                    "iconSize": 6,
+                    "iconColor": "none",
+                    "precision": 2,
+                    "statisticType": "column",
+                    "statisticField": "avg-time"
+                  }
+                ],
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "parameters": {
+                    "et": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.endTime",
+                      "waitForValue": true
+                    },
+                    "st": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.startTime",
+                      "waitForValue": true
+                    },
+                    "brand": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168332260",
+                      "waitForValue": true
+                    }
+                  },
+                  "datasourceId": "61eb0770-61f8-4943-8dd7-74f7ed2d2a62",
+                  "outputFields": [],
+                  "datasourceName": "02-B2B-统计组",
+                  "parameterTypes": {}
+                }
+              }
+            },
+            {
+              "id": "component_1775573444305_1pwzktz57",
+              "type": "EChartsChart",
+              "props": {
+                "data": [],
+                "title": "B2B订单状态数量对比",
+                "height": 400,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "bar",
+                "funnelGap": 2,
+                "lineStack": false,
+                "nameField": "name",
+                "funnelSort": "descending",
+                "lineSmooth": false,
+                "valueField": "value",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 95,
+                "customStyles": {},
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 65,
+                "categoryField": "category",
+                "lineAreaStyle": false,
+                "titleFontSize": 17,
+                "barOrientation": "vertical",
+                "lineCumulative": false,
+                "multiLineStack": false,
+                "additionalStats": [],
+                "barDebugPercent": false,
+                "barGradientMode": "none",
+                "barNumberFormat": "thousands",
+                "chartColorScheme": "default",
+                "gaugeSplitNumber": 10,
+                "headerLabelField": "unallocated_title",
+                "xAxisLabelRotate": "auto",
+                "gaugeLabelFontSize": 14,
+                "xAxisLabelInterval": "auto",
+                "barValueDisplayMode": "value",
+                "headerLabelFontSize": 17,
+                "xAxisLabelMaxLength": 12,
+                "headerLabelFontWeight": 700,
+                "additionalStatsPosition": "chartTopLeft",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": -20,
+                "databaseDataSourceConfig": null,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "horizontalBarShowPercent": true,
+                "horizontalBarLabelFontSize": 14,
+                "horizontalBarLabelPosition": "follow",
+                "additionalStatsNumberFormat": "thousands",
+                "horizontalBarLabelFontWeight": 700,
+                "additionalStatsShowLegendSquare": false
+              },
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168332260",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "ec693d34-d83d-487d-b2a1-4b678401d95f",
+                "outputFields": [],
+                "datasourceName": "02-B2B-订单处理流程漏斗",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "component_1775573458507_etv4kviop",
+              "type": "EChartsChart",
+              "props": {
+                "data": [],
+                "title": "B2B品牌占比",
+                "height": 400,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "pie",
+                "funnelGap": 2,
+                "lineStack": false,
+                "nameField": "name",
+                "funnelSort": "descending",
+                "lineSmooth": false,
+                "valueField": "value",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 95,
+                "customStyles": {},
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 65,
+                "categoryField": "category",
+                "lineAreaStyle": false,
+                "titleFontSize": 17,
+                "barOrientation": "vertical",
+                "lineCumulative": false,
+                "multiLineStack": false,
+                "additionalStats": [],
+                "barDebugPercent": false,
+                "barGradientMode": "none",
+                "barNumberFormat": "thousands",
+                "chartColorScheme": "logistics",
+                "gaugeSplitNumber": 10,
+                "pieLabelFontSize": 14,
+                "xAxisLabelRotate": "auto",
+                "gaugeLabelFontSize": 14,
+                "pieLabelFontWeight": 700,
+                "xAxisLabelInterval": "auto",
+                "barValueDisplayMode": "value",
+                "headerLabelFontSize": 14,
+                "xAxisLabelMaxLength": 12,
+                "headerLabelFontWeight": 400,
+                "additionalStatsPosition": "chartTopLeft",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": -20,
+                "databaseDataSourceConfig": null,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "horizontalBarShowPercent": true,
+                "horizontalBarLabelPosition": "follow",
+                "additionalStatsNumberFormat": "thousands",
+                "additionalStatsShowLegendSquare": false
+              },
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168183361.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_b2b_filter_1767168332260",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "01147123-42b7-4998-a6f2-2d39c08febb5",
+                "outputFields": [],
+                "datasourceName": "02-B2B-品牌占比",
+                "parameterTypes": {}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "b2c-outbound-dashboard": {
+      "title": "B2C出库作业看板",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "b2c-card": {
+            "area": "top",
+            "order": 1
+          },
+          "component_1767168158995_14tz9s2ly": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "component_1767168158995_14tz9s2ly",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "filter_1767168183361",
+                "type": "dateRange",
+                "label": "日期范围",
+                "inline": false,
+                "options": [],
+                "multiple": false,
+                "placeholder": "",
+                "quickSelect": true,
+                "defaultValue": "today",
+                "displayWidth": "200px",
+                "showTimePicker": false,
+                "quickSelectItems": {
+                  "yesterday": false,
+                  "yesterdayToToday": false
+                },
+                "specifiedEndTime": "16:59:59",
+                "useSpecifiedTime": false,
+                "specifiedStartTime": "17:00:00"
+              },
+              {
+                "key": "filter_1767168332260",
+                "type": "select",
+                "label": "品牌选择",
+                "style": {
+                  "width": "100px"
+                },
+                "inline": false,
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "420146f9-0336-43f1-8440-9dbc85971803"
+                },
+                "placeholder": "请选择品牌",
+                "quickSelect": true,
+                "defaultValue": "",
+                "displayWidth": "140px",
+                "dropdownWidth": "100px",
+                "useFirstOptionAsDefault": false
+              },
+              {
+                "key": "filter_1775578329681",
+                "type": "select",
+                "label": "销售平台",
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "70cb737c-1613-4afb-a23e-2994b7b2b4fb"
+                },
+                "placeholder": "请选择平台",
+                "quickSelect": true,
+                "displayWidth": "140px"
+              }
+            ],
+            "presets": []
+          }
+        },
+        {
+          "id": "b2c-card",
+          "type": "Card",
+          "props": {
+            "title": "B2C 出库有效订单",
+            "layout": {
+              "type": "custom",
+              "preset": "top1-bottom3",
+              "componentPositions": {
+                "kpi-cards": {
+                  "area": "top",
+                  "order": 1
+                },
+                "process-funnel": {
+                  "area": "bottom-center",
+                  "order": 0
+                },
+                "brand-bar-chart": {
+                  "area": "bottom-left",
+                  "order": 1
+                },
+                "process-pie-chart": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "b2c-platform-filter": {
+                  "area": "top",
+                  "order": 0
+                },
+                "component_1775553731637_nflq3gml0": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "component_1775553742415_dz5ufhkto": {
+                  "area": "bottom-right",
+                  "order": 1
+                }
+              }
+            },
+            "shadow": "md",
+            "bordered": true,
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "kpi-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total-orders",
+                    "icon": "Package",
+                    "title": "总订单数",
+                    "trend": {
+                      "type": "up",
+                      "value": 12.5,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "较昨日"
+                    },
+                    "value": 2847,
+                    "statisticType": "column",
+                    "statisticField": "total-orders",
+                    "useCustomDataSource": false,
+                    "databaseDataSourceConfig": null
+                  },
+                  {
+                    "key": "total-pieces",
+                    "icon": "Boxes",
+                    "title": "总件数",
+                    "trend": {
+                      "type": "up",
+                      "value": 8.3,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "较昨日"
+                    },
+                    "value": 15692,
+                    "statisticType": "column",
+                    "statisticField": "total-pieces"
+                  },
+                  {
+                    "key": "reviewed_rate",
+                    "icon": "CheckCircle",
+                    "title": "出库完成率",
+                    "trend": {
+                      "type": "up",
+                      "value": 2.1,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "较昨日"
+                    },
+                    "value": 87.5,
+                    "linkTo": "completion-gauge",
+                    "suffix": "%",
+                    "valueColor": "red",
+                    "valueStyle": {
+                      "color": "#ef4444"
+                    },
+                    "statisticType": "column",
+                    "statisticField": "reviewed_rate"
+                  },
+                  {
+                    "key": "avg-time",
+                    "icon": "Clock",
+                    "title": "平均出库时长",
+                    "trend": {
+                      "type": "down",
+                      "value": 15,
+                      "status": "success",
+                      "suffix": "小时",
+                      "description": "较昨日"
+                    },
+                    "value": 142,
+                    "suffix": "小时",
+                    "statisticType": "column",
+                    "statisticField": "avg-time"
+                  }
+                ],
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "parameters": {
+                    "et": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.endTime"
+                    },
+                    "sc": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_filter_1775578329681"
+                    },
+                    "st": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.startTime"
+                    },
+                    "brand": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_1767168158995_14tz9s2ly_filter_1767168332260"
+                    }
+                  },
+                  "datasourceId": "fcf7897e-67b5-47b8-aa9f-2576ace91de1",
+                  "outputFields": [],
+                  "datasourceName": "出库-统计组",
+                  "parameterTypes": {}
+                }
+              },
+              "useMockData": false
+            },
+            {
+              "id": "component_1775553731637_nflq3gml0",
+              "type": "EChartsChart",
+              "props": {
+                "data": [],
+                "title": "B2C平台订单数占比",
+                "height": 400,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "bar",
+                "funnelGap": 2,
+                "lineStack": false,
+                "nameField": "platform",
+                "funnelSort": "descending",
+                "lineSmooth": false,
+                "valueField": "sc_count",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 95,
+                "customStyles": {},
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 65,
+                "categoryField": "category",
+                "lineAreaStyle": false,
+                "titleFontSize": 17,
+                "barOrientation": "horizontal",
+                "lineCumulative": false,
+                "multiLineStack": false,
+                "additionalStats": [],
+                "barDebugPercent": false,
+                "barGradientMode": "none",
+                "barNumberFormat": "thousands",
+                "chartColorScheme": "ocean",
+                "gaugeSplitNumber": 10,
+                "xAxisLabelRotate": "auto",
+                "gaugeLabelFontSize": 14,
+                "xAxisLabelInterval": "auto",
+                "barLengthAdjustment": false,
+                "barValueDisplayMode": "percent",
+                "headerLabelFontSize": 14,
+                "xAxisLabelMaxLength": 12,
+                "headerLabelFontWeight": 400,
+                "additionalStatsPosition": "chartTopLeft",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": -20,
+                "databaseDataSourceConfig": null,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "horizontalBarShowPercent": true,
+                "horizontalBarLabelFontSize": 13,
+                "horizontalBarLabelPosition": "follow",
+                "additionalStatsNumberFormat": "thousands",
+                "horizontalBarLabelFontWeight": 500,
+                "horizontalBarPercentBaseField": "total_count",
+                "additionalStatsShowLegendSquare": false,
+                "barLayout": "progress",
+                "colors": [
+                  "#3B82F6",
+                  "#22D3EE",
+                  "#94A3B8",
+                  "#64748B"
+                ]
+              },
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.endTime",
+                    "waitForValue": true
+                  },
+                  "sc": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1775578329681",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168332260",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "c732c5a4-9483-437b-b89e-a9a6d62bbea0",
+                "outputFields": [],
+                "datasourceName": "02-B2C-平台订单数占比",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "process-funnel",
+              "type": "EChartsChart",
+              "props": {
+                "title": "B2C订单状态数量对比",
+                "height": 400,
+                "chartType": "bar",
+                "funnelGap": 2,
+                "nameField": "name",
+                "funnelSort": "descending",
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "titleFontSize": 17,
+                "barGradientMode": "none",
+                "chartColorScheme": "default",
+                "headerLabelField": "unallocated_title",
+                "funnelLabelFontSize": 14,
+                "headerLabelFontSize": 17,
+                "funnelLabelFontWeight": 700,
+                "headerLabelFontWeight": 700,
+                "horizontalBarLabelFontSize": 14,
+                "horizontalBarLabelFontWeight": 700
+              },
+              "mockData": [
+                {
+                  "name": "已分配",
+                  "value": 2847
+                },
+                {
+                  "name": "已拣货",
+                  "value": 2401
+                },
+                {
+                  "name": "已复核",
+                  "value": 1678
+                },
+                {
+                  "name": "已出库",
+                  "value": 1423
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "sqlQuery": "SELECT '已分配' AS name, COUNT(*) AS value FROM outbound_orders WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n        AND ({{sc}} = 'all' OR {{sc}} IS NULL OR {{sc}} = '' OR sales_channel = {{sc}}) and allocation_time IS NOT NULL\nUNION ALL\nSELECT '已拣货', COUNT(*) FROM outbound_orders WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n        AND ({{sc}} = 'all' OR {{sc}} IS NULL OR {{sc}} = '' OR sales_channel = {{sc}}) and picking_time IS NOT NULL\nUNION ALL\nSELECT '已复核', COUNT(*) FROM outbound_orders WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n        AND ({{sc}} = 'all' OR {{sc}} IS NULL OR {{sc}} = '' OR sales_channel = {{sc}}) and review_time IS NOT NULL\nUNION ALL\nSELECT '已出库', COUNT(*) FROM outbound_orders WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n        AND ({{sc}} = 'all' OR {{sc}} IS NULL OR {{sc}} = '' OR sales_channel = {{sc}}) and outbound_time IS NOT NULL",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.endTime"
+                  },
+                  "sc": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1775578329681"
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.startTime"
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168332260"
+                  }
+                },
+                "datasourceId": "2f9e0f6f-7991-476b-b96f-225d8335ffbc",
+                "outputFields": [],
+                "datasourceName": "订单处理流程漏斗",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "component_1775553742415_dz5ufhkto",
+              "type": "EChartsChart",
+              "props": {
+                "data": [],
+                "title": "B2C品牌占比",
+                "height": 400,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "pie",
+                "funnelGap": 2,
+                "lineStack": false,
+                "nameField": "name",
+                "funnelSort": "descending",
+                "lineSmooth": false,
+                "valueField": "value",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 95,
+                "pieRingSize": 70,
+                "customStyles": {},
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 65,
+                "pieRingWidth": 25,
+                "categoryField": "category",
+                "lineAreaStyle": false,
+                "titleFontSize": 17,
+                "barOrientation": "vertical",
+                "lineCumulative": false,
+                "multiLineStack": false,
+                "additionalStats": [],
+                "barDebugPercent": false,
+                "barGradientMode": "none",
+                "barNumberFormat": "thousands",
+                "chartColorScheme": "logistics",
+                "gaugeSplitNumber": 10,
+                "pieLabelFontSize": 14,
+                "xAxisLabelRotate": "auto",
+                "gaugeLabelFontSize": 14,
+                "pieLabelFontWeight": 700,
+                "xAxisLabelInterval": "auto",
+                "barValueDisplayMode": "value",
+                "headerLabelFontSize": 14,
+                "xAxisLabelMaxLength": 12,
+                "headerLabelFontWeight": 400,
+                "additionalStatsPosition": "chartTopLeft",
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": -20,
+                "databaseDataSourceConfig": null,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "horizontalBarShowPercent": true,
+                "horizontalBarLabelPosition": "follow",
+                "additionalStatsNumberFormat": "thousands",
+                "additionalStatsShowLegendSquare": false
+              },
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.endTime",
+                    "waitForValue": true
+                  },
+                  "sc": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1775578329681",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_1767168158995_14tz9s2ly_filter_1767168332260",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "9489e9d2-ba49-4a34-bd17-7c19836d55a2",
+                "outputFields": [],
+                "datasourceName": "02-B2C-品牌占比",
+                "parameterTypes": {}
+              }
+            }
+          ]
+        },
+        {
+          "id": "detailed-table",
+          "type": "Table",
+          "props": {
+            "title": "B2C异常出库订单数据",
+            "rowKey": "id",
+            "columns": [
+              {
+                "key": "column-order_no-1775099141937",
+                "align": "left",
+                "title": "订单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-sales_channel-1775099141937",
+                "align": "left",
+                "title": "销售渠道",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "sales_channel",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-wave-1775099202928",
+                "align": "left",
+                "title": "波次",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "wave",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-failure_reason-1775099141937",
+                "align": "left",
+                "title": "失败原因",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "failure_reason",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "pagination": {
+              "current": 1,
+              "pageSize": 10,
+              "showTotal": true,
+              "showQuickJumper": true,
+              "showSizeChanger": true
+            },
+            "showSearch": true,
+            "showRefresh": true,
+            "useMockData": false,
+            "enableExport": true
+          },
+          "mockData": [
+            {
+              "id": "1",
+              "orderNo": "ORD-2025-1001",
+              "pickupTime": "2025-01-15 14:20:00",
+              "reviewTime": "2025-01-15 11:45:00",
+              "pickingTime": "2025-01-15 10:15:00",
+              "outboundTime": "2025-01-15 16:30:00",
+              "salesChannel": "天猫",
+              "allocationTime": "2025-01-15 08:30:00",
+              "allocationOutboundDuration": "8.0小时"
+            },
+            {
+              "id": "2",
+              "orderNo": "ORD-2025-1002",
+              "pickupTime": "2025-01-15 15:45:00",
+              "reviewTime": "2025-01-15 13:15:00",
+              "pickingTime": "2025-01-15 11:30:00",
+              "outboundTime": "2025-01-15 18:20:00",
+              "salesChannel": "唯品会",
+              "allocationTime": "2025-01-15 09:00:00",
+              "allocationOutboundDuration": "9.3小时"
+            },
+            {
+              "id": "3",
+              "orderNo": "ORD-2025-1003",
+              "pickupTime": "",
+              "reviewTime": "",
+              "pickingTime": "",
+              "outboundTime": "",
+              "salesChannel": "抖音",
+              "allocationTime": "2025-01-15 10:15:00",
+              "allocationOutboundDuration": "超时未完成"
+            },
+            {
+              "id": "4",
+              "orderNo": "ORD-2025-1004",
+              "pickupTime": "2025-01-15 14:00:00",
+              "reviewTime": "2025-01-15 12:30:00",
+              "pickingTime": "2025-01-15 10:00:00",
+              "outboundTime": "2025-01-15 17:15:00",
+              "salesChannel": "得物",
+              "allocationTime": "2025-01-15 08:45:00",
+              "allocationOutboundDuration": "8.5小时"
+            },
+            {
+              "id": "5",
+              "orderNo": "ORD-2025-1005",
+              "pickupTime": "",
+              "reviewTime": "",
+              "pickingTime": "2025-01-15 11:00:00",
+              "outboundTime": "",
+              "salesChannel": "京东",
+              "allocationTime": "2025-01-15 09:30:00",
+              "allocationOutboundDuration": "复核环节异常"
+            },
+            {
+              "id": "6",
+              "orderNo": "ORD-2025-1006",
+              "pickupTime": "2025-01-15 13:30:00",
+              "reviewTime": "2025-01-15 11:20:00",
+              "pickingTime": "2025-01-15 09:45:00",
+              "outboundTime": "2025-01-15 15:45:00",
+              "salesChannel": "天猫",
+              "allocationTime": "2025-01-15 07:20:00",
+              "allocationOutboundDuration": "8.4小时"
+            },
+            {
+              "id": "7",
+              "orderNo": "ORD-2025-1007",
+              "pickupTime": "2025-01-15 16:15:00",
+              "reviewTime": "2025-01-15 14:00:00",
+              "pickingTime": "2025-01-15 12:30:00",
+              "outboundTime": "2025-01-15 19:30:00",
+              "salesChannel": "唯品会",
+              "allocationTime": "2025-01-15 10:00:00",
+              "allocationOutboundDuration": "9.5小时"
+            },
+            {
+              "id": "8",
+              "orderNo": "ORD-2025-1008",
+              "pickupTime": "",
+              "reviewTime": "2025-01-15 12:00:00",
+              "pickingTime": "2025-01-15 10:30:00",
+              "outboundTime": "",
+              "salesChannel": "抖音",
+              "allocationTime": "2025-01-15 08:00:00",
+              "allocationOutboundDuration": "揽收环节异常"
+            },
+            {
+              "id": "9",
+              "orderNo": "ORD-2025-1009",
+              "pickupTime": "2025-01-15 15:00:00",
+              "reviewTime": "2025-01-15 13:20:00",
+              "pickingTime": "2025-01-15 11:45:00",
+              "outboundTime": "2025-01-15 17:30:00",
+              "salesChannel": "得物",
+              "allocationTime": "2025-01-15 09:15:00",
+              "allocationOutboundDuration": "8.3小时"
+            },
+            {
+              "id": "10",
+              "orderNo": "ORD-2025-1010",
+              "pickupTime": "",
+              "reviewTime": "",
+              "pickingTime": "",
+              "outboundTime": "",
+              "salesChannel": "京东",
+              "allocationTime": "2025-01-15 07:45:00",
+              "allocationOutboundDuration": "拣货环节异常"
+            }
+          ],
+          "useMockData": false,
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "sqlQuery": "\t\tselect * from abnormal_pickup_orders limit {{limit}} offset {{offset}}",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.endTime"
+              },
+              "sc": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_1767168158995_14tz9s2ly_filter_1775578329681"
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_1767168158995_14tz9s2ly_filter_1767168183361.startTime"
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_1767168158995_14tz9s2ly_filter_1767168332260",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "e3f95854-18c7-4940-9743-3e526c204191",
+            "outputFields": [],
+            "datasourceName": "异常出库订单数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        }
+      ]
+    },
+    "inbound-customer-return": {
+      "title": "客退入库",
+      "layout": {
+        "type": "custom",
+        "preset": "dashboard-layout",
+        "componentPositions": {
+          "customer-return-card": {
+            "area": "main",
+            "order": 0
+          },
+          "component_inbound_fp_customer_return": {
+            "area": "header",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "customer-return-card",
+          "type": "Card",
+          "props": {
+            "title": "B2C客退入库",
+            "layout": {
+              "type": "custom",
+              "preset": "top1-bottom2-equal",
+              "componentPositions": {
+                "summary-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "completion-gauge-1": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "completion-gauge-2": {
+                  "area": "bottom-right",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total-qty",
+                    "icon": "activity",
+                    "title": "总数 (件)",
+                    "trend": {
+                      "suffix": "",
+                      "enabled": true,
+                      "upStyle": "success",
+                      "downStyle": "error",
+                      "description": "较上期",
+                      "trendCondition": ""
+                    },
+                    "value": 0,
+                    "statisticType": "column",
+                    "statisticField": "total-qty"
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "已收货 (件)",
+                    "trend": {
+                      "type": "up",
+                      "value": 12,
+                      "status": "success"
+                    },
+                    "value": 89,
+                    "statisticType": "column",
+                    "statisticField": "received-qty"
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "已上架 (件)",
+                    "trend": {
+                      "type": "up",
+                      "value": 15,
+                      "status": "success"
+                    },
+                    "value": 67,
+                    "statisticType": "column",
+                    "statisticField": "shelved-qty"
+                  },
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "在途申请",
+                    "trend": {
+                      "type": "up",
+                      "value": 8,
+                      "status": "warning",
+                      "enabled": false
+                    },
+                    "value": 156,
+                    "statisticType": "column",
+                    "statisticField": "unreceived_qty",
+                    "useCustomDataSource": true,
+                    "databaseDataSourceConfig": {
+                      "type": "database-datasource",
+                      "parameters": {
+                        "brand": {
+                          "type": "parameter",
+                          "value": "",
+                          "source": "component_inbound_fp_customer_return_filter_1769393507458",
+                          "waitForValue": true
+                        }
+                      },
+                      "datasourceId": "8b642b6e-db9f-4049-8b55-59207151e872",
+                      "outputFields": [],
+                      "datasourceName": "02-客退-统计组-待收货",
+                      "parameterTypes": {}
+                    }
+                  }
+                ],
+                "databaseDataSourceConfig": {
+                  "type": "database-datasource",
+                  "sqlQuery": "WITH today_stats AS (\n    SELECT\n        -- 待收货数量（总数量 - 已收货数量，确保不为负）\n        COALESCE(SUM(GREATEST(0, applied_return_qty - received_qty)), 0) AS unreceived_qty,\n        \n        -- 已收货数量\n        COALESCE(SUM(received_qty), 0) AS received_qty,\n        \n        -- 总数量\n        COALESCE(SUM(applied_return_qty), 0) AS total_qty\n    FROM customer_return_in_transit\n    WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n),\ntoday_shelved AS (\n    SELECT\n        COALESCE(SUM(shelved_qty), 0) AS shelved_qty\n    FROM customer_return_in_transit\n    WHERE create_time BETWEEN {{st}} AND {{et}}\n        AND ({{brand}} = 'all' OR brand = {{brand}})\n)\nSELECT\n    unreceived_qty AS \"pending-receipt-qty\",\n    received_qty AS \"received-qty\",\n    shelved_qty AS \"shelved-qty\",\n    CASE \n        WHEN (SELECT total_qty FROM today_stats) > 0 \n        THEN ROUND((shelved_qty::DECIMAL / (SELECT total_qty FROM today_stats) * 100)::NUMERIC, 2)\n        ELSE 0\n    END AS \"shelving-completion-rate\"\nFROM today_stats, today_shelved",
+                  "parameters": {
+                    "et": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_customer_return_filter_1769393479482.endTime"
+                    },
+                    "st": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_customer_return_filter_1769393479482.startTime"
+                    },
+                    "brand": {
+                      "type": "parameter",
+                      "value": "",
+                      "source": "component_inbound_fp_customer_return_filter_1769393507458"
+                    }
+                  },
+                  "datasourceId": "191158e1-2bad-4695-99ec-284658012e30",
+                  "outputFields": [],
+                  "datasourceName": "入库-客退-统计组",
+                  "parameterTypes": {}
+                }
+              },
+              "useMockData": false
+            },
+            {
+              "id": "completion-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "到货情况",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "received-title",
+                "gaugeValue": 78.5,
+                "showLegend": false,
+                "valueField": "receipt-completion-rate",
+                "gaugeLabelY": 0,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeShowValue": false,
+                "gaugeLabelColor": "#000000",
+                "gaugeLabelField": "received-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "logistics",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ],
+                "gaugeLabelFontSize": 20,
+                "gaugeTitleFontSize": 16,
+                "barValueDisplayMode": "valueAndPercent",
+                "gaugeDetailFontSize": 26,
+                "headerLabelFontSize": 12,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#3B82F6",
+                "headerLabelFontWeight": 400,
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "horizontalBarLabelFontSize": 14,
+                "horizontalBarPercentBaseField": "total-qty",
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom"
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 78.5
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "191158e1-2bad-4695-99ec-284658012e30",
+                "outputFields": [],
+                "datasourceName": "02-客退-统计组",
+                "parameterTypes": {}
+              }
+            },
+            {
+              "id": "completion-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "上架完成率",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gaugeProgressRing",
+                "nameField": "shelved-name",
+                "gaugeValue": 87.3,
+                "showLegend": false,
+                "valueField": "shelving-completion-rate",
+                "gaugeLabelX": 50,
+                "gaugeLabelY": 90,
+                "gaugeRadius": 60,
+                "showTooltip": true,
+                "gaugeCenterX": 50,
+                "gaugeCenterY": 60,
+                "titleFontSize": 17,
+                "gaugeLabelField": "shelved-name",
+                "gaugeShowDetail": true,
+                "gaugeTrackColor": "#94a3b8",
+                "chartColorScheme": "contrast",
+                "gaugeArcEndAngle": -270,
+                "gaugeDetailColor": "#333333",
+                "gaugeSplitNumber": 10,
+                "gaugeArcStartAngle": 90,
+                "gaugeLabelFontSize": 20,
+                "gaugeTrackGradient": false,
+                "gaugeDetailFontSize": 28,
+                "headerLabelFontSize": 17,
+                "gaugeLabelFontWeight": 700,
+                "gaugeDetailFontWeight": 700,
+                "gaugeProgressBarColor": "#27AE60",
+                "headerLabelFontWeight": 700,
+                "gaugeTitleOffsetCenterX": 0,
+                "gaugeTitleOffsetCenterY": 0,
+                "gaugeDetailOffsetCenterX": 0,
+                "gaugeDetailOffsetCenterY": 0,
+                "gaugeProgressRingCenterY": 45,
+                "gaugeProgressRingLineWidth": 24,
+                "gaugeProgressRingDrawOffsetPercent": 5,
+                "gaugeProgressRingCanvasLabelPosition": "chartBottom",
+                "gaugeProgressRingCanvasLabelEdgePercent": 8
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 89.7
+                }
+              ],
+              "useMockData": false,
+              "databaseDataSourceConfig": {
+                "type": "database-datasource",
+                "parameters": {
+                  "et": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393479482.endTime",
+                    "waitForValue": true
+                  },
+                  "st": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393479482.startTime",
+                    "waitForValue": true
+                  },
+                  "brand": {
+                    "type": "parameter",
+                    "value": "",
+                    "source": "component_inbound_fp_customer_return_filter_1769393507458",
+                    "waitForValue": true
+                  }
+                },
+                "datasourceId": "191158e1-2bad-4695-99ec-284658012e30",
+                "outputFields": [],
+                "datasourceName": "02-客退-统计组",
+                "parameterTypes": {}
+              }
+            }
+          ]
+        },
+        {
+          "id": "component_inbound_fp_customer_return",
+          "type": "FilterPanel",
+          "props": {
+            "title": "",
+            "filters": [
+              {
+                "key": "filter_1769393479482",
+                "type": "dateRange",
+                "label": "日期范围",
+                "options": [],
+                "multiple": false,
+                "placeholder": "Please select",
+                "quickSelect": true,
+                "defaultValue": "today",
+                "displayWidth": "200px",
+                "quickSelectItems": {
+                  "yesterday": false,
+                  "yesterdayToToday": false
+                },
+                "specifiedEndTime": "16:59:59",
+                "useSpecifiedTime": false,
+                "specifiedStartTime": "17:00:00"
+              },
+              {
+                "key": "filter_1769393507458",
+                "type": "select",
+                "label": "品牌",
+                "options": [],
+                "multiple": true,
+                "dataSource": {
+                  "labelField": "label",
+                  "valueField": "value",
+                  "datasourceId": "420146f9-0336-43f1-8440-9dbc85971803"
+                },
+                "placeholder": "请选择品牌",
+                "quickSelect": true,
+                "displayWidth": "140px",
+                "useFirstOptionAsDefault": false
+              }
+            ],
+            "presets": []
+          }
+        },
+        {
+          "id": "customer-return-table",
+          "type": "Table",
+          "props": {
+            "title": "B2C异常数据",
+            "rowKey": "id",
+            "addable": false,
+            "columns": [
+              {
+                "key": "column-id-1765954083703",
+                "align": "left",
+                "title": "主键ID",
+                "width": 150,
+                "hidden": true,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "id",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-original_order_no-1765954083703",
+                "align": "left",
+                "title": "原始订单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "original_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-return_order_no-1765954083703",
+                "align": "left",
+                "title": "退单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_order_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-express_tracking_no-1765954083703",
+                "align": "left",
+                "title": "快递单号",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "express_tracking_no",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-applied_return_qty-1765954083703",
+                "align": "left",
+                "title": "申请退货件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "applied_return_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-received_qty-1765954083703",
+                "align": "left",
+                "title": "已收货件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "received_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_qty-1765954083703",
+                "align": "left",
+                "title": "已上架件数",
+                "width": 150,
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_qty",
+                "fieldType": "DOUBLE",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-shelved_progress-1765954083703",
+                "align": "left",
+                "title": "已上架完成进度（%）",
+                "width": 150,
+                "render": {
+                  "type": "Progress",
+                  "props": {}
+                },
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "shelved_progress",
+                "fieldType": "FLOAT",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              },
+              {
+                "key": "column-return_channel-1765954083703",
+                "align": "left",
+                "title": "退货渠道",
+                "width": 150,
+                "render": {
+                  "type": "Tag",
+                  "props": {}
+                },
+                "editable": false,
+                "ellipsis": true,
+                "dataIndex": "return_channel",
+                "fieldType": "VARCHAR",
+                "filterType": "equals",
+                "filterable": false,
+                "editRequired": false
+              }
+            ],
+            "filterable": false,
+            "pagination": {
+              "pageSize": 10
+            },
+            "showSearch": false,
+            "showRefresh": true,
+            "showToolbar": false,
+            "enableExport": false,
+            "showSettings": false
+          },
+          "mockData": [
+            {
+              "id": "cr1",
+              "sku": "SKU-2025-CR001",
+              "size": "42",
+              "shelvedQty": 45,
+              "colorNumber": "BK001",
+              "productName": "男士运动鞋",
+              "receivedQty": 48,
+              "styleNumber": "RB-CR-001",
+              "returnReason": "尺寸不合适",
+              "returnChannel": "线上",
+              "returnOrderNo": "RT-2025-CR001",
+              "originalOrderNo": "ORD-2025-1001",
+              "shelvedProgress": 90,
+              "appliedReturnQty": 50,
+              "expressTrackingNo": "SF1234567890123"
+            },
+            {
+              "id": "cr2",
+              "sku": "SKU-2025-CR002",
+              "size": "均码",
+              "shelvedQty": 25,
+              "colorNumber": "BR002",
+              "productName": "女士手提包",
+              "receivedQty": 30,
+              "styleNumber": "HB-CR-002",
+              "returnReason": "质量问题",
+              "returnChannel": "线下",
+              "returnOrderNo": "RT-2025-CR002",
+              "originalOrderNo": "ORD-2025-1002",
+              "shelvedProgress": 83.3,
+              "appliedReturnQty": 30,
+              "expressTrackingNo": "YT9876543210987"
+            },
+            {
+              "id": "cr3",
+              "sku": "SKU-2025-CR003",
+              "size": "120cm",
+              "shelvedQty": 0,
+              "colorNumber": "RD003",
+              "productName": "儿童T恤",
+              "receivedQty": 0,
+              "styleNumber": "CT-CR-003",
+              "returnReason": "颜色不符",
+              "returnChannel": "第三方平台",
+              "returnOrderNo": "RT-2025-CR003",
+              "originalOrderNo": "ORD-2025-1003",
+              "shelvedProgress": 0,
+              "appliedReturnQty": 100,
+              "expressTrackingNo": "ST4567890123456"
+            },
+            {
+              "id": "cr4",
+              "sku": "SKU-2025-CR004",
+              "size": "M",
+              "shelvedQty": 60,
+              "colorNumber": "BL004",
+              "productName": "休闲T恤",
+              "receivedQty": 65,
+              "styleNumber": "CT-CR-004",
+              "returnReason": "不喜欢",
+              "returnChannel": "线上",
+              "returnOrderNo": "RT-2025-CR004",
+              "originalOrderNo": "ORD-2025-1004",
+              "shelvedProgress": 92.3,
+              "appliedReturnQty": 65,
+              "expressTrackingNo": "SF2345678901234"
+            },
+            {
+              "id": "cr5",
+              "sku": "SKU-2025-CR005",
+              "size": "L",
+              "shelvedQty": 35,
+              "colorNumber": "GR005",
+              "productName": "运动裤",
+              "receivedQty": 40,
+              "styleNumber": "SP-CR-005",
+              "returnReason": "尺码偏大",
+              "returnChannel": "线上",
+              "returnOrderNo": "RT-2025-CR005",
+              "originalOrderNo": "ORD-2025-1005",
+              "shelvedProgress": 87.5,
+              "appliedReturnQty": 40,
+              "expressTrackingNo": "YT3456789012345"
+            }
+          ],
+          "useMockData": false,
+          "databaseDataSourceConfig": {
+            "type": "database-datasource",
+            "parameters": {
+              "et": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_customer_return_filter_1769393479482.endTime",
+                "waitForValue": true
+              },
+              "st": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_customer_return_filter_1769393479482.startTime",
+                "waitForValue": true
+              },
+              "brand": {
+                "type": "parameter",
+                "value": "",
+                "source": "component_inbound_fp_customer_return_filter_1769393507458",
+                "waitForValue": true
+              },
+              "limit": "20",
+              "offset": "0"
+            },
+            "datasourceId": "1a2d91b7-cbf4-4f0e-9d63-0d1e091dc90c",
+            "outputFields": [],
+            "datasourceName": "02-客退-异常数据",
+            "parameterTypes": {
+              "limit": "number",
+              "offset": "number"
+            }
+          }
+        }
+      ],
+      "fullscreen": {
+        "enabled": true
+      },
+      "autoRefresh": {
+        "enabled": false,
+        "interval": 30
+      },
+      "description": ""
+    }
+  },
+  "appConfig": {
+    "logo": "",
+    "name": "联亚集团智能物流看板",
+    "theme": {
+      "layout": "mix",
+      "navTheme": "dark",
+      "siderWidth": 256,
+      "headerHeight": 64,
+      "primaryColor": "#1890ff"
+    },
+    "version": "1.0.0",
+    "dataSource": {
+      "type": "mock",
+      "enableRealTime": true,
+      "refreshInterval": 30000
+    },
+    "hideTabBar": false,
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "nav-item-1773737891350",
+          "icon": "file",
+          "level": 1,
+          "title": "看板",
+          "children": [],
+          "linkedPage": "page_1773737879842",
+          "hasChildren": false,
+          "pageParameters": {}
+        },
+        {
+          "key": "b2c-outbound",
+          "icon": "PackageOpen",
+          "level": 1,
+          "title": "B2C出库",
+          "children": [],
+          "linkedPage": "b2c-outbound-dashboard",
+          "hasChildren": false,
+          "pageParameters": {}
+        },
+        {
+          "key": "inbound-customer-return",
+          "icon": "RotateCcw",
+          "level": 1,
+          "title": "B2C客退入库",
+          "children": [],
+          "linkedPage": "inbound-customer-return",
+          "hasChildren": false,
+          "pageParameters": {}
+        },
+        {
+          "key": "b2b-outbound",
+          "icon": "Package",
+          "level": 1,
+          "title": "B2B出库",
+          "children": [],
+          "linkedPage": "b2b-outbound-dashboard",
+          "hasChildren": false,
+          "pageParameters": {}
+        },
+        {
+          "key": "inbound-purchase",
+          "icon": "ShoppingCart",
+          "path": "/inbound-purchase",
+          "level": 1,
+          "title": "B2B采购入库",
+          "children": [],
+          "linkedPage": "inbound-purchase",
+          "hasChildren": false,
+          "pageParameters": {}
+        },
+        {
+          "key": "inbound-store-return",
+          "icon": "Store",
+          "path": "/inbound-transfer",
+          "level": 1,
+          "title": "B2B门店退仓入库",
+          "children": [],
+          "linkedPage": "inbound-transfer",
+          "hasChildren": false,
+          "pageParameters": {}
+        }
+      ]
+    },
+    "autoRefresh": true,
+    "defaultPage": "page_1773737879842",
+    "description": "实时物流作业进度与时效分析看板",
+    "tabBehavior": "single",
+    "fullScreenMode": true,
+    "refreshInterval": 30000
+  }
+}

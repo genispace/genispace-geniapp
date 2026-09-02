@@ -1,0 +1,416 @@
+{
+  "schemaVersion": 1,
+  "appConfig": {
+    "name": "Northstar Operations Hub",
+    "description": "Multi-page operations workspace used for portable GeniApp acceptance testing",
+    "version": "2.4.0",
+    "defaultPage": "overview",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "overview",
+          "title": "Executive overview",
+          "icon": "LayoutDashboard",
+          "linkedPage": "overview"
+        },
+        {
+          "key": "operations",
+          "title": "Operations",
+          "icon": "Activity",
+          "linkedPage": "operations"
+        },
+        {
+          "key": "planning",
+          "title": "Planning",
+          "icon": "ClipboardList",
+          "linkedPage": "planning"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "overview": {
+      "title": "Executive overview",
+      "description": "Live operating indicators and the accounts that need attention today.",
+      "layout": {
+        "type": "grid-24",
+        "columns": 24,
+        "rowHeight": 48,
+        "gap": 16,
+        "components": [
+          { "id": "overview-banner", "colStart": 0, "colSpan": 24, "rowStart": 0, "rowSpan": 2 },
+          { "id": "overview-kpis", "colStart": 0, "colSpan": 24, "rowStart": 2, "rowSpan": 3 },
+          { "id": "revenue-trend", "colStart": 0, "colSpan": 14, "rowStart": 5, "rowSpan": 6 },
+          { "id": "priority-accounts", "colStart": 14, "colSpan": 10, "rowStart": 5, "rowSpan": 6 }
+        ]
+      },
+      "customStyles": {
+        "rootStyles": {
+          "backgroundColor": "hsl(var(--background))"
+        },
+        "customCss": "& .portable-page-header h1 { color: hsl(var(--foreground)); }"
+      },
+      "components": [
+        {
+          "id": "overview-banner",
+          "type": "CustomContent",
+          "props": {
+            "html": "<div class='northstar-banner'><span>OPERATIONS PULSE</span><strong>Focus the team on profitable, on-time delivery.</strong><p>Published snapshot · complete portable runtime · application-owned contracts</p></div>"
+          },
+          "customStyles": {
+            "rootStyles": {
+              "color": "#ffffff",
+              "backgroundColor": "#183153",
+              "borderRadius": "18px",
+              "padding": "22px 26px"
+            },
+            "customCss": "& .northstar-banner { display: grid; gap: 7px; } & .northstar-banner span { color: #8ed8d1; font-size: 11px; font-weight: 800; letter-spacing: .14em; } & .northstar-banner strong { font-size: 22px; letter-spacing: -.02em; } & .northstar-banner p { margin: 0; color: #c7d5e9; font-size: 13px; }"
+          }
+        },
+        {
+          "id": "overview-kpis",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": { "cols": 4 },
+            "items": [
+              {
+                "key": "revenue",
+                "title": "Monthly revenue",
+                "prefix": "$",
+                "value": "2.48M",
+                "trend": { "value": 12.8, "suffix": "%", "type": "up", "description": "vs target" }
+              },
+              {
+                "key": "margin",
+                "title": "Gross margin",
+                "value": 38.6,
+                "suffix": "%",
+                "trend": { "value": 2.1, "suffix": " pts", "type": "up", "description": "month over month" }
+              },
+              {
+                "key": "ontime",
+                "title": "On-time delivery",
+                "value": 96.4,
+                "suffix": "%",
+                "trend": { "value": 1.7, "suffix": "%", "type": "up", "description": "last 30 days" }
+              },
+              {
+                "key": "risk",
+                "title": "At-risk orders",
+                "value": 14,
+                "trend": { "value": 3, "type": "down", "description": "since yesterday" }
+              }
+            ]
+          },
+          "customStyles": {
+            "rootStyles": {
+              "padding": "0",
+              "border": "0",
+              "backgroundColor": "transparent",
+              "boxShadow": "none"
+            }
+          }
+        },
+        {
+          "id": "revenue-trend",
+          "type": "Chart",
+          "props": {
+            "title": "Revenue run rate",
+            "description": "Recognized revenue by month",
+            "chartType": "line",
+            "xField": "month",
+            "yField": "revenue",
+            "height": 260
+          },
+          "mockData": [
+            { "month": "Apr", "revenue": 1.72 },
+            { "month": "May", "revenue": 1.88 },
+            { "month": "Jun", "revenue": 1.96 },
+            { "month": "Jul", "revenue": 2.14 },
+            { "month": "Aug", "revenue": 2.31 },
+            { "month": "Sep", "revenue": 2.48 }
+          ],
+          "useMockData": true,
+          "customStyles": {
+            "rootStyles": { "borderTop": "3px solid #3157d5" }
+          }
+        },
+        {
+          "id": "priority-accounts",
+          "type": "Table",
+          "props": {
+            "title": "Priority accounts",
+            "description": "Commercial accounts requiring intervention",
+            "columns": [
+              { "key": "account", "title": "Account", "dataIndex": "account" },
+              { "key": "owner", "title": "Owner", "dataIndex": "owner" },
+              { "key": "risk", "title": "Risk", "dataIndex": "risk" },
+              { "key": "value", "title": "Value", "dataIndex": "value", "render": "currency" }
+            ]
+          },
+          "mockData": [
+            { "account": "Atlas Retail", "owner": "Mina", "risk": "Supply", "value": 184000 },
+            { "account": "Lumen Foods", "owner": "Evan", "risk": "Margin", "value": 127500 },
+            { "account": "Cedar Group", "owner": "Noah", "risk": "Schedule", "value": 98000 },
+            { "account": "Nova Labs", "owner": "Zoe", "risk": "Quality", "value": 76000 }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "operations": {
+      "title": "Operations control",
+      "description": "A tabbed operating view combining throughput and exception queues.",
+      "layout": "fluid",
+      "customStyles": {
+        "rootStyles": { "backgroundColor": "hsl(var(--background))" }
+      },
+      "components": [
+        {
+          "id": "operations-tabs",
+          "type": "Tabs",
+          "props": {
+            "items": [
+              {
+                "key": "throughput",
+                "label": "Throughput",
+                "component": {
+                    "id": "throughput-chart",
+                    "type": "Chart",
+                    "props": { "title": "Units completed", "description": "Daily output for the last seven days", "chartType": "column", "xField": "day", "yField": "units", "height": 250 },
+                    "mockData": [
+                      { "day": "Mon", "units": 840 },
+                      { "day": "Tue", "units": 920 },
+                      { "day": "Wed", "units": 885 },
+                      { "day": "Thu", "units": 990 },
+                      { "day": "Fri", "units": 1040 },
+                      { "day": "Sat", "units": 760 },
+                      { "day": "Sun", "units": 810 }
+                    ],
+                    "useMockData": true
+                  }
+              },
+              {
+                "key": "exceptions",
+                "label": "Exceptions",
+                "component": {
+                    "id": "exception-list",
+                    "type": "List",
+                    "props": {
+                      "title": "Active exceptions",
+                      "items": [
+                        { "title": "Line B temperature drift", "description": "Engineering review due in 35 minutes" },
+                        { "title": "Carrier capacity shortfall", "description": "Three priority routes need reassignment" },
+                        { "title": "Packaging material below threshold", "description": "Replenishment request is awaiting approval" }
+                      ]
+                    }
+                  }
+              }
+            ]
+          },
+          "customStyles": {
+            "rootStyles": {
+              "borderRadius": "20px",
+              "borderColor": "#ded8c9"
+            }
+          }
+        }
+      ]
+    },
+    "planning": {
+      "title": "Scenario planning",
+      "description": "Collect the assumptions for the next operating review.",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "planning-intro",
+          "type": "Typography",
+          "props": {
+            "variant": "h2",
+            "content": "Prepare the October capacity scenario"
+          },
+          "customStyles": {
+            "rootStyles": { "color": "hsl(var(--foreground))", "paddingBottom": "4px" }
+          }
+        },
+        {
+          "id": "planning-form",
+          "type": "Form",
+          "props": {
+            "title": "Planning assumptions",
+            "description": "Values are included as representative UI state in this exported acceptance app.",
+            "submitButtonText": "Save scenario",
+            "fields": [
+              { "name": "scenario", "label": "Scenario name", "type": "text", "defaultValue": "October balanced plan" },
+              { "name": "growth", "label": "Demand growth (%)", "type": "number", "defaultValue": 8 },
+              { "name": "capacity", "label": "Added capacity", "type": "number", "defaultValue": 1200 },
+              { "name": "notes", "label": "Review notes", "type": "textarea", "defaultValue": "Protect service levels for Atlas Retail and Lumen Foods." }
+            ]
+          },
+          "customStyles": {
+            "rootStyles": { "maxWidth": "920px" },
+            "customCss": "& button { background-color: #0f766e; }"
+          }
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "locales": {
+      "zh": {
+        "appConfig": {
+          "name": "北辰运营中心",
+          "description": "用于可移植 GeniApp 验收的多页面运营工作台",
+          "navigation": {
+            "items": [
+              { "key": "overview", "title": "经营总览" },
+              { "key": "operations", "title": "运营控制" },
+              { "key": "planning", "title": "情景规划" }
+            ]
+          }
+        },
+        "pages": {
+          "overview": {
+            "title": "经营总览",
+            "description": "查看实时运营指标以及今天需要重点关注的客户。",
+            "components": {
+              "overview-banner": {
+                "props": {
+                  "html": "<div class='northstar-banner'><span>运营脉搏</span><strong>聚焦高利润、准时交付。</strong><p>已发布快照 · 完整可移植运行时 · 应用自有契约</p></div>"
+                }
+              },
+              "overview-kpis": {
+                "props": {
+                  "items": [
+                    { "key": "revenue", "title": "月度营收", "trend": { "description": "相对目标" } },
+                    { "key": "margin", "title": "毛利率", "trend": { "description": "环比" } },
+                    { "key": "ontime", "title": "准时交付率", "trend": { "description": "最近 30 天" } },
+                    { "key": "risk", "title": "风险订单", "trend": { "description": "较昨日" } }
+                  ]
+                }
+              },
+              "revenue-trend": {
+                "props": { "title": "营收趋势", "description": "按月份确认的营收" }
+              },
+              "priority-accounts": {
+                "props": {
+                  "title": "重点客户",
+                  "description": "需要介入的商业客户",
+                  "columns": [
+                    { "key": "account", "title": "客户" },
+                    { "key": "owner", "title": "负责人" },
+                    { "key": "risk", "title": "风险" },
+                    { "key": "value", "title": "金额" }
+                  ]
+                }
+              }
+            }
+          },
+          "operations": {
+            "title": "运营控制",
+            "description": "结合产出情况与异常队列的分页运营视图。",
+            "components": {
+              "operations-tabs": {
+                "props": {
+                  "items": [
+                    { "key": "throughput", "label": "产出" },
+                    { "key": "exceptions", "label": "异常" }
+                  ]
+                }
+              },
+              "throughput-chart": {
+                "props": { "title": "完成数量", "description": "最近七天每日产出" }
+              },
+              "exception-list": {
+                "props": {
+                  "title": "活动异常",
+                  "items": [
+                    { "title": "B 线温度漂移", "description": "工程评审将在 35 分钟后到期" },
+                    { "title": "承运能力不足", "description": "三条优先线路需要重新分配" },
+                    { "title": "包装材料低于阈值", "description": "补货申请正在等待审批" }
+                  ]
+                }
+              }
+            }
+          },
+          "planning": {
+            "title": "情景规划",
+            "description": "收集下一次运营复盘所需的假设。",
+            "components": {
+              "planning-intro": {
+                "props": { "content": "准备十月份产能情景" }
+              },
+              "planning-form": {
+                "props": {
+                  "title": "规划假设",
+                  "description": "这些值用于展示导出验收应用的代表性界面状态。",
+                  "submitButtonText": "保存情景",
+                  "fields": [
+                    { "name": "scenario", "label": "情景名称", "defaultValue": "十月均衡计划" },
+                    { "name": "growth", "label": "需求增长（%）" },
+                    { "name": "capacity", "label": "新增产能" },
+                    { "name": "notes", "label": "复盘备注", "defaultValue": "保障 Atlas Retail 和 Lumen Foods 的服务水平。" }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "labels": {
+          "Apr": "4月",
+          "May": "5月",
+          "Jun": "6月",
+          "Jul": "7月",
+          "Aug": "8月",
+          "Sep": "9月",
+          "Mon": "周一",
+          "Tue": "周二",
+          "Wed": "周三",
+          "Thu": "周四",
+          "Fri": "周五",
+          "Sat": "周六",
+          "Sun": "周日",
+          "Supply": "供应",
+          "Margin": "毛利",
+          "Schedule": "排期",
+          "Quality": "质量"
+        }
+      }
+    }
+  },
+  "geniappContracts": {
+    "tables": [
+      {
+        "name": "planning_scenarios",
+        "description": "Application-owned planning scenario records",
+        "columns": [
+          { "name": "id", "type": "uuid", "primaryKey": true, "nullable": false, "default": "gen_random_uuid()" },
+          { "name": "name", "type": "text", "nullable": false },
+          { "name": "demand_growth", "type": "numeric", "nullable": false },
+          { "name": "added_capacity", "type": "integer", "nullable": false },
+          { "name": "notes", "type": "text", "nullable": true },
+          { "name": "created_at", "type": "timestamp", "nullable": false, "default": "CURRENT_TIMESTAMP" }
+        ]
+      }
+    ],
+    "resources": {
+      "version": 1,
+      "resources": [
+        { "key": "planning-scenarios", "type": "table", "table": "planning_scenarios" }
+      ]
+    },
+    "rbac": {
+      "version": 1,
+      "roles": [
+        { "key": "planner", "name": "Planner", "permissions": ["scenario.read", "scenario.write"] }
+      ],
+      "permissions": ["scenario.read", "scenario.write"]
+    },
+    "events": {
+      "version": 1,
+      "publishes": ["scenario.saved"],
+      "subscribes": []
+    }
+  }
+}

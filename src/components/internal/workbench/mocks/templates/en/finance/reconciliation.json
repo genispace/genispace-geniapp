@@ -1,0 +1,1565 @@
+{
+  "appConfig": {
+    "name": "Financial Reconciliation System",
+    "description": "Financial reconciliation on GeniSpace: automated matching of cash book and bank statements with variance analysis.",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "Reconciliation home",
+          "icon": "Dashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "baseline-tables",
+          "title": "Baseline sources",
+          "icon": "Database",
+          "linkedPage": "baseline-tables"
+        },
+        {
+          "key": "create-task",
+          "title": "Create reconciliation",
+          "icon": "PlusCircle",
+          "linkedPage": "create-task"
+        },
+        {
+          "key": "reconciliation-result",
+          "title": "Reconciliation results",
+          "icon": "FileCheck",
+          "linkedPage": "reconciliation-result"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Reconciliation home",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "dashboard-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "totalTasks",
+                "title": "Total tasks",
+                "value": 25,
+                "icon": "FileText",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              },
+              {
+                "key": "completedThisMonth",
+                "title": "Completed (MTD)",
+                "value": 18,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              },
+              {
+                "key": "averageMatchRate",
+                "title": "Avg. match rate",
+                "value": 96.67,
+                "icon": "TrendingUp",
+                "trend": {
+                  "value": 2.3,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "vs last month"
+                },
+                "suffix": "%"
+              },
+              {
+                "key": "pendingDifferences",
+                "title": "Open variances",
+                "value": 8,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "vs last month"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "recent-tasks-table",
+          "type": "Table",
+          "props": {
+            "title": "Recent tasks",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "pagination": {
+              "pageSize": 10
+            },
+            "columns": [
+              {
+                "title": "Task name",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true,
+                "primary": true
+              },
+              {
+                "title": "Baseline",
+                "dataIndex": "baselineTableName",
+                "key": "baselineTableName",
+                "searchable": true
+              },
+              {
+                "title": "Reconciliation date",
+                "dataIndex": "reconciliationDate",
+                "key": "reconciliationDate",
+                "render": {
+                  "type": "Date",
+                  "props": {
+                    "format": "YYYY-MM-DD"
+                  }
+                }
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "completed": "green",
+                      "processing": "blue",
+                      "pending": "orange",
+                      "failed": "red"
+                    },
+                    "text": {
+                      "completed": "Completed",
+                      "processing": "Processing",
+                      "pending": "Pending",
+                      "failed": "Failed"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Match rate",
+                "dataIndex": "matchRate",
+                "key": "matchRate",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "status": "matchRate >= 95 ? 'success' : matchRate >= 80 ? 'normal' : 'exception'",
+                    "showInfo": true,
+                    "format": "(percent) => `${percent}%`"
+                  }
+                }
+              },
+              {
+                "title": "Actions",
+                "key": "actions",
+                "render": {
+                  "type": "Actions",
+                  "props": {
+                    "actions": [
+                      {
+                        "key": "view",
+                        "label": "View",
+                        "icon": "Eye"
+                      },
+                      {
+                        "key": "export",
+                        "label": "Export",
+                        "icon": "Download"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "task_001",
+              "name": "Jan 2024 reconciliation",
+              "baselineTableName": "ICBC core — Haifeng Rice Base",
+              "reconciliationDate": "2024-01-31",
+              "status": "completed",
+              "matchRate": 96.67
+            },
+            {
+              "id": "task_002",
+              "name": "Feb 2024 reconciliation",
+              "baselineTableName": "CCB direct — Jiangyang Produce",
+              "reconciliationDate": "2024-02-29",
+              "status": "completed",
+              "matchRate": 94.23
+            },
+            {
+              "id": "task_003",
+              "name": "Mar 2024 reconciliation",
+              "baselineTableName": "ICBC core — Haifeng Rice Base",
+              "reconciliationDate": "2024-03-31",
+              "status": "processing",
+              "matchRate": 0
+            },
+            {
+              "id": "task_004",
+              "name": "Apr 2024 reconciliation",
+              "baselineTableName": "Non-direct — Zhejiang Huicheng",
+              "reconciliationDate": "2024-04-30",
+              "status": "pending",
+              "matchRate": 0
+            },
+            {
+              "id": "task_005",
+              "name": "Dec 2023 reconciliation",
+              "baselineTableName": "ICBC core — Haifeng Rice Base",
+              "reconciliationDate": "2023-12-31",
+              "status": "completed",
+              "matchRate": 98.12
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "match-rate-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Match rate trend (last 30 days)",
+            "chartType": "line",
+            "xField": "date",
+            "yField": "matchRate",
+            "height": 300,
+            "meta": {
+              "date": {
+                "alias": "Date"
+              },
+              "matchRate": {
+                "alias": "Match rate",
+                "formatter": "(value) => `${value}%`"
+              }
+            },
+            "smooth": true,
+            "point": {
+              "size": 4
+            }
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "matchRate": 95.2
+            },
+            {
+              "date": "2024-01-05",
+              "matchRate": 96.1
+            },
+            {
+              "date": "2024-01-10",
+              "matchRate": 94.8
+            },
+            {
+              "date": "2024-01-15",
+              "matchRate": 96.7
+            },
+            {
+              "date": "2024-01-20",
+              "matchRate": 97.3
+            },
+            {
+              "date": "2024-01-25",
+              "matchRate": 96.5
+            },
+            {
+              "date": "2024-01-30",
+              "matchRate": 96.9
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "baseline-tables": {
+      "title": "Baseline sources",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "baseline-tables-table",
+          "type": "Table",
+          "props": {
+            "title": "Baseline data sources",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "Account name",
+                "dataIndex": "name",
+                "key": "name",
+                "searchable": true,
+                "primary": true
+              },
+              {
+                "title": "Type",
+                "dataIndex": "type",
+                "key": "type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "bank_statement": "blue",
+                      "accounting_record": "green"
+                    },
+                    "text": {
+                      "bank_statement": "Bank statement",
+                      "accounting_record": "Cash book"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Records",
+                "dataIndex": "recordCount",
+                "key": "recordCount",
+                "render": {
+                  "type": "Number",
+                  "props": {
+                    "format": "thousand"
+                  }
+                }
+              },
+              {
+                "title": "Last updated",
+                "dataIndex": "lastUpdated",
+                "key": "lastUpdated",
+                "render": {
+                  "type": "Date",
+                  "props": {
+                    "format": "YYYY-MM-DD HH:mm"
+                  }
+                }
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default"
+                    },
+                    "text": {
+                      "active": "Active",
+                      "inactive": "Inactive"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Actions",
+                "key": "actions",
+                "render": {
+                  "type": "Actions",
+                  "props": {
+                    "actions": [
+                      {
+                        "key": "view",
+                        "label": "View",
+                        "icon": "Eye"
+                      },
+                      {
+                        "key": "edit",
+                        "label": "Edit",
+                        "icon": "Edit"
+                      },
+                      {
+                        "key": "setDefault",
+                        "label": "Set as default",
+                        "icon": "Star"
+                      },
+                      {
+                        "key": "delete",
+                        "label": "Delete",
+                        "icon": "Trash2",
+                        "danger": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "baseline_001",
+              "name": "ICBC core — Haifeng Rice Base",
+              "type": "bank_statement",
+              "recordCount": 150,
+              "lastUpdated": "2024-01-15 10:30:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_002",
+              "name": "CCB direct — Jiangyang Produce",
+              "type": "bank_statement",
+              "recordCount": 89,
+              "lastUpdated": "2024-02-10 14:20:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_003",
+              "name": "Non-direct — Zhejiang Huicheng",
+              "type": "accounting_record",
+              "recordCount": 234,
+              "lastUpdated": "2024-03-05 09:15:00",
+              "status": "active"
+            },
+            {
+              "id": "baseline_004",
+              "name": "ICBC general — test account",
+              "type": "bank_statement",
+              "recordCount": 67,
+              "lastUpdated": "2024-01-20 16:45:00",
+              "status": "inactive"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "create-task": {
+      "title": "Create reconciliation",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "reconciliation-workflow",
+          "type": "WorkflowComponent",
+          "props": {
+            "agentId": "reconciliation-agent-id",
+            "useMockData": true,
+            "steps": [
+              {
+                "id": "select-baseline",
+                "title": "Step 1: Select baseline",
+                "description": "Choose a baseline from the list (cash book or bank statement), or preview baseline data.",
+                "icon": "Database",
+                "component": "datasource-selector",
+                "config": {
+                  "datasource-selector": {
+                    "title": "Select baseline",
+                    "description": "Pick the baseline data source (cash book or bank statement). Typically use the cash book as the baseline and compare to the bank statement.",
+                    "showPreview": true,
+                    "previewLimit": 10
+                  }
+                }
+              },
+              {
+                "id": "upload-file",
+                "title": "Step 2: Upload file",
+                "description": "Upload the file to reconcile against the baseline (Excel or PDF). If the baseline is the cash book, upload the bank statement; if the baseline is the bank statement, upload the cash book.",
+                "icon": "Upload",
+                "component": "upload",
+                "config": {
+                  "upload": {
+                    "accept": ".xls,.xlsx,.pdf",
+                    "maxSize": 52428800,
+                    "preview": true,
+                    "buttonText": "Choose file",
+                    "placeholder": "Supported: Excel (.xls, .xlsx), PDF"
+                  }
+                }
+              },
+              {
+                "id": "field-mapping",
+                "title": "Step 3: Field mapping",
+                "description": "Map columns from your upload",
+                "icon": "Settings",
+                "component": "form",
+                "config": {
+                  "form": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "transactionDateField": {
+                          "type": "string",
+                          "title": "Transaction date column",
+                          "description": "Column for transaction date in the upload"
+                        },
+                        "amountField": {
+                          "type": "string",
+                          "title": "Amount column",
+                          "description": "Column for amount in the upload"
+                        },
+                        "counterpartyField": {
+                          "type": "string",
+                          "title": "Counterparty column",
+                          "description": "Column for counterparty name in the upload"
+                        },
+                        "summaryField": {
+                          "type": "string",
+                          "title": "Memo column",
+                          "description": "Column for memo in the upload"
+                        }
+                      },
+                      "required": [
+                        "transactionDateField",
+                        "amountField"
+                      ]
+                    },
+                    "layout": "vertical"
+                  }
+                }
+              },
+              {
+                "id": "match-config",
+                "title": "Step 4: Match rules",
+                "description": "Set tolerances and rules",
+                "icon": "Sliders",
+                "component": "form",
+                "config": {
+                  "form": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "amountTolerance": {
+                          "type": "number",
+                          "title": "Amount tolerance (CNY)",
+                          "description": "Allowed amount variance; default CNY 0.01.",
+                          "default": 0.01,
+                          "minimum": 0,
+                          "maximum": 1000
+                        },
+                        "dateTolerance": {
+                          "type": "integer",
+                          "title": "Date tolerance (days)",
+                          "description": "Allowed date variance in days; default 3.",
+                          "default": 3,
+                          "minimum": 0,
+                          "maximum": 30
+                        },
+                        "minMatchScore": {
+                          "type": "integer",
+                          "title": "Minimum match score",
+                          "description": "Minimum match score; default 70.",
+                          "default": 70,
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": [
+                        "amountTolerance",
+                        "dateTolerance",
+                        "minMatchScore"
+                      ]
+                    },
+                    "layout": "vertical"
+                  }
+                }
+              },
+              {
+                "id": "execute",
+                "title": "Step 5: Run reconciliation",
+                "description": "Run matching and view live progress and results.",
+                "icon": "Play",
+                "component": "progress",
+                "config": {
+                  "progress": {
+                    "showProgress": true,
+                    "showLogs": true,
+                    "autoNext": true
+                  }
+                }
+              },
+              {
+                "id": "result",
+                "title": "Step 6: View results",
+                "description": "Review reconciliation results, variances, and unmatched lines.",
+                "icon": "FileCheck",
+                "component": "result",
+                "config": {
+                  "result": {
+                    "showSummary": true,
+                    "showMatches": true,
+                    "showDifferences": true,
+                    "showUnmatched": true
+                  }
+                }
+              }
+            ],
+            "transforms": {
+              "transformStepData": {
+                "type": "function",
+                "code": "// Step data transforms\nif (stepId === 'select-baseline') {\n  return {\n    ...data,\n    baselineDatasourceId: data.datasourceId,\n    baselineTableName: data.name,\n    baselineTableType: data.type\n  };\n}\nif (stepId === 'upload-file') {\n  return {\n    ...data,\n    fileId: data.id,\n    fileName: data.name,\n    fileType: data.type\n  };\n}\nif (stepId === 'field-mapping') {\n  return {\n    ...data,\n    fieldMapping: {\n      transactionDate: data.transactionDateField,\n      amount: data.amountField,\n      counterparty: data.counterpartyField,\n      summary: data.summaryField\n    }\n  };\n}\nif (stepId === 'match-config') {\n  return {\n    ...data,\n    config: {\n      amountTolerance: data.amountTolerance,\n      dateTolerance: data.dateTolerance,\n      minMatchScore: data.minMatchScore\n    }\n  };\n}\nreturn data;"
+              },
+              "prepareStepOutput": {
+                "type": "function",
+                "code": "// Prepare step output\nif (stepId === 'execute') {\n  return {\n    ...data,\n    executionId: data.id,\n    status: data.status,\n    progress: data.progress,\n    logs: data.logs\n  };\n}\nif (stepId === 'result') {\n  return {\n    ...data,\n    taskId: data.taskId,\n    summary: data.summary,\n    matches: data.matches,\n    differences: data.differences,\n    unmatched: data.unmatched\n  };\n}\nreturn data;"
+              },
+              "validateStepData": {
+                "type": "function",
+                "code": "// Validate step data\nconst errors = [];\nif (stepId === 'select-baseline') {\n  if (!data.datasourceId) errors.push('Please select a baseline');\n}\nif (stepId === 'upload-file') {\n  if (!data.id) errors.push('Please upload a reconciliation file');\n}\nif (stepId === 'field-mapping') {\n  if (!data.transactionDateField) errors.push('Please select the transaction date column');\n  if (!data.amountField) errors.push('Please select the amount column');\n}\nif (stepId === 'match-config') {\n  if (data.amountTolerance < 0) errors.push('Amount tolerance cannot be negative');\n  if (data.dateTolerance < 0) errors.push('Date tolerance cannot be negative');\n  if (data.minMatchScore < 0 || data.minMatchScore > 100) errors.push('Minimum match score must be between 0 and 100');\n}\nreturn { valid: errors.length === 0, errors };"
+              }
+            }
+          },
+          "mockData": {
+            "select-baseline": {
+              "datasourceId": "baseline_001",
+              "name": "ICBC core — Haifeng Rice Base",
+              "type": "bank_statement",
+              "preview": [
+                {
+                  "transaction_date": "2024-01-15",
+                  "amount": 10000.0,
+                  "balance": 500000.0,
+                  "counterparty_name": "Vendor A",
+                  "summary": "Goods payment",
+                  "reference_number": "REF001"
+                }
+              ]
+            },
+            "upload-file": {
+              "id": "file_001",
+              "name": "bank_statement_jan_2024.xls",
+              "type": "application/vnd.ms-excel",
+              "size": 102400
+            },
+            "field-mapping": {
+              "transactionDateField": "Txn date",
+              "amountField": "Amount",
+              "counterpartyField": "Counterparty",
+              "summaryField": "Memo"
+            },
+            "match-config": {
+              "amountTolerance": 0.01,
+              "dateTolerance": 3,
+              "minMatchScore": 70
+            },
+            "execute": {
+              "id": "exec_001",
+              "status": "completed",
+              "progress": 100,
+              "logs": [
+                "Starting reconciliation...",
+                "Loaded baseline: 150 rows",
+                "Parsed upload: 148 rows",
+                "Running smart match...",
+                "Matching done: 145 rows matched",
+                "Found 12 variance rows",
+                "Reconciliation complete"
+              ]
+            },
+            "result": {
+              "taskId": "task_001",
+              "summary": {
+                "totalBaselineRecords": 150,
+                "totalReconciliationRecords": 148,
+                "matchedCount": 145,
+                "unmatchedBaselineCount": 5,
+                "unmatchedReconciliationCount": 3,
+                "differenceCount": 12,
+                "matchRate": 96.67,
+                "oneToManyMatches": 3,
+                "reversalMatches": 2,
+                "feeAllocations": 5,
+                "largeAmountTransactions": 1,
+                "crossMonthMatches": 2
+              },
+              "matches": [
+                {
+                  "id": "match_001",
+                  "baselineRecord": {
+                    "date": "2024-01-15",
+                    "amount": 10000.0,
+                    "counterparty": "Vendor A",
+                    "summary": "Goods payment"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-15",
+                    "amount": 10000.0,
+                    "counterparty": "Vendor A",
+                    "summary": "Goods payment"
+                  },
+                  "matchScore": 98.5,
+                  "matchStatus": "matched",
+                  "matchType": "exact"
+                },
+                {
+                  "id": "match_one_to_many_001",
+                  "baselineRecord": {
+                    "date": "2024-01-20",
+                    "amount": 50000.0,
+                    "counterparty": "Vendor H",
+                    "summary": "Goods payment"
+                  },
+                  "reconciliationRecords": [
+                    {
+                      "date": "2024-01-20",
+                      "amount": 30000.0,
+                      "counterparty": "Vendor H",
+                      "summary": "Goods payment — order 001"
+                    },
+                    {
+                      "date": "2024-01-20",
+                      "amount": 20000.0,
+                      "counterparty": "Vendor H",
+                      "summary": "Goods payment — order 002"
+                    }
+                  ],
+                  "matchScore": 95.0,
+                  "matchStatus": "matched",
+                  "matchType": "one_to_many"
+                },
+                {
+                  "id": "match_reversal_001",
+                  "baselineRecord": {
+                    "date": "2024-01-25",
+                    "amount": -5000.0,
+                    "counterparty": "Vendor J",
+                    "summary": "Reversal — goods"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-25",
+                    "amount": -5000.0,
+                    "counterparty": "Vendor J",
+                    "summary": "Credit note"
+                  },
+                  "matchScore": 98.0,
+                  "matchStatus": "matched",
+                  "matchType": "reversal"
+                }
+              ],
+              "differences": [
+                {
+                  "id": "diff_001",
+                  "type": "amount_mismatch",
+                  "baselineRecord": {
+                    "date": "2024-01-16",
+                    "amount": 5000.0
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-16",
+                    "amount": 5010.5
+                  },
+                  "differenceAmount": 10.5,
+                  "severity": "error"
+                },
+                {
+                  "id": "diff_fee_001",
+                  "type": "fee_allocation",
+                  "baselineRecord": {
+                    "date": "2024-01-22",
+                    "amount": 10000.0,
+                    "counterparty": "Vendor I",
+                    "summary": "Goods payment"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-22",
+                    "amount": 10010.0,
+                    "counterparty": "Vendor I",
+                    "summary": "Goods payment"
+                  },
+                  "differenceAmount": 10.0,
+                  "description": "Bank fee",
+                  "severity": "normal"
+                },
+                {
+                  "id": "diff_large_001",
+                  "type": "large_amount",
+                  "baselineRecord": {
+                    "date": "2024-01-28",
+                    "amount": 150000.0,
+                    "counterparty": "Vendor L",
+                    "summary": "Large goods payment"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-01-28",
+                    "amount": 150000.0,
+                    "counterparty": "Vendor L",
+                    "summary": "Large goods payment"
+                  },
+                  "differenceAmount": 0,
+                  "description": "Amount exceeds mean + 3× std dev",
+                  "severity": "warning"
+                },
+                {
+                  "id": "diff_cross_month_001",
+                  "type": "cross_month",
+                  "baselineRecord": {
+                    "date": "2024-01-31",
+                    "amount": 8000.0,
+                    "counterparty": "Vendor N",
+                    "summary": "Service fee"
+                  },
+                  "reconciliationRecord": {
+                    "date": "2024-02-01",
+                    "amount": 8000.0,
+                    "counterparty": "Vendor N",
+                    "summary": "Service fee"
+                  },
+                  "differenceAmount": 0,
+                  "differenceDays": 1,
+                  "description": "Cross-month dates (Jan 31 vs Feb 1)",
+                  "severity": "warning"
+                }
+              ],
+              "unmatched": {
+                "baseline": [
+                  {
+                    "date": "2024-01-20",
+                    "amount": 2000.0,
+                    "counterparty": "Vendor B",
+                    "summary": "Prepayment"
+                  }
+                ],
+                "reconciliation": [
+                  {
+                    "date": "2024-01-25",
+                    "amount": 1500.0,
+                    "counterparty": "Vendor C",
+                    "summary": "Refund"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reconciliation-result": {
+      "title": "Reconciliation results",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "result-summary",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "totalRecords",
+                "title": "Total records",
+                "value": 150,
+                "icon": "FileText"
+              },
+              {
+                "key": "matchedCount",
+                "title": "Matches",
+                "value": 145,
+                "icon": "CheckCircle",
+                "trend": {
+                  "value": 96.67,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "Match rate"
+                }
+              },
+              {
+                "key": "unmatchedCount",
+                "title": "Unmatched count",
+                "value": 8,
+                "icon": "AlertCircle",
+                "trend": {
+                  "value": 5.33,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "warning",
+                  "description": "Unmatched rate"
+                }
+              },
+              {
+                "key": "differenceCount",
+                "title": "Variances",
+                "value": 12,
+                "icon": "XCircle",
+                "trend": {
+                  "value": 8.0,
+                  "type": "down",
+                  "suffix": "%",
+                  "status": "error",
+                  "description": "Variance rate"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "match-results-table",
+          "type": "Table",
+          "props": {
+            "title": "Match results",
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "columns": [
+              {
+                "title": "Baseline row",
+                "key": "baselineRecord",
+                "dataIndex": "baselineRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "Upload row",
+                "key": "reconciliationRecord",
+                "dataIndex": "reconciliationRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "Match score",
+                "dataIndex": "matchScore",
+                "key": "matchScore",
+                "render": {
+                  "type": "Progress",
+                  "props": {
+                    "status": "matchScore >= 95 ? 'success' : matchScore >= 80 ? 'normal' : 'exception'",
+                    "showInfo": true,
+                    "format": "(percent) => `${percent}%`"
+                  }
+                }
+              },
+              {
+                "title": "Match status",
+                "dataIndex": "matchStatus",
+                "key": "matchStatus",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "matched": "green",
+                      "unmatched": "orange"
+                    },
+                    "text": {
+                      "matched": "Matched",
+                      "unmatched": "Unmatched"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Match type",
+                "dataIndex": "matchType",
+                "key": "matchType",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "exact": "green",
+                      "fuzzy": "blue",
+                      "one_to_many": "purple",
+                      "reversal": "orange"
+                    },
+                    "text": {
+                      "exact": "Exact match",
+                      "fuzzy": "Fuzzy match",
+                      "one_to_many": "One-to-many",
+                      "reversal": "Reversal"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "match_001",
+              "baselineRecord": {
+                "date": "2024-01-15",
+                "amount": 10000.0,
+                "counterparty": "Vendor A",
+                "summary": "Goods payment"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-15",
+                "amount": 10000.0,
+                "counterparty": "Vendor A",
+                "summary": "Goods payment"
+              },
+              "matchScore": 98.5,
+              "matchStatus": "matched",
+              "matchType": "exact"
+            },
+            {
+              "id": "match_002",
+              "baselineRecord": {
+                "date": "2024-01-16",
+                "amount": 5000.0,
+                "counterparty": "Vendor B",
+                "summary": "Materials"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-17",
+                "amount": 5000.0,
+                "counterparty": "Vendor B",
+                "summary": "Materials"
+              },
+              "matchScore": 85.2,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            },
+            {
+              "id": "match_003",
+              "baselineRecord": {
+                "date": "2024-01-18",
+                "amount": 8000.0,
+                "counterparty": "Vendor C",
+                "summary": "Service fee"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-18",
+                "amount": 8000.0,
+                "counterparty": "Vendor C Ltd.",
+                "summary": "Service fee"
+              },
+              "matchScore": 92.3,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            },
+            {
+              "id": "match_004",
+              "baselineRecord": {
+                "date": "2024-01-20",
+                "amount": 50000.0,
+                "counterparty": "Vendor H",
+                "summary": "Goods payment"
+              },
+              "reconciliationRecords": [
+                {
+                  "date": "2024-01-20",
+                  "amount": 30000.0,
+                  "counterparty": "Vendor H",
+                  "summary": "Goods payment — order 001"
+                },
+                {
+                  "date": "2024-01-20",
+                  "amount": 20000.0,
+                  "counterparty": "Vendor H",
+                  "summary": "Goods payment — order 002"
+                }
+              ],
+              "matchScore": 95.0,
+              "matchStatus": "matched",
+              "matchType": "one_to_many"
+            },
+            {
+              "id": "match_005",
+              "baselineRecord": {
+                "date": "2024-01-25",
+                "amount": -5000.0,
+                "counterparty": "Vendor J",
+                "summary": "Reversal — goods"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-25",
+                "amount": -5000.0,
+                "counterparty": "Vendor J",
+                "summary": "Credit note"
+              },
+              "matchScore": 98.0,
+              "matchStatus": "matched",
+              "matchType": "reversal"
+            },
+            {
+              "id": "match_006",
+              "baselineRecord": {
+                "date": "2024-01-31",
+                "amount": 12000.0,
+                "counterparty": "Vendor K",
+                "summary": "Materials"
+              },
+              "reconciliationRecord": {
+                "date": "2024-02-01",
+                "amount": 12000.0,
+                "counterparty": "Vendor K",
+                "summary": "Materials"
+              },
+              "matchScore": 88.5,
+              "matchStatus": "matched",
+              "matchType": "fuzzy"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "differences-table",
+          "type": "Table",
+          "props": {
+            "title": "Variance analysis",
+            "rowKey": "id",
+            "showSearch": true,
+            "pagination": {
+              "pageSize": 20
+            },
+            "columns": [
+              {
+                "title": "Variance type",
+                "dataIndex": "type",
+                "key": "type",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "amount_mismatch": "red",
+                      "date_mismatch": "orange",
+                      "unmatched": "yellow",
+                      "fee_allocation": "blue",
+                      "large_amount": "red",
+                      "reversal": "orange",
+                      "cross_month": "cyan"
+                    },
+                    "text": {
+                      "amount_mismatch": "Amount variance",
+                      "date_mismatch": "Date variance",
+                      "unmatched": "Unmatched",
+                      "fee_allocation": "Fee allocation",
+                      "large_amount": "Large amount",
+                      "reversal": "Reversal",
+                      "cross_month": "Cross-month"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Baseline row",
+                "key": "baselineRecord",
+                "dataIndex": "baselineRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "Upload row",
+                "key": "reconciliationRecord",
+                "dataIndex": "reconciliationRecord",
+                "render": {
+                  "type": "Custom",
+                  "props": {
+                    "render": "record => record ? `${record.date} | ${record.amount} | ${record.counterparty}` : '-'"
+                  }
+                }
+              },
+              {
+                "title": "Variance amount",
+                "dataIndex": "differenceAmount",
+                "key": "differenceAmount",
+                "render": {
+                  "type": "Currency",
+                  "props": {
+                    "currency": "CNY",
+                    "showSign": true
+                  }
+                }
+              },
+              {
+                "title": "Day variance",
+                "dataIndex": "differenceDays",
+                "key": "differenceDays",
+                "render": {
+                  "type": "Number",
+                  "props": {
+                    "suffix": " days"
+                  }
+                }
+              },
+              {
+                "title": "Severity",
+                "dataIndex": "severity",
+                "key": "severity",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "error": "red",
+                      "warning": "orange",
+                      "normal": "default"
+                    },
+                    "text": {
+                      "error": "Critical",
+                      "warning": "Warning",
+                      "normal": "Normal"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "id": "diff_001",
+              "type": "amount_mismatch",
+              "baselineRecord": {
+                "date": "2024-01-16",
+                "amount": 5000.0,
+                "counterparty": "Vendor B"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-16",
+                "amount": 5010.5,
+                "counterparty": "Vendor B"
+              },
+              "differenceAmount": 10.5,
+              "differenceDays": 0,
+              "severity": "error"
+            },
+            {
+              "id": "diff_002",
+              "type": "date_mismatch",
+              "baselineRecord": {
+                "date": "2024-01-20",
+                "amount": 3000.0,
+                "counterparty": "Vendor D"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-23",
+                "amount": 3000.0,
+                "counterparty": "Vendor D"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 3,
+              "severity": "warning"
+            },
+            {
+              "id": "diff_003",
+              "type": "unmatched",
+              "baselineRecord": {
+                "date": "2024-01-25",
+                "amount": 2000.0,
+                "counterparty": "Vendor E"
+              },
+              "reconciliationRecord": null,
+              "differenceAmount": 2000.0,
+              "differenceDays": null,
+              "severity": "warning"
+            },
+            {
+              "id": "diff_004",
+              "type": "fee_allocation",
+              "baselineRecord": {
+                "date": "2024-01-22",
+                "amount": 10000.0,
+                "counterparty": "Vendor I",
+                "summary": "Goods payment"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-22",
+                "amount": 10010.0,
+                "counterparty": "Vendor I",
+                "summary": "Goods payment"
+              },
+              "differenceAmount": 10.0,
+              "differenceDays": 0,
+              "description": "Bank fee",
+              "severity": "normal"
+            },
+            {
+              "id": "diff_005",
+              "type": "large_amount",
+              "baselineRecord": {
+                "date": "2024-01-28",
+                "amount": 150000.0,
+                "counterparty": "Vendor L",
+                "summary": "Large goods payment"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-28",
+                "amount": 150000.0,
+                "counterparty": "Vendor L",
+                "summary": "Large goods payment"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 0,
+              "description": "Amount exceeds mean + 3× std dev",
+              "severity": "warning"
+            },
+            {
+              "id": "diff_006",
+              "type": "reversal",
+              "baselineRecord": {
+                "date": "2024-01-26",
+                "amount": -3000.0,
+                "counterparty": "Vendor M",
+                "summary": "Reversal — materials"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-26",
+                "amount": -3000.0,
+                "counterparty": "Vendor M",
+                "summary": "Credit note — materials"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 0,
+              "description": "Reversal",
+              "severity": "normal"
+            },
+            {
+              "id": "diff_007",
+              "type": "cross_month",
+              "baselineRecord": {
+                "date": "2024-01-31",
+                "amount": 8000.0,
+                "counterparty": "Vendor N",
+                "summary": "Service fee"
+              },
+              "reconciliationRecord": {
+                "date": "2024-02-01",
+                "amount": 8000.0,
+                "counterparty": "Vendor N",
+                "summary": "Service fee"
+              },
+              "differenceAmount": 0,
+              "differenceDays": 1,
+              "description": "Cross-month dates (Jan 31 vs Feb 1)",
+              "severity": "warning"
+            },
+            {
+              "id": "diff_008",
+              "type": "fee_allocation",
+              "baselineRecord": {
+                "date": "2024-01-24",
+                "amount": 25000.0,
+                "counterparty": "Vendor O",
+                "summary": "Goods payment"
+              },
+              "reconciliationRecord": {
+                "date": "2024-01-24",
+                "amount": 25015.0,
+                "counterparty": "Vendor O",
+                "summary": "Goods payment"
+              },
+              "differenceAmount": 15.0,
+              "differenceDays": 0,
+              "description": "Bank transfer fee",
+              "severity": "normal"
+            }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "unmatched-records-tabs",
+          "type": "Tabs",
+          "props": {
+            "defaultActiveKey": "baseline",
+            "type": "card"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "baseline",
+                "label": "Unmatched baseline rows"
+              },
+              "component": {
+                "type": "Table",
+                "id": "unmatched-baseline-table",
+                "props": {
+                  "title": "Unmatched baseline rows",
+                  "rowKey": "id",
+                  "columns": [
+                    {
+                      "title": "Date",
+                      "dataIndex": "date",
+                      "key": "date"
+                    },
+                    {
+                      "title": "Amount",
+                      "dataIndex": "amount",
+                      "key": "amount",
+                      "render": {
+                        "type": "Currency",
+                        "props": {
+                          "currency": "CNY"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Counterparty",
+                      "dataIndex": "counterparty",
+                      "key": "counterparty"
+                    },
+                    {
+                      "title": "Memo",
+                      "dataIndex": "summary",
+                      "key": "summary"
+                    }
+                  ]
+                },
+                "mockData": [
+                  {
+                    "id": "unmatched_baseline_001",
+                    "date": "2024-01-20",
+                    "amount": 2000.0,
+                    "counterparty": "Vendor B",
+                    "summary": "Prepayment"
+                  },
+                  {
+                    "id": "unmatched_baseline_002",
+                    "date": "2024-01-22",
+                    "amount": 1500.0,
+                    "counterparty": "Vendor F",
+                    "summary": "Materials"
+                  }
+                ],
+                "useMockData": true
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "reconciliation",
+                "label": "Unmatched upload rows"
+              },
+              "component": {
+                "type": "Table",
+                "id": "unmatched-reconciliation-table",
+                "props": {
+                  "title": "Unmatched upload rows",
+                  "rowKey": "id",
+                  "columns": [
+                    {
+                      "title": "Date",
+                      "dataIndex": "date",
+                      "key": "date"
+                    },
+                    {
+                      "title": "Amount",
+                      "dataIndex": "amount",
+                      "key": "amount",
+                      "render": {
+                        "type": "Currency",
+                        "props": {
+                          "currency": "CNY"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Counterparty",
+                      "dataIndex": "counterparty",
+                      "key": "counterparty"
+                    },
+                    {
+                      "title": "Memo",
+                      "dataIndex": "summary",
+                      "key": "summary"
+                    }
+                  ]
+                },
+                "mockData": [
+                  {
+                    "id": "unmatched_reconciliation_001",
+                    "date": "2024-01-25",
+                    "amount": 1500.0,
+                    "counterparty": "Vendor C",
+                    "summary": "Refund"
+                  },
+                  {
+                    "id": "unmatched_reconciliation_002",
+                    "date": "2024-01-28",
+                    "amount": 3000.0,
+                    "counterparty": "Vendor G",
+                    "summary": "Service fee"
+                  }
+                ],
+                "useMockData": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "match-rate-trend-chart",
+          "type": "Chart",
+          "props": {
+            "title": "Match rate trend",
+            "chartType": "line",
+            "xField": "date",
+            "yField": "matchRate",
+            "height": 300,
+            "meta": {
+              "date": {
+                "alias": "Date"
+              },
+              "matchRate": {
+                "alias": "Match rate",
+                "formatter": "(value) => `${value}%`"
+              }
+            },
+            "smooth": true
+          },
+          "mockData": [
+            {
+              "date": "2024-01-01",
+              "matchRate": 95.2
+            },
+            {
+              "date": "2024-01-05",
+              "matchRate": 96.1
+            },
+            {
+              "date": "2024-01-10",
+              "matchRate": 94.8
+            },
+            {
+              "date": "2024-01-15",
+              "matchRate": 96.7
+            },
+            {
+              "date": "2024-01-20",
+              "matchRate": 97.3
+            },
+            {
+              "date": "2024-01-25",
+              "matchRate": 96.5
+            },
+            {
+              "date": "2024-01-30",
+              "matchRate": 96.9
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

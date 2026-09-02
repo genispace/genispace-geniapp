@@ -1,0 +1,1521 @@
+{
+  "appConfig": {
+    "appId": "recruiting-app",
+    "logo": "/logo.png",
+    "theme": "recruiting",
+    "layout": {
+      "type": "industry",
+      "headerActions": [
+        "switchIndustry",
+        "userProfile",
+        "help"
+      ],
+      "menuPosition": "mix"
+    },
+    "navigation": {
+      "items": [
+        {
+          "key": "dashboard",
+          "path": "/workbench/recruiting/dashboard",
+          "title": "Workbench",
+          "icon": "dashboard",
+          "linkedPage": "dashboard",
+          "pageParameters": {
+            "view": "overview",
+            "period": "month",
+            "showStats": true
+          }
+        },
+        {
+          "key": "candidates",
+          "path": "/workbench/recruiting/candidates",
+          "title": "Candidate search",
+          "icon": "search",
+          "linkedPage": "candidates",
+          "pageParameters": {
+            "status": "active",
+            "source": "all",
+            "pageSize": 20
+          }
+        },
+        {
+          "key": "clients",
+          "path": "/workbench/recruiting/clients",
+          "title": "Clients",
+          "icon": "team",
+          "linkedPage": "clients",
+          "pageParameters": {
+            "type": "active",
+            "sortBy": "created_at",
+            "includeArchived": false
+          }
+        },
+        {
+          "key": "jobs",
+          "path": "/workbench/recruiting/jobs",
+          "title": "Jobs",
+          "icon": "solution",
+          "linkedPage": "jobs",
+          "pageParameters": {
+            "status": "open",
+            "category": "all",
+            "urgency": "high"
+          }
+        },
+        {
+          "key": "reports",
+          "path": "/workbench/recruiting/reports",
+          "title": "Reports",
+          "icon": "bar-chart",
+          "linkedPage": "reports",
+          "pageParameters": {
+            "reportType": "recruiting",
+            "dateRange": "last_30_days",
+            "groupBy": "week",
+            "includeSubMetrics": true
+          }
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Recruiting workbench",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "StatisticGroup",
+          "id": "dashboardStats",
+          "grid": {
+            "cols": 4
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_001",
+            "params": {
+              "filter": "date >= '2024-04-01'",
+              "limit": 4,
+              "outputFields": [
+                "key",
+                "title",
+                "value",
+                "icon",
+                "trend"
+              ]
+            }
+          },
+          "mockData": [
+            {
+              "key": "candidates",
+              "title": "Candidates today",
+              "value": 18,
+              "icon": "user",
+              "trend": {
+                "value": 12,
+                "type": "up",
+                "suffix": "%",
+                "status": "success",
+                "description": "vs last week"
+              }
+            },
+            {
+              "key": "jobs",
+              "title": "Open roles",
+              "value": 24,
+              "icon": "solution",
+              "trend": {
+                "value": 5,
+                "type": "up",
+                "suffix": "",
+                "status": "success",
+                "description": "new this week"
+              }
+            },
+            {
+              "key": "clients",
+              "title": "Active clients",
+              "value": 12,
+              "icon": "team",
+              "trend": {
+                "value": 8,
+                "type": "up",
+                "suffix": "%",
+                "status": "success",
+                "description": "vs last month"
+              }
+            },
+            {
+              "key": "hires",
+              "title": "Hires (MTD)",
+              "value": 6,
+              "icon": "check-circle",
+              "trend": {
+                "value": 3,
+                "suffix": "",
+                "type": "up",
+                "status": "success",
+                "description": "Pending confirmation"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "id": "listGroup",
+          "props": {
+            "layout": "grid",
+            "cols": [
+              1,
+              1
+            ],
+            "gutter": 16
+          },
+          "children": [
+            {
+              "type": "DataGridCard",
+              "id": "candidateList",
+              "props": {
+                "title": "Hot candidates",
+                "pagination": false,
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "title": "Name",
+                    "dataIndex": "name",
+                    "key": "name",
+                    "primary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "Role",
+                    "dataIndex": "position",
+                    "key": "position",
+                    "secondary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "Match score",
+                    "dataIndex": "matchRate",
+                    "key": "matchRate",
+                    "render": {
+                      "type": "Progress",
+                      "props": {
+                        "status": "matchRate >= 90 ? 'success' : matchRate >= 70 ? 'normal' : 'exception'",
+                        "showInfo": true,
+                        "size": "small"
+                      }
+                    }
+                  },
+                  {
+                    "title": "Status",
+                    "dataIndex": "status",
+                    "key": "status",
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "interviewing": "blue",
+                          "matching": "orange",
+                          "offered": "green",
+                          "default": "default"
+                        }
+                      },
+                      "text": {
+                        "interviewing": "Interviewing",
+                        "matching": "Matching",
+                        "offered": "Offer out",
+                        "default": "Pending"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dataSource": {
+                "type": "dataset",
+                "datasetId": "ds_002",
+                "params": {
+                  "filter": "status in ['interviewing', 'matching', 'offered']",
+                  "limit": 5,
+                  "offset": 0,
+                  "outputFields": [
+                    "id",
+                    "name",
+                    "position",
+                    "matchRate",
+                    "status"
+                  ]
+                }
+              },
+              "mockData": [
+                {
+                  "id": 1,
+                  "name": "Alex Zhang",
+                  "position": "Senior frontend engineer",
+                  "matchRate": 92,
+                  "status": "interviewing"
+                },
+                {
+                  "id": 2,
+                  "name": "Jordan Li",
+                  "position": "Product manager",
+                  "matchRate": 85,
+                  "status": "matching"
+                },
+                {
+                  "id": 3,
+                  "name": "Sam Wang",
+                  "position": "UX designer",
+                  "matchRate": 78,
+                  "status": "offered"
+                },
+                {
+                  "id": 4,
+                  "name": "Rio Zhao",
+                  "position": "Full-stack engineer",
+                  "matchRate": 95,
+                  "status": "pending"
+                }
+              ]
+            },
+            {
+              "type": "DataGridCard",
+              "id": "jobList",
+              "props": {
+                "title": "Open requisitions",
+                "pagination": false,
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "title": "Job title",
+                    "dataIndex": "title",
+                    "key": "title",
+                    "primary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "Client",
+                    "dataIndex": "client",
+                    "key": "client",
+                    "secondary": true,
+                    "searchable": true
+                  },
+                  {
+                    "title": "Headcount",
+                    "dataIndex": "count",
+                    "key": "count"
+                  },
+                  {
+                    "title": "Status",
+                    "dataIndex": "status",
+                    "key": "status",
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "active": "green",
+                          "pending": "orange",
+                          "closed": "red"
+                        }
+                      },
+                      "text": {
+                        "active": "Open",
+                        "pending": "Pending",
+                        "closed": "Closed"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dataSource": {
+                "type": "dataset",
+                "datasetId": "ds_003",
+                "params": {
+                  "filter": "status != 'closed'",
+                  "limit": 5,
+                  "offset": 0,
+                  "outputFields": [
+                    "id",
+                    "title",
+                    "client",
+                    "count",
+                    "status",
+                    "candidates"
+                  ]
+                }
+              },
+              "mockData": [
+                {
+                  "id": 1,
+                  "title": "Senior frontend engineer",
+                  "client": "Tencent",
+                  "count": 2,
+                  "status": "active",
+                  "candidates": 8
+                },
+                {
+                  "id": 2,
+                  "title": "Product manager",
+                  "client": "Alibaba",
+                  "count": 1,
+                  "status": "active",
+                  "candidates": 5
+                },
+                {
+                  "id": 3,
+                  "title": "UX designer",
+                  "client": "ByteDance",
+                  "count": 3,
+                  "status": "pending",
+                  "candidates": 10
+                },
+                {
+                  "id": 4,
+                  "title": "Full-stack engineer",
+                  "client": "Baidu",
+                  "count": 2,
+                  "status": "closed",
+                  "candidates": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Tabs",
+          "id": "recruitingProgress",
+          "props": {
+            "defaultActiveKey": "all",
+            "type": "card",
+            "size": "large"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "all",
+                "label": "All pipelines"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "allProgress",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_005",
+                  "params": {
+                    "filter": "type = 'all'",
+                    "limit": 100,
+                    "outputFields": [
+                      "stage",
+                      "count"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "stage": "Resume screen",
+                    "count": 120
+                  },
+                  {
+                    "stage": "Phone screen",
+                    "count": 80
+                  },
+                  {
+                    "stage": "Panel",
+                    "count": 45
+                  },
+                  {
+                    "stage": "Final",
+                    "count": 25
+                  },
+                  {
+                    "stage": "Offer",
+                    "count": 15
+                  },
+                  {
+                    "stage": "Hired",
+                    "count": 8
+                  }
+                ],
+                "props": {
+                  "chartType": "column",
+                  "title": "Pipeline funnel",
+                  "xField": "stage",
+                  "yField": "count",
+                  "height": 300,
+                  "meta": {
+                    "stage": {
+                      "alias": "Stage"
+                    },
+                    "count": {
+                      "alias": "Count"
+                    }
+                  },
+                  "label": {
+                    "text": "count",
+                    "position": "top",
+                    "style": {
+                      "fill": "#666"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "highPriority",
+                "label": "High priority"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "highPriorityProgress",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_005",
+                  "params": {
+                    "filter": "type = 'high_priority'",
+                    "limit": 100,
+                    "outputFields": [
+                      "date",
+                      "count"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "date": "Mon",
+                    "count": 25
+                  },
+                  {
+                    "date": "Tue",
+                    "count": 38
+                  },
+                  {
+                    "date": "Wed",
+                    "count": 52
+                  },
+                  {
+                    "date": "Thu",
+                    "count": 65
+                  },
+                  {
+                    "date": "Fri",
+                    "count": 78
+                  },
+                  {
+                    "date": "Sat",
+                    "count": 90
+                  },
+                  {
+                    "date": "Sun",
+                    "count": 102
+                  }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "High-priority pipeline",
+                  "xField": "date",
+                  "yField": "count",
+                  "height": 300,
+                  "meta": {
+                    "date": {
+                      "alias": "Date"
+                    },
+                    "count": {
+                      "alias": "Count"
+                    }
+                  },
+                  "smooth": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "candidates": {
+      "title": "Candidate search",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "TaskInputRenderer",
+          "id": "resumeAnalysisTask",
+          "props": {
+            "taskId": "b88f5b4f-93f7-493e-be82-202d9dd15bc0",
+            "className": "mb-6"
+          },
+          "mockTitle": "Resume intake and analysis",
+          "mockDescription": "Upload a resume; the system extracts key fields automatically."
+        },
+        {
+          "type": "Table",
+          "id": "candidatesTable",
+          "props": {
+            "title": "Candidates",
+            "pagination": {
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "Search by name, role, skills...",
+            "searchValue": "frontend",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "Name",
+                "dataIndex": "name",
+                "key": "name",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Role",
+                "dataIndex": "position",
+                "key": "position",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Experience (yrs)",
+                "dataIndex": "experience",
+                "key": "experience",
+                "sorter": true,
+                "editable": true
+              },
+              {
+                "title": "Education",
+                "dataIndex": "education",
+                "key": "education",
+                "editable": true,
+                "filterable": true,
+                "filterOptions": [
+                  {
+                    "text": "Bachelor",
+                    "value": "Bachelor"
+                  },
+                  {
+                    "text": "Master",
+                    "value": "Master"
+                  }
+                ]
+              },
+              {
+                "title": "Skills",
+                "dataIndex": "skills",
+                "key": "skills",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "interviewing": "blue",
+                      "offered": "gold"
+                    }
+                  },
+                  "text": {
+                    "active": "Active",
+                    "interviewing": "Interviewing",
+                    "offered": "Offer out"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_002",
+            "params": {
+              "filter": "status in ['active', 'interviewing', 'offered']",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": [
+                "id",
+                "name",
+                "position",
+                "experience",
+                "education",
+                "skills",
+                "status"
+              ]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "name": "Alex Zhang",
+              "position": "Senior frontend engineer",
+              "experience": 5,
+              "education": "Bachelor",
+              "skills": [
+                "React",
+                "TypeScript",
+                "Node.js",
+                "Vue"
+              ],
+              "location": "Shanghai",
+              "salary": "25-35K",
+              "status": "active",
+              "matchRate": 92,
+              "lastUpdate": "2024-04-15"
+            },
+            {
+              "id": 2,
+              "name": "Jordan Li",
+              "position": "Frontend engineer",
+              "experience": 3,
+              "education": "Master",
+              "skills": [
+                "Vue",
+                "JavaScript",
+                "HTML/CSS"
+              ],
+              "location": "Beijing",
+              "salary": "20-30K",
+              "status": "interviewing",
+              "matchRate": 85,
+              "lastUpdate": "2024-04-12"
+            },
+            {
+              "id": 3,
+              "name": "Sam Wang",
+              "position": "Full-stack engineer",
+              "experience": 4,
+              "education": "Bachelor",
+              "skills": [
+                "React",
+                "Node.js",
+                "MongoDB"
+              ],
+              "location": "Guangzhou",
+              "salary": "25-35K",
+              "status": "active",
+              "matchRate": 88,
+              "lastUpdate": "2024-04-18"
+            },
+            {
+              "id": 4,
+              "name": "Rio Zhao",
+              "position": "Frontend architect",
+              "experience": 7,
+              "education": "Master",
+              "skills": [
+                "React",
+                "TypeScript",
+                "Webpack",
+                "Node.js"
+              ],
+              "location": "Shenzhen",
+              "salary": "35-45K",
+              "status": "interviewing",
+              "matchRate": 95,
+              "lastUpdate": "2024-04-10"
+            },
+            {
+              "id": 5,
+              "name": "Casey Qian",
+              "position": "Frontend engineer",
+              "experience": 2,
+              "education": "Bachelor",
+              "skills": [
+                "Vue",
+                "JavaScript",
+                "HTML/CSS"
+              ],
+              "location": "Shanghai",
+              "salary": "15-25K",
+              "status": "active",
+              "matchRate": 78,
+              "lastUpdate": "2024-04-08"
+            },
+            {
+              "id": 6,
+              "name": "Blake Sun",
+              "position": "Senior backend engineer",
+              "experience": 6,
+              "education": "Master",
+              "skills": [
+                "Java",
+                "Spring Boot",
+                "MySQL",
+                "Redis"
+              ],
+              "location": "Hangzhou",
+              "salary": "30-45K",
+              "status": "passive",
+              "matchRate": 90,
+              "lastUpdate": "2024-04-05"
+            },
+            {
+              "id": 7,
+              "name": "Taylor Zhou",
+              "position": "DevOps engineer",
+              "experience": 5,
+              "education": "Bachelor",
+              "skills": [
+                "Docker",
+                "Kubernetes",
+                "Jenkins",
+                "AWS"
+              ],
+              "location": "Beijing",
+              "salary": "25-35K",
+              "status": "contacted",
+              "matchRate": 87,
+              "lastUpdate": "2024-04-16"
+            },
+            {
+              "id": 8,
+              "name": "Morgan Wu",
+              "position": "Data engineer",
+              "experience": 4,
+              "education": "Master",
+              "skills": [
+                "Python",
+                "Spark",
+                "Hadoop",
+                "SQL"
+              ],
+              "location": "Shenzhen",
+              "salary": "25-40K",
+              "status": "new",
+              "matchRate": 82,
+              "lastUpdate": "2024-04-19"
+            },
+            {
+              "id": 9,
+              "name": "Riley Zheng",
+              "position": "SDET",
+              "experience": 3,
+              "education": "Bachelor",
+              "skills": [
+                "Python",
+                "Selenium",
+                "JMeter",
+                "TestNG"
+              ],
+              "location": "Chengdu",
+              "salary": "18-28K",
+              "status": "active",
+              "matchRate": 85,
+              "lastUpdate": "2024-04-17"
+            },
+            {
+              "id": 10,
+              "name": "Jamie Liu",
+              "position": "Product manager",
+              "experience": 5,
+              "education": "Master",
+              "skills": [
+                "Roadmapping",
+                "User research",
+                "Analytics",
+                "Program management"
+              ],
+              "location": "Shanghai",
+              "salary": "25-35K",
+              "status": "interviewing",
+              "matchRate": 89,
+              "lastUpdate": "2024-04-14"
+            }
+          ]
+        }
+      ]
+    },
+    "clients": {
+      "title": "Clients",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Table",
+          "id": "clientsTable",
+          "props": {
+            "title": "Clients",
+            "pagination": {
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "Search company, contact, industry...",
+            "searchValue": "tech",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "Company",
+                "dataIndex": "name",
+                "key": "name",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Industry",
+                "dataIndex": "industry",
+                "key": "industry",
+                "filterable": true,
+                "editable": true,
+                "filterOptions": [
+                  {
+                    "text": "Internet",
+                    "value": "Internet"
+                  },
+                  {
+                    "text": "Finance",
+                    "value": "Finance"
+                  }
+                ]
+              },
+              {
+                "title": "Location",
+                "dataIndex": "location",
+                "key": "location",
+                "searchable": true,
+                "filterable": true,
+                "editable": true
+              },
+              {
+                "title": "Contact",
+                "dataIndex": "contact",
+                "key": "contact",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "inactive": "default",
+                      "vip": "gold"
+                    }
+                  },
+                  "text": {
+                    "active": "Active",
+                    "inactive": "Inactive",
+                    "vip": "VIP"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_004",
+            "params": {
+              "filter": "status in ['active', 'vip']",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": [
+                "id",
+                "name",
+                "industry",
+                "location",
+                "contact",
+                "status"
+              ]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "name": "Tencent",
+              "industry": "Internet",
+              "location": "Shenzhen",
+              "size": "Enterprise",
+              "contact": "Dir. Zhang",
+              "phone": "13800138000",
+              "email": "hr@tencent.example.com",
+              "website": "www.tencent.example.com",
+              "status": "active",
+              "openPositions": 8,
+              "totalHires": 12
+            },
+            {
+              "id": 2,
+              "name": "Alibaba",
+              "industry": "Internet",
+              "location": "Hangzhou",
+              "size": "Enterprise",
+              "contact": "Mgr. Li",
+              "phone": "13900139000",
+              "email": "hr@alibaba.example.com",
+              "website": "www.alibaba.example.com",
+              "status": "vip",
+              "openPositions": 5,
+              "totalHires": 18
+            },
+            {
+              "id": 3,
+              "name": "ByteDance",
+              "industry": "Internet",
+              "location": "Beijing",
+              "size": "Enterprise",
+              "contact": "Lead Wang",
+              "phone": "13700137000",
+              "email": "hr@bytedance.example.com",
+              "website": "www.bytedance.example.com",
+              "status": "active",
+              "openPositions": 6,
+              "totalHires": 8
+            },
+            {
+              "id": 4,
+              "name": "Baidu",
+              "industry": "Internet",
+              "location": "Beijing",
+              "size": "Enterprise",
+              "contact": "VP Liu",
+              "phone": "13600136000",
+              "email": "hr@baidu.example.com",
+              "website": "www.baidu.example.com",
+              "status": "active",
+              "openPositions": 4,
+              "totalHires": 5
+            },
+            {
+              "id": 5,
+              "name": "Meituan",
+              "industry": "Internet",
+              "location": "Beijing",
+              "size": "Enterprise",
+              "contact": "Mgr. Zhao",
+              "phone": "13500135000",
+              "email": "hr@meituan.example.com",
+              "website": "www.meituan.example.com",
+              "status": "vip",
+              "openPositions": 7,
+              "totalHires": 10
+            }
+          ]
+        }
+      ]
+    },
+    "jobs": {
+      "title": "Jobs",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Table",
+          "id": "jobsTable",
+          "props": {
+            "title": "Requisitions",
+            "pagination": {
+              "pageSize": 10,
+              "current": 1,
+              "showSizeChanger": true,
+              "showQuickJumper": false,
+              "showTotal": true
+            },
+            "rowKey": "id",
+            "showSearch": true,
+            "showRefresh": true,
+            "showSettings": true,
+            "searchPlaceholder": "Search role title, client company...",
+            "showToolbar": true,
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "addable": true,
+            "editable": true,
+            "deletable": true,
+            "columns": [
+              {
+                "title": "Job title",
+                "dataIndex": "title",
+                "key": "title",
+                "filterSearch": true,
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Client",
+                "dataIndex": "client",
+                "key": "client",
+                "searchable": true,
+                "editable": true
+              },
+              {
+                "title": "Headcount",
+                "dataIndex": "count",
+                "key": "count",
+                "sorter": true,
+                "editable": true
+              },
+              {
+                "title": "Status",
+                "dataIndex": "status",
+                "key": "status",
+                "render": {
+                  "type": "Tag",
+                  "props": {
+                    "color": {
+                      "active": "green",
+                      "pending": "orange",
+                      "closed": "red"
+                    }
+                  },
+                  "text": {
+                    "active": "Open",
+                    "pending": "Pending",
+                    "closed": "Closed"
+                  }
+                }
+              }
+            ]
+          },
+          "dataSource": {
+            "type": "dataset",
+            "datasetId": "ds_003",
+            "params": {
+              "filter": "status != 'closed'",
+              "limit": 10,
+              "offset": 0,
+              "outputFields": [
+                "id",
+                "title",
+                "client",
+                "count",
+                "status"
+              ]
+            }
+          },
+          "mockData": [
+            {
+              "id": 1,
+              "title": "Senior frontend engineer",
+              "client": "Tencent",
+              "count": 2,
+              "status": "active"
+            },
+            {
+              "id": 2,
+              "title": "Product manager",
+              "client": "Alibaba",
+              "count": 1,
+              "status": "active"
+            },
+            {
+              "id": 3,
+              "title": "UX designer",
+              "client": "ByteDance",
+              "count": 3,
+              "status": "pending"
+            },
+            {
+              "id": 4,
+              "title": "Full-stack engineer",
+              "client": "Baidu",
+              "count": 2,
+              "status": "closed"
+            },
+            {
+              "id": 5,
+              "title": "Data analyst",
+              "client": "Huawei",
+              "count": 2,
+              "status": "active"
+            }
+          ]
+        }
+      ]
+    },
+    "reports": {
+      "title": "Reports",
+      "layout": "fluid",
+      "components": [
+        {
+          "type": "Tabs",
+          "id": "reportsTabs",
+          "props": {
+            "defaultActiveKey": "client",
+            "type": "card"
+          },
+          "children": [
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "client",
+                "label": "By client"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "clientReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_006",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": [
+                      "company",
+                      "count",
+                      "status"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "company": "Tencent",
+                    "count": 15,
+                    "status": "In progress"
+                  },
+                  {
+                    "company": "Tencent",
+                    "count": 8,
+                    "status": "Done"
+                  },
+                  {
+                    "company": "Alibaba",
+                    "count": 12,
+                    "status": "In progress"
+                  },
+                  {
+                    "company": "Alibaba",
+                    "count": 5,
+                    "status": "Done"
+                  },
+                  {
+                    "company": "ByteDance",
+                    "count": 10,
+                    "status": "In progress"
+                  },
+                  {
+                    "company": "ByteDance",
+                    "count": 3,
+                    "status": "Done"
+                  },
+                  {
+                    "company": "Meituan",
+                    "count": 8,
+                    "status": "In progress"
+                  },
+                  {
+                    "company": "Meituan",
+                    "count": 4,
+                    "status": "Done"
+                  },
+                  {
+                    "company": "Baidu",
+                    "count": 6,
+                    "status": "In progress"
+                  },
+                  {
+                    "company": "Baidu",
+                    "count": 2,
+                    "status": "Done"
+                  }
+                ],
+                "props": {
+                  "chartType": "column",
+                  "title": "Open roles by client",
+                  "xField": "company",
+                  "yField": "count",
+                  "seriesField": "status",
+                  "height": 400,
+                  "meta": {
+                    "company": {
+                      "alias": "Company"
+                    },
+                    "count": {
+                      "alias": "Roles"
+                    },
+                    "status": {
+                      "alias": "Status"
+                    }
+                  },
+                  "isGroup": true,
+                  "isStack": false,
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "consultant",
+                "label": "Consultant performance"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "consultantReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_007",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": [
+                      "month",
+                      "Alex",
+                      "Jordan",
+                      "Sam"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "month": "Jan",
+                    "Alex": 45,
+                    "Jordan": 28,
+                    "Sam": 35
+                  },
+                  {
+                    "month": "Feb",
+                    "Alex": 32,
+                    "Jordan": 42,
+                    "Sam": 30
+                  },
+                  {
+                    "month": "Mar",
+                    "Alex": 38,
+                    "Jordan": 24,
+                    "Sam": 47
+                  },
+                  {
+                    "month": "Apr",
+                    "Alex": 42,
+                    "Jordan": 35,
+                    "Sam": 41
+                  },
+                  {
+                    "month": "May",
+                    "Alex": 50,
+                    "Jordan": 45,
+                    "Sam": 38
+                  },
+                  {
+                    "month": "Jun",
+                    "Alex": 55,
+                    "Jordan": 48,
+                    "Sam": 42
+                  }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "Consultant monthly placements",
+                  "xField": "month",
+                  "yField": [
+                    "Alex",
+                    "Jordan",
+                    "Sam"
+                  ],
+                  "height": 400,
+                  "meta": {
+                    "Alex": {
+                      "alias": "Alex"
+                    },
+                    "Jordan": {
+                      "alias": "Jordan"
+                    },
+                    "Sam": {
+                      "alias": "Sam"
+                    }
+                  },
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "industry",
+                "label": "Industry mix"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "industryReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_008",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": [
+                      "name",
+                      "value",
+                      "description"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "name": "Internet",
+                    "value": 45,
+                    "description": "Tech, product, ops, and more"
+                  },
+                  {
+                    "name": "Finance",
+                    "value": 25,
+                    "description": "Banking, securities, insurance, and related sectors"
+                  },
+                  {
+                    "name": "Healthcare",
+                    "value": 12,
+                    "description": "Medtech and biotech"
+                  },
+                  {
+                    "name": "Education",
+                    "value": 8,
+                    "description": "K-12, higher ed, vocational"
+                  },
+                  {
+                    "name": "Other",
+                    "value": 10,
+                    "description": "Manufacturing, retail, and other sectors"
+                  }
+                ],
+                "props": {
+                  "chartType": "pie",
+                  "title": "Hiring share by industry",
+                  "angleField": "value",
+                  "colorField": "name",
+                  "height": 400,
+                  "radius": 0.8,
+                  "meta": {
+                    "value": {
+                      "alias": "Share"
+                    },
+                    "name": {
+                      "alias": "Industry"
+                    }
+                  },
+                  "label": {
+                    "type": "outer",
+                    "content": "{name}: {percentage}"
+                  },
+                  "tooltip": {
+                    "formatter": "{name}: {value}%\n{description}"
+                  }
+                }
+              }
+            },
+            {
+              "type": "TabPane",
+              "props": {
+                "key": "trend",
+                "label": "Hiring trend"
+              },
+              "component": {
+                "type": "Chart",
+                "id": "trendReport",
+                "dataSource": {
+                  "type": "dataset",
+                  "datasetId": "ds_009",
+                  "params": {
+                    "filter": "date >= '2024-01-01'",
+                    "limit": 100,
+                    "outputFields": [
+                      "date",
+                      "interviews",
+                      "offers",
+                      "hires"
+                    ]
+                  }
+                },
+                "mockData": [
+                  {
+                    "date": "2024-01",
+                    "interviews": 45,
+                    "offers": 12,
+                    "hires": 8
+                  },
+                  {
+                    "date": "2024-02",
+                    "interviews": 52,
+                    "offers": 15,
+                    "hires": 10
+                  },
+                  {
+                    "date": "2024-03",
+                    "interviews": 48,
+                    "offers": 18,
+                    "hires": 12
+                  },
+                  {
+                    "date": "2024-04",
+                    "interviews": 60,
+                    "offers": 20,
+                    "hires": 15
+                  },
+                  {
+                    "date": "2024-05",
+                    "interviews": 55,
+                    "offers": 22,
+                    "hires": 16
+                  }
+                ],
+                "props": {
+                  "chartType": "line",
+                  "title": "Hiring outcomes",
+                  "xField": "date",
+                  "yField": [
+                    "interviews",
+                    "offers",
+                    "hires"
+                  ],
+                  "height": 400,
+                  "meta": {
+                    "interviews": {
+                      "alias": "Interviews"
+                    },
+                    "offers": {
+                      "alias": "Offers"
+                    },
+                    "hires": {
+                      "alias": "Hires"
+                    }
+                  },
+                  "legend": {
+                    "position": "top",
+                    "layout": "horizontal"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

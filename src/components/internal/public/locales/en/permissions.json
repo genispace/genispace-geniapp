@@ -1,0 +1,61 @@
+{
+  "tree": {
+    "title": "Permission Configuration",
+    "searchPlaceholder": "Search permissions...",
+    "noPermissions": "No permission data available",
+    "noSearchResults": "No matching permissions found",
+    "resourceTypes": {
+      "user": "User Management",
+      "member": "Member Management",
+      "agent": "Agent",
+      "operator": "Operator",
+      "knowledge": "Knowledge Base",
+      "task": "Task Management",
+      "setting": "Space Settings",
+      "dataset": "Dataset",
+      "model": "Operator Management",
+      "billing": "Billing Management",
+      "apikey": "API Key",
+      "notification": "Notification Management",
+      "workflow": "Workflow",
+      "analytics": "Data Analysis",
+      "config": "Configuration Management",
+      "system_setting": "System Settings",
+      "coupon": "Coupon",
+      "subscription": "Subscription Management",
+      "audit_log": "Audit Log",
+      "contact": "Contact Management",
+      "dashboard": "Dashboard",
+      "issue_report": "Issue Report",
+      "partner": "Partner",
+      "subscription_order": "Subscription Order",
+      "survey": "Survey Management",
+      "token": "Token Management",
+      "worker": "Worker Management",
+      "space": "Space Management"
+    },
+    "permissionTypes": {
+      "read": "View",
+      "write": "Edit",
+      "delete": "Delete",
+      "admin": "Manage",
+      "owner": "Owner"
+    },
+    "scopes": {
+      "system": "System Permissions",
+      "personal": "Personal Permissions",
+      "permissions": "permissions",
+      "modules": "modules",
+      "space": "Space Permissions"
+    },
+    "status": {
+      "default": "Default",
+      "locked": "Locked"
+    },
+    "actions": {
+      "selectAll": "Select All",
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All"
+    }
+  }
+}

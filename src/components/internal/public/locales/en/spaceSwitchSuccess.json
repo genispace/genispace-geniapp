@@ -1,0 +1,13 @@
+{
+  "title": "Space Switch Successful",
+  "description": "Successfully switched to \"{{spaceName}}\" space, data is loading...",
+  "space_icon": {
+    "collaborative": "Collaborative Space"
+  },
+  "actions": {
+    "close": "Close"
+  },
+  "messages": {
+    "url_cleanup": "Clean URL parameters"
+  }
+}

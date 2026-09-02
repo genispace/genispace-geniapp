@@ -1,0 +1,179 @@
+{
+  "appConfig": {
+    "name": "环形图布局实验室",
+    "description": "用于验证环形图在不同宽度与缩放下的标签布局效果",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "布局实验页",
+          "icon": "PieChart",
+          "linkedPage": "dashboard"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "环形图布局实验页",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "lab-desc",
+          "type": "Paragraph",
+          "props": {
+            "content": "请在浏览器 100% 与 125% 缩放下观察：图尽量大、标签完整（可换行最多 3 行）、图例固定底部。"
+          }
+        },
+        {
+          "id": "pie-full-balanced",
+          "type": "EChartsChart",
+          "props": {
+            "title": "全宽-基线样本（3 类）",
+            "height": 380,
+            "chartType": "pie",
+            "nameField": "name",
+            "valueField": "value",
+            "showLegend": true,
+            "showTooltip": true
+          },
+          "mockData": [
+            { "name": "nautica", "value": 512 },
+            { "name": "reebok", "value": 790 },
+            { "name": "spyder", "value": 224 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "pie-two-col",
+          "type": "Container",
+          "props": {
+            "layout": "grid",
+            "cols": [1, 1],
+            "gutter": 16
+          },
+          "children": [
+            {
+              "id": "pie-half-extreme",
+              "type": "EChartsChart",
+              "props": {
+                "title": "双列-极端分布（80/15/5）",
+                "height": 360,
+                "chartType": "pie",
+                "nameField": "name",
+                "valueField": "value",
+                "showLegend": true,
+                "showTooltip": true
+              },
+              "mockData": [
+                { "name": "主品牌", "value": 800 },
+                { "name": "次品牌", "value": 150 },
+                { "name": "新品牌", "value": 50 }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "pie-half-long-name",
+              "type": "EChartsChart",
+              "props": {
+                "title": "双列-长名称样本（测试换行）",
+                "height": 360,
+                "chartType": "pie",
+                "nameField": "name",
+                "valueField": "value",
+                "showLegend": true,
+                "showTooltip": true
+              },
+              "mockData": [
+                { "name": "高端户外休闲系列", "value": 420 },
+                { "name": "城市通勤轻量系列", "value": 330 },
+                { "name": "跨境电商特供系列", "value": 210 },
+                { "name": "联名限量实验系列", "value": 140 }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "pie-three-col",
+          "type": "Container",
+          "props": {
+            "layout": "grid",
+            "cols": [1, 1, 1],
+            "gutter": 12
+          },
+          "children": [
+            {
+              "id": "pie-third-6-categories",
+              "type": "EChartsChart",
+              "props": {
+                "title": "三列-6 分类",
+                "height": 340,
+                "chartType": "pie",
+                "nameField": "name",
+                "valueField": "value",
+                "showLegend": true,
+                "showTooltip": true
+              },
+              "mockData": [
+                { "name": "A 品牌", "value": 280 },
+                { "name": "B 品牌", "value": 240 },
+                { "name": "C 品牌", "value": 180 },
+                { "name": "D 品牌", "value": 140 },
+                { "name": "E 品牌", "value": 90 },
+                { "name": "F 品牌", "value": 70 }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "pie-third-8-categories",
+              "type": "EChartsChart",
+              "props": {
+                "title": "三列-8 分类",
+                "height": 340,
+                "chartType": "pie",
+                "nameField": "name",
+                "valueField": "value",
+                "showLegend": true,
+                "showTooltip": true
+              },
+              "mockData": [
+                { "name": "春", "value": 120 },
+                { "name": "夏", "value": 140 },
+                { "name": "秋", "value": 150 },
+                { "name": "冬", "value": 110 },
+                { "name": "节庆", "value": 90 },
+                { "name": "联名", "value": 80 },
+                { "name": "经典", "value": 70 },
+                { "name": "其他", "value": 60 }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "pie-third-near-threshold",
+              "type": "EChartsChart",
+              "props": {
+                "title": "三列-临界宽度样本",
+                "height": 340,
+                "chartType": "pie",
+                "nameField": "name",
+                "valueField": "value",
+                "showLegend": true,
+                "showTooltip": true
+              },
+              "mockData": [
+                { "name": "nautica", "value": 483 },
+                { "name": "reebok", "value": 763 },
+                { "name": "spyder", "value": 216 }
+              ],
+              "useMockData": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,511 @@
+{
+  "appConfig": {
+    "name": "餐饮管理系统",
+    "description": "餐饮行业管理系统，包含菜品管理、订单管理、库存管理、员工管理等功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "营业概览",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "menu",
+          "title": "菜品管理",
+          "icon": "Utensils",
+          "children": [
+            {
+              "key": "dish-list",
+              "title": "菜品列表",
+              "icon": "List",
+              "linkedPage": "dish-list"
+            },
+            {
+              "key": "dish-add",
+              "title": "添加菜品",
+              "icon": "Plus",
+              "linkedPage": "dish-add"
+            }
+          ]
+        },
+        {
+          "key": "orders",
+          "title": "订单管理",
+          "icon": "Receipt",
+          "linkedPage": "orders"
+        },
+        {
+          "key": "inventory",
+          "title": "库存管理",
+          "icon": "Warehouse",
+          "linkedPage": "inventory"
+        },
+        {
+          "key": "staff",
+          "title": "员工管理",
+          "icon": "Users",
+          "linkedPage": "staff"
+        },
+        {
+          "key": "analytics",
+          "title": "经营分析",
+          "icon": "BarChart3",
+          "linkedPage": "analytics"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "营业概览",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-revenue",
+                "title": "今日营业额",
+                "value": 12580,
+                "icon": "DollarSign",
+                "trend": {
+                  "value": 15.5,
+                  "type": "up",
+                  "suffix": "%",
+                  "status": "success",
+                  "description": "较昨日"
+                },
+                "prefix": "¥"
+              },
+              {
+                "key": "today-orders",
+                "title": "今日订单",
+                "value": 156,
+                "icon": "Receipt",
+                "trend": {
+                  "value": 8,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "today-customers",
+                "title": "今日客流量",
+                "value": 342,
+                "icon": "Users",
+                "trend": {
+                  "value": 12,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "pending-orders",
+                "title": "待处理订单",
+                "value": 8,
+                "icon": "Clock",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "revenue-chart",
+          "type": "Chart",
+          "props": {
+            "title": "营业额趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "time": "09:00", "revenue": 1200 },
+            { "time": "10:00", "revenue": 1800 },
+            { "time": "11:00", "revenue": 2500 },
+            { "time": "12:00", "revenue": 3200 },
+            { "time": "13:00", "revenue": 2800 },
+            { "time": "14:00", "revenue": 1500 },
+            { "time": "17:00", "revenue": 2200 },
+            { "time": "18:00", "revenue": 3500 },
+            { "time": "19:00", "revenue": 4200 },
+            { "time": "20:00", "revenue": 3800 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "popular-dishes",
+          "type": "Table",
+          "props": {
+            "title": "热门菜品",
+            "columns": [
+              {
+                "key": "dishName",
+                "title": "菜品名称",
+                "dataIndex": "dishName"
+              },
+              {
+                "key": "category",
+                "title": "分类",
+                "dataIndex": "category"
+              },
+              {
+                "key": "sales",
+                "title": "今日销量",
+                "dataIndex": "sales"
+              },
+              {
+                "key": "revenue",
+                "title": "销售额",
+                "dataIndex": "revenue",
+                "render": "currency"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "dishName": "宫保鸡丁",
+              "category": "川菜",
+              "sales": 45,
+              "revenue": 2025
+            },
+            {
+              "dishName": "麻婆豆腐",
+              "category": "川菜",
+              "sales": 38,
+              "revenue": 1520
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "dish-list": {
+      "title": "菜品列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "dish-table",
+          "type": "Table",
+          "props": {
+            "title": "菜品列表",
+            "columns": [
+              {
+                "key": "dishId",
+                "title": "菜品ID",
+                "dataIndex": "dishId"
+              },
+              {
+                "key": "name",
+                "title": "菜品名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "category",
+                "title": "分类",
+                "dataIndex": "category"
+              },
+              {
+                "key": "price",
+                "title": "价格",
+                "dataIndex": "price",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "添加菜品",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "dishId": "D001",
+              "name": "宫保鸡丁",
+              "category": "川菜",
+              "price": 45,
+              "status": "在售"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "orders": {
+      "title": "订单管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "order-table",
+          "type": "Table",
+          "props": {
+            "title": "订单列表",
+            "columns": [
+              {
+                "key": "orderId",
+                "title": "订单号",
+                "dataIndex": "orderId"
+              },
+              {
+                "key": "table",
+                "title": "桌号",
+                "dataIndex": "table"
+              },
+              {
+                "key": "dishes",
+                "title": "菜品",
+                "dataIndex": "dishes"
+              },
+              {
+                "key": "amount",
+                "title": "金额",
+                "dataIndex": "amount",
+                "render": "currency"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              },
+              {
+                "key": "createTime",
+                "title": "下单时间",
+                "dataIndex": "createTime"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "orderId": "ORD20240107001",
+              "table": "A05",
+              "dishes": "宫保鸡丁 x2, 麻婆豆腐 x1",
+              "amount": 135,
+              "status": "制作中",
+              "createTime": "2024-01-07 18:30:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "dish-add": {
+      "title": "添加菜品",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "dish-form",
+          "type": "Form",
+          "props": {
+            "title": "菜品信息",
+            "fields": [
+              {
+                "key": "name",
+                "label": "菜品名称",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "category",
+                "label": "分类",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "price",
+                "label": "价格",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "inventory": {
+      "title": "库存管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "inventory-table",
+          "type": "Table",
+          "props": {
+            "title": "库存列表",
+            "columns": [
+              {
+                "key": "itemId",
+                "title": "物料ID",
+                "dataIndex": "itemId"
+              },
+              {
+                "key": "name",
+                "title": "物料名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "stock",
+                "title": "库存",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "unit",
+                "title": "单位",
+                "dataIndex": "unit"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "itemId": "I001",
+              "name": "大米",
+              "stock": 500,
+              "unit": "kg",
+              "status": "正常"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "staff": {
+      "title": "员工管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "staff-table",
+          "type": "Table",
+          "props": {
+            "title": "员工列表",
+            "columns": [
+              {
+                "key": "staffId",
+                "title": "员工ID",
+                "dataIndex": "staffId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "position",
+                "title": "职位",
+                "dataIndex": "position"
+              },
+              {
+                "key": "phone",
+                "title": "联系电话",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "staffId": "S001",
+              "name": "王五",
+              "position": "服务员",
+              "phone": "139****9999",
+              "status": "在职"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "analytics": {
+      "title": "经营分析",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "revenue-chart",
+          "type": "Chart",
+          "props": {
+            "title": "营业额趋势",
+            "chartType": "line",
+            "height": 400
+          },
+          "mockData": [
+            { "date": "2024-01-01", "revenue": 12580 },
+            { "date": "2024-01-02", "revenue": 13800 },
+            { "date": "2024-01-03", "revenue": 13200 },
+            { "date": "2024-01-04", "revenue": 14500 },
+            { "date": "2024-01-05", "revenue": 14200 },
+            { "date": "2024-01-06", "revenue": 15800 },
+            { "date": "2024-01-07", "revenue": 15200 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "dish-chart",
+          "type": "Chart",
+          "props": {
+            "title": "菜品销售占比",
+            "chartType": "pie",
+            "height": 300
+          },
+          "mockData": [
+            { "dish": "宫保鸡丁", "value": 35 },
+            { "dish": "麻婆豆腐", "value": 25 },
+            { "dish": "其他", "value": 40 }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

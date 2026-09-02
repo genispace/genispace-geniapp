@@ -1,0 +1,316 @@
+{
+  "appConfig": {
+    "name": "Automated Accounting Process Demo",
+    "description": "Demo of automated accounting process using AI agent for invoice recognition and structured data extraction",
+    "version": "1.0.0",
+    "defaultPage": "invoice-demo",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "home",
+          "title": "Automated Accounting",
+          "icon": "FileText",
+          "linkedPage": "invoice-demo"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "invoice-demo": {
+      "title": "Automated Accounting Process",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "invoice-recognition-demo",
+          "type": "WorkflowComponent",
+          "props": {
+            "agentId": "19707181-629b-4a98-9ca7-8ddfaf44ba48",
+            "useMockData": false,
+            "className": "",
+            "steps": [
+              {
+                "id": "upload",
+                "title": "Step 1: Document Upload",
+                "description": "Upload digital accounting documents (Receipts and Supplier invoices)",
+                "icon": "FileText",
+                "component": "upload",
+                "config": {
+                  "upload": {
+                    "accept": "image/*,.pdf",
+                    "maxSize": 10485760,
+                    "preview": true,
+                    "buttonText": "Select Invoice File",
+                    "placeholder": "Supported formats: PDF, JPG, PNG"
+                  }
+                }
+              },
+              {
+                "id": "proposal",
+                "title": "Step 2: Proposed Journal Entry",
+                "description": "Review the AI-generated accounting proposal",
+                "icon": "Brain",
+                "component": "proposal",
+                "config": {
+                  "proposal": {
+                    "renderer": "table",
+                    "rendererConfig": {
+                      "type": "table",
+                      "table": {
+                        "columns": [
+                          {
+                            "key": "account",
+                            "label": "Account",
+                            "type": "text",
+                            "align": "left"
+                          },
+                          {
+                            "key": "description",
+                            "label": "Description",
+                            "type": "text",
+                            "align": "left"
+                          },
+                          {
+                            "key": "debit",
+                            "label": "Debit",
+                            "type": "currency",
+                            "align": "right"
+                          },
+                          {
+                            "key": "credit",
+                            "label": "Credit",
+                            "type": "currency",
+                            "align": "right"
+                          }
+                        ],
+                        "dataPath": "entries",
+                        "showHeader": true,
+                        "striped": true
+                      },
+                      "form": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "invoiceNumber": {
+                              "type": "string",
+                              "title": "Invoice Number",
+                              "description": "Invoice number"
+                            },
+                            "invoiceDate": {
+                              "type": "string",
+                              "format": "date",
+                              "title": "Invoice Date",
+                              "description": "Invoice date, format: YYYY-MM-DD"
+                            },
+                            "sellerName": {
+                              "type": "string",
+                              "title": "Seller Name",
+                              "description": "Seller company name"
+                            },
+                            "sellerTaxId": {
+                              "type": "string",
+                              "title": "Seller Tax ID",
+                              "description": "Seller tax registration number"
+                            },
+                            "buyerName": {
+                              "type": "string",
+                              "title": "Buyer Name",
+                              "description": "Buyer company or personal name"
+                            },
+                            "buyerTaxId": {
+                              "type": "string",
+                              "title": "Buyer Tax ID",
+                              "description": "Buyer tax registration number"
+                            },
+                            "totalAmount": {
+                              "type": "number",
+                              "title": "Total Amount",
+                              "description": "Total amount including tax"
+                            },
+                            "taxAmount": {
+                              "type": "number",
+                              "title": "Tax Amount",
+                              "description": "VAT amount"
+                            },
+                            "amountWithoutTax": {
+                              "type": "number",
+                              "title": "Amount Without Tax",
+                              "description": "Amount excluding tax"
+                            },
+                            "taxRate": {
+                              "type": "number",
+                              "title": "Tax Rate (%)",
+                              "description": "VAT rate (percentage)"
+                            },
+                            "currency": {
+                              "type": "string",
+                              "title": "Currency",
+                              "description": "Currency type, default SEK",
+                              "default": "SEK",
+                              "enum": ["SEK", "EUR", "USD", "GBP", "CNY"]
+                            },
+                            "items": {
+                              "type": "array",
+                              "title": "Invoice Items",
+                              "description": "Invoice line items",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "description": {
+                                    "type": "string",
+                                    "title": "Description",
+                                    "description": "Product or service description"
+                                  },
+                                  "quantity": {
+                                    "type": "number",
+                                    "title": "Quantity",
+                                    "description": "Quantity"
+                                  },
+                                  "unitPrice": {
+                                    "type": "number",
+                                    "title": "Unit Price",
+                                    "description": "Unit price"
+                                  },
+                                  "amount": {
+                                    "type": "number",
+                                    "title": "Amount",
+                                    "description": "Amount"
+                                  },
+                                  "vatRate": {
+                                    "type": "number",
+                                    "title": "VAT Rate (%)",
+                                    "description": "VAT rate"
+                                  },
+                                  "vatAmount": {
+                                    "type": "number",
+                                    "title": "VAT Amount",
+                                    "description": "VAT amount"
+                                  }
+                                },
+                                "required": ["description", "quantity", "unitPrice", "amount"]
+                              }
+                            },
+                            "paymentTerms": {
+                              "type": "string",
+                              "title": "Payment Terms",
+                              "description": "Payment terms"
+                            },
+                            "dueDate": {
+                              "type": "string",
+                              "format": "date",
+                              "title": "Due Date",
+                              "description": "Due date"
+                            },
+                            "notes": {
+                              "type": "string",
+                              "title": "Notes",
+                              "description": "Additional notes",
+                              "ui:widget": "textarea"
+                            }
+                          },
+                          "required": ["invoiceNumber", "invoiceDate", "totalAmount"]
+                        },
+                        "layout": "vertical"
+                      }
+                    },
+                    "actions": [
+                      {
+                        "id": "approve",
+                        "label": "Approve & Post",
+                        "variant": "primary",
+                        "icon": "Check",
+                        "action": "approve",
+                        "confirmMessage": "Are you sure you want to approve and post this journal entry?"
+                      },
+                      {
+                        "id": "edit",
+                        "label": "Edit Proposal",
+                        "variant": "secondary",
+                        "icon": "Edit",
+                        "action": "edit"
+                      },
+                      {
+                        "id": "reject",
+                        "label": "Reject / Request Clarification",
+                        "variant": "destructive",
+                        "icon": "AlertTriangle",
+                        "action": "reject",
+                        "confirmMessage": "Are you sure you want to reject this proposal?"
+                      }
+                    ],
+                    "metadata": [
+                      {
+                        "key": "postingDate",
+                        "label": "Posting date",
+                        "valuePath": "postingDate",
+                        "format": "date",
+                        "icon": "Calendar"
+                      },
+                      {
+                        "key": "vatHandling",
+                        "label": "VAT handling",
+                        "valuePath": "vatHandling",
+                        "format": "text"
+                      },
+                      {
+                        "key": "confidenceScore",
+                        "label": "Confidence score",
+                        "valuePath": "confidenceScore",
+                        "format": "percentage",
+                        "icon": "TrendingUp"
+                      }
+                    ],
+                    "alerts": [
+                      {
+                        "type": "warning",
+                        "message": "Nothing will be posted without approval.",
+                        "icon": "AlertTriangle"
+                      },
+                      {
+                        "type": "info",
+                        "message": "Learning enabled. Any changes made will improve future accounting proposals for similar invoices.",
+                        "icon": "Brain"
+                      }
+                    ],
+                    "editable": true,
+                    "editMode": "form"
+                  }
+                }
+              },
+              {
+                "id": "result",
+                "title": "Step 3: Automated Posting",
+                "description": "Posted journal entry with full traceability",
+                "icon": "Shield",
+                "component": "result",
+                "config": {
+                  "result": {
+                    "displayFormat": "json",
+                    "showCopy": true,
+                    "successMessage": "Posted successfully",
+                    "errorMessage": "Posting failed"
+                  }
+                }
+              }
+            ],
+            "transforms": {
+              "transformStepData": {
+                "type": "function",
+                "code": "// 直接返回原始数据，不自动生成 entries。只有当智能体返回的数据中已经有 entries 时才会保留。\nif (stepId === 'upload' || stepId === 'proposal') { return { ...data }; }\nreturn data;"
+              },
+              "prepareStepOutput": {
+                "type": "function",
+                "code": "if (stepId === 'proposal') { const uploadData = context?.uploadData; return { journalEntry: data.entries || null, invoiceData: { invoiceNumber: data.invoiceNumber, invoiceDate: data.invoiceDate, sellerName: data.sellerName, sellerTaxId: data.sellerTaxId, buyerName: data.buyerName, buyerTaxId: data.buyerTaxId, totalAmount: data.totalAmount, taxAmount: data.taxAmount, amountWithoutTax: data.amountWithoutTax, taxRate: data.taxRate, currency: data.currency, items: data.items, paymentTerms: data.paymentTerms, dueDate: data.dueDate, notes: data.notes }, metadata: { postingDate: data.postingDate, vatHandling: data.vatHandling, confidenceScore: data.confidenceScore, uploadData }, timestamp: new Date().toISOString() }; } return data;"
+              },
+              "validateStepData": {
+                "type": "function",
+                "code": "if (stepId === 'upload') { const errors = []; if (!data.invoiceNumber) errors.push('Invoice number is required'); if (!data.invoiceDate) errors.push('Invoice date is required'); if (!data.totalAmount || data.totalAmount <= 0) errors.push('Total amount must be greater than 0'); if (data.amountWithoutTax && data.taxAmount && Math.abs(data.totalAmount - (data.amountWithoutTax + data.taxAmount)) > 0.01) errors.push('Total amount should equal amount without tax plus tax amount'); return { valid: errors.length === 0, errors }; } if (stepId === 'proposal') { const errors = []; if (!data.invoiceNumber) errors.push('Invoice number is required'); if (!data.invoiceDate) errors.push('Invoice date is required'); if (!data.totalAmount || data.totalAmount <= 0) errors.push('Total amount must be greater than 0'); if (data.items && Array.isArray(data.items)) { data.items.forEach((item, index) => { if (!item.description) errors.push(`Item ${index + 1}: description is required`); if (item.quantity === undefined || item.quantity <= 0) errors.push(`Item ${index + 1}: quantity must be greater than 0`); if (item.unitPrice === undefined || item.unitPrice < 0) errors.push(`Item ${index + 1}: unit price must be non-negative`); if (item.amount === undefined || item.amount < 0) errors.push(`Item ${index + 1}: amount must be non-negative`); }); } return { valid: errors.length === 0, errors }; } return { valid: true };"
+              }
+            }
+          },
+          "useMockData": false
+        }
+      ]
+    }
+  }
+}

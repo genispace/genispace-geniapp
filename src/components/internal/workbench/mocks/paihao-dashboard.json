@@ -1,0 +1,1073 @@
+{
+    "pages": {
+        "page_1765354438704": {
+            "title": "墨盒市场分析",
+            "layout": {
+                "type": "custom",
+                "preset": "all-vertical",
+                "componentPositions": {
+                    "component_1765354520389_6gztewi9y": {
+                        "area": "top",
+                        "order": 2
+                    },
+                    "component_1765354961648_hk5r42wdt": {
+                        "area": "top",
+                        "order": 1
+                    },
+                    "component_1768200781377_ece2bkidq": {
+                        "area": "top",
+                        "order": 3
+                    },
+                    "component_1769566849441_gel7rgpvy": {
+                        "area": "top",
+                        "order": 4
+                    },
+                    "component_1770014046964_h9jobwzjb": {
+                        "area": "top",
+                        "order": 0
+                    }
+                }
+            },
+            "components": [
+                {
+                    "id": "component_1765354520389_6gztewi9y",
+                    "type": "Chart",
+                    "props": {
+                        "meta": {
+                            "date": {
+                                "alias": "日期"
+                            },
+                            "value": {
+                                "alias": "数值"
+                            }
+                        },
+                        "color": "#ff1a1a",
+                        "label": true,
+                        "title": "图表",
+                        "height": 300,
+                        "xField": "date",
+                        "yField": "value",
+                        "chartType": "column",
+                        "colorField": "",
+                        "xAxisTitle": "月份",
+                        "yAxisTitle": "市场总购买量",
+                        "colorScheme": "reds",
+                        "seriesField": "墨盒型号",
+                        "useMockData": true
+                    }
+                },
+                {
+                    "id": "component_1765354961648_hk5r42wdt",
+                    "type": "StatisticGroup",
+                    "props": {
+                        "grid": {
+                            "cols": 4
+                        },
+                        "items": [
+                            {
+                                "key": "total_users",
+                                "icon": "users",
+                                "color": "blue",
+                                "title": "总用户数",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 8.5,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": true,
+                                    "description": "较上月增长8.5%"
+                                },
+                                "value": 12847,
+                                "prefix": "",
+                                "suffix": "",
+                                "iconSize": 6,
+                                "precision": 0,
+                                "statisticType": "manual"
+                            },
+                            {
+                                "key": "revenue",
+                                "icon": "dollar-sign",
+                                "color": "green",
+                                "title": "总收入",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 12.3,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": true,
+                                    "description": "较上月增长12.3%"
+                                },
+                                "value": 245689.67,
+                                "prefix": "¥",
+                                "suffix": "",
+                                "iconSize": 6,
+                                "precision": 2,
+                                "statisticType": "manual"
+                            },
+                            {
+                                "key": "orders",
+                                "icon": "shopping-cart",
+                                "color": "orange",
+                                "title": "订单数量",
+                                "trend": {
+                                    "type": "down",
+                                    "value": 2.1,
+                                    "status": "warning",
+                                    "suffix": "%",
+                                    "enabled": true,
+                                    "description": "较上月下降2.1%"
+                                },
+                                "value": 3456,
+                                "prefix": "",
+                                "suffix": " 笔",
+                                "iconSize": 6,
+                                "precision": 0,
+                                "statisticType": "manual"
+                            },
+                            {
+                                "key": "conversion_rate",
+                                "icon": "trending-up",
+                                "color": "purple",
+                                "title": "转化率",
+                                "trend": {
+                                    "type": "up",
+                                    "value": 5.7,
+                                    "status": "success",
+                                    "suffix": "%",
+                                    "enabled": true,
+                                    "description": "较上月提升5.7%"
+                                },
+                                "value": 18.42,
+                                "prefix": "",
+                                "suffix": "%",
+                                "iconSize": 6,
+                                "precision": 2,
+                                "statisticType": "manual"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "component_1768200781377_ece2bkidq",
+                    "type": "Container",
+                    "props": {
+                        "cols": [
+                            1
+                        ],
+                        "gutter": 16,
+                        "layout": "grid",
+                        "children": []
+                    },
+                    "children": [
+                        {
+                            "id": "component_1768200794243_bffsh2bkc",
+                            "type": "StatisticGroup",
+                            "props": {
+                                "grid": {
+                                    "cols": 4
+                                },
+                                "items": [
+                                    {
+                                        "key": "total_users",
+                                        "icon": "users",
+                                        "color": "blue",
+                                        "title": "Total Users",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 8.5,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "enabled": true,
+                                            "description": "Increased by 8.5% compared to last month"
+                                        },
+                                        "value": 12847,
+                                        "prefix": "",
+                                        "suffix": "",
+                                        "iconSize": 6,
+                                        "precision": 0,
+                                        "statisticType": "manual"
+                                    },
+                                    {
+                                        "key": "revenue",
+                                        "icon": "dollar-sign",
+                                        "color": "green",
+                                        "title": "Total Revenue",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 12.3,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "enabled": true,
+                                            "description": "Increased by 12.3% compared to last month"
+                                        },
+                                        "value": 245689.67,
+                                        "prefix": "¥",
+                                        "suffix": "",
+                                        "iconSize": 6,
+                                        "precision": 2,
+                                        "statisticType": "manual"
+                                    },
+                                    {
+                                        "key": "orders",
+                                        "icon": "shopping-cart",
+                                        "color": "orange",
+                                        "title": "Order Count",
+                                        "trend": {
+                                            "type": "down",
+                                            "value": 2.1,
+                                            "status": "warning",
+                                            "suffix": "%",
+                                            "enabled": true,
+                                            "description": "Decreased by 2.1% compared to last month"
+                                        },
+                                        "value": 3456,
+                                        "prefix": "",
+                                        "suffix": " orders",
+                                        "iconSize": 6,
+                                        "precision": 0,
+                                        "statisticType": "manual"
+                                    },
+                                    {
+                                        "key": "conversion_rate",
+                                        "icon": "trending-up",
+                                        "color": "purple",
+                                        "title": "Conversion Rate",
+                                        "trend": {
+                                            "type": "up",
+                                            "value": 5.7,
+                                            "status": "success",
+                                            "suffix": "%",
+                                            "enabled": true,
+                                            "description": "Increased by 5.7% compared to last month"
+                                        },
+                                        "value": 18.42,
+                                        "prefix": "",
+                                        "suffix": "%",
+                                        "iconSize": 6,
+                                        "precision": 2,
+                                        "statisticType": "manual"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "component_1769566849441_gel7rgpvy",
+                    "type": "Table",
+                    "props": {
+                        "title": "Table",
+                        "rowKey": "id",
+                        "addable": true,
+                        "columns": [
+                            {
+                                "key": "column-id-1769566897137",
+                                "align": "left",
+                                "title": "主键",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "id",
+                                "fieldType": "DOUBLE",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-code-1769566897137",
+                                "align": "left",
+                                "title": "墨盒套组的商品编码",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "code",
+                                "fieldType": "VARCHAR",
+                                "filterable": true,
+                                "editRequired": false,
+                                "filterPassMode": "parameter",
+                                "filterMultiSelect": true,
+                                "filterParameterName": "sort"
+                            },
+                            {
+                                "key": "column-title-1769566897137",
+                                "align": "left",
+                                "title": "墨盒套组的商品标题",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "title",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-brand-1769566897137",
+                                "align": "left",
+                                "title": "墨盒套组的品牌",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "brand",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-region-1769566897137",
+                                "align": "left",
+                                "title": "销售大洲（NA/EU）。销售大洲: 北美-NA，欧洲-EU",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "region",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-country-1769566897137",
+                                "align": "left",
+                                "title": "国家/销售市场（比如：美国）。使用国家简称进行筛选：美国-US、日本-JP、英国-UK、加拿大-CA、澳大利亚-AU、法国-FR、德国-DE、日本-JP、韩国-KR、意大利-IT、西班牙-ES",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "country",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            }
+                        ],
+                        "editable": true,
+                        "sortable": true,
+                        "deletable": true,
+                        "filterable": true,
+                        "pagination": {
+                            "style": "default",
+                            "current": 1,
+                            "pageSize": 10,
+                            "showTotal": true,
+                            "showQuickJumper": false,
+                            "showSizeChanger": true
+                        },
+                        "searchable": true,
+                        "showSearch": true,
+                        "showRefresh": true,
+                        "showToolbar": true,
+                        "useMockData": false,
+                        "enableExport": false,
+                        "showSettings": true,
+                        "searchPlaceholder": "Search..."
+                    },
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "parameters": {
+                            "limit": "20",
+                            "offset": "0"
+                        },
+                        "datasourceId": "151ccc6d-1352-41e4-8a57-cc000490bc98",
+                        "outputFields": [],
+                        "datasourceName": "主档商品查询",
+                        "parameterTypes": {
+                            "limit": "number",
+                            "offset": "number"
+                        }
+                    }
+                },
+                {
+                    "id": "component_1770014046964_h9jobwzjb",
+                    "type": "FilterPanel",
+                    "props": {
+                        "title": "",
+                        "filters": [
+                            {
+                                "key": "filter_1770014119636",
+                                "type": "select",
+                                "label": "New Filter",
+                                "options": [
+                                    {
+                                        "label": "新选项1",
+                                        "value": "option_1770014129428"
+                                    },
+                                    {
+                                        "label": "新选项1",
+                                        "value": "option_1770014129943"
+                                    }
+                                ],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770014138024",
+                                "type": "dateRange",
+                                "label": "New Filter",
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770014145369",
+                                "type": "radio",
+                                "label": "New Filter",
+                                "buttons": [
+                                    {
+                                        "label": "新按钮1",
+                                        "value": "button_1770014151385"
+                                    },
+                                    {
+                                        "label": "新按钮2",
+                                        "value": "button_1770014152191"
+                                    }
+                                ],
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770014162161",
+                                "type": "text",
+                                "label": "New Filter",
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770014168911",
+                                "type": "tagInput",
+                                "label": "New Filter",
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770014178757",
+                                "type": "number",
+                                "label": "New Filter",
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            }
+                        ],
+                        "presets": []
+                    }
+                }
+            ],
+            "description": "墨盒市场分析"
+        },
+        "page_1768290964769": {
+            "title": "打印机错位流量分析总表",
+            "layout": {
+                "type": "custom",
+                "preset": "top1-bottom2-equal",
+                "componentPositions": {
+                    "component_1768292096658_qrokwj6e1": {
+                        "area": "top",
+                        "order": 0
+                    },
+                    "component_1768373172588_ic41ith0o": {
+                        "area": "bottom-right",
+                        "order": 0
+                    },
+                    "component_1768382300142_5t9il3tj5": {
+                        "area": "bottom-left",
+                        "order": 0
+                    }
+                }
+            },
+            "components": [
+                {
+                    "id": "component_1768292096658_qrokwj6e1",
+                    "type": "FilterPanel",
+                    "props": {
+                        "title": "",
+                        "filters": [
+                            {
+                                "key": "filter_contry",
+                                "type": "select",
+                                "label": "站点国家",
+                                "options": [],
+                                "multiple": false,
+                                "dataSource": {
+                                    "labelField": "label",
+                                    "valueField": "value",
+                                    "datasourceId": "5f4f5500-d369-4798-a47f-22e55cbece9c"
+                                },
+                                "placeholder": "Please select",
+                                "quickSelect": true,
+                                "useFirstOptionAsDefault": true
+                            },
+                            {
+                                "key": "filter_year",
+                                "type": "select",
+                                "label": "年",
+                                "options": [],
+                                "multiple": false,
+                                "dataSource": {
+                                    "labelField": "year_value",
+                                    "valueField": "year_value",
+                                    "datasourceId": "2fbddaae-fccd-4945-8fb2-988fb1edec5c"
+                                },
+                                "placeholder": "Please select",
+                                "quickSelect": true,
+                                "defaultValue": "2025",
+                                "useFirstOptionAsDefault": true
+                            },
+                            {
+                                "key": "filter_month",
+                                "type": "select",
+                                "label": "月",
+                                "options": [],
+                                "multiple": false,
+                                "dataSource": {
+                                    "labelField": "month_value",
+                                    "valueField": "month_value",
+                                    "datasourceId": "26b9d3ca-d180-4bea-be04-953a3c769f26"
+                                },
+                                "placeholder": "Please select",
+                                "quickSelect": true,
+                                "defaultValue": "",
+                                "useFirstOptionAsDefault": true
+                            },
+                            {
+                                "key": "filter_1769568322890",
+                                "type": "tagInput",
+                                "label": "墨盒型号",
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1769587837871",
+                                "type": "select",
+                                "label": "颜色套组",
+                                "maxTags": 5,
+                                "options": [
+                                    {
+                                        "label": "1black&1color",
+                                        "value": "1black&1color"
+                                    },
+                                    {
+                                        "label": "2black&1color",
+                                        "value": "2black&1color"
+                                    },
+                                    {
+                                        "label": "1black",
+                                        "value": "1black"
+                                    },
+                                    {
+                                        "label": "2black",
+                                        "value": "2black"
+                                    },
+                                    {
+                                        "label": "1color",
+                                        "value": "1color"
+                                    },
+                                    {
+                                        "label": "2color",
+                                        "value": "2color"
+                                    }
+                                ],
+                                "multiple": true,
+                                "placeholder": "",
+                                "quickSelect": true
+                            },
+                            {
+                                "key": "filter_1770370961149",
+                                "type": "tagInput",
+                                "label": "打印机机型",
+                                "maxTags": 5,
+                                "options": [],
+                                "multiple": false,
+                                "placeholder": "Please select",
+                                "quickSelect": true
+                            }
+                        ],
+                        "presets": []
+                    }
+                },
+                {
+                    "id": "component_1768373172588_ic41ith0o",
+                    "type": "Table",
+                    "props": {
+                        "title": "竞品明细",
+                        "rowKey": "id",
+                        "addable": false,
+                        "columns": [
+                            {
+                                "key": "column-code-1768893497419",
+                                "align": "left",
+                                "title": "ASIN",
+                                "width": 50,
+                                "editable": false,
+                                "ellipsis": true,
+                                "maxWidth": 50,
+                                "minWidth": 50,
+                                "dataIndex": "code",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-in_short-1777104713172",
+                                "align": "left",
+                                "title": "是否包含在短标题",
+                                "width": 70,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "in_short",
+                                "fieldType": "SWITCH",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-title_en-1768441230333",
+                                "align": "left",
+                                "title": "商品标题",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "title_en",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-short_title-1768527842808",
+                                "align": "left",
+                                "title": "短标题",
+                                "width": 150,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "short_title",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-brand-1768441230333",
+                                "align": "left",
+                                "title": "墨盒品牌",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "brand",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-sales-1768441230333",
+                                "align": "left",
+                                "title": "子体销量",
+                                "width": 60,
+                                "editable": false,
+                                "ellipsis": true,
+                                "maxWidth": 60,
+                                "minWidth": 60,
+                                "dataIndex": "sales",
+                                "fieldType": "INT32",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-bsr-1768441230333",
+                                "align": "left",
+                                "title": "父体BSR",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "bsr",
+                                "fieldType": "INT32",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            }
+                        ],
+                        "editable": false,
+                        "sortable": true,
+                        "deletable": false,
+                        "filterable": true,
+                        "pagination": {
+                            "current": 1,
+                            "pageSize": 10,
+                            "showTotal": true,
+                            "showQuickJumper": false,
+                            "showSizeChanger": true
+                        },
+                        "searchable": true,
+                        "showSearch": true,
+                        "showRefresh": true,
+                        "showToolbar": false,
+                        "useMockData": false,
+                        "enableExport": true,
+                        "showSettings": false,
+                        "searchPlaceholder": "Search..."
+                    },
+                    "parameterConfig": {
+                        "triggers": {},
+                        "enableEmit": false,
+                        "enableListen": false,
+                        "enableDebugLog": true,
+                        "parameterMapping": {},
+                        "dataSourceFilters": [],
+                        "parameterHandlers": {},
+                        "listenToParameters": [],
+                        "enableCommunication": true,
+                        "enableParameterReceiving": false
+                    },
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "sqlQuery": "\nselect jp.id,jp.code,cartridge_model,cartridge_combo,jp.title_en,jp.brand ,jp.sales, jp.bsr,substr(title_en, 0,80) short_title\nfrom paihao_competitive_product_data as jp\ninner join (\n\tSELECT distinct\n\t\t\tid jpid,\n\t\t\tunnest(string_to_array(replace(title_en,',',' '), ' ')) as printer_model\n\tFROM paihao_competitive_product_data\n\tWHERE country ={{country}} and brand not in ('COLORETTO','COCCINK','Penguin','Cyloral') \n\t\t\tAND monthly = CONCAT({{year}}, '-', LPAD({{month}}, 2, '0'))\n\t\t\tAND ({{cartridge_model}} is not null and cartridge_model = {{cartridge_model}})\n\t\t\tand ({{cartridge_combo}} is not null and cartridge_combo={{cartridge_combo}})\n) tmp on tmp.jpid=jp.id and tmp.printer_model={{printer_model}}\nORDER BY {{sort}}\nlimit {{limit}} offset {{offset}}",
+                        "enableSort": true,
+                        "parameters": {
+                            "year": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_year"
+                            },
+                            "limit": "20",
+                            "month": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_month"
+                            },
+                            "offset": "0",
+                            "country": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_contry"
+                            },
+                            "printer_model": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "table_component_1768382300142_5t9il3tj5_selectedRowData_printer_model"
+                            },
+                            "cartridge_combo": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "table_component_1768382300142_5t9il3tj5_selectedRowData_cartridge_combo"
+                            },
+                            "cartridge_model": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "table_component_1768382300142_5t9il3tj5_selectedRowData_cartridge_model"
+                            }
+                        },
+                        "defaultSort": [
+                            {
+                                "field": "in_short",
+                                "direction": "desc"
+                            },
+                            {
+                                "field": "sales",
+                                "direction": "desc"
+                            }
+                        ],
+                        "datasourceId": "d9263a4c-b956-4056-be48-95e3f8ee230c",
+                        "outputFields": [],
+                        "datasourceName": "打印机错位流量分析总表-右",
+                        "parameterTypes": {
+                            "limit": "number",
+                            "offset": "number"
+                        }
+                    }
+                },
+                {
+                    "id": "component_1768382300142_5t9il3tj5",
+                    "type": "Table",
+                    "props": {
+                        "title": "热门机型",
+                        "rowKey": "idx",
+                        "addable": false,
+                        "columns": [
+                            {
+                                "key": "column-jpcount-1768528960748",
+                                "align": "left",
+                                "title": "竞品数量",
+                                "width": 50,
+                                "editable": false,
+                                "ellipsis": true,
+                                "maxWidth": 50,
+                                "minWidth": 50,
+                                "dataIndex": "jpcount",
+                                "fieldType": "INT32",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-jpcount_short-1777106491627",
+                                "align": "left",
+                                "title": "竞品数量(short)",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "jpcount_short",
+                                "fieldType": "INT32",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "custom_column_1768988421933",
+                                "title": "打印机系列",
+                                "width": 80,
+                                "editable": false,
+                                "dataIndex": "printer_series",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-printer_model-1768382399589",
+                                "align": "left",
+                                "title": "打印机型号",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "printer_model",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-cartridge_model-1768382399589",
+                                "align": "left",
+                                "title": "墨盒型号",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "cartridge_model",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-cartridge_combo-1768382399589",
+                                "align": "left",
+                                "title": "墨盒组合",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "cartridge_combo",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-maket_purchase_quantity-1768382399589",
+                                "align": "left",
+                                "title": "市场购买量",
+                                "width": 90,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "maket_purchase_quantity",
+                                "fieldType": "DOUBLE",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-maket_exposure-1768382399589",
+                                "align": "left",
+                                "title": "市场购买转化率",
+                                "width": 80,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "exchange_rate",
+                                "fieldType": "DOUBLE",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-idx-1768528960748",
+                                "align": "left",
+                                "title": "idx 字段",
+                                "width": 150,
+                                "hidden": true,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "idx",
+                                "fieldType": "DOUBLE",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            },
+                            {
+                                "key": "column-maket_exposure-1768575170348",
+                                "align": "left",
+                                "title": "市场曝光量：总数",
+                                "width": 150,
+                                "hidden": true,
+                                "editable": false,
+                                "ellipsis": true,
+                                "dataIndex": "maket_exposure",
+                                "fieldType": "VARCHAR",
+                                "filterType": "equals",
+                                "filterable": false,
+                                "editRequired": false
+                            }
+                        ],
+                        "editable": false,
+                        "sortable": true,
+                        "deletable": false,
+                        "filterable": true,
+                        "pagination": {
+                            "style": "simple",
+                            "current": 1,
+                            "pageSize": 20,
+                            "showTotal": false,
+                            "showQuickJumper": false,
+                            "showSizeChanger": true
+                        },
+                        "searchable": true,
+                        "showSearch": true,
+                        "showRefresh": true,
+                        "showToolbar": false,
+                        "useMockData": false,
+                        "enableExport": true,
+                        "showSettings": false,
+                        "searchPlaceholder": "Search..."
+                    },
+                    "parameterConfig": {
+                        "triggers": {
+                            "onRowSelect": {
+                                "enabled": true,
+                                "parameters": [
+                                    "selectedRowData",
+                                    "selectedRowIds"
+                                ],
+                                "debounceTime": 100
+                            }
+                        },
+                        "enableEmit": true,
+                        "enableListen": false,
+                        "enableDebugLog": false,
+                        "parameterMapping": {},
+                        "dataSourceFilters": [],
+                        "parameterHandlers": {},
+                        "listenToParameters": [],
+                        "enableCommunication": true,
+                        "enableParameterReceiving": false
+                    },
+                    "databaseDataSourceConfig": {
+                        "type": "database-datasource",
+                        "sqlQuery": "select * from\n\t(\n\tselect \n\t\tprinter_series,\n\t\tcartridge_model,\n\t\tprinter_model,\n\t\tcartridge_combo,\n\t\tcast(sum(maket_hits)/NULLIF(count(distinct jpid), 0) as DECIMAL(10,0)) maket_hits,\n\t\tcast(sum(maket_purchase_quantity)/NULLIF(count(distinct jpid), 0) as DECIMAL(10,0)) maket_purchase_quantity,\n\t\tcast(sum(maket_purchase_quantity)/NULLIF(sum(maket_hits), 0) * 100 as DECIMAL(10,2)) exchange_rate,\n\t\tcount(distinct jpid) jpcount,\n\t\trow_number() over (order by cartridge_model,printer_model,cartridge_combo,sum(maket_purchase_quantity) desc) as idx\n\tfrom\n\t\t(\n\t\tselect\n\t\t\tdistinct hot.cartridge_model,\n\t\t\thot.printer_model,\n\t\t\tsw.printer_series,\n\t\t\tsw.maket_purchase_quantity,\n\t\t\tsw.maket_hits,\n\t\t\tsw.maket_exposure,\n\t\t\tsw.search_word,\n\t\t\tjp.cartridge_combo,\n\t\t\tjp.jpid\n\t\tfrom\n\t\t\tpaihao_hot_model as hot\n\t\tleft join paihao_search_term as sw on hot.search_word_id = sw.id and hot.country = sw.country\n\t\tleft join (\n\t\t\tselect \n\t\t\t\tid jpid,\n\t\t\t\tcountry,\n\t\t\t\tmonthly,\n\t\t\t\tcartridge_model,\n\t\t\t\tcartridge_combo,\n\t\t\t\tunnest(string_to_array(replace(title_en,',',' '),' ')) as printer_model\n\t\t\tfrom\n\t\t\t\tpaihao_competitive_product_data\n\t\t\twhere\n\t\t\t\tcountry = {{country}}\n\t\t\t\tand brand not in ('COLORETTO', 'COCCINK', 'Penguin', 'Cyloral')\n\t\t\t\tand monthly = CONCAT({{year}}, '-', LPAD({{month}}, 2, '0'))\n\t\t) jp on\n\t\t\thot.country = jp.country\n\t\t\tand TO_CHAR(hot.report_date, 'YYYY-MM')= jp.monthly\n\t\t\tand hot.cartridge_model = jp.cartridge_model\n\t\t\tand jp.printer_model = hot.printer_model\n\t\twhere\n\t\t\tTO_CHAR(hot.report_date, 'YYYY-MM')= CONCAT({{year}}, '-', LPAD({{month}}, 2, '0'))\n\t\t\tand hot.country= {{country}}\n\t\t\tand jp.printer_model <> ''\n\t\t\tand ({{cartridge_model}} is null or {{cartridge_model}} ='' or hot.cartridge_model in (NULLIF({{cartridge_model}},'')))\n\t\t\tand ({{cartridge_combo}} is null or {{cartridge_combo}} ='' or jp.cartridge_combo in  (NULLIF({{cartridge_combo}},'')))\n\t\t\tand ({{printer_model}} is null or {{printer_model}} ='' or hot.printer_model in  (NULLIF({{printer_model}},'')))\n\t\t) as distinct_data\n\tgroup by\n\t\tcartridge_model,\n\t\tprinter_model,\n\t\tcartridge_combo,\n\t\tprinter_series\n) as tmp\norder by {{sort}} limit {{limit}} offset {{offset}}\n",
+                        "enableSort": true,
+                        "parameters": {
+                            "year": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_year"
+                            },
+                            "limit": "20",
+                            "month": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_month"
+                            },
+                            "offset": "0",
+                            "country": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_contry"
+                            },
+                            "printer_model": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_1770370961149",
+                                "waitForValue": false
+                            },
+                            "cartridge_combo": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_1769587837871",
+                                "waitForValue": false
+                            },
+                            "cartridge_model": {
+                                "type": "parameter",
+                                "value": "",
+                                "source": "component_1768292096658_qrokwj6e1_filter_1769568322890",
+                                "waitForValue": false
+                            }
+                        },
+                        "defaultSort": [
+                            {
+                                "field": "maket_purchase_quantity",
+                                "direction": "desc"
+                            },
+                            {
+                                "field": "cartridge_model",
+                                "direction": "asc"
+                            },
+                            {
+                                "field": "cartridge_combo",
+                                "direction": "asc"
+                            }
+                        ],
+                        "datasourceId": "2332f028-3faa-431b-bc8b-b0bebed64ff3",
+                        "outputFields": [],
+                        "datasourceName": "打印机错位流量分析总表-左",
+                        "parameterTypes": {
+                            "limit": "number",
+                            "offset": "number"
+                        }
+                    }
+                }
+            ],
+            "description": ""
+        }
+    },
+    "appConfig": {
+        "logo": "",
+        "appId": "new-app",
+        "theme": "default",
+        "layout": {
+            "type": "default",
+            "menuPosition": "left",
+            "headerActions": []
+        },
+        "navigation": {
+            "items": [
+                {
+                    "key": "nav-item-1768290970576",
+                    "icon": "file",
+                    "title": "打印机错位流量分析总表",
+                    "children": [],
+                    "linkedPage": "page_1768290964769",
+                    "pageParameters": {}
+                },
+                {
+                    "key": "nav-item-1765354208851",
+                    "icon": "layout-dashboard",
+                    "title": "墨盒市场销量分析",
+                    "children": [],
+                    "linkedPage": "page_1765354438704",
+                    "pageParameters": {}
+                }
+            ]
+        },
+        "defaultPage": "page_1768290964769"
+    }
+}

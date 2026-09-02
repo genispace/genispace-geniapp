@@ -1,0 +1,7 @@
+/**
+ * 单选模式下，含 [aria-selected] 的日期格圆角（等价于原 Tailwind has-[[aria-selected]]:rounded-md）。
+ * 独立 CSS：Tailwind 任意变体在 esbuild 压缩阶段会与后续规则错误拼接，触发 css-syntax-error。
+ */
+.gs-calendar-single.rdp .rdp-cell:has([aria-selected]) {
+  border-radius: 0.375rem;
+}

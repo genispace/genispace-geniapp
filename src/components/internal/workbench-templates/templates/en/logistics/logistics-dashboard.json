@@ -1,0 +1,4362 @@
+{
+  "pages": {
+    "pickup-dashboard": {
+      "title": "Collection timeliness signboard",
+      "layout": {
+        "type": "custom",
+        "preset": "dashboard-layout",
+        "componentPositions": {
+          "b2b-card": {
+            "area": "bottom-second",
+            "order": 0
+          },
+          "b2c-card": {
+            "area": "top",
+            "order": 0
+          },
+          "filter-panel": {
+            "area": "header",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "filter-panel",
+          "type": "FilterPanel",
+          "props": {
+            "filters": [
+              {
+                "key": "dateRange",
+                "type": "dateRange",
+                "label": "date range",
+                "style": {
+                  "width": 300,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "defaultValue": "today"
+              },
+              {
+                "key": "brand",
+                "type": "select",
+                "label": "Brand selection",
+                "style": {
+                  "width": 200,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "options": [
+                  {
+                    "label": "Nimbus Outfitters",
+                    "value": "Nimbus Outfitters"
+                  },
+                  {
+                    "label": "Blue Harbor Line",
+                    "value": "Blue Harbor Line"
+                  },
+                  {
+                    "label": "Summit Trace Co",
+                    "value": "Summit Trace Co"
+                  }
+                ],
+                "multiple": true
+              }
+            ],
+            "presets": [
+              {
+                "label": "today",
+                "value": {
+                  "dateRange": "today"
+                }
+              },
+              {
+                "label": "yesterday",
+                "value": {
+                  "dateRange": "yesterday"
+                }
+              },
+              {
+                "label": "Last 7 days",
+                "value": {
+                  "dateRange": "last7days"
+                }
+              },
+              {
+                "label": "Last 30 days",
+                "value": {
+                  "dateRange": "last30days",
+                  "timeWindow": "month"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b2c-card",
+          "type": "Card",
+          "props": {
+            "title": "B2C collecting data",
+            "layout": {
+              "type": "default",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "brand-radar": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "brand-table": {
+                  "area": "bottom-second",
+                  "order": 0
+                },
+                "trend-chart": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "timeline-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "abnormal-pickup-table": {
+                  "area": "bottom-second",
+                  "order": 1
+                }
+              }
+            },
+            "content": "",
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "trend-chart",
+              "type": "Chart",
+              "props": {
+                "point": {
+                  "size": 5,
+                  "shape": "diamond"
+                },
+                "title": "7-day yield trend",
+                "height": 300,
+                "legend": {
+                  "position": "top"
+                },
+                "smooth": true,
+                "xField": "date",
+                "yField": "rate",
+                "chartType": "line",
+                "seriesField": "brand",
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "date": "01-15",
+                  "rate": 95.5,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-16",
+                  "rate": 96.2,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-17",
+                  "rate": 94.8,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-18",
+                  "rate": 97.3,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-19",
+                  "rate": 95.7,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-20",
+                  "rate": 98.1,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-21",
+                  "rate": 96.4,
+                  "brand": "Nimbus Outfitters"
+                },
+                {
+                  "date": "01-15",
+                  "rate": 75.3,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-16",
+                  "rate": 77.1,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-17",
+                  "rate": 73.5,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-18",
+                  "rate": 78.9,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-19",
+                  "rate": 76.2,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-20",
+                  "rate": 79.8,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-21",
+                  "rate": 77.6,
+                  "brand": "Blue Harbor Line"
+                },
+                {
+                  "date": "01-15",
+                  "rate": 82.8,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-16",
+                  "rate": 84.5,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-17",
+                  "rate": 81.2,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-18",
+                  "rate": 85.8,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-19",
+                  "rate": 83.1,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-20",
+                  "rate": 86.5,
+                  "brand": "Summit Trace Co"
+                },
+                {
+                  "date": "01-21",
+                  "rate": 84.3,
+                  "brand": "Summit Trace Co"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "timeline-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 3,
+                  "rows": 2,
+                  "gutter": [
+                    12,
+                    12
+                  ]
+                },
+                "items": [
+                  {
+                    "key": "payment-24h-pickup",
+                    "icon": "CheckCircle",
+                    "title": "Collection rate within 24 hours of delivery",
+                    "trend": {
+                      "type": "up",
+                      "value": 1.2,
+                      "status": "success",
+                      "suffix": "%"
+                    },
+                    "value": 87.5,
+                    "suffix": "%",
+                    "description": "Proportion of total allocated orders"
+                  },
+                  {
+                    "key": "outbound-5h-pickup",
+                    "icon": "Zap",
+                    "title": "Collection rate within 48 hours of delivery",
+                    "trend": {
+                      "type": "down",
+                      "value": 0.3,
+                      "status": "warning",
+                      "suffix": "%"
+                    },
+                    "value": 78.6,
+                    "suffix": "%",
+                    "description": "Proportion of total allocated orders"
+                  },
+                  {
+                    "key": "exception-pickup",
+                    "icon": "AlertTriangle",
+                    "title": "Abnormal collection rate: collection exceeds 24 hours after delivery",
+                    "trend": {
+                      "type": "down",
+                      "value": 0.5,
+                      "status": "success",
+                      "suffix": "%"
+                    },
+                    "value": 5.2,
+                    "suffix": "%",
+                    "description": "Proportion of total allocated orders"
+                  }
+                ]
+              },
+              "useMockData": true
+            },
+            {
+              "id": "brand-radar",
+              "type": "Chart",
+              "props": {
+                "meta": {
+                  "pickupRate": {
+                    "alias": "Recovery rate",
+                    "formatter": "percentage"
+                  }
+                },
+                "label": {
+                  "position": "top",
+                  "formatter": "{value}%"
+                },
+                "title": "Brand acquisition rate analysis",
+                "height": 300,
+                "xField": "brand",
+                "yField": "pickupRate",
+                "chartType": "column",
+                "columnStyle": {
+                  "fill": "#1890ff"
+                }
+              },
+              "mockData": [
+                {
+                  "brand": "Nimbus Outfitters",
+                  "pickupRate": 89.5
+                },
+                {
+                  "brand": "Blue Harbor Line",
+                  "pickupRate": 85.3
+                },
+                {
+                  "brand": "Summit Trace Co",
+                  "pickupRate": 87.8
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "abnormal-pickup-table",
+              "type": "Table",
+              "props": {
+                "title": "Exceptionally collected data",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "salesChannel",
+                    "title": "sales channel",
+                    "width": 120,
+                    "dataIndex": "salesChannel",
+                    "searchable": true
+                  },
+                  {
+                    "key": "orderNo",
+                    "title": "Order number",
+                    "width": 150,
+                    "dataIndex": "orderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "allocationTime",
+                    "title": "allocate time",
+                    "width": 160,
+                    "dataIndex": "allocationTime"
+                  },
+                  {
+                    "key": "pickingTime",
+                    "title": "Picking time",
+                    "width": 160,
+                    "dataIndex": "pickingTime"
+                  },
+                  {
+                    "key": "reviewTime",
+                    "title": "Review time",
+                    "width": 160,
+                    "dataIndex": "reviewTime"
+                  },
+                  {
+                    "key": "outboundTime",
+                    "title": "Delivery time",
+                    "width": 160,
+                    "dataIndex": "outboundTime"
+                  },
+                  {
+                    "key": "pickupTime",
+                    "title": "Collection time",
+                    "width": 160,
+                    "dataIndex": "pickupTime"
+                  },
+                  {
+                    "key": "outboundPickupDuration",
+                    "title": "Delivery and collection time",
+                    "width": 150,
+                    "sorter": true,
+                    "dataIndex": "outboundPickupDuration"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 20,
+                  "showQuickJumper": true,
+                  "showSizeChanger": true
+                },
+                "showSearch": true,
+                "showRefresh": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "1",
+                  "orderNo": "ORD-2025-1001",
+                  "pickupTime": "2025-01-15 14:20:00",
+                  "reviewTime": "2025-01-15 11:45:00",
+                  "pickingTime": "2025-01-15 10:15:00",
+                  "outboundTime": "2025-01-15 16:30:00",
+                  "salesChannel": "HarborBright Mall",
+                  "allocationTime": "2025-01-15 08:30:00",
+                  "outboundPickupDuration": "25.2 hours"
+                },
+                {
+                  "id": "2",
+                  "orderNo": "ORD-2025-1002",
+                  "pickupTime": "2025-01-15 15:45:00",
+                  "reviewTime": "2025-01-15 13:15:00",
+                  "pickingTime": "2025-01-15 11:30:00",
+                  "outboundTime": "2025-01-15 18:20:00",
+                  "salesChannel": "RubyLane Outlet",
+                  "allocationTime": "2025-01-15 09:00:00",
+                  "outboundPickupDuration": "28.5 hours"
+                },
+                {
+                  "id": "3",
+                  "orderNo": "ORD-2025-1003",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "",
+                  "outboundTime": "",
+                  "salesChannel": "LoopClip Social",
+                  "allocationTime": "2025-01-15 10:15:00",
+                  "outboundPickupDuration": "Timeout not completed"
+                },
+                {
+                  "id": "4",
+                  "orderNo": "ORD-2025-1004",
+                  "pickupTime": "2025-01-15 14:00:00",
+                  "reviewTime": "2025-01-15 12:30:00",
+                  "pickingTime": "2025-01-15 10:00:00",
+                  "outboundTime": "2025-01-15 17:15:00",
+                  "salesChannel": "SparkFind Deals",
+                  "allocationTime": "2025-01-15 08:45:00",
+                  "outboundPickupDuration": "26.8 hours"
+                },
+                {
+                  "id": "5",
+                  "orderNo": "ORD-2025-1005",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "2025-01-15 11:00:00",
+                  "outboundTime": "",
+                  "salesChannel": "StarDock Shop",
+                  "allocationTime": "2025-01-15 09:30:00",
+                  "outboundPickupDuration": "Abnormality in the review process"
+                },
+                {
+                  "id": "6",
+                  "orderNo": "ORD-2025-1006",
+                  "pickupTime": "2025-01-15 13:30:00",
+                  "reviewTime": "2025-01-15 11:20:00",
+                  "pickingTime": "2025-01-15 09:45:00",
+                  "outboundTime": "2025-01-15 15:45:00",
+                  "salesChannel": "HarborBright Mall",
+                  "allocationTime": "2025-01-15 07:20:00",
+                  "outboundPickupDuration": "27.3 hours"
+                },
+                {
+                  "id": "7",
+                  "orderNo": "ORD-2025-1007",
+                  "pickupTime": "2025-01-15 16:15:00",
+                  "reviewTime": "2025-01-15 14:00:00",
+                  "pickingTime": "2025-01-15 12:30:00",
+                  "outboundTime": "2025-01-15 19:30:00",
+                  "salesChannel": "RubyLane Outlet",
+                  "allocationTime": "2025-01-15 10:00:00",
+                  "outboundPickupDuration": "Abnormality in collection process"
+                },
+                {
+                  "id": "8",
+                  "orderNo": "ORD-2025-1008",
+                  "pickupTime": "",
+                  "reviewTime": "2025-01-15 12:00:00",
+                  "pickingTime": "2025-01-15 10:30:00",
+                  "outboundTime": "",
+                  "salesChannel": "LoopClip Social",
+                  "allocationTime": "2025-01-15 08:00:00",
+                  "outboundPickupDuration": "Abnormalities in the picking process"
+                },
+                {
+                  "id": "9",
+                  "orderNo": "ORD-2025-1009",
+                  "pickupTime": "2025-01-15 15:00:00",
+                  "reviewTime": "2025-01-15 13:20:00",
+                  "pickingTime": "2025-01-15 11:45:00",
+                  "outboundTime": "2025-01-15 17:30:00",
+                  "salesChannel": "SparkFind Deals",
+                  "allocationTime": "2025-01-15 09:15:00",
+                  "outboundPickupDuration": "30.1 hours"
+                },
+                {
+                  "id": "10",
+                  "orderNo": "ORD-2025-1010",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "",
+                  "outboundTime": "",
+                  "salesChannel": "StarDock Shop",
+                  "allocationTime": "2025-01-15 07:45:00",
+                  "outboundPickupDuration": "Timeout not completed"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "b2b-card",
+          "type": "Card",
+          "props": {
+            "title": "B2B collecting data",
+            "content": "",
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "b2b-delivery-table",
+              "type": "Table",
+              "props": {
+                "title": "Detailed time limit from delivery to receipt",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "arrivalStore",
+                    "title": "Arrival store",
+                    "width": 120,
+                    "dataIndex": "arrivalStore",
+                    "searchable": true
+                  },
+                  {
+                    "key": "outboundOrderNo",
+                    "title": "Outbound order number",
+                    "width": 150,
+                    "dataIndex": "outboundOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "wmsOrderReceivedTime",
+                    "title": "WMS order receipt time",
+                    "width": 180,
+                    "dataIndex": "wmsOrderReceivedTime"
+                  },
+                  {
+                    "key": "brandOutboundOrderNo",
+                    "title": "Brand delivery order number",
+                    "width": 150,
+                    "dataIndex": "brandOutboundOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "outboundPieces",
+                    "title": "Number of outbound items",
+                    "width": 100,
+                    "dataIndex": "outboundPieces"
+                  },
+                  {
+                    "key": "logisticsOrderNo",
+                    "title": "Logistics order number",
+                    "width": 150,
+                    "dataIndex": "logisticsOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "outboundTime",
+                    "title": "Delivery time",
+                    "width": 160,
+                    "dataIndex": "outboundTime"
+                  },
+                  {
+                    "key": "pickupTime",
+                    "title": "Collection time",
+                    "width": 160,
+                    "dataIndex": "pickupTime"
+                  },
+                  {
+                    "key": "signTime",
+                    "title": "Signing time",
+                    "width": 160,
+                    "dataIndex": "signTime"
+                  },
+                  {
+                    "key": "outboundToSignDuration",
+                    "title": "Time from delivery to receipt (hours)",
+                    "width": 180,
+                    "sorter": true,
+                    "dataIndex": "outboundToSignDuration"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 15
+                },
+                "showSearch": true,
+                "showRefresh": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "1",
+                  "signTime": "2025-01-17 10:30:00",
+                  "pickupTime": "2025-01-15 16:45:00",
+                  "arrivalStore": "Northwing Plaza Store",
+                  "outboundTime": "2025-01-15 14:20:00",
+                  "outboundPieces": 150,
+                  "outboundOrderNo": "OUT-2025-001234",
+                  "logisticsOrderNo": "SF1234567890123",
+                  "brandOutboundOrderNo": "BRAND-OUT-001234",
+                  "wmsOrderReceivedTime": "2025-01-15 08:30:00",
+                  "outboundToSignDuration": 44.17
+                },
+                {
+                  "id": "2",
+                  "signTime": "2025-01-16 14:15:00",
+                  "pickupTime": "2025-01-15 17:20:00",
+                  "arrivalStore": "Maple Bay Store",
+                  "outboundTime": "2025-01-15 15:30:00",
+                  "outboundPieces": 200,
+                  "outboundOrderNo": "OUT-2025-001235",
+                  "logisticsOrderNo": "YT9876543210987",
+                  "brandOutboundOrderNo": "BRAND-OUT-001235",
+                  "wmsOrderReceivedTime": "2025-01-15 09:15:00",
+                  "outboundToSignDuration": 22.75
+                },
+                {
+                  "id": "3",
+                  "signTime": "2025-01-17 09:00:00",
+                  "pickupTime": "2025-01-15 18:30:00",
+                  "arrivalStore": "Coral Harbor Store",
+                  "outboundTime": "2025-01-15 16:00:00",
+                  "outboundPieces": 120,
+                  "outboundOrderNo": "OUT-2025-001236",
+                  "logisticsOrderNo": "ZT3456789012345",
+                  "brandOutboundOrderNo": "BRAND-OUT-001236",
+                  "wmsOrderReceivedTime": "2025-01-15 10:00:00",
+                  "outboundToSignDuration": 41
+                },
+                {
+                  "id": "4",
+                  "signTime": "2025-01-16 16:30:00",
+                  "pickupTime": "2025-01-15 19:00:00",
+                  "arrivalStore": "Jadepeak Outlet Store",
+                  "outboundTime": "2025-01-15 17:15:00",
+                  "outboundPieces": 180,
+                  "outboundOrderNo": "OUT-2025-001237",
+                  "logisticsOrderNo": "ST4567890123456",
+                  "brandOutboundOrderNo": "BRAND-OUT-001237",
+                  "wmsOrderReceivedTime": "2025-01-15 11:20:00",
+                  "outboundToSignDuration": 23.25
+                },
+                {
+                  "id": "5",
+                  "signTime": "2025-01-17 11:20:00",
+                  "pickupTime": "2025-01-15 15:15:00",
+                  "arrivalStore": "Willowmere Store",
+                  "outboundTime": "2025-01-15 13:30:00",
+                  "outboundPieces": 95,
+                  "outboundOrderNo": "OUT-2025-001238",
+                  "logisticsOrderNo": "YD5678901234567",
+                  "brandOutboundOrderNo": "BRAND-OUT-001238",
+                  "wmsOrderReceivedTime": "2025-01-15 08:45:00",
+                  "outboundToSignDuration": 45.83
+                },
+                {
+                  "id": "6",
+                  "signTime": "2025-01-18 10:00:00",
+                  "pickupTime": "2025-01-15 16:30:00",
+                  "arrivalStore": "Mistlane Riverfront Store",
+                  "outboundTime": "2025-01-15 15:00:00",
+                  "outboundPieces": 220,
+                  "outboundOrderNo": "OUT-2025-001239",
+                  "logisticsOrderNo": "SF2345678901234",
+                  "brandOutboundOrderNo": "BRAND-OUT-001239",
+                  "wmsOrderReceivedTime": "2025-01-15 09:30:00",
+                  "outboundToSignDuration": 67
+                },
+                {
+                  "id": "7",
+                  "signTime": "2025-01-17 15:30:00",
+                  "pickupTime": "2025-01-15 16:00:00",
+                  "arrivalStore": "Embercross Downtown Store",
+                  "outboundTime": "2025-01-15 14:45:00",
+                  "outboundPieces": 160,
+                  "outboundOrderNo": "OUT-2025-001240",
+                  "logisticsOrderNo": "SF6789012345678",
+                  "brandOutboundOrderNo": "BRAND-OUT-001240",
+                  "wmsOrderReceivedTime": "2025-01-15 10:15:00",
+                  "outboundToSignDuration": 48.75
+                },
+                {
+                  "id": "8",
+                  "signTime": "2025-01-16 18:00:00",
+                  "pickupTime": "2025-01-15 14:20:00",
+                  "arrivalStore": "Stonegate Citadel Store",
+                  "outboundTime": "2025-01-15 12:30:00",
+                  "outboundPieces": 130,
+                  "outboundOrderNo": "OUT-2025-001241",
+                  "logisticsOrderNo": "YT7890123456789",
+                  "brandOutboundOrderNo": "BRAND-OUT-001241",
+                  "wmsOrderReceivedTime": "2025-01-15 08:00:00",
+                  "outboundToSignDuration": 29.5
+                },
+                {
+                  "id": "9",
+                  "signTime": "2025-01-18 14:00:00",
+                  "pickupTime": "2025-01-15 18:15:00",
+                  "arrivalStore": "Bronzebell Store",
+                  "outboundTime": "2025-01-15 16:30:00",
+                  "outboundPieces": 175,
+                  "outboundOrderNo": "OUT-2025-001242",
+                  "logisticsOrderNo": "ST8901234567890",
+                  "brandOutboundOrderNo": "BRAND-OUT-001242",
+                  "wmsOrderReceivedTime": "2025-01-15 11:00:00",
+                  "outboundToSignDuration": 69.5
+                },
+                {
+                  "id": "10",
+                  "signTime": "2025-01-17 09:30:00",
+                  "pickupTime": "2025-01-15 15:00:00",
+                  "arrivalStore": "Fogstep Central Store",
+                  "outboundTime": "2025-01-15 13:15:00",
+                  "outboundPieces": 140,
+                  "outboundOrderNo": "OUT-2025-001243",
+                  "logisticsOrderNo": "SF9012345678901",
+                  "brandOutboundOrderNo": "BRAND-OUT-001243",
+                  "wmsOrderReceivedTime": "2025-01-15 09:00:00",
+                  "outboundToSignDuration": 44.25
+                },
+                {
+                  "id": "11",
+                  "signTime": "2025-01-16 20:00:00",
+                  "pickupTime": "2025-01-15 17:30:00",
+                  "arrivalStore": "Tianjin Heping Store",
+                  "outboundTime": "2025-01-15 15:45:00",
+                  "outboundPieces": 110,
+                  "outboundOrderNo": "OUT-2025-001244",
+                  "logisticsOrderNo": "ZT1234567890123",
+                  "brandOutboundOrderNo": "BRAND-OUT-001244",
+                  "wmsOrderReceivedTime": "2025-01-15 10:30:00",
+                  "outboundToSignDuration": 28.25
+                },
+                {
+                  "id": "12",
+                  "signTime": "2025-01-16 16:20:00",
+                  "pickupTime": "2025-01-15 15:45:00",
+                  "arrivalStore": "Suzhou Industrial Park Store",
+                  "outboundTime": "2025-01-15 14:00:00",
+                  "outboundPieces": 165,
+                  "outboundOrderNo": "OUT-2025-001245",
+                  "logisticsOrderNo": "YD2345678901234",
+                  "brandOutboundOrderNo": "BRAND-OUT-001245",
+                  "wmsOrderReceivedTime": "2025-01-15 08:20:00",
+                  "outboundToSignDuration": 26.33
+                },
+                {
+                  "id": "13",
+                  "signTime": "2025-01-17 12:00:00",
+                  "pickupTime": "2025-01-15 18:45:00",
+                  "arrivalStore": "Changsha Furong Store",
+                  "outboundTime": "2025-01-15 17:00:00",
+                  "outboundPieces": 190,
+                  "outboundOrderNo": "OUT-2025-001246",
+                  "logisticsOrderNo": "SF3456789012345",
+                  "brandOutboundOrderNo": "BRAND-OUT-001246",
+                  "wmsOrderReceivedTime": "2025-01-15 11:45:00",
+                  "outboundToSignDuration": 43
+                },
+                {
+                  "id": "14",
+                  "signTime": "2025-01-17 08:30:00",
+                  "pickupTime": "2025-01-15 17:00:00",
+                  "arrivalStore": "Zhengzhou Jinshui Store",
+                  "outboundTime": "2025-01-15 15:20:00",
+                  "outboundPieces": 145,
+                  "outboundOrderNo": "OUT-2025-001247",
+                  "logisticsOrderNo": "YT4567890123456",
+                  "brandOutboundOrderNo": "BRAND-OUT-001247",
+                  "wmsOrderReceivedTime": "2025-01-15 09:45:00",
+                  "outboundToSignDuration": 41.17
+                },
+                {
+                  "id": "15",
+                  "signTime": "2025-01-17 13:45:00",
+                  "pickupTime": "2025-01-15 16:15:00",
+                  "arrivalStore": "Jinan Lixia Store",
+                  "outboundTime": "2025-01-15 14:30:00",
+                  "outboundPieces": 125,
+                  "outboundOrderNo": "OUT-2025-001248",
+                  "logisticsOrderNo": "ST5678901234567",
+                  "brandOutboundOrderNo": "BRAND-OUT-001248",
+                  "wmsOrderReceivedTime": "2025-01-15 10:00:00",
+                  "outboundToSignDuration": 47.25
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        }
+      ]
+    },
+    "inbound-dashboard": {
+      "title": "Warehousing operation progress dashboard",
+      "layout": {
+        "type": "custom",
+        "preset": "dashboard-layout",
+        "componentPositions": {
+          "tab-filter": {
+            "area": "header",
+            "order": 1
+          },
+          "filter-panel": {
+            "area": "header",
+            "order": 0
+          },
+          "detailed-table": {
+            "area": "bottom-second",
+            "order": 3
+          },
+          "store-return-card": {
+            "area": "main",
+            "order": 2
+          },
+          "customer-return-card": {
+            "area": "main",
+            "order": 0
+          },
+          "purchase-inbound-card": {
+            "area": "main",
+            "order": 1
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "filter-panel",
+          "type": "FilterPanel",
+          "props": {
+            "filters": [
+              {
+                "key": "dateRange",
+                "type": "dateRange",
+                "label": "date range",
+                "style": {
+                  "width": 300,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "defaultValue": "today"
+              },
+              {
+                "key": "brand",
+                "type": "select",
+                "label": "Brand selection",
+                "style": {
+                  "width": 200,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "options": [
+                  {
+                    "label": "Nimbus Outfitters",
+                    "value": "Nimbus Outfitters"
+                  },
+                  {
+                    "label": "Blue Harbor Line",
+                    "value": "Blue Harbor Line"
+                  },
+                  {
+                    "label": "Summit Trace Co",
+                    "value": "Summit Trace Co"
+                  }
+                ],
+                "multiple": true
+              }
+            ],
+            "presets": [
+              {
+                "label": "today",
+                "value": {
+                  "dateRange": "today"
+                }
+              },
+              {
+                "label": "yesterday",
+                "value": {
+                  "dateRange": "yesterday"
+                }
+              },
+              {
+                "label": "Last 7 days",
+                "value": {
+                  "dateRange": "last7days"
+                }
+              },
+              {
+                "label": "Last 30 days",
+                "value": {
+                  "dateRange": "last30days",
+                  "timeWindow": "month"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "customer-return-card",
+          "type": "Card",
+          "props": {
+            "title": "Customer return to warehouse",
+            "layout": {
+              "type": "custom",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "summary-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "progress-chart": {
+                  "area": "middle-right",
+                  "order": 0
+                },
+                "completion-gauge-1": {
+                  "area": "middle-left",
+                  "order": 0
+                },
+                "completion-gauge-2": {
+                  "area": "middle-center",
+                  "order": 0
+                },
+                "customer-return-table": {
+                  "area": "bottom-second",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "Awaiting receipt",
+                    "trend": {
+                      "type": "up",
+                      "value": 8,
+                      "status": "warning"
+                    },
+                    "value": 156
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "Goods received",
+                    "trend": {
+                      "type": "up",
+                      "value": 12,
+                      "status": "success"
+                    },
+                    "value": 89
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "Already on the shelves",
+                    "trend": {
+                      "type": "up",
+                      "value": 15,
+                      "status": "success"
+                    },
+                    "value": 67
+                  },
+                  {
+                    "key": "completion-rate",
+                    "icon": "TrendingUp",
+                    "title": "Shelf completion rate",
+                    "trend": {
+                      "type": "up",
+                      "value": 3.2,
+                      "status": "success"
+                    },
+                    "value": 78.5,
+                    "linkTo": "completion-gauge",
+                    "suffix": "%"
+                  }
+                ]
+              },
+              "useMockData": true
+            },
+            {
+              "id": "completion-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Receipt completion rate",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 78.5,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 78.5
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "completion-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Shelf completion rate",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 87.3,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 89.7
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "progress-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "position": "middle"
+                },
+                "title": "Inbound progress trend",
+                "width": 400,
+                "height": 260,
+                "legend": {
+                  "position": "top"
+                },
+                "xField": "date",
+                "yField": "value",
+                "isStack": true,
+                "chartType": "column",
+                "seriesField": "status"
+              },
+              "mockData": [
+                {
+                  "date": "01-15",
+                  "value": 45,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-16",
+                  "value": 52,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-17",
+                  "value": 48,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-18",
+                  "value": 61,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-19",
+                  "value": 55,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-20",
+                  "value": 67,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-21",
+                  "value": 58,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-22",
+                  "value": 64,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-23",
+                  "value": 49,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-24",
+                  "value": 73,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "01-15",
+                  "value": 89,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-16",
+                  "value": 76,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-17",
+                  "value": 93,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-18",
+                  "value": 87,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-19",
+                  "value": 102,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-20",
+                  "value": 95,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-21",
+                  "value": 108,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-22",
+                  "value": 115,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-23",
+                  "value": 98,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-24",
+                  "value": 124,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "01-15",
+                  "value": 67,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-16",
+                  "value": 71,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-17",
+                  "value": 58,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-18",
+                  "value": 74,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-19",
+                  "value": 82,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-20",
+                  "value": 69,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-21",
+                  "value": 86,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-22",
+                  "value": 92,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-23",
+                  "value": 75,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-24",
+                  "value": 101,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "01-15",
+                  "value": 3,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-16",
+                  "value": 2,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-17",
+                  "value": 5,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-18",
+                  "value": 4,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-19",
+                  "value": 2,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-20",
+                  "value": 6,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-21",
+                  "value": 3,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-22",
+                  "value": 4,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-23",
+                  "value": 5,
+                  "status": "abnormal"
+                },
+                {
+                  "date": "01-24",
+                  "value": 3,
+                  "status": "abnormal"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "customer-return-table",
+              "type": "Table",
+              "props": {
+                "title": "data in transit",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "sku",
+                    "title": "SKU #",
+                    "width": 120,
+                    "dataIndex": "sku",
+                    "searchable": true
+                  },
+                  {
+                    "key": "productName",
+                    "title": "Product name",
+                    "width": 150,
+                    "dataIndex": "productName",
+                    "searchable": true
+                  },
+                  {
+                    "key": "styleNumber",
+                    "title": "Style number",
+                    "width": 100,
+                    "dataIndex": "styleNumber"
+                  },
+                  {
+                    "key": "size",
+                    "title": "size",
+                    "width": 80,
+                    "dataIndex": "size"
+                  },
+                  {
+                    "key": "colorNumber",
+                    "title": "Color number",
+                    "width": 80,
+                    "dataIndex": "colorNumber"
+                  },
+                  {
+                    "key": "originalOrderNo",
+                    "title": "Original order number",
+                    "width": 140,
+                    "dataIndex": "originalOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "returnOrderNo",
+                    "title": "Chargeback number",
+                    "width": 140,
+                    "dataIndex": "returnOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "appliedReturnQty",
+                    "title": "Number of items requested for return",
+                    "width": 120,
+                    "dataIndex": "appliedReturnQty"
+                  },
+                  {
+                    "key": "receivedQty",
+                    "title": "Number of items received",
+                    "width": 120,
+                    "dataIndex": "receivedQty"
+                  },
+                  {
+                    "key": "shelvedQty",
+                    "title": "Number of items on shelves",
+                    "width": 120,
+                    "dataIndex": "shelvedQty"
+                  },
+                  {
+                    "key": "shelvedProgress",
+                    "title": "Shelf completion progress",
+                    "width": 140,
+                    "render": {
+                      "type": "Progress",
+                      "props": {
+                        "format": "percent"
+                      }
+                    },
+                    "dataIndex": "shelvedProgress"
+                  },
+                  {
+                    "key": "expressTrackingNo",
+                    "title": "Express tracking number",
+                    "width": 150,
+                    "dataIndex": "expressTrackingNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "returnChannel",
+                    "title": "Return channels",
+                    "width": 100,
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "on-line": "blue",
+                          "offline": "green",
+                          "Third party platform": "orange"
+                        }
+                      }
+                    },
+                    "dataIndex": "returnChannel"
+                  },
+                  {
+                    "key": "returnReason",
+                    "title": "Reason for return",
+                    "width": 120,
+                    "dataIndex": "returnReason"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 10
+                },
+                "showSearch": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "cr1",
+                  "sku": "SKU-2025-CR001",
+                  "size": "42",
+                  "shelvedQty": 45,
+                  "colorNumber": "BK001",
+                  "productName": "Men's sneakers",
+                  "receivedQty": 48,
+                  "styleNumber": "RB-CR-001",
+                  "returnReason": "Not the right size",
+                  "returnChannel": "on-line",
+                  "returnOrderNo": "RT-2025-CR001",
+                  "originalOrderNo": "ORD-2025-1001",
+                  "shelvedProgress": 90,
+                  "appliedReturnQty": 50,
+                  "expressTrackingNo": "SF1234567890123"
+                },
+                {
+                  "id": "cr2",
+                  "sku": "SKU-2025-CR002",
+                  "size": "One size fits all",
+                  "shelvedQty": 25,
+                  "colorNumber": "BR002",
+                  "productName": "women's handbag",
+                  "receivedQty": 30,
+                  "styleNumber": "HB-CR-002",
+                  "returnReason": "quality issues",
+                  "returnChannel": "offline",
+                  "returnOrderNo": "RT-2025-CR002",
+                  "originalOrderNo": "ORD-2025-1002",
+                  "shelvedProgress": 83.3,
+                  "appliedReturnQty": 30,
+                  "expressTrackingNo": "YT9876543210987"
+                },
+                {
+                  "id": "cr3",
+                  "sku": "SKU-2025-CR003",
+                  "size": "120cm",
+                  "shelvedQty": 0,
+                  "colorNumber": "RD003",
+                  "productName": "Children's T-shirt",
+                  "receivedQty": 0,
+                  "styleNumber": "CT-CR-003",
+                  "returnReason": "Color does not match",
+                  "returnChannel": "Third party platform",
+                  "returnOrderNo": "RT-2025-CR003",
+                  "originalOrderNo": "ORD-2025-1003",
+                  "shelvedProgress": 0,
+                  "appliedReturnQty": 100,
+                  "expressTrackingNo": "ST4567890123456"
+                },
+                {
+                  "id": "cr4",
+                  "sku": "SKU-2025-CR004",
+                  "size": "M",
+                  "shelvedQty": 60,
+                  "colorNumber": "BL004",
+                  "productName": "Casual T-shirt",
+                  "receivedQty": 65,
+                  "styleNumber": "CT-CR-004",
+                  "returnReason": "dislike",
+                  "returnChannel": "on-line",
+                  "returnOrderNo": "RT-2025-CR004",
+                  "originalOrderNo": "ORD-2025-1004",
+                  "shelvedProgress": 92.3,
+                  "appliedReturnQty": 65,
+                  "expressTrackingNo": "SF2345678901234"
+                },
+                {
+                  "id": "cr5",
+                  "sku": "SKU-2025-CR005",
+                  "size": "L",
+                  "shelvedQty": 35,
+                  "colorNumber": "GR005",
+                  "productName": "sweatpants",
+                  "receivedQty": 40,
+                  "styleNumber": "SP-CR-005",
+                  "returnReason": "Size runs large",
+                  "returnChannel": "on-line",
+                  "returnOrderNo": "RT-2025-CR005",
+                  "originalOrderNo": "ORD-2025-1005",
+                  "shelvedProgress": 87.5,
+                  "appliedReturnQty": 40,
+                  "expressTrackingNo": "YT3456789012345"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "purchase-inbound-card",
+          "type": "Card",
+          "props": {
+            "title": "Procurement and warehousing",
+            "layout": {
+              "type": "custom",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "purchase-gauge-1": {
+                  "area": "middle-left",
+                  "order": 0
+                },
+                "purchase-gauge-2": {
+                  "area": "middle-center",
+                  "order": 0
+                },
+                "purchase-inbound-table": {
+                  "area": "bottom-second",
+                  "order": 0
+                },
+                "purchase-summary-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "purchase-progress-chart": {
+                  "area": "middle-right",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "purchase-summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 3
+                },
+                "items": [
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "Awaiting receipt (same day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 5,
+                      "status": "warning"
+                    },
+                    "value": 120
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "Goods received (same day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 8,
+                      "status": "success"
+                    },
+                    "value": 95
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "Already on the shelves (that day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 12,
+                      "status": "success"
+                    },
+                    "value": 78
+                  }
+                ]
+              },
+              "useMockData": true
+            },
+            {
+              "id": "purchase-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Receipt completion rate (same day)",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 82.5,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 82.5
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "purchase-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Shelf completion rate (same day)",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 88.3,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 88.3
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "purchase-progress-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "position": "middle"
+                },
+                "title": "Inbound progress trend (today)",
+                "width": 400,
+                "height": 260,
+                "legend": {
+                  "position": "top"
+                },
+                "xField": "date",
+                "yField": "value",
+                "isStack": true,
+                "chartType": "column",
+                "seriesField": "status"
+              },
+              "mockData": [
+                {
+                  "date": "08:00",
+                  "value": 15,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "10:00",
+                  "value": 20,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "12:00",
+                  "value": 18,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "14:00",
+                  "value": 25,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "16:00",
+                  "value": 22,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "18:00",
+                  "value": 20,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "08:00",
+                  "value": 12,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "10:00",
+                  "value": 18,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "12:00",
+                  "value": 22,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "14:00",
+                  "value": 28,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "16:00",
+                  "value": 30,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "18:00",
+                  "value": 25,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "08:00",
+                  "value": 8,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "10:00",
+                  "value": 15,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "12:00",
+                  "value": 20,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "14:00",
+                  "value": 25,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "16:00",
+                  "value": 28,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "18:00",
+                  "value": 22,
+                  "status": "Already on the shelves"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "purchase-inbound-table",
+              "type": "Table",
+              "props": {
+                "title": "data in transit",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "purchaseSource",
+                    "title": "Procurement source",
+                    "width": 120,
+                    "dataIndex": "purchaseSource",
+                    "searchable": true
+                  },
+                  {
+                    "key": "purchaseOrderNo",
+                    "title": "Purchase order number",
+                    "width": 150,
+                    "dataIndex": "purchaseOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "purchaseOrderQty",
+                    "title": "Purchase order quantity",
+                    "width": 140,
+                    "dataIndex": "purchaseOrderQty"
+                  },
+                  {
+                    "key": "receivedQty",
+                    "title": "Number of items received",
+                    "width": 120,
+                    "dataIndex": "receivedQty"
+                  },
+                  {
+                    "key": "shelvedQty",
+                    "title": "Number of items on shelves",
+                    "width": 120,
+                    "dataIndex": "shelvedQty"
+                  },
+                  {
+                    "key": "shelvedProgress",
+                    "title": "Shelf completion progress",
+                    "width": 140,
+                    "render": {
+                      "type": "Progress",
+                      "props": {
+                        "format": "percent"
+                      }
+                    },
+                    "dataIndex": "shelvedProgress"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 10
+                },
+                "showSearch": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "pi1",
+                  "shelvedQty": 450,
+                  "receivedQty": 480,
+                  "purchaseSource": "Supplier A",
+                  "purchaseOrderNo": "PO-2025-001",
+                  "shelvedProgress": 90,
+                  "purchaseOrderQty": 500
+                },
+                {
+                  "id": "pi2",
+                  "shelvedQty": 280,
+                  "receivedQty": 300,
+                  "purchaseSource": "Supplier B",
+                  "purchaseOrderNo": "PO-2025-002",
+                  "shelvedProgress": 93.3,
+                  "purchaseOrderQty": 300
+                },
+                {
+                  "id": "pi3",
+                  "shelvedQty": 720,
+                  "receivedQty": 750,
+                  "purchaseSource": "Supplier C",
+                  "purchaseOrderNo": "PO-2025-003",
+                  "shelvedProgress": 90,
+                  "purchaseOrderQty": 800
+                },
+                {
+                  "id": "pi4",
+                  "shelvedQty": 0,
+                  "receivedQty": 0,
+                  "purchaseSource": "Supplier D",
+                  "purchaseOrderNo": "PO-2025-004",
+                  "shelvedProgress": 0,
+                  "purchaseOrderQty": 200
+                },
+                {
+                  "id": "pi5",
+                  "shelvedQty": 320,
+                  "receivedQty": 350,
+                  "purchaseSource": "Supplier E",
+                  "purchaseOrderNo": "PO-2025-005",
+                  "shelvedProgress": 91.4,
+                  "purchaseOrderQty": 350
+                },
+                {
+                  "id": "pi6",
+                  "shelvedQty": 180,
+                  "receivedQty": 200,
+                  "purchaseSource": "Supplier F",
+                  "purchaseOrderNo": "PO-2025-006",
+                  "shelvedProgress": 90,
+                  "purchaseOrderQty": 200
+                },
+                {
+                  "id": "pi7",
+                  "shelvedQty": 540,
+                  "receivedQty": 580,
+                  "purchaseSource": "Supplier G",
+                  "purchaseOrderNo": "PO-2025-007",
+                  "shelvedProgress": 93.1,
+                  "purchaseOrderQty": 580
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "store-return-card",
+          "type": "Card",
+          "props": {
+            "title": "Store withdrawal and storage",
+            "layout": {
+              "type": "custom",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "store-gauge-1": {
+                  "area": "middle-left",
+                  "order": 0
+                },
+                "store-gauge-2": {
+                  "area": "middle-center",
+                  "order": 0
+                },
+                "store-return-table": {
+                  "area": "bottom-second",
+                  "order": 0
+                },
+                "store-summary-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "store-progress-chart": {
+                  "area": "middle-right",
+                  "order": 0
+                }
+              }
+            },
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "store-summary-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 3
+                },
+                "items": [
+                  {
+                    "key": "pending",
+                    "icon": "Clock",
+                    "title": "Awaiting receipt (same day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 3,
+                      "status": "warning"
+                    },
+                    "value": 85
+                  },
+                  {
+                    "key": "received",
+                    "icon": "CheckCircle",
+                    "title": "Goods received (same day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 6,
+                      "status": "success"
+                    },
+                    "value": 72
+                  },
+                  {
+                    "key": "shelved",
+                    "icon": "Archive",
+                    "title": "Already on the shelves (that day)",
+                    "trend": {
+                      "type": "up",
+                      "value": 10,
+                      "status": "success"
+                    },
+                    "value": 65
+                  }
+                ]
+              },
+              "useMockData": true
+            },
+            {
+              "id": "store-gauge-1",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Receipt completion rate (same day)",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 84.7,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 84.7
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "store-gauge-2",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Shelf completion rate (same day)",
+                "height": 300,
+                "gaugeMax": 100,
+                "gaugeMin": 0,
+                "chartType": "gauge",
+                "nameField": "name",
+                "gaugeValue": 90.3,
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true,
+                "gaugeDetailColor": "#22c55e",
+                "gaugeSplitNumber": 10,
+                "gaugeAxisLineColor": [
+                  [
+                    1,
+                    "#22c55e"
+                  ]
+                ]
+              },
+              "mockData": [
+                {
+                  "name": "",
+                  "value": 90.3
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "store-progress-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "position": "middle"
+                },
+                "title": "Inbound progress trend (today)",
+                "width": 400,
+                "height": 260,
+                "legend": {
+                  "position": "top"
+                },
+                "xField": "date",
+                "yField": "value",
+                "isStack": true,
+                "chartType": "column",
+                "seriesField": "status"
+              },
+              "mockData": [
+                {
+                  "date": "08:00",
+                  "value": 12,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "10:00",
+                  "value": 15,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "12:00",
+                  "value": 18,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "14:00",
+                  "value": 20,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "16:00",
+                  "value": 18,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "18:00",
+                  "value": 2,
+                  "status": "Awaiting receipt"
+                },
+                {
+                  "date": "08:00",
+                  "value": 8,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "10:00",
+                  "value": 12,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "12:00",
+                  "value": 18,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "14:00",
+                  "value": 22,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "16:00",
+                  "value": 25,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "18:00",
+                  "value": 20,
+                  "status": "Goods received"
+                },
+                {
+                  "date": "08:00",
+                  "value": 5,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "10:00",
+                  "value": 10,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "12:00",
+                  "value": 15,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "14:00",
+                  "value": 20,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "16:00",
+                  "value": 22,
+                  "status": "Already on the shelves"
+                },
+                {
+                  "date": "18:00",
+                  "value": 18,
+                  "status": "Already on the shelves"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "store-return-table",
+              "type": "Table",
+              "props": {
+                "title": "data in transit",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "returnSource",
+                    "title": "Return source",
+                    "width": 120,
+                    "dataIndex": "returnSource",
+                    "searchable": true
+                  },
+                  {
+                    "key": "returnOrderNo",
+                    "title": "Return order number",
+                    "width": 150,
+                    "dataIndex": "returnOrderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "returnOrderQty",
+                    "title": "Return order number",
+                    "width": 140,
+                    "dataIndex": "returnOrderQty"
+                  },
+                  {
+                    "key": "receivedQty",
+                    "title": "Number of items received",
+                    "width": 120,
+                    "dataIndex": "receivedQty"
+                  },
+                  {
+                    "key": "inspectedQty",
+                    "title": "Number of pieces inspected",
+                    "width": 120,
+                    "dataIndex": "inspectedQty"
+                  },
+                  {
+                    "key": "qualityLevel",
+                    "title": "Quality inspection level (A/B/C/D)",
+                    "width": 150,
+                    "render": {
+                      "type": "Tag",
+                      "props": {
+                        "color": {
+                          "A": "green",
+                          "B": "blue",
+                          "C": "orange",
+                          "D": "red"
+                        }
+                      }
+                    },
+                    "dataIndex": "qualityLevel"
+                  },
+                  {
+                    "key": "shelvedQty",
+                    "title": "Number of items on shelves",
+                    "width": 120,
+                    "dataIndex": "shelvedQty"
+                  },
+                  {
+                    "key": "shelvedProgress",
+                    "title": "Shelf completion progress",
+                    "width": 140,
+                    "render": {
+                      "type": "Progress",
+                      "props": {
+                        "format": "percent"
+                      }
+                    },
+                    "dataIndex": "shelvedProgress"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 10
+                },
+                "showSearch": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "sr1",
+                  "shelvedQty": 135,
+                  "receivedQty": 145,
+                  "inspectedQty": 140,
+                  "qualityLevel": "A",
+                  "returnSource": "Northwing Plaza Store",
+                  "returnOrderNo": "SR-2025-001",
+                  "returnOrderQty": 150,
+                  "shelvedProgress": 90
+                },
+                {
+                  "id": "sr2",
+                  "shelvedQty": 180,
+                  "receivedQty": 195,
+                  "inspectedQty": 190,
+                  "qualityLevel": "B",
+                  "returnSource": "Maple Bay Store",
+                  "returnOrderNo": "SR-2025-002",
+                  "returnOrderQty": 200,
+                  "shelvedProgress": 90
+                },
+                {
+                  "id": "sr3",
+                  "shelvedQty": 100,
+                  "receivedQty": 115,
+                  "inspectedQty": 110,
+                  "qualityLevel": "C",
+                  "returnSource": "Coral Harbor Store",
+                  "returnOrderNo": "SR-2025-003",
+                  "returnOrderQty": 120,
+                  "shelvedProgress": 83.3
+                },
+                {
+                  "id": "sr4",
+                  "shelvedQty": 0,
+                  "receivedQty": 0,
+                  "inspectedQty": 0,
+                  "qualityLevel": "",
+                  "returnSource": "Jadepeak Outlet Store",
+                  "returnOrderNo": "SR-2025-004",
+                  "returnOrderQty": 180,
+                  "shelvedProgress": 0
+                },
+                {
+                  "id": "sr5",
+                  "shelvedQty": 220,
+                  "receivedQty": 240,
+                  "inspectedQty": 235,
+                  "qualityLevel": "A",
+                  "returnSource": "Willowmere Store",
+                  "returnOrderNo": "SR-2025-005",
+                  "returnOrderQty": 250,
+                  "shelvedProgress": 88
+                },
+                {
+                  "id": "sr6",
+                  "shelvedQty": 95,
+                  "receivedQty": 105,
+                  "inspectedQty": 100,
+                  "qualityLevel": "B",
+                  "returnSource": "Mistlane Promenade Store",
+                  "returnOrderNo": "SR-2025-006",
+                  "returnOrderQty": 110,
+                  "shelvedProgress": 86.4
+                },
+                {
+                  "id": "sr7",
+                  "shelvedQty": 160,
+                  "receivedQty": 175,
+                  "inspectedQty": 170,
+                  "qualityLevel": "A",
+                  "returnSource": "Embercross Innovation Store",
+                  "returnOrderNo": "SR-2025-007",
+                  "returnOrderQty": 180,
+                  "shelvedProgress": 88.9
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        }
+      ]
+    },
+    "delivery-dashboard": {
+      "title": "Signing timeliness board",
+      "layout": {
+        "type": "custom",
+        "preset": "dashboard-layout",
+        "componentPositions": {
+          "filter-panel": {
+            "area": "header",
+            "order": 0
+          },
+          "region-heatmap": {
+            "area": "top",
+            "order": 0
+          },
+          "b2c-carrier-timeline": {
+            "area": "top",
+            "order": 1
+          },
+          "component_1762913516082_922h90kb4": {
+            "area": "top",
+            "order": 2
+          },
+          "component_1762925272711_572i23psn": {
+            "area": "top",
+            "order": 3
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "filter-panel",
+          "type": "FilterPanel",
+          "props": {
+            "filters": [
+              {
+                "key": "dateRange",
+                "type": "dateRange",
+                "label": "date range",
+                "style": {
+                  "width": 300,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "defaultValue": "today"
+              },
+              {
+                "key": "brand",
+                "type": "select",
+                "label": "Brand selection",
+                "style": {
+                  "width": 200,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "options": [
+                  {
+                    "label": "Nimbus Outfitters",
+                    "value": "Nimbus Outfitters"
+                  },
+                  {
+                    "label": "Blue Harbor Line",
+                    "value": "Blue Harbor Line"
+                  },
+                  {
+                    "label": "Summit Trace Co",
+                    "value": "Summit Trace Co"
+                  }
+                ],
+                "multiple": true
+              }
+            ],
+            "presets": [
+              {
+                "label": "today",
+                "value": {
+                  "dateRange": "today"
+                }
+              },
+              {
+                "label": "yesterday",
+                "value": {
+                  "dateRange": "yesterday"
+                }
+              },
+              {
+                "label": "Last 7 days",
+                "value": {
+                  "dateRange": "last7days"
+                }
+              },
+              {
+                "label": "Last 30 days",
+                "value": {
+                  "dateRange": "last30days",
+                  "timeWindow": "month"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "component_1762913516082_922h90kb4",
+          "type": "Card",
+          "props": {
+            "title": "B2C",
+            "layout": {
+              "type": "default",
+              "preset": "top1-bottom2-left-large",
+              "componentPositions": {
+                "region-heatmap": {
+                  "area": "top",
+                  "order": 0
+                },
+                "brand-carrier-comparison-chart": {
+                  "area": "top",
+                  "order": 1
+                }
+              }
+            },
+            "content": "Card content",
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "region-heatmap",
+              "type": "MapChart",
+              "props": {
+                "color": [
+                  "#313695",
+                  "#4575b4",
+                  "#74add1",
+                  "#abd9e9",
+                  "#e0f3f8",
+                  "#ffffcc",
+                  "#fee090",
+                  "#fdae61",
+                  "#f46d43",
+                  "#d73027",
+                  "#a50026"
+                ],
+                "title": "Regional signature timeliness map",
+                "height": 1000,
+                "mapType": "china",
+                "nameField": "name",
+                "showLabel": true,
+                "visualMap": {
+                  "max": 35,
+                  "min": 20,
+                  "text": [
+                    "high",
+                    "Low"
+                  ],
+                  "calculable": true
+                },
+                "valueField": "value"
+              },
+              "mockData": [
+                {
+                  "name": "Amber Coast Sector",
+                  "value": 24.5
+                },
+                {
+                  "name": "Mistlake Plain Sector",
+                  "value": 28.3
+                },
+                {
+                  "name": "Tidemarsh Delta Sector",
+                  "value": 26.7
+                },
+                {
+                  "name": "Aurum Bay City",
+                  "value": 22.1
+                },
+                {
+                  "name": "Frostpine Municipality",
+                  "value": 25.8
+                },
+                {
+                  "name": "Golden Wheat Plateau",
+                  "value": 24.5
+                },
+                {
+                  "name": "Misty Gorge Prefecture",
+                  "value": 24.5
+                },
+                {
+                  "name": "Jade River Corridor",
+                  "value": 29.8
+                },
+                {
+                  "name": "Sunfield Plains Province",
+                  "value": 24.5
+                },
+                {
+                  "name": "Ember Lake Region",
+                  "value": 28.9
+                },
+                {
+                  "name": "Granite Ridge Province",
+                  "value": 24.5
+                },
+                {
+                  "name": "Coral Sound Coast",
+                  "value": 24.5
+                },
+                {
+                  "name": "Bronze Stream Basin",
+                  "value": 28.7
+                },
+                {
+                  "name": "Ironwood Steppe",
+                  "value": 29.4
+                },
+                {
+                  "name": "Coalridge Highlands",
+                  "value": 31.8
+                },
+                {
+                  "name": "Windmere Grasslands",
+                  "value": 24.5
+                },
+                {
+                  "name": "Harborgate Peninsula",
+                  "value": 24.5
+                },
+                {
+                  "name": "Snowpine Frontier",
+                  "value": 33.1
+                },
+                {
+                  "name": "Icebound Reach Province",
+                  "value": 24.5
+                },
+                {
+                  "name": "Karstflower Enclave",
+                  "value": 27.2
+                },
+                {
+                  "name": "Tropical Shoal Isle",
+                  "value": 26.8
+                },
+                {
+                  "name": "Foggy Terraces Metro",
+                  "value": 29.9
+                },
+                {
+                  "name": "Cloudstep Mountains",
+                  "value": 31.4
+                },
+                {
+                  "name": "Highland Bloom Reserve",
+                  "value": 32.7
+                },
+                {
+                  "name": "Skyplateau Domain",
+                  "value": 38.5
+                },
+                {
+                  "name": "Loesswind Corridor",
+                  "value": 30.3
+                },
+                {
+                  "name": "Dunesilk Expanse",
+                  "value": 33.6
+                },
+                {
+                  "name": "Saltmirror Basin",
+                  "value": 36.8
+                },
+                {
+                  "name": "Desert Bloom Oasis",
+                  "value": 32.2
+                },
+                {
+                  "name": "Westwind Frontier",
+                  "value": 37.4
+                },
+                {
+                  "name": "Pearl Strait Prefecture",
+                  "value": 24.9
+                },
+                {
+                  "name": "Harborlight Enclave",
+                  "value": 23.5
+                },
+                {
+                  "name": "Lotus Port Ward",
+                  "value": 22.8
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "brand-carrier-comparison-chart",
+              "type": "Chart",
+              "props": {
+                "meta": {
+                  "time": {
+                    "alias": "Time limit(days)",
+                    "formatter": "number"
+                  },
+                  "brand": {
+                    "alias": "brand"
+                  },
+                  "carrier": {
+                    "alias": "courier company"
+                  },
+                  "Horizon Post": {
+                    "alias": "Horizon Post"
+                  },
+                  "SwiftLine Express": {
+                    "alias": "SwiftLine Express"
+                  }
+                },
+                "title": "Comparative analysis of express delivery timeliness",
+                "yAxis": {
+                  "max": 5,
+                  "min": 0,
+                  "label": {
+                    "formatter": "{value}days"
+                  }
+                },
+                "colors": [
+                  "#52c41a",
+                  "#ff7a00"
+                ],
+                "height": 350,
+                "legend": {
+                  "position": "top"
+                },
+                "xField": "brand",
+                "yField": "time",
+                "subTitle": "Detailed comparison of the timeliness of SwiftLine Express and Horizon Post among various brands",
+                "chartType": "column",
+                "columnStyle": {
+                  "radius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                },
+                "seriesField": "carrier",
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "time": 2.2,
+                  "brand": "Nimbus Outfitters",
+                  "carrier": "SwiftLine Express"
+                },
+                {
+                  "time": 3.4,
+                  "brand": "Nimbus Outfitters",
+                  "carrier": "Horizon Post"
+                },
+                {
+                  "time": 1.9,
+                  "brand": "Blue Harbor Line",
+                  "carrier": "SwiftLine Express"
+                },
+                {
+                  "time": 3.1,
+                  "brand": "Blue Harbor Line",
+                  "carrier": "Horizon Post"
+                },
+                {
+                  "time": 2.7,
+                  "brand": "Summit Trace Co",
+                  "carrier": "SwiftLine Express"
+                },
+                {
+                  "time": 4.1,
+                  "brand": "Summit Trace Co",
+                  "carrier": "Horizon Post"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "component_1762925272711_572i23psn",
+          "type": "Card",
+          "props": {
+            "title": "B2B",
+            "layout": {
+              "type": "default",
+              "preset": "top1-bottom2-left-large",
+              "componentPositions": {
+                "b2b-region-heatmap": {
+                  "area": "top",
+                  "order": 0
+                },
+                "b2b-carrier-timeline": {
+                  "area": "top",
+                  "order": 1
+                }
+              }
+            },
+            "content": "Card content",
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "b2b-region-heatmap",
+              "type": "MapChart",
+              "props": {
+                "color": [
+                  "#313695",
+                  "#4575b4",
+                  "#74add1",
+                  "#abd9e9",
+                  "#e0f3f8",
+                  "#ffffcc",
+                  "#fee090",
+                  "#fdae61",
+                  "#f46d43",
+                  "#d73027",
+                  "#a50026"
+                ],
+                "title": "B2B regional signature timeliness map",
+                "height": 1000,
+                "mapType": "china",
+                "nameField": "name",
+                "showLabel": true,
+                "visualMap": {
+                  "max": 40,
+                  "min": 25,
+                  "text": [
+                    "high",
+                    "Low"
+                  ],
+                  "calculable": true
+                },
+                "valueField": "value"
+              },
+              "mockData": [
+                {
+                  "name": "Amber Coast Sector",
+                  "value": 28.5
+                },
+                {
+                  "name": "Mistlake Plain Sector",
+                  "value": 32.3
+                },
+                {
+                  "name": "Tidemarsh Delta Sector",
+                  "value": 30.7
+                },
+                {
+                  "name": "Aurum Bay City",
+                  "value": 26.1
+                },
+                {
+                  "name": "Frostpine Municipality",
+                  "value": 29.8
+                },
+                {
+                  "name": "Golden Wheat Plateau",
+                  "value": 28.5
+                },
+                {
+                  "name": "Misty Gorge Prefecture",
+                  "value": 28.5
+                },
+                {
+                  "name": "Jade River Corridor",
+                  "value": 33.8
+                },
+                {
+                  "name": "Sunfield Plains Province",
+                  "value": 28.5
+                },
+                {
+                  "name": "Ember Lake Region",
+                  "value": 32.9
+                },
+                {
+                  "name": "Granite Ridge Province",
+                  "value": 28.5
+                },
+                {
+                  "name": "Coral Sound Coast",
+                  "value": 28.5
+                },
+                {
+                  "name": "Bronze Stream Basin",
+                  "value": 32.7
+                },
+                {
+                  "name": "Ironwood Steppe",
+                  "value": 33.4
+                },
+                {
+                  "name": "Coalridge Highlands",
+                  "value": 35.8
+                },
+                {
+                  "name": "Windmere Grasslands",
+                  "value": 28.5
+                },
+                {
+                  "name": "Harborgate Peninsula",
+                  "value": 28.5
+                },
+                {
+                  "name": "Snowpine Frontier",
+                  "value": 37.1
+                },
+                {
+                  "name": "Icebound Reach Province",
+                  "value": 28.5
+                },
+                {
+                  "name": "Karstflower Enclave",
+                  "value": 31.2
+                },
+                {
+                  "name": "Tropical Shoal Isle",
+                  "value": 30.8
+                },
+                {
+                  "name": "Foggy Terraces Metro",
+                  "value": 33.9
+                },
+                {
+                  "name": "Cloudstep Mountains",
+                  "value": 35.4
+                },
+                {
+                  "name": "Highland Bloom Reserve",
+                  "value": 36.7
+                },
+                {
+                  "name": "Skyplateau Domain",
+                  "value": 38.5
+                },
+                {
+                  "name": "Loesswind Corridor",
+                  "value": 34.3
+                },
+                {
+                  "name": "Dunesilk Expanse",
+                  "value": 37.6
+                },
+                {
+                  "name": "Saltmirror Basin",
+                  "value": 38.8
+                },
+                {
+                  "name": "Desert Bloom Oasis",
+                  "value": 36.2
+                },
+                {
+                  "name": "Westwind Frontier",
+                  "value": 39.4
+                },
+                {
+                  "name": "Pearl Strait Prefecture",
+                  "value": 28.9
+                },
+                {
+                  "name": "Harborlight Enclave",
+                  "value": 27.5
+                },
+                {
+                  "name": "Lotus Port Ward",
+                  "value": 26.8
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "b2b-carrier-timeline",
+              "type": "Chart",
+              "props": {
+                "meta": {
+                  "time": {
+                    "alias": "Time limit (hours)",
+                    "formatter": "number"
+                  },
+                  "brand": {
+                    "alias": "brand"
+                  },
+                  "carrier": {
+                    "alias": "carrier"
+                  },
+                  "RidgeLink Cargo": {
+                    "alias": "RidgeLink Cargo"
+                  },
+                  "SwiftLine Freight": {
+                    "alias": "SwiftLine Freight"
+                  }
+                },
+                "title": "B2B Carrier Timeliness Comparison",
+                "colors": [
+                  "#1890ff",
+                  "#52c41a"
+                ],
+                "height": 350,
+                "legend": {
+                  "position": "top"
+                },
+                "xField": "brand",
+                "yField": "time",
+                "chartType": "column",
+                "columnStyle": {
+                  "radius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                },
+                "seriesField": "carrier",
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "time": 22.5,
+                  "brand": "Nimbus Outfitters",
+                  "carrier": "RidgeLink Cargo"
+                },
+                {
+                  "time": 28.3,
+                  "brand": "Nimbus Outfitters",
+                  "carrier": "SwiftLine Freight"
+                },
+                {
+                  "time": 24.2,
+                  "brand": "Blue Harbor Line",
+                  "carrier": "RidgeLink Cargo"
+                },
+                {
+                  "time": 30.1,
+                  "brand": "Blue Harbor Line",
+                  "carrier": "SwiftLine Freight"
+                },
+                {
+                  "time": 26.8,
+                  "brand": "Summit Trace Co",
+                  "carrier": "RidgeLink Cargo"
+                },
+                {
+                  "time": 32.5,
+                  "brand": "Summit Trace Co",
+                  "carrier": "SwiftLine Freight"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        }
+      ]
+    },
+    "outbound-dashboard": {
+      "title": "Outbound operation progress dashboard",
+      "layout": {
+        "type": "custom",
+        "preset": "all-vertical",
+        "componentPositions": {
+          "b2b-card": {
+            "area": "top",
+            "order": 2
+          },
+          "b2c-card": {
+            "area": "top",
+            "order": 1
+          },
+          "filter-panel": {
+            "area": "top",
+            "order": 0
+          }
+        }
+      },
+      "components": [
+        {
+          "id": "filter-panel",
+          "type": "FilterPanel",
+          "props": {
+            "filters": [
+              {
+                "key": "dateRange",
+                "type": "dateRange",
+                "label": "date range",
+                "style": {
+                  "width": 300,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "defaultValue": "today"
+              },
+              {
+                "key": "brand",
+                "type": "select",
+                "label": "Brand selection",
+                "style": {
+                  "width": 200,
+                  "marginTop": 0
+                },
+                "inline": true,
+                "options": [
+                  {
+                    "label": "Nimbus Outfitters",
+                    "value": "Nimbus Outfitters"
+                  },
+                  {
+                    "label": "Blue Harbor Line",
+                    "value": "Blue Harbor Line"
+                  },
+                  {
+                    "label": "Summit Trace Co",
+                    "value": "Summit Trace Co"
+                  }
+                ],
+                "multiple": true
+              }
+            ],
+            "presets": [
+              {
+                "label": "today",
+                "value": {
+                  "dateRange": "today"
+                }
+              },
+              {
+                "label": "yesterday",
+                "value": {
+                  "dateRange": "yesterday"
+                }
+              },
+              {
+                "label": "Last 7 days",
+                "value": {
+                  "dateRange": "last7days"
+                }
+              },
+              {
+                "label": "Last 30 days",
+                "value": {
+                  "dateRange": "last30days",
+                  "timeWindow": "month"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "b2c-card",
+          "type": "Card",
+          "props": {
+            "title": "B2C outbound valid orders",
+            "layout": {
+              "type": "custom",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "kpi-cards": {
+                  "area": "top",
+                  "order": 0
+                },
+                "detailed-table": {
+                  "area": "bottom-second",
+                  "order": 2
+                },
+                "process-funnel": {
+                  "area": "middle-center",
+                  "order": -1
+                },
+                "brand-bar-chart": {
+                  "area": "middle-left",
+                  "order": 0
+                },
+                "hourly-line-chart": {
+                  "area": "bottom-second",
+                  "order": 1
+                },
+                "process-pie-chart": {
+                  "area": "middle-right",
+                  "order": 0
+                },
+                "b2c-platform-filter": {
+                  "area": "top",
+                  "order": -1
+                }
+              }
+            },
+            "shadow": "md",
+            "bordered": true,
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "b2c-platform-filter",
+              "type": "FilterPanel",
+              "props": {
+                "filters": [
+                  {
+                    "key": "platform",
+                    "type": "radio",
+                    "label": "",
+                    "inline": false,
+                    "options": [
+                      {
+                        "label": "all",
+                        "value": "all"
+                      },
+                      {
+                        "label": "HarborBright Mall",
+                        "value": "HarborBright Mall"
+                      },
+                      {
+                        "label": "RubyLane Outlet",
+                        "value": "RubyLane Outlet"
+                      },
+                      {
+                        "label": "LoopClip Social",
+                        "value": "LoopClip Social"
+                      },
+                      {
+                        "label": "SparkFind Deals",
+                        "value": "SparkFind Deals"
+                      },
+                      {
+                        "label": "StarDock Shop",
+                        "value": "StarDock Shop"
+                      },
+                      {
+                        "label": "other",
+                        "value": "other"
+                      }
+                    ],
+                    "defaultValue": "all"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "kpi-cards",
+              "type": "StatisticGroup",
+              "props": {
+                "grid": {
+                  "cols": 4
+                },
+                "items": [
+                  {
+                    "key": "total-orders",
+                    "icon": "Package",
+                    "title": "Total number of orders",
+                    "trend": {
+                      "type": "up",
+                      "value": 12.5,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "vs yesterday"
+                    },
+                    "value": 2847
+                  },
+                  {
+                    "key": "total-pieces",
+                    "icon": "Boxes",
+                    "title": "Total number of pieces",
+                    "trend": {
+                      "type": "up",
+                      "value": 8.3,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "vs yesterday"
+                    },
+                    "value": 15692
+                  },
+                  {
+                    "key": "completion-rate",
+                    "icon": "CheckCircle",
+                    "title": "Outbound completion rate",
+                    "trend": {
+                      "type": "up",
+                      "value": 2.1,
+                      "status": "success",
+                      "suffix": "%",
+                      "description": "vs yesterday"
+                    },
+                    "value": 87.5,
+                    "linkTo": "completion-gauge",
+                    "suffix": "%",
+                    "valueStyle": {
+                      "color": "#ef4444"
+                    }
+                  },
+                  {
+                    "key": "avg-time",
+                    "icon": "Clock",
+                    "title": "Average delivery time",
+                    "trend": {
+                      "type": "down",
+                      "value": 15,
+                      "status": "success",
+                      "suffix": "Hour",
+                      "description": "vs yesterday"
+                    },
+                    "value": 142,
+                    "suffix": "Hour"
+                  }
+                ]
+              },
+              "useMockData": true
+            },
+            {
+              "id": "brand-bar-chart",
+              "type": "Chart",
+              "props": {
+                "meta": {
+                  "value": {
+                    "alias": "Proportion",
+                    "formatter": "percentage"
+                  }
+                },
+                "label": {
+                  "position": "top",
+                  "formatter": "{value}%"
+                },
+                "title": "Proportion of platform orders",
+                "height": 280,
+                "xField": "platform",
+                "yField": "value",
+                "chartType": "column",
+                "showLegend": false,
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "value": 35,
+                  "platform": "HarborBright Mall",
+                  "percentage": "35.0%"
+                },
+                {
+                  "value": 20,
+                  "platform": "RubyLane Outlet",
+                  "percentage": "20.0%"
+                },
+                {
+                  "value": 18,
+                  "platform": "LoopClip Social",
+                  "percentage": "18.0%"
+                },
+                {
+                  "value": 12,
+                  "platform": "SparkFind Deals",
+                  "percentage": "12.0%"
+                },
+                {
+                  "value": 10,
+                  "platform": "StarDock Shop",
+                  "percentage": "10.0%"
+                },
+                {
+                  "value": 5,
+                  "platform": "other",
+                  "percentage": "5.0%"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "process-funnel",
+              "type": "EChartsChart",
+              "props": {
+                "title": "Order processing funnel",
+                "height": 320,
+                "chartType": "funnel",
+                "funnelGap": 2,
+                "nameField": "name",
+                "funnelSort": "descending",
+                "showLegend": false,
+                "valueField": "value",
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "name": "assigned",
+                  "value": 2847
+                },
+                {
+                  "name": "Picked",
+                  "value": 2401
+                },
+                {
+                  "name": "Reviewed",
+                  "value": 1678
+                },
+                {
+                  "name": "Out of stock",
+                  "value": 1423
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "process-pie-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "type": "spider",
+                  "formatter": "{name}\n{percentage}",
+                  "labelHeight": 28
+                },
+                "title": "Brand proportion",
+                "height": 280,
+                "xField": "name",
+                "yField": "value",
+                "chartType": "pie",
+                "angleField": "value",
+                "colorField": "name",
+                "showLegend": true,
+                "innerRadius": 0.4,
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "name": "Nimbus Outfitters",
+                  "value": 1139,
+                  "percentage": "40.0%"
+                },
+                {
+                  "name": "Blue Harbor Line",
+                  "value": 996,
+                  "percentage": "35.0%"
+                },
+                {
+                  "name": "Summit Trace Co",
+                  "value": 712,
+                  "percentage": "25.0%"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "hourly-line-chart",
+              "type": "Chart",
+              "props": {
+                "title": "Track trends hourly",
+                "height": 300,
+                "legend": {
+                  "position": "top"
+                },
+                "smooth": true,
+                "xField": "hour",
+                "yField": "value",
+                "tooltip": {
+                  "shared": true,
+                  "showCrosshairs": true
+                },
+                "showArea": false,
+                "chartType": "line",
+                "showPoint": true,
+                "seriesField": "category"
+              },
+              "mockData": [
+                {
+                  "hour": "17-0 o'clock",
+                  "value": 2847,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "0-9 o'clock",
+                  "value": 3156,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 2963,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 3248,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 3456,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 3621,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 3892,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 3756,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 3423,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 2987,
+                  "category": "Total orders"
+                },
+                {
+                  "hour": "17-0 o'clock",
+                  "value": 856,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "0-9 o'clock",
+                  "value": 1245,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 1532,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 1876,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 2134,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 2234,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 2456,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 2321,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 2145,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 1876,
+                  "category": "assigned"
+                },
+                {
+                  "hour": "17-0 o'clock",
+                  "value": 723,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "0-9 o'clock",
+                  "value": 1089,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 1324,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 1567,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 1789,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 1923,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 2134,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 2034,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 1876,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 1654,
+                  "category": "Picked"
+                },
+                {
+                  "hour": "17-0 o'clock",
+                  "value": 645,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "0-9 o'clock",
+                  "value": 956,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 1156,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 1345,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 1523,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 1678,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 1823,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 1765,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 1634,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 1456,
+                  "category": "Reviewed"
+                },
+                {
+                  "hour": "17-0 o'clock",
+                  "value": 623,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "0-9 o'clock",
+                  "value": 867,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 951,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 1234,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 1423,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 1567,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 1734,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 1689,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 1567,
+                  "category": "Out of stock"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 1432,
+                  "category": "Out of stock"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "detailed-table",
+              "type": "Table",
+              "props": {
+                "title": "Abnormal outbound order data",
+                "rowKey": "id",
+                "columns": [
+                  {
+                    "key": "salesChannel",
+                    "title": "sales channel",
+                    "width": 120,
+                    "dataIndex": "salesChannel",
+                    "searchable": true
+                  },
+                  {
+                    "key": "orderNo",
+                    "title": "Order number",
+                    "width": 150,
+                    "dataIndex": "orderNo",
+                    "searchable": true
+                  },
+                  {
+                    "key": "allocationTime",
+                    "title": "allocate time",
+                    "width": 160,
+                    "dataIndex": "allocationTime"
+                  },
+                  {
+                    "key": "pickingTime",
+                    "title": "Picking time",
+                    "width": 160,
+                    "dataIndex": "pickingTime"
+                  },
+                  {
+                    "key": "reviewTime",
+                    "title": "Review time",
+                    "width": 160,
+                    "dataIndex": "reviewTime"
+                  },
+                  {
+                    "key": "outboundTime",
+                    "title": "Delivery time",
+                    "width": 160,
+                    "dataIndex": "outboundTime"
+                  },
+                  {
+                    "key": "allocationOutboundDuration",
+                    "title": "Distribution-outbound time",
+                    "width": 150,
+                    "sorter": true,
+                    "dataIndex": "allocationOutboundDuration"
+                  }
+                ],
+                "pagination": {
+                  "pageSize": 20,
+                  "showQuickJumper": true,
+                  "showSizeChanger": true
+                },
+                "showSearch": true,
+                "showRefresh": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "id": "1",
+                  "orderNo": "ORD-2025-1001",
+                  "pickupTime": "2025-01-15 14:20:00",
+                  "reviewTime": "2025-01-15 11:45:00",
+                  "pickingTime": "2025-01-15 10:15:00",
+                  "outboundTime": "2025-01-15 16:30:00",
+                  "salesChannel": "HarborBright Mall",
+                  "allocationTime": "2025-01-15 08:30:00",
+                  "allocationOutboundDuration": "8.0 hours"
+                },
+                {
+                  "id": "2",
+                  "orderNo": "ORD-2025-1002",
+                  "pickupTime": "2025-01-15 15:45:00",
+                  "reviewTime": "2025-01-15 13:15:00",
+                  "pickingTime": "2025-01-15 11:30:00",
+                  "outboundTime": "2025-01-15 18:20:00",
+                  "salesChannel": "RubyLane Outlet",
+                  "allocationTime": "2025-01-15 09:00:00",
+                  "allocationOutboundDuration": "9.3 hours"
+                },
+                {
+                  "id": "3",
+                  "orderNo": "ORD-2025-1003",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "",
+                  "outboundTime": "",
+                  "salesChannel": "LoopClip Social",
+                  "allocationTime": "2025-01-15 10:15:00",
+                  "allocationOutboundDuration": "Timeout not completed"
+                },
+                {
+                  "id": "4",
+                  "orderNo": "ORD-2025-1004",
+                  "pickupTime": "2025-01-15 14:00:00",
+                  "reviewTime": "2025-01-15 12:30:00",
+                  "pickingTime": "2025-01-15 10:00:00",
+                  "outboundTime": "2025-01-15 17:15:00",
+                  "salesChannel": "SparkFind Deals",
+                  "allocationTime": "2025-01-15 08:45:00",
+                  "allocationOutboundDuration": "8.5 hours"
+                },
+                {
+                  "id": "5",
+                  "orderNo": "ORD-2025-1005",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "2025-01-15 11:00:00",
+                  "outboundTime": "",
+                  "salesChannel": "StarDock Shop",
+                  "allocationTime": "2025-01-15 09:30:00",
+                  "allocationOutboundDuration": "Abnormality in the review process"
+                },
+                {
+                  "id": "6",
+                  "orderNo": "ORD-2025-1006",
+                  "pickupTime": "2025-01-15 13:30:00",
+                  "reviewTime": "2025-01-15 11:20:00",
+                  "pickingTime": "2025-01-15 09:45:00",
+                  "outboundTime": "2025-01-15 15:45:00",
+                  "salesChannel": "HarborBright Mall",
+                  "allocationTime": "2025-01-15 07:20:00",
+                  "allocationOutboundDuration": "8.4 hours"
+                },
+                {
+                  "id": "7",
+                  "orderNo": "ORD-2025-1007",
+                  "pickupTime": "2025-01-15 16:15:00",
+                  "reviewTime": "2025-01-15 14:00:00",
+                  "pickingTime": "2025-01-15 12:30:00",
+                  "outboundTime": "2025-01-15 19:30:00",
+                  "salesChannel": "RubyLane Outlet",
+                  "allocationTime": "2025-01-15 10:00:00",
+                  "allocationOutboundDuration": "9.5 hours"
+                },
+                {
+                  "id": "8",
+                  "orderNo": "ORD-2025-1008",
+                  "pickupTime": "",
+                  "reviewTime": "2025-01-15 12:00:00",
+                  "pickingTime": "2025-01-15 10:30:00",
+                  "outboundTime": "",
+                  "salesChannel": "LoopClip Social",
+                  "allocationTime": "2025-01-15 08:00:00",
+                  "allocationOutboundDuration": "Abnormality in collection process"
+                },
+                {
+                  "id": "9",
+                  "orderNo": "ORD-2025-1009",
+                  "pickupTime": "2025-01-15 15:00:00",
+                  "reviewTime": "2025-01-15 13:20:00",
+                  "pickingTime": "2025-01-15 11:45:00",
+                  "outboundTime": "2025-01-15 17:30:00",
+                  "salesChannel": "SparkFind Deals",
+                  "allocationTime": "2025-01-15 09:15:00",
+                  "allocationOutboundDuration": "8.3 hours"
+                },
+                {
+                  "id": "10",
+                  "orderNo": "ORD-2025-1010",
+                  "pickupTime": "",
+                  "reviewTime": "",
+                  "pickingTime": "",
+                  "outboundTime": "",
+                  "salesChannel": "StarDock Shop",
+                  "allocationTime": "2025-01-15 07:45:00",
+                  "allocationOutboundDuration": "Abnormalities in the picking process"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        },
+        {
+          "id": "b2b-card",
+          "type": "Card",
+          "props": {
+            "title": "B2B outbound valid orders",
+            "layout": {
+              "type": "custom",
+              "preset": "dashboard-layout",
+              "componentPositions": {
+                "b2b-hourly-chart": {
+                  "area": "header",
+                  "order": 1
+                },
+                "b2b-brand-pie-chart": {
+                  "area": "bottom-right",
+                  "order": 0
+                },
+                "b2b-channel-bar-chart": {
+                  "area": "bottom-left",
+                  "order": 0
+                },
+                "b2b-fulfillment-table": {
+                  "area": "header",
+                  "order": 0
+                }
+              }
+            },
+            "shadow": "md",
+            "bordered": true,
+            "titleStyle": {
+              "fontSize": "24px",
+              "fontWeight": "600"
+            }
+          },
+          "children": [
+            {
+              "id": "b2b-fulfillment-table",
+              "type": "Table",
+              "props": {
+                "title": "B2B channel order fulfillment tracking form (last 7 days)",
+                "rowKey": "date",
+                "columns": [
+                  {
+                    "key": "date",
+                    "fixed": "left",
+                    "title": "date",
+                    "width": 120,
+                    "dataIndex": "date"
+                  },
+                  {
+                    "key": "totalOrdersItems",
+                    "title": "Total order/piece",
+                    "width": 150,
+                    "render": "text",
+                    "dataIndex": "totalOrdersItems"
+                  },
+                  {
+                    "key": "picked",
+                    "title": "Picked",
+                    "width": 150,
+                    "render": "text",
+                    "dataIndex": "picked"
+                  },
+                  {
+                    "key": "reviewed",
+                    "title": "Reviewed",
+                    "width": 150,
+                    "render": "text",
+                    "dataIndex": "reviewed"
+                  },
+                  {
+                    "key": "yesterdayRate",
+                    "title": "Yesterday’s achievement rate (0 points)",
+                    "width": 160,
+                    "render": "text",
+                    "dataIndex": "yesterdayRate"
+                  },
+                  {
+                    "key": "todayRate",
+                    "title": "Same-day achievement rate (real-time)",
+                    "width": 160,
+                    "render": "text",
+                    "dataIndex": "todayRate"
+                  }
+                ],
+                "pagination": false,
+                "showSearch": false,
+                "showRefresh": true,
+                "enableExport": true
+              },
+              "mockData": [
+                {
+                  "date": "2025-10-24",
+                  "picked": "130 orders/1308 pieces",
+                  "reviewed": "130 orders/1308 pieces",
+                  "todayRate": "100%",
+                  "yesterdayRate": "80%",
+                  "totalOrdersItems": "130 orders/1308 pieces"
+                },
+                {
+                  "date": "2025-10-25",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "90%",
+                  "yesterdayRate": "70%",
+                  "totalOrdersItems": "58 orders/289 pieces"
+                },
+                {
+                  "date": "2025-10-26",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "80%",
+                  "yesterdayRate": "60%",
+                  "totalOrdersItems": "53 orders/251 pieces"
+                },
+                {
+                  "date": "2025-10-27",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "-",
+                  "yesterdayRate": "-",
+                  "totalOrdersItems": "250 orders/5923 pieces"
+                },
+                {
+                  "date": "2025-10-28",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "-",
+                  "yesterdayRate": "-",
+                  "totalOrdersItems": "208 orders/3911 pieces"
+                },
+                {
+                  "date": "2025-10-29",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "-",
+                  "yesterdayRate": "-",
+                  "totalOrdersItems": "173 orders/3070 pieces"
+                },
+                {
+                  "date": "2025-10-30",
+                  "picked": "-",
+                  "reviewed": "-",
+                  "todayRate": "-",
+                  "yesterdayRate": "-",
+                  "totalOrdersItems": "171 orders/8468 pieces"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "b2b-hourly-chart",
+              "type": "Chart",
+              "props": {
+                "title": "Visualized line chart or list display of B2B order operations by hour",
+                "height": 400,
+                "legend": {
+                  "position": "top"
+                },
+                "smooth": true,
+                "xField": "hour",
+                "yField": "value",
+                "tooltip": {
+                  "shared": true,
+                  "showCrosshairs": true
+                },
+                "showArea": false,
+                "chartType": "line",
+                "showPoint": true,
+                "seriesField": "category"
+              },
+              "mockData": [
+                {
+                  "hour": "23-9 o'clock",
+                  "value": 4,
+                  "category": "Order"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 4,
+                  "category": "Order"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 13,
+                  "category": "Order"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 13,
+                  "category": "Order"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 13,
+                  "category": "Order"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 13,
+                  "category": "Order"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 15,
+                  "category": "Order"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 16,
+                  "category": "Order"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 18,
+                  "category": "Order"
+                },
+                {
+                  "hour": "18 o'clock",
+                  "value": 20,
+                  "category": "Order"
+                },
+                {
+                  "hour": "19 o'clock",
+                  "value": 22,
+                  "category": "Order"
+                },
+                {
+                  "hour": "20 o'clock",
+                  "value": 25,
+                  "category": "Order"
+                },
+                {
+                  "hour": "Blackjack",
+                  "value": 30,
+                  "category": "Order"
+                },
+                {
+                  "hour": "22 o'clock",
+                  "value": 45,
+                  "category": "Order"
+                },
+                {
+                  "hour": "23 o'clock",
+                  "value": 126,
+                  "category": "Order"
+                },
+                {
+                  "hour": "23-9 o'clock",
+                  "value": 4,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 4,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 6,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 7,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 7,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 13,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 13,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 15,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 16,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "18 o'clock",
+                  "value": 18,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "19 o'clock",
+                  "value": 20,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "20 o'clock",
+                  "value": 22,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "Blackjack",
+                  "value": 25,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "22 o'clock",
+                  "value": 28,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "23 o'clock",
+                  "value": 15,
+                  "category": "Picking"
+                },
+                {
+                  "hour": "23-9 o'clock",
+                  "value": 4,
+                  "category": "Review"
+                },
+                {
+                  "hour": "10 o'clock",
+                  "value": 4,
+                  "category": "Review"
+                },
+                {
+                  "hour": "11 o'clock",
+                  "value": 4,
+                  "category": "Review"
+                },
+                {
+                  "hour": "12 o'clock",
+                  "value": 6,
+                  "category": "Review"
+                },
+                {
+                  "hour": "13 o'clock",
+                  "value": 7,
+                  "category": "Review"
+                },
+                {
+                  "hour": "14 o'clock",
+                  "value": 7,
+                  "category": "Review"
+                },
+                {
+                  "hour": "15 o'clock",
+                  "value": 13,
+                  "category": "Review"
+                },
+                {
+                  "hour": "16 o'clock",
+                  "value": 15,
+                  "category": "Review"
+                },
+                {
+                  "hour": "17 o'clock",
+                  "value": 14,
+                  "category": "Review"
+                },
+                {
+                  "hour": "18 o'clock",
+                  "value": 16,
+                  "category": "Review"
+                },
+                {
+                  "hour": "19 o'clock",
+                  "value": 18,
+                  "category": "Review"
+                },
+                {
+                  "hour": "20 o'clock",
+                  "value": 20,
+                  "category": "Review"
+                },
+                {
+                  "hour": "Blackjack",
+                  "value": 23,
+                  "category": "Review"
+                },
+                {
+                  "hour": "22 o'clock",
+                  "value": 26,
+                  "category": "Review"
+                },
+                {
+                  "hour": "23 o'clock",
+                  "value": 15,
+                  "category": "Review"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "b2b-channel-bar-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "position": "top"
+                },
+                "title": "Order type analysis",
+                "height": 320,
+                "xField": "channel",
+                "yField": "value",
+                "chartType": "column",
+                "showLegend": false,
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "value": 120,
+                  "channel": "JIT",
+                  "percentage": "60.0%"
+                },
+                {
+                  "value": 80,
+                  "channel": "store",
+                  "percentage": "40.0%"
+                }
+              ],
+              "useMockData": true
+            },
+            {
+              "id": "b2b-brand-pie-chart",
+              "type": "Chart",
+              "props": {
+                "label": {
+                  "type": "spider",
+                  "formatter": "{name}\n{percentage}",
+                  "labelHeight": 28
+                },
+                "title": "Brand proportion",
+                "height": 320,
+                "xField": "name",
+                "yField": "value",
+                "chartType": "pie",
+                "angleField": "value",
+                "colorField": "name",
+                "showLegend": true,
+                "innerRadius": 0.4,
+                "showTooltip": true
+              },
+              "mockData": [
+                {
+                  "name": "Nimbus Outfitters",
+                  "value": 126,
+                  "percentage": "40.0%"
+                },
+                {
+                  "name": "Blue Harbor Line",
+                  "value": 30,
+                  "percentage": "35.0%"
+                },
+                {
+                  "name": "Summit Trace Co",
+                  "value": 15,
+                  "percentage": "25.0%"
+                }
+              ],
+              "useMockData": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "appConfig": {
+    "logo": "",
+    "name": "Logistics Analytics Dashboard",
+    "theme": {
+      "layout": "mix",
+      "navTheme": "dark",
+      "siderWidth": 256,
+      "headerHeight": 64,
+      "primaryColor": "#1890ff"
+    },
+    "version": "1.0.0",
+    "dataSource": {
+      "type": "mock",
+      "enableRealTime": true,
+      "refreshInterval": 30000
+    },
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "outbound",
+          "icon": "PackageOpen",
+          "title": "Outbound operation progress",
+          "linkedPage": "outbound-dashboard"
+        },
+        {
+          "key": "inbound",
+          "icon": "PackageCheck",
+          "title": "Warehouse operation progress",
+          "linkedPage": "inbound-dashboard"
+        },
+        {
+          "key": "pickup",
+          "icon": "Truck",
+          "title": "Collection timeliness signboard",
+          "linkedPage": "pickup-dashboard"
+        },
+        {
+          "key": "delivery",
+          "icon": "MapPin",
+          "title": "Signing timeliness board",
+          "linkedPage": "delivery-dashboard"
+        }
+      ]
+    },
+    "autoRefresh": true,
+    "defaultPage": "outbound-dashboard",
+    "description": "Real-time logistics operation progress and timeliness analysis dashboard",
+    "fullScreenMode": true,
+    "refreshInterval": 30000
+  }
+}

@@ -1,0 +1,2340 @@
+{
+  "header": {
+    "change_lang": "切换语言",
+    "setting": "设置",
+    "return_to_platform": "返回智慧协作平台",
+    "platform_name": "智慧协作平台",
+    "system_settings": "系统设置",
+    "profile": "个人中心",
+    "profile_menu": "个人资料",
+    "logout": "退出登录",
+    "menu": "菜单",
+    "settings": "设置",
+    "workbench": "工作台",
+    "edit_workbench": "编辑工作台",
+    "toggle_theme": "深色模式",
+    "lang_short_zh": "中"
+  },
+  "theme": {
+    "selector_title": "工作台主题",
+    "placeholder": "选择主题",
+    "workbench_basic_field": "工作台主题外观",
+    "workbench_basic_hint": "为该工作台内置的主题包之一；无编辑权限时仍可在浏览器本地切换。"
+  },
+  "execution": {
+    "history": {
+      "title": "执行历史",
+      "modal_title": "执行历史 - {{taskName}}",
+      "no_executions": "暂无执行记录",
+      "loading": "加载中...",
+      "load_error": "加载失败",
+      "status_column": "状态",
+      "start_time_column": "开始时间",
+      "end_time_column": "结束时间",
+      "duration_column": "持续时间",
+      "executor_column": "执行者",
+      "actions_column": "操作",
+      "view_details": "查看详情",
+      "get_failed": "获取执行历史失败"
+    },
+    "details": {
+      "title": "执行详情",
+      "basic_info": "基本信息",
+      "task_name": "任务名称",
+      "status_label": "状态",
+      "executor": "执行者",
+      "scheduled_time": "计划时间",
+      "start_time": "开始时间",
+      "end_time": "结束时间",
+      "duration": "执行时长",
+      "inputs": "输入参数",
+      "outputs": "输出结果",
+      "logs": "执行日志",
+      "error": "错误信息",
+      "no_outputs": "暂无输出",
+      "no_logs": "暂无日志",
+      "copy": "复制",
+      "copy_success": "复制成功",
+      "copy_failed": "复制失败",
+      "copy_failed_description": "无法复制到剪切板，请手动复制"
+    },
+    "status": {
+      "pending": "等待中",
+      "running": "执行中",
+      "completed": "已完成",
+      "failed": "失败",
+      "canceled": "已取消"
+    }
+  },
+  "workbench": {
+    "version_history": "版本历史",
+    "version_label": "版本",
+    "created_by": "创建者",
+    "restore": "恢复",
+    "no_versions": "暂无版本记录",
+    "version_restored": "版本恢复成功",
+    "load_config_failed": "加载工作台配置失败",
+    "update_success": "工作台更新成功"
+  },
+  "form": {
+    "validation_error": "验证失败",
+    "upload_required": "请上传{{field}}",
+    "field_required": "请填写{{field}}"
+  },
+  "task": {
+    "error": "错误",
+    "missing_id": "缺少任务ID",
+    "submit_success": "提交成功",
+    "submit_success_message": "任务已成功提交",
+    "submit_error": "提交失败",
+    "submit_error_message": "任务提交失败"
+  },
+  "file": {
+    "upload_success": "文件上传成功",
+    "upload_success_message": "文件已成功上传",
+    "upload_error": "文件上传失败",
+    "upload_error_message": "文件上传失败，请重试"
+  },
+  "componentEditor": {
+    "componentType": "组件类型",
+    "componentId": "组件ID",
+    "props": "属性",
+    "dataSource": "数据源",
+    "mockData": "模拟数据",
+    "resetData": "重置数据",
+    "mockDataPlaceholder": "输入 JSON 格式的模拟数据",
+    "jsonFormatError": "JSON 格式错误",
+    "mockDataNotSupported": "此组件不支持模拟数据配置",
+    "dataSourceNotSupported": "此组件不支持数据源配置"
+  },
+  "checking_permissions": "检查权限中...",
+  "access_restricted": "访问受限",
+  "back_to_console": "返回控制台",
+  "view_publish_history": "查看发布历史说明",
+  "publish_history_nav": "发布历史说明",
+  "insufficient_permissions": "权限不足",
+  "no_view_permission_message": "您没有查看此工作台的权限，请联系管理员授权。",
+  "loading": "加载中...",
+  "workbench_label": "工作台",
+  "demo_mode": "演示模式",
+  "demo_mode_message": "Demo 工作台不支持保存配置",
+  "workbench_id_not_found": "工作台ID未找到",
+  "failed_to_get_workbench_config": "获取工作台配置失败",
+  "failed_to_load_workbench_config": "加载工作台配置失败",
+  "exit_fullscreen": "退出全屏",
+  "fullscreen_header": {
+    "platform_name": "平台",
+    "no_refresh": "未开启自动刷新",
+    "refresh_every_seconds": "每 {{value}} 秒",
+    "refresh_every_minutes": "每 {{value}} 分钟"
+  },
+  "multi_page_renderer": {
+    "welcome_title": "欢迎使用工作台",
+    "welcome_description": "通过拖拽式可视化界面快速构建企业级应用，支持丰富的组件库、数据绑定、自定义样式和实时预览，让您轻松开发专业应用",
+    "feature_visual_drag": "可视化拖拽",
+    "feature_visual_drag_description": "表单、表格、图表、容器等30+组件类型，支持自定义样式和交互",
+    "feature_data_binding": "智能数据绑定",
+    "feature_data_binding_description": "无缝连接企业数据源，支持实时数据展示和业务逻辑配置",
+    "feature_component_communication": "组件间通信",
+    "feature_component_communication_description": "支持参数传递和事件触发，构建复杂的业务流程和用户交互",
+    "start_creating_title": "开始创建您的第一个页面",
+    "start_creating_description": "点击导航菜单打开页面，或通过编辑模式创建新的页面配置",
+    "select_page": "选择页面",
+    "or": "或",
+    "enable_edit_mode": "开启编辑模式",
+    "loading_page": "加载页面中...",
+    "page_load_failed": "页面加载失败",
+    "unknown_error": "未知错误",
+    "reload": "重新加载",
+    "start_building": "开始构建您的页面",
+    "start_building_description": "从右侧组件库拖拽组件到此处，开始构建您的页面",
+    "drag_component_hint": "拖拽组件到此处"
+  },
+  "layout_system": {
+    "presets": {
+      "all_vertical": {
+        "name": "全垂直",
+        "description": "所有组件垂直排列，适合单列展示"
+      },
+      "top1_bottom3": {
+        "name": "上1下3",
+        "description": "上面1个区域，下面水平3个区域"
+      },
+      "top1_bottom2": {
+        "name": "上1下2",
+        "description": "上面1个区域，下面水平2个区域"
+      },
+      "top1_bottom2_equal": {
+        "name": "上1下2左右等分",
+        "description": "上面1个区域，下面左右2个等分区域"
+      },
+      "left1_right2": {
+        "name": "左1右2",
+        "description": "左面1个区域，右面垂直2个区域"
+      },
+      "top1_bottom2_left_large": {
+        "name": "上1下2-左小右大",
+        "description": "上面1个区域，下面左侧小区域，右侧大区域"
+      },
+      "dashboard_layout": {
+        "name": "看板布局",
+        "description": "头部区域，顶部KPI卡片，中间3列图表，底部左右分列，最下方横跨全列"
+      },
+      "left3_right1": {
+        "name": "左大右小",
+        "description": "顶部和底部横跨全部，左侧占3/4宽度，右侧占1/4宽度"
+      }
+    },
+    "areas": {
+      "top": "顶部区域",
+      "bottom": "底部区域",
+      "bottom_left": "底部左侧区域",
+      "bottom_center": "底部中间区域",
+      "bottom_right": "底部右侧区域",
+      "bottom_second": "底部第二行区域",
+      "left": "左侧区域",
+      "left_top": "左侧顶部区域",
+      "left_center": "左侧中间区域",
+      "left_bottom": "左侧底部区域",
+      "right": "右侧区域",
+      "right_top": "右侧上方区域",
+      "right_bottom": "右侧下方区域",
+      "header": "头部区域",
+      "middle_left": "中间左侧区域",
+      "middle_center": "中间中间区域",
+      "middle_right": "中间右侧区域",
+      "middle": "中间区域"
+    },
+    "area_descriptions": {
+      "top": "页面顶部显示的组件",
+      "bottom_left": "页面底部左侧显示的组件",
+      "bottom_center": "页面底部中间显示的组件",
+      "bottom_right": "页面底部右侧显示的组件",
+      "bottom_second": "页面底部第二行显示的组件（横跨所有列）",
+      "left": "页面左侧显示的组件",
+      "right_top": "页面右侧上方显示的组件",
+      "right_bottom": "页面右侧下方显示的组件",
+      "header": "页面头部显示的组件（如筛选器）",
+      "middle_left": "页面中间左侧显示的组件",
+      "middle_center": "页面中间中间显示的组件",
+      "middle_right": "页面中间右侧显示的组件",
+      "middle": "页面中间显示的组件"
+    },
+    "unnamed_component": "未命名组件"
+  },
+  "common": {
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "edit": "编辑"
+  },
+  "workbench_sidebar": {
+    "expand_sidebar": "展开侧边栏",
+    "collapse_sidebar": "收起侧边栏",
+    "enter_edit_mode": "进入编辑模式",
+    "no_navigation_menu": "还没有导航菜单",
+    "create_navigation_menu_hint": "创建导航菜单来组织页面访问",
+    "enter_edit_mode_to_create_nav": "进入编辑模式来创建导航菜单",
+    "new_page": "新建页面",
+    "confirm_delete_page": "确认删除页面",
+    "delete_page_confirmation": "您确定要删除页面 \"{{pageTitle}}\" 吗？此操作不可撤销，页面中的所有组件和配置都将被永久删除。",
+    "confirm_delete": "确定删除",
+    "deleting_page": "删除中...",
+    "workbench_list": "工作台列表",
+    "edit_mode_unavailable": "编辑模式功能不可用，请刷新页面重试",
+    "cannot_toggle_edit_mode": "无法切换编辑模式，请刷新页面重试",
+    "cannot_delete_page": "无法删除页面",
+    "page_linked_to_nav": "该页面已关联到导航菜单项 \"{{title}}\"，请先从导航菜单中移除后再删除页面。",
+    "new_workbench": "新建工作台",
+    "new_workbench_description": "一个新的工作台",
+    "create_success": "工作台创建成功"
+  },
+  "property_editor": {
+    "yes": "是",
+    "no": "否",
+    "add_column": "添加列",
+    "add_item": "添加项",
+    "item_placeholder": "项 {{index}}",
+    "no_data_hint": "暂无数据，点击上方按钮添加",
+    "column_default_title": "列{{index}}"
+  },
+  "dynamic_property_editor": {
+    "loading": "加载中...",
+    "not_supported": "暂不支持 {{type}} 组件的属性编辑",
+    "contact_developer": "请联系开发者添加支持"
+  },
+  "parameter_config_panel": {
+    "title": "参数接收配置",
+    "parameter_mapping": "参数映射",
+    "add_parameter": "添加参数",
+    "mapping_description_title": "参数映射说明：",
+    "parameter_name": "参数名",
+    "parameter_name_desc": "接收的URL参数名称，如?id=123中的\"id\"",
+    "target_type": "目标类型",
+    "target_type_desc": "参数要映射到的目标位置",
+    "target_field": "目标字段",
+    "target_field_desc": "具体的字段名称",
+    "default_value": "默认值",
+    "default_value_desc": "参数为空时使用的默认值",
+    "required": "必填",
+    "required_desc": "是否必须提供此参数",
+    "parameter_name_placeholder": "参数名",
+    "target_type_prop": "属性",
+    "target_type_form_field": "表单字段",
+    "target_type_filter_condition": "筛选条件",
+    "target_type_data_source": "数据源",
+    "target_type_prop_desc": "将参数值赋给组件的属性，如标题、描述等",
+    "target_type_form_field_desc": "将参数值填入表单的指定字段中",
+    "target_type_filter_condition_desc": "作为数据筛选的条件值，用于过滤数据",
+    "target_type_data_source_desc": "直接作为组件的数据源或数据源标识",
+    "select_field": "选择字段",
+    "target_field_placeholder": "目标字段",
+    "default_value_placeholder": "默认值",
+    "data_source_filters": "数据源筛选条件",
+    "add_filter": "添加筛选",
+    "filter_description_title": "数据源筛选说明：",
+    "filter_field": "筛选字段",
+    "filter_field_desc": "要筛选的数据库字段名",
+    "operator": "算子",
+    "operator_desc": "筛选条件的比较方式",
+    "value_type": "值类型",
+    "value_type_desc": "筛选值的来源，选择\"参数\"将从上方配置的参数中选择",
+    "filter_value": "筛选值",
+    "filter_value_desc": "参数类型时从下拉选择，静态值时直接输入",
+    "multiple_filters_logic": "多个筛选条件将使用AND逻辑连接",
+    "filter_field_placeholder": "筛选字段",
+    "operator_equals": "等于",
+    "operator_like": "包含",
+    "operator_in": "在范围内",
+    "operator_gt": "大于",
+    "operator_lt": "小于",
+    "operator_not_equals": "不等于",
+    "value_type_parameter": "参数",
+    "value_type_static": "静态值",
+    "select_parameter": "选择参数",
+    "configure_parameter_mapping_first": "请先配置参数映射",
+    "static_value_placeholder": "静态值",
+    "operator_description": "算子说明",
+    "operator_equals_desc": "精确匹配字段值",
+    "operator_like_desc": "模糊匹配，包含指定文本",
+    "operator_in_desc": "值在指定范围内（逗号分隔）",
+    "operator_gt_desc": "字段值大于指定值",
+    "operator_lt_desc": "字段值小于指定值",
+    "operator_not_equals_desc": "字段值不等于指定值",
+    "value_type_description": "值类型说明",
+    "value_type_parameter_desc": "从已配置的参数中选择，动态获取参数值",
+    "value_type_static_desc": "使用固定的静态值"
+  },
+  "statistic_group": {
+    "statistic_items_config": "统计项配置",
+    "statistic_items_config_description": "配置统计卡片的每个统计项",
+    "add_statistic_item": "添加统计项",
+    "statistic_item_default_title": "统计项{{index}}",
+    "unique_identifier": "唯一标识",
+    "title": "标题",
+    "statistic_type": "统计类型",
+    "select_statistic_type": "选择统计类型",
+    "manual": "手动设置",
+    "count": "计数",
+    "sum": "求和",
+    "avg": "平均值",
+    "max": "最大值",
+    "min": "最小值",
+    "value": "数值",
+    "dataset_id": "数据集ID",
+    "select_dataset": "选择数据集",
+    "no_datasets": "暂无数据集",
+    "icon": "图标",
+    "select_icon": "选择图标",
+    "statistic_field": "统计字段",
+    "statistic_field_optional": "统计字段（可选）",
+    "select_field": "选择字段",
+    "select_field_optional": "选择字段（可选）",
+    "leave_empty_for_all": "留空表示全部记录",
+    "enter_field_name": "输入字段名",
+    "statistic_condition_optional": "统计条件（可选）",
+    "condition_example": "例如: created_at = {{前1天}}",
+    "filter_condition_count": "过滤条件，只统计符合条件的记录数",
+    "filter_condition_sum": "过滤条件，只对符合条件的记录求和",
+    "filter_condition_avg": "过滤条件，只对符合条件的记录求平均值",
+    "filter_condition_max": "过滤条件，只在符合条件的记录中找最大值",
+    "filter_condition_min": "过滤条件，只在符合条件的记录中找最小值",
+    "use_current_date": "使用 {{current_date}} 表示当前日期的时间范围（00:00:00 - 23:59:59）",
+    "use_previous_day": "使用 {{previous_day}} 表示前1天的时间范围（00:00:00 - 23:59:59）",
+    "use_previous_n_days": "使用 {{previous_n_days}} 表示前N天的时间范围，如 {{7_days}} 、{{30_days}}",
+    "condition_example_full": "示例: created_at = {{previous_day}} OR created_at = {{current_date}}",
+    "trend_config": "趋势配置",
+    "trend_description_default": "较上期",
+    "show": "显示",
+    "hide": "隐藏",
+    "trend_statistic_condition": "趋势统计条件",
+    "up_style": "上升样式",
+    "select_up_style": "选择上升样式",
+    "green": "绿色",
+    "yellow": "黄色",
+    "red": "红色",
+    "down_style": "下降样式",
+    "select_down_style": "选择下降样式",
+    "suffix": "后缀",
+    "select_suffix": "选择后缀",
+    "suffix_item": "条",
+    "suffix_yuan": "元",
+    "description": "描述",
+    "description_placeholder": "例如: 较上期, 较上月, 本周新增",
+    "no_statistic_items": "暂无统计项配置",
+    "click_to_add_description": "点击\"添加统计项\"按钮开始配置统计卡片",
+    "new_statistic_item": "新统计项",
+    "add_first_statistic_item": "添加第一个统计项",
+    "add_more_statistic_items": "添加更多统计项",
+    "card_style_config": "卡片样式配置",
+    "card_height": "卡片高度",
+    "height_example": "例如: 235px",
+    "set_card_height": "设置卡片高度，如: 235px",
+    "card_padding": "卡片内边距",
+    "padding_example": "例如: 24px",
+    "set_card_padding": "设置卡片内边距，如: 24px",
+    "title_style": "标题样式",
+    "font_size": "字体大小",
+    "font_size_example": "例如: 20px",
+    "font_size_example_large": "例如: 48px",
+    "font_weight": "字重",
+    "select_font_weight": "选择字重",
+    "normal": "正常",
+    "medium": "中等",
+    "semi_bold": "半粗",
+    "bold": "粗体",
+    "value_style": "数值样式",
+    "title_spacing": "标题间距",
+    "spacing_example": "例如: 32px",
+    "title_spacing_description": "标题和百分比之间的间距",
+    "mock_data_config": "Mock 数据配置",
+    "icons": {
+      "activity": "活动",
+      "users": "用户",
+      "bar_chart": "图表",
+      "dollar": "金额",
+      "clock": "时间",
+      "file": "文档",
+      "check_square": "任务",
+      "message": "消息",
+      "star": "星级",
+      "heart": "喜欢"
+    }
+  },
+  "component_communication_wizard": {
+    "title": "组件间通信设置向导",
+    "description": "快速配置组件之间的参数传递和事件通信",
+    "select_sender_label": "1. 选择发送组件（触发事件的组件）",
+    "select_receiver_label": "2. 选择接收组件（响应事件的组件）",
+    "no_sender_components": "当前页面没有可用的TaskInput组件",
+    "no_receiver_components": "当前页面没有可用的接收组件",
+    "select_communication_type": "选择通信类型",
+    "communication_types": {
+      "task_table_refresh": {
+        "title": "TaskInput → Table 自动刷新",
+        "description": "任务执行成功后自动刷新表格数据"
+      },
+      "task_status_display": {
+        "title": "TaskInput → 状态显示",
+        "description": "任务执行后更新状态显示组件"
+      },
+      "custom": {
+        "title": "自定义通信",
+        "description": "手动配置参数传递"
+      }
+    },
+    "sender_params": "发送参数：",
+    "config_preview": "配置预览",
+    "sender_component": "发送组件",
+    "receiver_component": "接收组件",
+    "enable_communication": "启用组件间通信",
+    "send_param": "发送参数:",
+    "listen_param": "监听参数:",
+    "auto_refresh_on_change": "参数变化时自动刷新数据",
+    "debounce_time": "防抖时间: 300ms",
+    "expected_effect": "预期效果",
+    "effect_steps": {
+      "task_table_refresh": {
+        "step1": "1. 用户在TaskInput组件中执行任务",
+        "step2": "2. 任务执行成功后，自动发送刷新信号",
+        "step3": "3. Table组件接收到信号，自动刷新数据",
+        "step4": "4. 用户无需手动刷新，即可看到最新数据"
+      },
+      "task_status_display": {
+        "step1": "1. 用户在TaskInput组件中执行任务",
+        "step2": "2. 任务完成后，发送执行结果信息",
+        "step3": "3. 状态显示组件接收到结果，更新显示内容",
+        "step4": "4. 用户可以看到任务的执行状态和结果"
+      }
+    },
+    "config_complete": "配置完成！",
+    "config_complete_message": "组件间通信已成功配置，现在{{sender}}和{{receiver}}可以进行通信了。",
+    "tip": "💡 提示：您可以在各组件的配置面板中进一步调整通信参数",
+    "steps": {
+      "select": "选择组件",
+      "configure": "配置通信",
+      "preview": "预览配置",
+      "complete": "完成"
+    },
+    "next": "下一步",
+    "previous": "上一步",
+    "apply_config": "应用配置",
+    "complete": "完成"
+  },
+  "component_types": {
+    "custom_content": {
+      "title": "自定义内容",
+      "description": "支持组件级作用域样式的安全 HTML 内容；不允许脚本与内联事件",
+      "prop_types": {
+        "html": {
+          "label": "HTML 内容",
+          "description": "仅支持语义化 HTML。外观请使用自定义样式；脚本、表单和内联事件会被移除。"
+        },
+        "empty_text": {
+          "label": "空状态文本",
+          "default_value": "自定义内容"
+        },
+        "aria_label": {
+          "label": "无障碍标签"
+        }
+      }
+    },
+    "workflow_component": {
+      "title": "AI 工作流",
+      "description": "包含上传、智能体/任务处理、人工复核和结果展示的流程组件",
+      "prop_types": {
+        "agent_id": {
+          "label": "智能体 ID",
+          "description": "必须来自平台资源发现；存在任务管道时优先使用任务。"
+        },
+        "parse_task_id": { "label": "解析任务 ID" },
+        "save_task_id": { "label": "保存任务 ID" },
+        "file_input": { "label": "文件输入映射" },
+        "save_input": { "label": "保存输入映射" },
+        "steps": { "label": "流程步骤" },
+        "use_mock_data": { "label": "使用模拟数据" },
+        "mock_data": { "label": "模拟数据" }
+      }
+    },
+    "form": {
+      "title": "表单",
+      "description": "用于数据输入和编辑，支持多种字段类型和验证",
+      "prop_types": {
+        "title": {
+          "label": "表单标题",
+          "default_value": "表单"
+        },
+        "description": {
+          "label": "表单描述"
+        },
+        "mode": {
+          "label": "表单模式",
+          "options": {
+            "edit": "编辑模式",
+            "display": "显示模式",
+            "mixed": "混合模式"
+          }
+        },
+        "layout": {
+          "label": "布局方式",
+          "options": {
+            "vertical": "垂直布局",
+            "horizontal": "水平布局",
+            "grid": "网格布局"
+          }
+        },
+        "fields": {
+          "label": "表单字段",
+          "item_config": {
+            "label": "字段配置",
+            "children": {
+              "name": {
+                "label": "字段名"
+              },
+              "label": {
+                "label": "字段标签"
+              },
+              "type": {
+                "label": "字段类型",
+                "options": {
+                  "text": "文本",
+                  "number": "数字",
+                  "textarea": "多行文本",
+                  "select": "下拉选择",
+                  "checkbox": "复选框",
+                  "radio": "单选框",
+                  "switch": "开关",
+                  "date": "日期"
+                }
+              },
+              "mode": {
+                "label": "字段模式",
+                "options": {
+                  "editable": "可编辑",
+                  "readonly": "只读",
+                  "hidden": "隐藏"
+                }
+              },
+              "required": {
+                "label": "必填"
+              },
+              "placeholder": {
+                "label": "占位符"
+              }
+            }
+          }
+        },
+        "actions": {
+          "label": "操作按钮",
+          "item_config": {
+            "label": "操作按钮配置",
+            "children": {
+              "id": {
+                "label": "按钮ID"
+              },
+              "label": {
+                "label": "按钮标签"
+              },
+              "type": {
+                "label": "操作类型",
+                "options": {
+                  "navigate": "导航",
+                  "api": "API调用",
+                  "confirm": "确认操作",
+                  "update_dataset": "更新数据集",
+                  "insert_dataset": "插入数据集",
+                  "delete_dataset": "删除数据集",
+                  "download": "文件下载",
+                  "task_call": "任务执行",
+                  "task_execute": "任务执行"
+                }
+              },
+              "icon": {
+                "label": "图标"
+              },
+              "variant": {
+                "label": "按钮样式",
+                "options": {
+                  "default": "默认",
+                  "destructive": "危险",
+                  "outline": "边框",
+                  "secondary": "次要"
+                }
+              },
+              "config": {
+                "label": "操作配置",
+                "children": {
+                  "target_page": {
+                    "label": "目标页面"
+                  },
+                  "endpoint": {
+                    "label": "API接口"
+                  },
+                  "method": {
+                    "label": "请求方法"
+                  },
+                  "success_message": {
+                    "label": "成功消息",
+                    "default_value": "操作成功"
+                  },
+                  "error_message": {
+                    "label": "失败消息",
+                    "default_value": "操作失败"
+                  },
+                  "confirm_message": {
+                    "label": "确认消息",
+                    "default_value": "确认执行此操作？"
+                  },
+                  "require_validation": {
+                    "label": "验证表单"
+                  },
+                  "task_call": {
+                    "label": "任务调用配置",
+                    "children": {
+                      "task_id": {
+                        "label": "任务ID"
+                      },
+                      "require_confirmation": {
+                        "label": "需要确认"
+                      },
+                      "confirm_message": {
+                        "label": "确认消息",
+                        "default_value": "确认执行此任务？"
+                      },
+                      "success_message": {
+                        "label": "成功消息",
+                        "default_value": "任务执行成功"
+                      },
+                      "error_message": {
+                        "label": "失败消息",
+                        "default_value": "任务执行失败"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "display_config": {
+          "label": "显示配置",
+          "children": {
+            "show_title": {
+              "label": "显示标题"
+            },
+            "group_fields": {
+              "label": "字段分组"
+            },
+            "card_layout": {
+              "label": "卡片布局"
+            },
+            "columns_per_row": {
+              "label": "每行列数"
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "数据集",
+          "children": {
+            "dataset_id": {
+              "label": "数据集ID"
+            },
+            "params": {
+              "label": "查询参数",
+              "children": {
+                "filter": {
+                  "label": "过滤条件",
+                  "description": "例如: id = \"123\""
+                },
+                "limit": {
+                  "label": "限制条数"
+                },
+                "offset": {
+                  "label": "偏移量"
+                },
+                "output_fields": {
+                  "label": "输出字段"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "表单的模拟数据，用于预览和测试",
+        "default_value": {
+          "name": "张三",
+          "bio": "这是一个示例描述"
+        }
+      },
+      "create_component": {
+        "title": {
+          "label": "表单标题",
+          "default_value": "表单"
+        },
+        "mode": {
+          "label": "表单模式"
+        },
+        "layout": {
+          "label": "布局方式"
+        },
+        "fields": {
+          "label": "表单字段",
+          "default_value": {
+            "name": {
+              "label": "姓名",
+              "placeholder": "请输入姓名"
+            },
+            "email": {
+              "label": "邮箱",
+              "placeholder": "请输入邮箱地址"
+            }
+          }
+        },
+        "actions": {
+          "label": "操作按钮"
+        }
+      }
+    },
+    "table": {
+      "title": "表格",
+      "description": "用于展示结构化数据，支持排序、筛选、搜索等功能",
+      "prop_types": {
+        "title": {
+          "label": "标题",
+          "default_value": "表格"
+        },
+        "pagination": {
+          "label": "分页配置",
+          "children": {
+            "page_size": {
+              "label": "每页条数"
+            },
+            "current": {
+              "label": "当前页码"
+            },
+            "show_size_changer": {
+              "label": "显示条数选择器"
+            },
+            "show_quick_jumper": {
+              "label": "显示快速跳转"
+            },
+            "show_total": {
+              "label": "显示总数"
+            }
+          }
+        },
+        "row_key": {
+          "label": "行主键"
+        },
+        "show_search": {
+          "label": "显示搜索"
+        },
+        "show_refresh": {
+          "label": "显示刷新"
+        },
+        "show_settings": {
+          "label": "显示设置"
+        },
+        "search_placeholder": {
+          "label": "搜索框占位符",
+          "default_value": "搜索..."
+        },
+        "show_toolbar": {
+          "label": "显示工具栏"
+        },
+        "searchable": {
+          "label": "可搜索"
+        },
+        "filterable": {
+          "label": "可筛选"
+        },
+        "sortable": {
+          "label": "可排序"
+        },
+        "addable": {
+          "label": "可添加"
+        },
+        "editable": {
+          "label": "可编辑"
+        },
+        "deletable": {
+          "label": "可删除"
+        },
+        "enable_export": {
+          "label": "可导出"
+        },
+        "columns": {
+          "label": "列配置",
+          "children": {
+            "title": {
+              "label": "列标题"
+            },
+            "data_index": {
+              "label": "数据字段"
+            },
+            "key": {
+              "label": "唯一标识"
+            },
+            "width": {
+              "label": "列宽"
+            },
+            "fixed": {
+              "label": "固定位置",
+              "options": {
+                "left": "左侧",
+                "right": "右侧"
+              }
+            },
+            "align": {
+              "label": "对齐方式",
+              "options": {
+                "left": "左对齐",
+                "center": "居中",
+                "right": "右对齐"
+              }
+            },
+            "ellipsis": {
+              "label": "超出省略"
+            },
+            "filter_search": {
+              "label": "筛选可搜索"
+            },
+            "searchable": {
+              "label": "可搜索"
+            },
+            "editable": {
+              "label": "可编辑"
+            },
+            "sorter": {
+              "label": "可排序"
+            },
+            "filterable": {
+              "label": "可筛选"
+            },
+            "hidden": {
+              "label": "隐藏"
+            },
+            "filter_options": {
+              "label": "筛选选项",
+              "children": {
+                "text": {
+                  "label": "显示文本"
+                },
+                "value": {
+                  "label": "选项值"
+                }
+              }
+            },
+            "render": {
+              "label": "渲染配置",
+              "children": {
+                "type": {
+                  "label": "渲染类型",
+                  "options": {
+                    "tag": "标签",
+                    "button": "按钮",
+                    "link": "链接"
+                  }
+                },
+                "props": {
+                  "label": "属性配置",
+                  "children": {
+                    "color": {
+                      "label": "颜色映射",
+                      "children": {
+                        "color_value": {
+                          "label": "颜色值"
+                        }
+                      }
+                    }
+                  }
+                },
+                "text": {
+                  "label": "文本映射",
+                  "children": {
+                    "display_text": {
+                      "label": "显示文本"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "use_mock_data": {
+          "label": "使用模拟数据",
+          "description": "启用时显示示例数据，用于开发和测试"
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "数据集",
+          "children": {
+            "dataset_id": {
+              "label": "数据集ID"
+            },
+            "params": {
+              "label": "查询参数",
+              "children": {
+                "filter": {
+                  "label": "过滤条件",
+                  "description": "例如: status = \"active\""
+                },
+                "limit": {
+                  "label": "每页条数"
+                },
+                "offset": {
+                  "label": "偏移量"
+                },
+                "output_fields": {
+                  "label": "输出字段"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，包含表格数据和列配置",
+        "default_value": {
+          "data_source": {
+            "name_1": "张三",
+            "position_1": "前端开发",
+            "education_1": "本科",
+            "name_2": "李四",
+            "position_2": "后端开发",
+            "education_2": "硕士",
+            "name_3": "王五",
+            "position_3": "全栈开发",
+            "education_3": "本科"
+          },
+          "columns": {
+            "name": {
+              "title": "姓名"
+            },
+            "position": {
+              "title": "职位"
+            },
+            "experience": {
+              "title": "工作经验"
+            },
+            "education": {
+              "title": "学历",
+              "filter_options": {
+                "bachelor": "本科",
+                "master": "硕士"
+              }
+            },
+            "skills": {
+              "title": "技能"
+            },
+            "status": {
+              "title": "状态",
+              "render": {
+                "text": {
+                  "active": "活跃",
+                  "interviewing": "面试中",
+                  "offered": "已发offer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "editable_table": {
+      "title": "可编辑表格",
+      "description": "支持行内编辑的数据表格，可进行新增、编辑、删除等操作"
+    },
+    "analytics_table": {
+      "title_component": "分析表",
+      "description": "配置驱动的分析表:对比单元格、合计行、快筛 Pill 与前端派生字段",
+      "prop_types": {
+        "dim_label": {
+          "label": "维度列表头"
+        },
+        "columns": {
+          "label": "列配置"
+        },
+        "derived_fields": {
+          "label": "派生字段"
+        },
+        "toolbar": {
+          "label": "工具栏(搜索 / 快筛)"
+        },
+        "max_height": {
+          "label": "最大高度"
+        },
+        "show_index": {
+          "label": "序号列"
+        },
+        "zebra": {
+          "label": "斑马纹"
+        },
+        "bare": {
+          "label": "去卡片壳"
+        },
+        "summary_label": {
+          "label": "合计行标签"
+        },
+        "summary_ds": {
+          "label": "合计数据源"
+        },
+        "row_markers": {
+          "label": "行色点"
+        },
+        "highlight_row": {
+          "label": "高亮行"
+        },
+        "header_class": {
+          "label": "表头行样式"
+        },
+        "index_header_class": {
+          "label": "序号列表头样式"
+        },
+        "zebra_class": {
+          "label": "斑马纹行样式"
+        }
+      },
+      "mock_data": {
+        "label": "示例数据",
+        "description": "用于预览的示例行",
+        "retail": "渠道 · 正价",
+        "outlet": "渠道 · 奥莱",
+        "ecommerce": "渠道 · 电商"
+      }
+    },
+    "chart": {
+      "title": "图表",
+      "description": "用于展示数据可视化，支持多种图表类型",
+      "prop_types": {
+        "chart_type": {
+          "label": "图表类型",
+          "options": {
+            "line": "折线图",
+            "bar": "柱状图",
+            "pie": "饼图",
+            "scatter": "散点图"
+          }
+        },
+        "title": {
+          "label": "标题",
+          "default_value": "图表"
+        },
+        "height": {
+          "label": "组件高度",
+          "description": "整个图表卡片的最小高度（含标题与工具栏）"
+        },
+        "chart_height": {
+          "label": "图表高度",
+          "description": "图表绘图区高度；未填写时与组件高度数值一致，用于兼容旧页面"
+        },
+        "x_field": {
+          "label": "X轴字段"
+        },
+        "y_field": {
+          "label": "Y轴字段"
+        },
+        "meta": {
+          "label": "字段元信息",
+          "default_value": {
+            "date": {
+              "alias": "日期"
+            },
+            "value": {
+              "alias": "数值"
+            }
+          }
+        },
+        "additional_stats": {
+          "label": "附加统计标签",
+          "description": "折线图统计项配置，支持单位与占比"
+        },
+        "additional_stats_label_font_size": {
+          "label": "附加统计字体大小"
+        },
+        "additional_stats_font_family": {
+          "label": "附加统计标签字体",
+          "options": {
+            "sans_serif": "通用无衬线（sans-serif）"
+          }
+        },
+        "additional_stats_font_weight": {
+          "label": "附加统计字重"
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "数据集",
+          "children": {
+            "dataset_id": {
+              "label": "数据集ID"
+            },
+            "params": {
+              "label": "查询参数",
+              "children": {
+                "filter": {
+                  "label": "过滤条件",
+                  "description": "例如: date >= \"2024-01-01\""
+                },
+                "limit": {
+                  "label": "数据条数"
+                },
+                "output_fields": {
+                  "label": "输出字段"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象数组"
+      }
+    },
+    "service_desk_reporter": {
+      "prop_types": {
+        "title": {
+          "default_value": "报告问题"
+        },
+        "description": {
+          "default_value": "向支持团队报告数据看板或门店 IT 问题。"
+        },
+        "submit_button_text": {
+          "default_value": "提交工单"
+        }
+      }
+    },
+    "statistic_group": {
+      "title": "统计卡片",
+      "description": "用于展示关键指标数据",
+      "prop_types": {
+        "grid": {
+          "label": "网格配置",
+          "children": {
+            "cols": {
+              "label": "列数"
+            }
+          }
+        },
+        "items": {
+          "label": "统计项",
+          "default_value": {
+            "total_users": {
+              "title": "总用户数",
+              "trend": {
+                "description": "较上月增长8.5%"
+              }
+            },
+            "revenue": {
+              "title": "总收入",
+              "trend": {
+                "description": "较上月增长12.3%"
+              }
+            },
+            "orders": {
+              "title": "订单数量",
+              "suffix": " 笔",
+              "trend": {
+                "description": "较上月下降2.1%"
+              }
+            },
+            "conversion_rate": {
+              "title": "转化率",
+              "trend": {
+                "description": "较上月提升5.7%"
+              }
+            }
+          },
+          "children": {
+            "key": {
+              "label": "唯一标识"
+            },
+            "title": {
+              "label": "标题"
+            },
+            "value": {
+              "label": "数值"
+            },
+            "precision": {
+              "label": "小数位数"
+            },
+            "prefix": {
+              "label": "前缀"
+            },
+            "suffix": {
+              "label": "后缀"
+            },
+            "icon": {
+              "label": "图标"
+            },
+            "icon_size": {
+              "label": "图标大小"
+            },
+            "color": {
+              "label": "图标颜色（兼容）",
+              "options": {
+                "blue": "蓝色",
+                "green": "绿色",
+                "orange": "橙色",
+                "purple": "紫色",
+                "red": "红色",
+                "gray": "灰色"
+              }
+            },
+            "icon_color": {
+              "label": "图标颜色"
+            },
+            "value_color": {
+              "label": "数值颜色"
+            },
+            "statistic_type": {
+              "label": "统计类型",
+              "options": {
+                "manual": "手动设置",
+                "count": "计数",
+                "sum": "求和",
+                "avg": "平均值",
+                "max": "最大值",
+                "min": "最小值"
+              }
+            },
+            "dataset_id": {
+              "label": "数据集ID"
+            },
+            "statistic_field": {
+              "label": "统计字段"
+            },
+            "statistic_condition": {
+              "label": "统计条件"
+            },
+            "trend": {
+              "label": "趋势",
+              "children": {
+                "enabled": {
+                  "label": "启用趋势"
+                },
+                "value": {
+                  "label": "变化值"
+                },
+                "type": {
+                  "label": "变化类型",
+                  "options": {
+                    "up": "上升",
+                    "down": "下降"
+                  }
+                },
+                "suffix": {
+                  "label": "后缀"
+                },
+                "status": {
+                  "label": "状态",
+                  "options": {
+                    "success": "成功",
+                    "warning": "警告",
+                    "error": "错误"
+                  }
+                },
+                "description": {
+                  "label": "描述"
+                },
+                "trend_condition": {
+                  "label": "趋势统计条件"
+                },
+                "up_style": {
+                  "label": "上升样式",
+                  "options": {
+                    "success": "成功",
+                    "warning": "警告",
+                    "error": "错误"
+                  }
+                },
+                "down_style": {
+                  "label": "下降样式",
+                  "options": {
+                    "success": "成功",
+                    "warning": "警告",
+                    "error": "错误"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "data_grid_card": {
+      "title": "数据卡片",
+      "description": "用于展示数据列表，支持搜索和操作",
+      "prop_types": {
+        "title": {
+          "label": "标题",
+          "default_value": "数据卡片"
+        },
+        "pagination": {
+          "label": "分页"
+        },
+        "row_key": {
+          "label": "行主键"
+        },
+        "columns": {
+          "label": "列配置",
+          "children": {
+            "title": {
+              "label": "列标题"
+            },
+            "data_index": {
+              "label": "数据字段"
+            },
+            "key": {
+              "label": "唯一标识"
+            },
+            "primary": {
+              "label": "主要列"
+            },
+            "secondary": {
+              "label": "次要列"
+            },
+            "searchable": {
+              "label": "可搜索"
+            },
+            "render": {
+              "label": "渲染配置",
+              "children": {
+                "type": {
+                  "label": "渲染类型",
+                  "options": {
+                    "tag": "标签",
+                    "progress": "进度条"
+                  }
+                },
+                "props": {
+                  "label": "属性配置",
+                  "children": {
+                    "color": {
+                      "label": "颜色映射",
+                      "children": {
+                        "color_value": {
+                          "label": "颜色值"
+                        }
+                      }
+                    },
+                    "status": {
+                      "label": "状态表达式"
+                    },
+                    "show_info": {
+                      "label": "显示信息"
+                    },
+                    "size": {
+                      "label": "尺寸",
+                      "options": {
+                        "small": "小",
+                        "default": "中",
+                        "large": "大"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "数据集",
+          "children": {
+            "dataset_id": {
+              "label": "数据集ID"
+            },
+            "params": {
+              "label": "查询参数",
+              "children": {
+                "filter": {
+                  "label": "过滤条件",
+                  "description": "例如: status = \"active\""
+                },
+                "limit": {
+                  "label": "每页条数"
+                },
+                "offset": {
+                  "label": "偏移量"
+                },
+                "output_fields": {
+                  "label": "输出字段"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象数组",
+        "default_value": {
+          "card_1": {
+            "title": "卡片1",
+            "content": "内容1"
+          },
+          "card_2": {
+            "title": "卡片2",
+            "content": "内容2"
+          }
+        }
+      }
+    },
+    "container": {
+      "title": "容器",
+      "description": "用于组织其他组件，支持网格和弹性布局",
+      "prop_types": {
+        "layout": {
+          "label": "布局类型",
+          "options": {
+            "grid": "网格布局",
+            "flex": "弹性布局"
+          }
+        },
+        "cols": {
+          "label": "列配置",
+          "children": {
+            "col_width": {
+              "label": "列宽"
+            }
+          }
+        },
+        "gutter": {
+          "label": "间距"
+        },
+        "children": {
+          "label": "子组件"
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象"
+      }
+    },
+    "tabs": {
+      "title": "标签页",
+      "description": "用于组织内容，支持多个标签页切换",
+      "prop_types": {
+        "default_active_key": {
+          "label": "默认激活的标签"
+        },
+        "type": {
+          "label": "标签页类型",
+          "options": {
+            "card": "卡片式",
+            "line": "线条式"
+          }
+        },
+        "size": {
+          "label": "尺寸",
+          "options": {
+            "large": "大",
+            "middle": "中",
+            "small": "小"
+          }
+        },
+        "tab_bar_to_content_gap": {
+          "label": "TabBar 到 Tab 内容间距",
+          "description": "标签栏与 Tab 内容之间的垂直间距，如 8 或 16px"
+        },
+        "children": {
+          "label": "标签页内容",
+          "children": {
+            "key": {
+              "label": "唯一标识"
+            },
+            "label": {
+              "label": "标签文本"
+            },
+            "component": {
+              "label": "组件配置",
+              "children": {
+                "type": {
+                  "label": "组件类型"
+                },
+                "id": {
+                  "label": "组件ID"
+                },
+                "props": {
+                  "label": "组件属性"
+                },
+                "data_source": {
+                  "label": "数据源配置"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象",
+        "default_value": {
+          "tab_1": {
+            "label": "标签1"
+          },
+          "tab_2": {
+            "label": "标签2"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title": "文字",
+      "description": "用于展示文本内容，支持多种样式",
+      "prop_types": {
+        "type": {
+          "label": "类型",
+          "options": {
+            "paragraph": "段落",
+            "title": "标题",
+            "text": "文本",
+            "blockquote": "引用"
+          }
+        },
+        "content": {
+          "label": "内容",
+          "default_value": "文本内容"
+        },
+        "content_segments": {
+          "label": "内容分段",
+          "description": "可选：行内片段，支持颜色与参数绑定；非空时运行时将覆盖上方纯文本内容。"
+        },
+        "level": {
+          "label": "标题级别"
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象",
+        "default_value": {
+          "content": "这是一段示例文本",
+          "segment_static": "合计："
+        }
+      }
+    },
+    "card": {
+      "title": "卡片",
+      "description": "用于展示内容块，支持标题和内容",
+      "prop_types": {
+        "title": {
+          "label": "标题",
+          "default_value": "卡片标题"
+        },
+        "content": {
+          "label": "内容",
+          "default_value": "卡片内容"
+        },
+        "title_to_content_gap": {
+          "label": "标题到内容间距",
+          "description": "卡片标题与内容之间的垂直间距，如 8 或 12px"
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象",
+        "default_value": {
+          "title": "卡片标题",
+          "content": "卡片内容"
+        }
+      }
+    },
+    "list": {
+      "title": "列表",
+      "description": "展示列表数据，支持排行、任务进度等槽位化看板布局",
+      "prop_types": {
+        "title": {
+          "label": "标题",
+          "default_value": "列表"
+        },
+        "items": {
+          "label": "列表项"
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据，格式为对象",
+        "default_value": {
+          "title": "列表标题",
+          "items": {
+            "item_1": "列表项1",
+            "item_2": "列表项2"
+          }
+        }
+      }
+    },
+    "task_input": {
+      "title": "任务输入",
+      "description": "用于执行任务的输入表单组件",
+      "prop_types": {
+        "task_id": {
+          "label": "任务ID",
+          "description": "要执行的任务的唯一标识符"
+        },
+        "title": {
+          "label": "组件标题",
+          "default_value": "任务执行",
+          "description": "显示在组件顶部的标题"
+        },
+        "description": {
+          "label": "组件描述",
+          "default_value": "请填写任务参数并执行",
+          "description": "显示在组件标题下方的描述文字"
+        },
+        "show_title": {
+          "label": "显示标题",
+          "description": "是否显示组件标题"
+        },
+        "show_description": {
+          "label": "显示描述",
+          "description": "是否显示组件描述"
+        },
+        "auto_submit": {
+          "label": "自动提交",
+          "description": "当所有必填参数填写完成后自动提交任务"
+        },
+        "submit_button_text": {
+          "label": "提交按钮文字",
+          "default_value": "执行任务",
+          "description": "提交按钮显示的文字"
+        },
+        "show_optional_inputs": {
+          "label": "默认显示可选参数",
+          "description": "是否默认展开显示可选参数"
+        },
+        "compact": {
+          "label": "紧凑模式",
+          "description": "使用紧凑的布局样式"
+        },
+        "use_mock_data": {
+          "label": "启用 Mock 模式",
+          "description": "启用后将使用模拟数据而不是真实的后端服务"
+        },
+        "mock_file_data": {
+          "label": "Mock 文件数据",
+          "description": "配置模拟文件数据，用于测试文件上传功能"
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟数据",
+        "default_value": {
+          "title": "示例任务",
+          "description": "这是一个示例任务输入组件",
+          "submit_button_text": "执行任务",
+          "mock_file_data": {
+            "files": {
+              "sample_document": {
+                "content": "这是一个模拟的PDF文档内容。\n\n文档包含以下信息：\n- 项目概述\n- 技术规格\n- 实施计划\n- 风险评估"
+              }
+            }
+          }
+        }
+      }
+    },
+    "tree": {
+      "title": "树形结构",
+      "description": "用于展示具有层级关系的数据，支持展开/折叠、搜索、增删改查操作",
+      "prop_types": {
+        "title": {
+          "label": "组件标题",
+          "default_value": "树形结构",
+          "description": "显示在组件顶部的标题"
+        },
+        "key": {
+          "label": "唯一标识字段",
+          "description": "数据中用作节点唯一标识的字段名"
+        },
+        "label": {
+          "label": "显示名称字段",
+          "description": "数据中用作节点显示名称的字段名"
+        },
+        "parent_key": {
+          "label": "父级字段",
+          "description": "数据中用作父级节点标识的字段名"
+        },
+        "sort_key": {
+          "label": "排序字段",
+          "description": "数据中用作同级节点排序的字段名"
+        },
+        "height": {
+          "label": "容器高度",
+          "description": "树形容器的高度，单位像素"
+        },
+        "searchable": {
+          "label": "启用搜索",
+          "description": "是否显示搜索框，支持节点名称搜索"
+        },
+        "show_icon": {
+          "label": "显示图标",
+          "description": "是否显示文件夹和文件图标"
+        },
+        "show_count": {
+          "label": "显示子节点数量",
+          "description": "是否在父节点旁显示子节点数量"
+        },
+        "default_expand_level": {
+          "label": "默认展开层级",
+          "description": "初始加载时自动展开的层级数量（0-5）",
+          "options": {
+            "none": "不展开",
+            "level_1": "展开1层",
+            "level_2": "展开2层",
+            "level_3": "展开3层",
+            "level_4": "展开4层",
+            "all": "全部展开"
+          }
+        },
+        "addable": {
+          "label": "允许添加",
+          "description": "是否显示添加节点的操作按钮"
+        },
+        "editable": {
+          "label": "允许编辑",
+          "description": "是否显示编辑节点的操作按钮"
+        },
+        "deletable": {
+          "label": "允许删除",
+          "description": "是否显示删除节点的操作按钮"
+        },
+        "insert_dataset_config": {
+          "label": "新增节点配置",
+          "description": "配置新增节点时的数据插入方式",
+          "properties": {
+            "target_dataset_id": {
+              "label": "目标数据集ID",
+              "description": "新增节点数据插入的目标数据集"
+            },
+            "insert_fields": {
+              "label": "插入字段映射",
+              "description": "配置各字段的数据来源",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "数据来源"
+                  },
+                  "value": {
+                    "label": "值"
+                  },
+                  "required": {
+                    "label": "是否必填"
+                  },
+                  "field_type": {
+                    "label": "字段类型"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "update_dataset_config": {
+          "label": "编辑节点配置",
+          "description": "配置编辑节点时的数据更新方式",
+          "properties": {
+            "target_dataset_id": {
+              "label": "目标数据集ID",
+              "description": "编辑节点数据更新的目标数据集"
+            },
+            "update_fields": {
+              "label": "更新字段映射",
+              "description": "配置各字段的数据来源",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "数据来源"
+                  },
+                  "value": {
+                    "label": "值"
+                  },
+                  "required": {
+                    "label": "是否必填"
+                  },
+                  "field_type": {
+                    "label": "字段类型"
+                  }
+                }
+              }
+            },
+            "update_conditions": {
+              "label": "更新条件映射",
+              "description": "配置更新条件的字段映射",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "数据来源"
+                  },
+                  "value": {
+                    "label": "值"
+                  },
+                  "field_type": {
+                    "label": "字段类型"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "数据集",
+          "description": "从数据集获取树形数据",
+          "children": {
+            "dataset_id": {
+              "label": "数据集ID",
+              "description": "目标数据集的唯一标识"
+            },
+            "output_fields": {
+              "label": "输出字段",
+              "description": "需要从数据集中获取的字段列表"
+            },
+            "filter": {
+              "label": "筛选条件",
+              "description": "数据筛选的条件表达式"
+            },
+            "limit": {
+              "label": "数据限制",
+              "description": "最大获取的数据条数"
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "模拟数据",
+        "description": "用于开发和测试的模拟树形数据，默认使用企业组织架构数据",
+        "default_value": {
+          "headquarters": {
+            "name": "科技集团总部",
+            "description": "集团总部"
+          },
+          "departments": {
+            "tech_center": {
+              "name": "技术中心",
+              "description": "负责技术研发"
+            },
+            "product_center": {
+              "name": "产品中心",
+              "description": "负责产品规划"
+            },
+            "marketing_center": {
+              "name": "市场中心",
+              "description": "负责市场推广"
+            },
+            "hr": {
+              "name": "人力资源部",
+              "description": "负责人力资源管理"
+            },
+            "finance": {
+              "name": "财务部",
+              "description": "负责财务管理"
+            }
+          },
+          "sub_departments": {
+            "frontend": {
+              "name": "前端开发部",
+              "description": "Web和移动端开发"
+            },
+            "backend": {
+              "name": "后端开发部",
+              "description": "服务端开发"
+            },
+            "data_center": {
+              "name": "数据中心",
+              "description": "大数据和AI"
+            },
+            "test_center": {
+              "name": "测试中心",
+              "description": "质量保证"
+            },
+            "product_planning": {
+              "name": "产品规划部",
+              "description": "产品战略规划"
+            },
+            "ux": {
+              "name": "用户体验部",
+              "description": "UI/UX设计"
+            }
+          },
+          "teams": {
+            "web_frontend": {
+              "name": "Web前端组",
+              "description": "PC端Web开发"
+            },
+            "mobile": {
+              "name": "移动端组",
+              "description": "iOS/Android开发"
+            },
+            "miniprogram": {
+              "name": "小程序组",
+              "description": "微信小程序开发"
+            },
+            "business_backend": {
+              "name": "业务后端组",
+              "description": "业务逻辑开发"
+            },
+            "base_service": {
+              "name": "基础服务组",
+              "description": "基础服务开发"
+            },
+            "b2b_product": {
+              "name": "B端产品组",
+              "description": "B端产品设计"
+            },
+            "b2c_product": {
+              "name": "C端产品组",
+              "description": "C端产品设计"
+            }
+          }
+        }
+      }
+    },
+    "filter_panel": {
+      "title": "筛选面板",
+      "description": "用于页面数据筛选，支持下拉列表、日期范围、单选按钮组、文本输入框、数字输入框等筛选方式，可绑定数据库数据源",
+      "prop_types": {
+        "title": {
+          "label": "标题",
+          "default_value": "筛选条件"
+        },
+        "filters": {
+          "label": "筛选项配置",
+          "item_config": {
+            "label": "筛选项",
+            "children": {
+              "key": {
+                "label": "标识符",
+                "description": "筛选项的唯一标识符，用于组件间通信"
+              },
+              "type": {
+                "label": "筛选类型",
+                "options": {
+                  "select": "下拉列表",
+                  "date_range": "日期范围",
+                  "radio": "单选按钮组",
+                  "text": "文本输入框",
+                  "number": "数字输入框",
+                  "tag_input": "标签输入框"
+                }
+              },
+              "label": {
+                "label": "标签",
+                "default_value": "筛选项"
+              },
+              "options": {
+                "label": "选项列表（静态）",
+                "item_config": {
+                  "label": "选项",
+                  "children": {
+                    "label": {
+                      "label": "显示文本"
+                    },
+                    "value": {
+                      "label": "选项值"
+                    }
+                  }
+                }
+              },
+              "data_source": {
+                "label": "数据源配置（动态）",
+                "children": {
+                  "dataset_id": {
+                    "label": "数据集ID",
+                    "description": "绑定数据库数据集，动态加载选项"
+                  },
+                  "value_field": {
+                    "label": "值字段",
+                    "description": "数据集中用作选项值的字段名"
+                  },
+                  "label_field": {
+                    "label": "标签字段",
+                    "description": "数据集中用作选项标签的字段名"
+                  }
+                }
+              },
+              "multiple": {
+                "label": "支持多选",
+                "description": "是否支持多选（仅下拉列表和单选按钮组）"
+              },
+              "quick_select": {
+                "label": "显示快速选择",
+                "description": "日期范围是否显示快速选择按钮（今日、昨日、最近7天、最近30天）"
+              },
+              "quick_select_items": {
+                "label": "快速选择各按钮显示",
+                "description": "按预设键（today、yesterday 等）设为 false 可隐藏对应快捷按钮，未配置则默认显示"
+              },
+              "use_specified_time": {
+                "label": "指定时分秒",
+                "description": "开启后，在选定的开始日/结束日上使用配置的起止时刻（仅时分秒）下发参数；默认日期范围、快捷项与日历选择逻辑不变。关闭时仍为当日 00:00:00 与 23:59:59"
+              },
+              "specified_start_time": {
+                "label": "开始时刻",
+                "description": "仅时分秒（HH:mm 或 HH:mm:ss），作用在范围开始日期上"
+              },
+              "specified_end_time": {
+                "label": "结束时刻",
+                "description": "仅时分秒（HH:mm 或 HH:mm:ss），作用在范围结束日期上"
+              },
+              "buttons": {
+                "label": "按钮配置（单选按钮组）",
+                "item_config": {
+                  "label": "按钮",
+                  "children": {
+                    "label": {
+                      "label": "按钮文本"
+                    },
+                    "value": {
+                      "label": "按钮值"
+                    }
+                  }
+                }
+              },
+              "default_value": {
+                "label": "默认值",
+                "description": "筛选项的默认值"
+              },
+              "placeholder": {
+                "label": "占位符"
+              },
+              "max_tags": {
+                "label": "最大标签数",
+                "description": "允许的最大标签数量（仅用于标签输入类型）"
+              },
+              "group_count_field": {
+                "label": "分组计数字段",
+                "description": "仅多选 Pill Select：按选项行的该字段（如 main_store_code）对已选值去重分组，将分组数作为数字页面参数 {componentId}_{key}GroupCount 发布"
+              }
+            }
+          }
+        },
+        "presets": {
+          "label": "预设筛选",
+          "item_config": {
+            "label": "预设",
+            "children": {
+              "label": {
+                "label": "预设名称"
+              },
+              "value": {
+                "label": "预设值",
+                "description": "预设的筛选值，格式：{ filterKey: filterValue }"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hero_card": {
+      "shell": "外壳",
+      "card_width": "卡片宽度",
+      "rows": "内容行",
+      "description": "渐变 KPI 主卡，支持可配置内容行"
+    },
+    "ring_stat": {
+      "title": "环形占比卡",
+      "description": "带中心数值、图例与合计的进度环（占比/完成率）"
+    },
+    "app_identity_list": {
+      "title": "应用身份",
+      "description": "从 RBAC 列出应用的用户或角色；可行内分配角色，或编辑按键合并的数据源属性",
+      "prop": {
+        "source": "身份来源",
+        "source_users": "用户",
+        "source_roles": "角色",
+        "emit_param_key": "选中身份参数",
+        "searchable": "可搜索",
+        "show_email": "显示邮箱（用户）",
+        "show_phone": "显示手机号（用户）",
+        "show_roles": "显示角色（用户）",
+        "role_assignable": "行内分配角色（用户）",
+        "attribute_ds": "属性数据源 id（角色）",
+        "attribute_save_ds": "属性保存数据源 id（角色）",
+        "attribute_key_field": "属性合并字段",
+        "attribute_value_field": "属性值字段",
+        "attribute_kind": "属性编辑器（角色）",
+        "attribute_kind_none": "无",
+        "attribute_kind_toggle": "开关",
+        "attribute_kind_number": "数字",
+        "attribute_label": "属性列标题",
+        "attribute_save_key_param": "保存-键参数",
+        "attribute_save_value_param": "保存-值参数",
+        "emit_attribute_param_key": "选中用户属性参数（用户）",
+        "show_member_count": "显示成员数（角色）",
+        "show_permission_count": "显示权限数（角色）"
+      }
+    },
+    "identity_attribute_assign": {
+      "title_component": "身份属性分配",
+      "description": "把一组数据源选项（门店/区域/…）分配给总线选中的身份",
+      "prop": {
+        "title": "标题",
+        "identity_param_key": "选中身份参数",
+        "options_ds": "选项数据源 id",
+        "current_ds": "当前值数据源 id",
+        "save_ds": "保存（事务）数据源 id",
+        "option_value_field": "选项值字段",
+        "option_label_zh": "选项标签字段（中）",
+        "option_label_en": "选项标签字段（英）",
+        "option_group_field": "选项分组字段",
+        "current_value_field": "当前值字段",
+        "identity_value_param": "身份值参数",
+        "values_param": "值 JSON 参数",
+        "operator_param": "操作人参数"
+      }
+    },
+    "publish_history": {
+      "title": "发布历史",
+      "description": "工作台发布记录时间线（版本、说明、发布人、时间，只读）"
+    },
+    "publish_preview_entry": {
+      "title": "预览入口",
+      "description": "检测未发布修改并提供预览入口"
+    }
+  },
+  "edit_mode_provider": {
+    "tabs_component_not_found": "Tabs 组件 {{tabsId}} 不存在",
+    "card_component_not_found": "Card 组件 {{cardId}} 不存在",
+    "page_not_found": "页面 {{pageId}} 不存在"
+  },
+  "welcome": {
+    "workbench_created_successfully": "工作台创建成功",
+    "creating": "创建中...",
+    "try_different_search": "尝试其他搜索词",
+    "total_workbenches": "总计",
+    "active_workbenches": "活跃",
+    "draft_workbenches": "草稿",
+    "filter_by_status": "按状态筛选",
+    "status": {
+      "all": "全部",
+      "active": "活跃",
+      "inactive": "非激活",
+      "draft": "草稿"
+    },
+    "title": "使用低代码构建强大的应用",
+    "subtitle": "无代码可视化开发平台，快速交付企业级应用",
+    "get_started": "开始使用",
+    "hero": {
+      "badge": "企业级低代码平台",
+      "title": "使用低代码更快构建应用",
+      "subtitle": "GeniSpace 工作台让您无需编写代码即可快速构建企业级应用",
+      "getStarted": "开始使用"
+    },
+    "features": {
+      "title": "核心特性",
+      "subtitle": "构建强大应用所需的一切",
+      "visual": {
+        "title": "可视化低代码开发",
+        "description": "通过拖拽界面构建应用，无需编写代码"
+      },
+      "components": {
+        "title": "丰富的组件库",
+        "description": "预置业务组件，涵盖表单、表格、图表等"
+      },
+      "security": {
+        "title": "企业级安全",
+        "description": "企业级安全标准和基于角色的访问控制"
+      }
+    },
+    "quickTips": {
+      "drag": "拖拽组件构建您的应用",
+      "customize": "无需编码即可自定义样式和布局",
+      "deploy": "一键部署您的应用"
+    },
+    "delete_workbench": "删除工作台",
+    "delete_workbench_title": "删除工作台",
+    "delete_workbench_description": "此操作将永久删除工作台 \"{{name}}\"，包括所有页面和配置。此操作无法撤销。",
+    "delete_confirm_prompt": "请输入工作台名称 \"{{name}}\" 以确认删除：",
+    "delete_warning": "警告：此操作无法撤销。",
+    "confirm_delete": "确认删除",
+    "deleting": "删除中...",
+    "delete_success": "工作台已删除",
+    "delete_success_message": "工作台 \"{{name}}\" 已成功删除",
+    "tabs": {
+      "workbenches": "工作台",
+      "templates": "模板库"
+    },
+    "templates": {
+      "title": "从模板开始",
+      "subtitle": "选择专业设计的模板，加速您的开发进程",
+      "search": "搜索模板...",
+      "category": "分类",
+      "all_categories": "全部分类",
+      "search_placeholder": "搜索模板...",
+      "filter_by_category": "按分类筛选",
+      "loading": "加载模板中...",
+      "no_templates_found": "未找到模板",
+      "no_templates": "暂无模板",
+      "try_different_search": "尝试其他搜索词",
+      "check_back_later": "请稍后再查看新模板",
+      "found_count": "找到 {{count}} 个模板",
+      "pages": "页面",
+      "create_from_template": "基于此模板创建",
+      "creating": "正在从模板创建工作台...",
+      "workbench_created": "工作台已创建",
+      "workbench_created_from_template": "已成功从模板创建工作台",
+      "categories": {
+        "all": "全部分类",
+        "education": "教育",
+        "recruiting": "招聘",
+        "logistics": "物流",
+        "finance": "财务",
+        "retail": "零售/电商",
+        "healthcare": "医疗健康",
+        "real-estate": "房地产",
+        "restaurant": "餐饮",
+        "manufacturing": "制造业",
+        "general": "通用"
+      }
+    },
+    "guide": {
+      "title": "快速开始指南",
+      "subtitle": "按照以下步骤创建您的第一个工作台",
+      "step1": {
+        "title": "创建工作台",
+        "description": "点击创建按钮开始"
+      },
+      "step2": {
+        "title": "设计应用",
+        "description": "拖拽组件进行构建"
+      },
+      "step3": {
+        "title": "部署和分享",
+        "description": "立即发布您的应用"
+      }
+    }
+  },
+  "object_array_input": {
+    "select_placeholder": "请选择...",
+    "item_fallback": "项目",
+    "empty_hint": "暂无项目，点击下方按钮添加",
+    "add_label": "添加{{label}}"
+  },
+  "grid24": {
+    "unknown_component": "未知组件",
+    "unknown_type": "未知类型",
+    "no_title": "未命名",
+    "nesting_fallback": "嵌套深度已达或超过上限（≥{{max}}）。内层 24 列栅格已退化为纵向简单堆叠。请使用预设布局或减少嵌套。",
+    "presets": {
+      "single": "单列",
+      "two_equal": "两列等宽",
+      "three_equal": "三列等宽",
+      "two_ratio_1_2": "1:2 分栏",
+      "two_ratio_2_1": "2:1 分栏",
+      "two_ratio_3_1": "3:1 分栏",
+      "four_equal": "四列等宽",
+      "top_bottom": "上通栏 + 下两列",
+      "top_three_bottom": "上通栏 + 下三列",
+      "dashboard": "仪表盘"
+    }
+  },
+  "mobile": {
+    "back": "返回",
+    "open_menu": "打开菜单",
+    "refresh": "刷新",
+    "platform_logo_alt": "平台 Logo",
+    "choose_application": "返回工作台",
+    "choose_application_aria": "返回工作台"
+  },
+  "viewport": {
+    "return_to_desktop": "返回 PC 端视图",
+    "return_to_desktop_short": "返回 PC"
+  },
+  "home": {
+    "features": {
+      "title": "核心能力",
+      "subtitle": "构建强大应用所需的一切"
+    },
+    "templates": {
+      "badge": "丰富的行业模板",
+      "title": "从专业模板开始",
+      "subtitle": "从我们丰富的模板库中选择，快速为各行各业创建工作台"
+    }
+  },
+  "coming_soon": {
+    "title": "即将上线",
+    "description": "页面正在建设中，敬请期待",
+    "preview": "预览页面"
+  },
+  "preview_badge": "预览中",
+  "preview_banner": "您正在预览此工作台的未发布版本。",
+  "preview_exit": "退出预览",
+  "preview_link_invalid": "预览链接无效或已过期",
+  "release_notes": {
+    "title": "新版本发布",
+    "got_it": "知道了",
+    "published_by": "发布人：{{name}}",
+    "published_at": "发布时间：{{time}}",
+    "load_failed": "发布说明加载失败",
+    "fallback_message": "新版本已发布"
+  },
+  "page_empty_hint": "该页面暂无内容。"
+}

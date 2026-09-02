@@ -1,5 +1,9 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false
+  },
   "include": [
     "src/*.ts",
     "src/*.tsx",
@@ -16,8 +20,8 @@
     "src/case-workspace/**/*.tsx",
     "src/task-workspace/**/*.ts",
     "src/task-workspace/**/*.tsx",
-    "src/workbench/**/*.ts",
-    "src/workbench/**/*.tsx",
+    "src/components/**/*.ts",
+    "src/components/**/*.tsx",
     "src/ui/components/features/app/**/*.ts",
     "src/ui/components/features/app/**/*.tsx",
     "src/ui/components/features/user/UserAvatar.tsx",
@@ -41,6 +45,8 @@
     "node_modules",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/__tests__/**"
+    "src/**/__tests__/**",
+    "src/components/internal/workbench/locales/types.ts",
+    "src/components/internal/workbench/mocks/**"
   ]
 }

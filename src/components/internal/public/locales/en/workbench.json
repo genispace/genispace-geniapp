@@ -1,0 +1,2339 @@
+{
+  "header": {
+    "change_lang": "Change Language",
+    "setting": "Settings",
+    "return_to_platform": "Return to Platform",
+    "platform_name": "Smart Collaboration Platform",
+    "system_settings": "System Settings",
+    "profile": "Profile",
+    "profile_menu": "Profile",
+    "logout": "Logout",
+    "menu": "Menu",
+    "settings": "Settings",
+    "workbench": "Workbench",
+    "edit_workbench": "Edit Workbench",
+    "toggle_theme": "Dark mode",
+    "lang_short_zh": "中"
+  },
+  "theme": {
+    "selector_title": "Workbench theme",
+    "placeholder": "Select theme",
+    "workbench_basic_field": "Appearance theme",
+    "workbench_basic_hint": "Built-in styling package for this workbench; without edit permission choices stay in this browser only."
+  },
+  "execution": {
+    "history": {
+      "title": "Execution History",
+      "modal_title": "Execution History - {{taskName}}",
+      "no_executions": "No execution records",
+      "loading": "Loading...",
+      "load_error": "Load failed",
+      "status_column": "Status",
+      "start_time_column": "Start Time",
+      "end_time_column": "End Time",
+      "duration_column": "Duration",
+      "executor_column": "Executor",
+      "actions_column": "Actions",
+      "view_details": "View Details",
+      "get_failed": "Failed to fetch execution history"
+    },
+    "details": {
+      "title": "Execution Details",
+      "basic_info": "Basic Information",
+      "task_name": "Task Name",
+      "status_label": "Status",
+      "executor": "Executor",
+      "scheduled_time": "Scheduled Time",
+      "start_time": "Start Time",
+      "end_time": "End Time",
+      "duration": "Duration",
+      "inputs": "Inputs",
+      "outputs": "Outputs",
+      "logs": "Execution Logs",
+      "error": "Error Information",
+      "no_outputs": "No outputs",
+      "no_logs": "No logs",
+      "copy": "Copy",
+      "copy_success": "Copied successfully",
+      "copy_failed": "Copy failed",
+      "copy_failed_description": "Unable to copy to clipboard, please copy manually"
+    },
+    "status": {
+      "pending": "Pending",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    }
+  },
+  "workbench": {
+    "version_history": "Version History",
+    "version_label": "Version",
+    "created_by": "Created by",
+    "restore": "Restore",
+    "no_versions": "No version records",
+    "version_restored": "Version restored successfully",
+    "load_config_failed": "Failed to load workbench configuration",
+    "update_success": "Workbench updated successfully"
+  },
+  "form": {
+    "validation_error": "Validation Failed",
+    "upload_required": "Please upload {{field}}",
+    "field_required": "Please fill in {{field}}"
+  },
+  "task": {
+    "error": "Error",
+    "missing_id": "Missing Task ID",
+    "submit_success": "Submit Successful",
+    "submit_success_message": "Task has been successfully submitted",
+    "submit_error": "Submit Failed",
+    "submit_error_message": "Task submission failed"
+  },
+  "file": {
+    "upload_success": "File Upload Successful",
+    "upload_success_message": "File has been successfully uploaded",
+    "upload_error": "File Upload Failed",
+    "upload_error_message": "File upload failed, please try again"
+  },
+  "componentEditor": {
+    "componentType": "Component Type",
+    "componentId": "Component ID",
+    "props": "Properties",
+    "dataSource": "Data Source",
+    "mockData": "Mock Data",
+    "resetData": "Reset Data",
+    "mockDataPlaceholder": "Enter JSON format mock data",
+    "jsonFormatError": "JSON Format Error",
+    "mockDataNotSupported": "This component does not support mock data configuration",
+    "dataSourceNotSupported": "This component does not support data source configuration"
+  },
+  "checking_permissions": "Checking permissions...",
+  "access_restricted": "Access Restricted",
+  "back_to_console": "Back to Console",
+  "view_publish_history": "View publish history",
+  "publish_history_nav": "Publish History",
+  "insufficient_permissions": "Insufficient Permissions",
+  "no_view_permission_message": "You do not have permission to view this workbench. Please contact the administrator for authorization.",
+  "loading": "Loading...",
+  "workbench_label": "Workbench",
+  "demo_mode": "Demo Mode",
+  "demo_mode_message": "Demo workbench does not support saving configuration",
+  "workbench_id_not_found": "Workbench ID not found",
+  "failed_to_get_workbench_config": "Failed to get workbench configuration",
+  "failed_to_load_workbench_config": "Failed to load workbench configuration",
+  "exit_fullscreen": "Exit Fullscreen",
+  "fullscreen_header": {
+    "platform_name": "Platform",
+    "no_refresh": "Auto refresh is disabled",
+    "refresh_every_seconds": "Refresh every {{value}} seconds",
+    "refresh_every_minutes": "Refresh every {{value}} minutes"
+  },
+  "multi_page_renderer": {
+    "welcome_title": "Welcome to Workbench",
+    "welcome_description": "Quickly build enterprise applications through drag-and-drop visual interface, supporting rich component library, data binding, custom styles and real-time preview, making it easy to develop professional applications",
+    "feature_visual_drag": "Visual Drag & Drop",
+    "feature_visual_drag_description": "30+ component types including forms, tables, charts, containers, supporting custom styles and interactions",
+    "feature_data_binding": "Smart Data Binding",
+    "feature_data_binding_description": "Seamlessly connect enterprise data sources, supporting real-time data display and business logic configuration",
+    "feature_component_communication": "Component Communication",
+    "feature_component_communication_description": "Support parameter passing and event triggering, building complex business processes and user interactions",
+    "start_creating_title": "Start Creating Your First Page",
+    "start_creating_description": "Click the navigation menu to open a page, or create a new page configuration through edit mode",
+    "select_page": "Select Page",
+    "or": "or",
+    "enable_edit_mode": "Enable Edit Mode",
+    "loading_page": "Loading page...",
+    "page_load_failed": "Page Load Failed",
+    "unknown_error": "Unknown error",
+    "reload": "Reload",
+    "start_building": "Start Building Your Page",
+    "start_building_description": "Drag components from the component library on the right to here to start building your page",
+    "drag_component_hint": "Drag components here"
+  },
+  "layout_system": {
+    "presets": {
+      "all_vertical": {
+        "name": "All Vertical",
+        "description": "All components arranged vertically, suitable for single column display"
+      },
+      "top1_bottom3": {
+        "name": "Top 1 Bottom 3",
+        "description": "One area on top, three horizontal areas below"
+      },
+      "top1_bottom2": {
+        "name": "Top 1 Bottom 2",
+        "description": "One area on top, two horizontal areas below"
+      },
+      "top1_bottom2_equal": {
+        "name": "Top 1 Bottom 2 - Equal",
+        "description": "One area on top, two equal areas below (50-50 split)"
+      },
+      "left1_right2": {
+        "name": "Left 1 Right 2",
+        "description": "One area on the left, two vertical areas on the right"
+      },
+      "top1_bottom2_left_large": {
+        "name": "Top 1 Bottom 2 - Left Small Right Large",
+        "description": "One area on top, small area on bottom left, large area on bottom right"
+      },
+      "dashboard_layout": {
+        "name": "Dashboard Layout",
+        "description": "Header area, top KPI cards, middle 3-column charts, bottom left and right columns, bottommost spanning all columns"
+      },
+      "left3_right1": {
+        "name": "Left Large Right Small",
+        "description": "Top and bottom spanning full width, left area takes 3/4, right area takes 1/4"
+      }
+    },
+    "areas": {
+      "top": "Top Area",
+      "bottom": "Bottom Area",
+      "bottom_left": "Bottom Left Area",
+      "bottom_center": "Bottom Center Area",
+      "bottom_right": "Bottom Right Area",
+      "bottom_second": "Bottom Second Row Area",
+      "left": "Left Area",
+      "left_top": "Left Top Area",
+      "left_center": "Left Center Area",
+      "left_bottom": "Left Bottom Area",
+      "right": "Right Area",
+      "right_top": "Right Top Area",
+      "right_bottom": "Right Bottom Area",
+      "header": "Header Area",
+      "middle_left": "Middle Left Area",
+      "middle_center": "Middle Center Area",
+      "middle_right": "Middle Right Area",
+      "middle": "Middle Area"
+    },
+    "area_descriptions": {
+      "top": "Components displayed at the top of the page",
+      "bottom_left": "Components displayed at the bottom left of the page",
+      "bottom_center": "Components displayed at the bottom center of the page",
+      "bottom_right": "Components displayed at the bottom right of the page",
+      "bottom_second": "Components displayed in the bottom second row (spanning all columns)",
+      "left": "Components displayed on the left side of the page",
+      "right_top": "Components displayed at the top right of the page",
+      "right_bottom": "Components displayed at the bottom right of the page",
+      "header": "Components displayed in the page header (such as filters)",
+      "middle_left": "Components displayed in the middle left of the page",
+      "middle_center": "Components displayed in the middle center of the page",
+      "middle_right": "Components displayed in the middle right of the page",
+      "middle": "Components displayed in the middle of the page"
+    },
+    "unnamed_component": "Unnamed Component"
+  },
+  "common": {
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "edit": "Edit"
+  },
+  "workbench_sidebar": {
+    "expand_sidebar": "Expand Sidebar",
+    "collapse_sidebar": "Collapse Sidebar",
+    "enter_edit_mode": "Enter Edit Mode",
+    "no_navigation_menu": "No Navigation Menu",
+    "create_navigation_menu_hint": "Create a navigation menu to organize page access",
+    "enter_edit_mode_to_create_nav": "Enter edit mode to create navigation menu",
+    "new_page": "New Page",
+    "confirm_delete_page": "Confirm Delete Page",
+    "delete_page_confirmation": "Are you sure you want to delete page \"{{pageTitle}}\"? This operation cannot be undone, and all components and configurations in the page will be permanently deleted.",
+    "confirm_delete": "Confirm Delete",
+    "deleting_page": "Deleting...",
+    "workbench_list": "Workbench List",
+    "edit_mode_unavailable": "Edit mode is unavailable, please refresh the page and try again",
+    "cannot_toggle_edit_mode": "Unable to toggle edit mode, please refresh the page and try again",
+    "cannot_delete_page": "Cannot Delete Page",
+    "page_linked_to_nav": "This page is linked to navigation menu item \"{{title}}\", please remove it from the navigation menu before deleting the page.",
+    "new_workbench": "New Workbench",
+    "new_workbench_description": "A new workbench",
+    "create_success": "Workbench created successfully"
+  },
+  "property_editor": {
+    "yes": "Yes",
+    "no": "No",
+    "add_column": "Add Column",
+    "add_item": "Add Item",
+    "item_placeholder": "Item {{index}}",
+    "no_data_hint": "No data, click the button above to add",
+    "column_default_title": "Column {{index}}"
+  },
+  "dynamic_property_editor": {
+    "loading": "Loading...",
+    "not_supported": "Property editing for {{type}} component is not supported",
+    "contact_developer": "Please contact the developer to add support"
+  },
+  "parameter_config_panel": {
+    "title": "Parameter Receiving Configuration",
+    "parameter_mapping": "Parameter Mapping",
+    "add_parameter": "Add Parameter",
+    "mapping_description_title": "Parameter Mapping Description:",
+    "parameter_name": "Parameter Name",
+    "parameter_name_desc": "The URL parameter name to receive, such as \"id\" in ?id=123",
+    "target_type": "Target Type",
+    "target_type_desc": "The target location where the parameter will be mapped",
+    "target_field": "Target Field",
+    "target_field_desc": "The specific field name",
+    "default_value": "Default Value",
+    "default_value_desc": "The default value to use when the parameter is empty",
+    "required": "Required",
+    "required_desc": "Whether this parameter must be provided",
+    "parameter_name_placeholder": "Parameter Name",
+    "target_type_prop": "Property",
+    "target_type_form_field": "Form Field",
+    "target_type_filter_condition": "Filter Condition",
+    "target_type_data_source": "Data Source",
+    "target_type_prop_desc": "Assign parameter value to component properties, such as title, description, etc.",
+    "target_type_form_field_desc": "Fill parameter value into the specified field of the form",
+    "target_type_filter_condition_desc": "Use as filter condition value for data filtering",
+    "target_type_data_source_desc": "Use directly as component data source or data source identifier",
+    "select_field": "Select Field",
+    "target_field_placeholder": "Target Field",
+    "default_value_placeholder": "Default Value",
+    "data_source_filters": "Data Source Filters",
+    "add_filter": "Add Filter",
+    "filter_description_title": "Data Source Filter Description:",
+    "filter_field": "Filter Field",
+    "filter_field_desc": "The database field name to filter",
+    "operator": "Operator",
+    "operator_desc": "The comparison method for filter conditions",
+    "value_type": "Value Type",
+    "value_type_desc": "The source of filter value, select \"Parameter\" to choose from parameters configured above",
+    "filter_value": "Filter Value",
+    "filter_value_desc": "Select from dropdown for parameter type, enter directly for static value",
+    "multiple_filters_logic": "Multiple filter conditions will be connected using AND logic",
+    "filter_field_placeholder": "Filter Field",
+    "operator_equals": "Equals",
+    "operator_like": "Contains",
+    "operator_in": "In Range",
+    "operator_gt": "Greater Than",
+    "operator_lt": "Less Than",
+    "operator_not_equals": "Not Equals",
+    "value_type_parameter": "Parameter",
+    "value_type_static": "Static Value",
+    "select_parameter": "Select Parameter",
+    "configure_parameter_mapping_first": "Please configure parameter mapping first",
+    "static_value_placeholder": "Static Value",
+    "operator_description": "Operator Description",
+    "operator_equals_desc": "Exact match field value",
+    "operator_like_desc": "Fuzzy match, contains specified text",
+    "operator_in_desc": "Value within specified range (comma-separated)",
+    "operator_gt_desc": "Field value greater than specified value",
+    "operator_lt_desc": "Field value less than specified value",
+    "operator_not_equals_desc": "Field value not equal to specified value",
+    "value_type_description": "Value Type Description",
+    "value_type_parameter_desc": "Select from configured parameters to dynamically get parameter value",
+    "value_type_static_desc": "Use fixed static value"
+  },
+  "statistic_group": {
+    "statistic_items_config": "Statistic Items Configuration",
+    "statistic_items_config_description": "Configure each statistic item of the statistic card",
+    "add_statistic_item": "Add Statistic Item",
+    "statistic_item_default_title": "Statistic Item {{index}}",
+    "unique_identifier": "Unique Identifier",
+    "title": "Title",
+    "statistic_type": "Statistic Type",
+    "select_statistic_type": "Select Statistic Type",
+    "manual": "Manual",
+    "count": "Count",
+    "sum": "Sum",
+    "avg": "Average",
+    "max": "Maximum",
+    "min": "Minimum",
+    "value": "Value",
+    "dataset_id": "Dataset ID",
+    "select_dataset": "Select Dataset",
+    "no_datasets": "No Datasets Available",
+    "icon": "Icon",
+    "select_icon": "Select Icon",
+    "statistic_field": "Statistic Field",
+    "statistic_field_optional": "Statistic Field (Optional)",
+    "select_field": "Select Field",
+    "select_field_optional": "Select Field (Optional)",
+    "leave_empty_for_all": "Leave empty for all records",
+    "enter_field_name": "Enter Field Name",
+    "statistic_condition_optional": "Statistic Condition (Optional)",
+    "condition_example": "Example: created_at = {{1 day ago}}",
+    "filter_condition_count": "Filter condition, only count records that meet the condition",
+    "filter_condition_sum": "Filter condition, only sum records that meet the condition",
+    "filter_condition_avg": "Filter condition, only calculate average for records that meet the condition",
+    "filter_condition_max": "Filter condition, only find maximum in records that meet the condition",
+    "filter_condition_min": "Filter condition, only find minimum in records that meet the condition",
+    "use_current_date": "Use {{current_date}} to represent the time range of the current date (00:00:00 - 23:59:59)",
+    "use_previous_day": "Use {{previous_day}} to represent the time range of the previous day (00:00:00 - 23:59:59)",
+    "use_previous_n_days": "Use {{previous_n_days}} to represent the time range of the previous N days, such as {{7_days}} or {{30_days}}",
+    "condition_example_full": "Example: created_at = {{previous_day}} OR created_at = {{current_date}}",
+    "trend_config": "Trend Configuration",
+    "trend_description_default": "Compared to Previous Period",
+    "show": "Show",
+    "hide": "Hide",
+    "trend_statistic_condition": "Trend Statistic Condition",
+    "up_style": "Up Style",
+    "select_up_style": "Select Up Style",
+    "green": "Green",
+    "yellow": "Yellow",
+    "red": "Red",
+    "down_style": "Down Style",
+    "select_down_style": "Select Down Style",
+    "suffix": "Suffix",
+    "select_suffix": "Select Suffix",
+    "suffix_item": "Item",
+    "suffix_yuan": "Yuan",
+    "description": "Description",
+    "description_placeholder": "Example: Compared to Previous Period, Compared to Last Month, This Week New",
+    "no_statistic_items": "No Statistic Items Configured",
+    "click_to_add_description": "Click the \"Add Statistic Item\" button to start configuring the statistic card",
+    "new_statistic_item": "New Statistic Item",
+    "add_first_statistic_item": "Add First Statistic Item",
+    "add_more_statistic_items": "Add More Statistic Items",
+    "card_style_config": "Card Style Configuration",
+    "card_height": "Card Height",
+    "height_example": "Example: 235px",
+    "set_card_height": "Set card height, e.g.: 235px",
+    "card_padding": "Card Padding",
+    "padding_example": "Example: 24px",
+    "set_card_padding": "Set card padding, e.g.: 24px",
+    "title_style": "Title Style",
+    "font_size": "Font Size",
+    "font_size_example": "Example: 20px",
+    "font_size_example_large": "Example: 48px",
+    "font_weight": "Font Weight",
+    "select_font_weight": "Select Font Weight",
+    "normal": "Normal",
+    "medium": "Medium",
+    "semi_bold": "Semi Bold",
+    "bold": "Bold",
+    "value_style": "Value Style",
+    "title_spacing": "Title Spacing",
+    "spacing_example": "Example: 32px",
+    "title_spacing_description": "Spacing between title and percentage",
+    "mock_data_config": "Mock Data Configuration",
+    "icons": {
+      "activity": "Activity",
+      "users": "Users",
+      "bar_chart": "Chart",
+      "dollar": "Amount",
+      "clock": "Time",
+      "file": "Document",
+      "check_square": "Task",
+      "message": "Message",
+      "star": "Star",
+      "heart": "Like"
+    }
+  },
+  "component_communication_wizard": {
+    "title": "Component Communication Setup Wizard",
+    "description": "Quickly configure parameter passing and event communication between components",
+    "select_sender_label": "1. Select Sender Component (Component that triggers events)",
+    "select_receiver_label": "2. Select Receiver Component (Component that responds to events)",
+    "no_sender_components": "No available TaskInput components on current page",
+    "no_receiver_components": "No available receiver components on current page",
+    "select_communication_type": "Select Communication Type",
+    "communication_types": {
+      "task_table_refresh": {
+        "title": "TaskInput → Table Auto Refresh",
+        "description": "Automatically refresh table data after task execution succeeds"
+      },
+      "task_status_display": {
+        "title": "TaskInput → Status Display",
+        "description": "Update status display component after task execution"
+      },
+      "custom": {
+        "title": "Custom Communication",
+        "description": "Manually configure parameter passing"
+      }
+    },
+    "sender_params": "Sender Parameters:",
+    "config_preview": "Configuration Preview",
+    "sender_component": "Sender Component",
+    "receiver_component": "Receiver Component",
+    "enable_communication": "Enable Component Communication",
+    "send_param": "Send Parameter:",
+    "listen_param": "Listen Parameter:",
+    "auto_refresh_on_change": "Auto refresh data when parameters change",
+    "debounce_time": "Debounce Time: 300ms",
+    "expected_effect": "Expected Effect",
+    "effect_steps": {
+      "task_table_refresh": {
+        "step1": "1. User executes task in TaskInput component",
+        "step2": "2. After task execution succeeds, automatically send refresh signal",
+        "step3": "3. Table component receives signal and automatically refreshes data",
+        "step4": "4. User can see latest data without manual refresh"
+      },
+      "task_status_display": {
+        "step1": "1. User executes task in TaskInput component",
+        "step2": "2. After task completion, send execution result information",
+        "step3": "3. Status display component receives result and updates display content",
+        "step4": "4. User can see task execution status and result"
+      }
+    },
+    "config_complete": "Configuration Complete!",
+    "config_complete_message": "Component communication has been successfully configured. Now {{sender}} and {{receiver}} can communicate.",
+    "tip": "Tip: You can further adjust communication parameters in each component's configuration panel",
+    "steps": {
+      "select": "Select Components",
+      "configure": "Configure Communication",
+      "preview": "Preview Configuration",
+      "complete": "Complete"
+    },
+    "next": "Next",
+    "previous": "Previous",
+    "apply_config": "Apply Configuration",
+    "complete": "Complete"
+  },
+  "component_types": {
+    "custom_content": {
+      "title": "Custom Content",
+      "description": "Safe custom HTML content with component-scoped CSS; scripts and inline event handlers are not allowed",
+      "prop_types": {
+        "html": {
+          "label": "HTML Content",
+          "description": "Semantic HTML only. Use custom styles for appearance; scripts, forms and inline events are removed."
+        },
+        "empty_text": {
+          "label": "Empty State Text",
+          "default_value": "Custom content"
+        },
+        "aria_label": {
+          "label": "Accessibility Label"
+        }
+      }
+    },
+    "workflow_component": {
+      "title": "AI Workflow",
+      "description": "Upload, agent/task processing, human review and result workflow",
+      "prop_types": {
+        "agent_id": {
+          "label": "Agent ID",
+          "description": "Agent discovered from platform resources. Prefer a task pipeline when one is available."
+        },
+        "parse_task_id": { "label": "Parse Task ID" },
+        "save_task_id": { "label": "Save Task ID" },
+        "file_input": { "label": "File Input Mapping" },
+        "save_input": { "label": "Save Input Mapping" },
+        "steps": { "label": "Workflow Steps" },
+        "use_mock_data": { "label": "Use Mock Data" },
+        "mock_data": { "label": "Mock Data" }
+      }
+    },
+    "form": {
+      "title": "Form",
+      "description": "For data input and editing, supports multiple field types and validation",
+      "prop_types": {
+        "title": {
+          "label": "Form Title",
+          "default_value": "Form"
+        },
+        "description": {
+          "label": "Form Description"
+        },
+        "mode": {
+          "label": "Form Mode",
+          "options": {
+            "edit": "Edit Mode",
+            "display": "Display Mode",
+            "mixed": "Mixed Mode"
+          }
+        },
+        "layout": {
+          "label": "Layout",
+          "options": {
+            "vertical": "Vertical Layout",
+            "horizontal": "Horizontal Layout",
+            "grid": "Grid Layout"
+          }
+        },
+        "fields": {
+          "label": "Form Fields",
+          "item_config": {
+            "label": "Field Configuration",
+            "children": {
+              "name": {
+                "label": "Field Name"
+              },
+              "label": {
+                "label": "Field Label"
+              },
+              "type": {
+                "label": "Field Type",
+                "options": {
+                  "text": "Text",
+                  "number": "Number",
+                  "textarea": "Multi-line Text",
+                  "select": "Dropdown",
+                  "checkbox": "Checkbox",
+                  "radio": "Radio",
+                  "switch": "Switch",
+                  "date": "Date"
+                }
+              },
+              "mode": {
+                "label": "Field Mode",
+                "options": {
+                  "editable": "Editable",
+                  "readonly": "Read-only",
+                  "hidden": "Hidden"
+                }
+              },
+              "required": {
+                "label": "Required"
+              },
+              "placeholder": {
+                "label": "Placeholder"
+              }
+            }
+          }
+        },
+        "actions": {
+          "label": "Action Buttons",
+          "item_config": {
+            "label": "Action Button Configuration",
+            "children": {
+              "id": {
+                "label": "Button ID"
+              },
+              "label": {
+                "label": "Button Label"
+              },
+              "type": {
+                "label": "Action Type",
+                "options": {
+                  "navigate": "Navigate",
+                  "api": "API Call",
+                  "confirm": "Confirm Action",
+                  "update_dataset": "Update Dataset",
+                  "insert_dataset": "Insert Dataset",
+                  "delete_dataset": "Delete Dataset",
+                  "download": "File Download",
+                  "task_call": "Task Call"
+                }
+              },
+              "icon": {
+                "label": "Icon"
+              },
+              "variant": {
+                "label": "Button Style",
+                "options": {
+                  "default": "Default",
+                  "destructive": "Destructive",
+                  "outline": "Outline",
+                  "secondary": "Secondary"
+                }
+              },
+              "config": {
+                "label": "Action Configuration",
+                "children": {
+                  "target_page": {
+                    "label": "Target Page"
+                  },
+                  "endpoint": {
+                    "label": "API Endpoint"
+                  },
+                  "method": {
+                    "label": "Request Method"
+                  },
+                  "success_message": {
+                    "label": "Success Message",
+                    "default_value": "Operation successful"
+                  },
+                  "error_message": {
+                    "label": "Error Message",
+                    "default_value": "Operation failed"
+                  },
+                  "confirm_message": {
+                    "label": "Confirm Message",
+                    "default_value": "Confirm to execute this operation?"
+                  },
+                  "require_validation": {
+                    "label": "Validate Form"
+                  },
+                  "task_call": {
+                    "label": "Task Call Configuration",
+                    "children": {
+                      "task_id": {
+                        "label": "Task ID"
+                      },
+                      "require_confirmation": {
+                        "label": "Require Confirmation"
+                      },
+                      "confirm_message": {
+                        "label": "Confirm Message",
+                        "default_value": "Confirm to execute this task?"
+                      },
+                      "success_message": {
+                        "label": "Success Message",
+                        "default_value": "Task executed successfully"
+                      },
+                      "error_message": {
+                        "label": "Error Message",
+                        "default_value": "Task execution failed"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "display_config": {
+          "label": "Display Configuration",
+          "children": {
+            "show_title": {
+              "label": "Show Title"
+            },
+            "group_fields": {
+              "label": "Group Fields"
+            },
+            "card_layout": {
+              "label": "Card Layout"
+            },
+            "columns_per_row": {
+              "label": "Columns Per Row"
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "Dataset",
+          "children": {
+            "dataset_id": {
+              "label": "Dataset ID"
+            },
+            "params": {
+              "label": "Query Parameters",
+              "children": {
+                "filter": {
+                  "label": "Filter Condition",
+                  "description": "Example: id = \"123\""
+                },
+                "limit": {
+                  "label": "Limit"
+                },
+                "offset": {
+                  "label": "Offset"
+                },
+                "output_fields": {
+                  "label": "Output Fields"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for forms, used for preview and testing",
+        "default_value": {
+          "name": "Zhang San",
+          "bio": "This is an example description"
+        }
+      },
+      "create_component": {
+        "title": {
+          "label": "Form Title",
+          "default_value": "Form"
+        },
+        "mode": {
+          "label": "Form Mode"
+        },
+        "layout": {
+          "label": "Layout"
+        },
+        "fields": {
+          "label": "Form Fields",
+          "default_value": {
+            "name": {
+              "label": "Name",
+              "placeholder": "Please enter name"
+            },
+            "email": {
+              "label": "Email",
+              "placeholder": "Please enter email address"
+            }
+          }
+        },
+        "actions": {
+          "label": "Action Buttons"
+        }
+      }
+    },
+    "table": {
+      "title": "Table",
+      "description": "For displaying structured data, supports sorting, filtering, search and other functions",
+      "prop_types": {
+        "title": {
+          "label": "Title",
+          "default_value": "Table"
+        },
+        "pagination": {
+          "label": "Pagination Configuration",
+          "children": {
+            "page_size": {
+              "label": "Items Per Page"
+            },
+            "current": {
+              "label": "Current Page"
+            },
+            "show_size_changer": {
+              "label": "Show Size Changer"
+            },
+            "show_quick_jumper": {
+              "label": "Show Quick Jumper"
+            },
+            "show_total": {
+              "label": "Show Total"
+            }
+          }
+        },
+        "row_key": {
+          "label": "Row Key"
+        },
+        "show_search": {
+          "label": "Show Search"
+        },
+        "show_refresh": {
+          "label": "Show Refresh"
+        },
+        "show_settings": {
+          "label": "Show Settings"
+        },
+        "search_placeholder": {
+          "label": "Search Placeholder",
+          "default_value": "Search..."
+        },
+        "show_toolbar": {
+          "label": "Show Toolbar"
+        },
+        "searchable": {
+          "label": "Searchable"
+        },
+        "filterable": {
+          "label": "Filterable"
+        },
+        "sortable": {
+          "label": "Sortable"
+        },
+        "addable": {
+          "label": "Addable"
+        },
+        "editable": {
+          "label": "Editable"
+        },
+        "deletable": {
+          "label": "Deletable"
+        },
+        "enable_export": {
+          "label": "Enable Export"
+        },
+        "columns": {
+          "label": "Column Configuration",
+          "children": {
+            "title": {
+              "label": "Column Title"
+            },
+            "data_index": {
+              "label": "Data Field"
+            },
+            "key": {
+              "label": "Unique Identifier"
+            },
+            "width": {
+              "label": "Column Width"
+            },
+            "fixed": {
+              "label": "Fixed Position",
+              "options": {
+                "left": "Left",
+                "right": "Right"
+              }
+            },
+            "align": {
+              "label": "Alignment",
+              "options": {
+                "left": "Left",
+                "center": "Center",
+                "right": "Right"
+              }
+            },
+            "ellipsis": {
+              "label": "Ellipsis"
+            },
+            "filter_search": {
+              "label": "Filter Searchable"
+            },
+            "searchable": {
+              "label": "Searchable"
+            },
+            "editable": {
+              "label": "Editable"
+            },
+            "sorter": {
+              "label": "Sortable"
+            },
+            "filterable": {
+              "label": "Filterable"
+            },
+            "hidden": {
+              "label": "Hidden"
+            },
+            "filter_options": {
+              "label": "Filter Options",
+              "children": {
+                "text": {
+                  "label": "Display Text"
+                },
+                "value": {
+                  "label": "Option Value"
+                }
+              }
+            },
+            "render": {
+              "label": "Render Configuration",
+              "children": {
+                "type": {
+                  "label": "Render Type",
+                  "options": {
+                    "tag": "Tag",
+                    "button": "Button",
+                    "link": "Link"
+                  }
+                },
+                "props": {
+                  "label": "Property Configuration",
+                  "children": {
+                    "color": {
+                      "label": "Color Mapping",
+                      "children": {
+                        "color_value": {
+                          "label": "Color Value"
+                        }
+                      }
+                    }
+                  }
+                },
+                "text": {
+                  "label": "Text Mapping",
+                  "children": {
+                    "display_text": {
+                      "label": "Display Text"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "use_mock_data": {
+          "label": "Use Mock Data",
+          "description": "When enabled, display sample data for development and testing"
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "Dataset",
+          "children": {
+            "dataset_id": {
+              "label": "Dataset ID"
+            },
+            "params": {
+              "label": "Query Parameters",
+              "children": {
+                "filter": {
+                  "label": "Filter Condition",
+                  "description": "Example: status = \"active\""
+                },
+                "limit": {
+                  "label": "Items Per Page"
+                },
+                "offset": {
+                  "label": "Offset"
+                },
+                "output_fields": {
+                  "label": "Output Fields"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, includes table data and column configuration",
+        "default_value": {
+          "data_source": {
+            "name_1": "Zhang San",
+            "position_1": "Frontend Developer",
+            "education_1": "Bachelor",
+            "name_2": "Li Si",
+            "position_2": "Backend Developer",
+            "education_2": "Master",
+            "name_3": "Wang Wu",
+            "position_3": "Full-stack Developer",
+            "education_3": "Bachelor"
+          },
+          "columns": {
+            "name": {
+              "title": "Name"
+            },
+            "position": {
+              "title": "Position"
+            },
+            "experience": {
+              "title": "Experience"
+            },
+            "education": {
+              "title": "Education",
+              "filter_options": {
+                "bachelor": "Bachelor",
+                "master": "Master"
+              }
+            },
+            "skills": {
+              "title": "Skills"
+            },
+            "status": {
+              "title": "Status",
+              "render": {
+                "text": {
+                  "active": "Active",
+                  "interviewing": "Interviewing",
+                  "offered": "Offer Sent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "editable_table": {
+      "title": "Editable Table",
+      "description": "Table with inline editing, supports add, edit, delete operations"
+    },
+    "analytics_table": {
+      "title_component": "Analytics Table",
+      "description": "Config-driven analytics table: comparison cells, summary row, pills & client-side derived fields",
+      "prop_types": {
+        "dim_label": {
+          "label": "Dimension Header"
+        },
+        "columns": {
+          "label": "Columns"
+        },
+        "derived_fields": {
+          "label": "Derived Fields"
+        },
+        "toolbar": {
+          "label": "Toolbar (search / pills)"
+        },
+        "max_height": {
+          "label": "Max Height"
+        },
+        "show_index": {
+          "label": "Index Column"
+        },
+        "zebra": {
+          "label": "Zebra Stripes"
+        },
+        "bare": {
+          "label": "No Card Shell"
+        },
+        "summary_label": {
+          "label": "Summary Row Label"
+        },
+        "summary_ds": {
+          "label": "Summary Data Source"
+        },
+        "row_markers": {
+          "label": "Row Color Dots"
+        },
+        "highlight_row": {
+          "label": "Highlight Row"
+        },
+        "header_class": {
+          "label": "Header Row Style"
+        },
+        "index_header_class": {
+          "label": "Index Header Style"
+        },
+        "zebra_class": {
+          "label": "Zebra Row Style"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Sample rows for preview",
+        "retail": "Channel · Retail",
+        "outlet": "Channel · Outlet",
+        "ecommerce": "Channel · E-commerce"
+      }
+    },
+    "chart": {
+      "title": "Chart",
+      "description": "For displaying data visualization, supports multiple chart types",
+      "prop_types": {
+        "chart_type": {
+          "label": "Chart Type",
+          "options": {
+            "line": "Line Chart",
+            "bar": "Bar Chart",
+            "pie": "Pie Chart",
+            "scatter": "Scatter Chart"
+          }
+        },
+        "title": {
+          "label": "Title",
+          "default_value": "Chart"
+        },
+        "height": {
+          "label": "Component height",
+          "description": "Minimum height of the entire chart card (title, toolbar, and content)"
+        },
+        "chart_height": {
+          "label": "Chart area height",
+          "description": "Height of the plot area; when empty, matches component height (backward compatible)"
+        },
+        "x_field": {
+          "label": "X-axis Field"
+        },
+        "y_field": {
+          "label": "Y-axis Field"
+        },
+        "meta": {
+          "label": "Field Metadata",
+          "default_value": {
+            "date": {
+              "alias": "Date"
+            },
+            "value": {
+              "alias": "Value"
+            }
+          }
+        },
+        "additional_stats": {
+          "label": "Additional Statistics Labels",
+          "description": "Line chart stat items with unit and ratio"
+        },
+        "additional_stats_label_font_size": {
+          "label": "Additional Stats Font Size"
+        },
+        "additional_stats_font_family": {
+          "label": "Additional stats font",
+          "options": {
+            "sans_serif": "Generic sans-serif"
+          }
+        },
+        "additional_stats_font_weight": {
+          "label": "Additional stats font weight"
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "Dataset",
+          "children": {
+            "dataset_id": {
+              "label": "Dataset ID"
+            },
+            "params": {
+              "label": "Query Parameters",
+              "children": {
+                "filter": {
+                  "label": "Filter Condition",
+                  "description": "Example: date >= \"2024-01-01\""
+                },
+                "limit": {
+                  "label": "Data Count"
+                },
+                "output_fields": {
+                  "label": "Output Fields"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is array of objects"
+      }
+    },
+    "service_desk_reporter": {
+      "prop_types": {
+        "title": {
+          "default_value": "Report a Problem"
+        },
+        "description": {
+          "default_value": "Report dashboard or store IT issues to the support team."
+        },
+        "submit_button_text": {
+          "default_value": "Submit Ticket"
+        }
+      }
+    },
+    "statistic_group": {
+      "title": "Statistic Cards",
+      "description": "For displaying key indicator data",
+      "prop_types": {
+        "grid": {
+          "label": "Grid Configuration",
+          "children": {
+            "cols": {
+              "label": "Columns"
+            }
+          }
+        },
+        "items": {
+          "label": "Statistic Items",
+          "default_value": {
+            "total_users": {
+              "title": "Total Users",
+              "trend": {
+                "description": "Increased by 8.5% compared to last month"
+              }
+            },
+            "revenue": {
+              "title": "Total Revenue",
+              "trend": {
+                "description": "Increased by 12.3% compared to last month"
+              }
+            },
+            "orders": {
+              "title": "Order Count",
+              "suffix": " orders",
+              "trend": {
+                "description": "Decreased by 2.1% compared to last month"
+              }
+            },
+            "conversion_rate": {
+              "title": "Conversion Rate",
+              "trend": {
+                "description": "Increased by 5.7% compared to last month"
+              }
+            }
+          },
+          "children": {
+            "key": {
+              "label": "Unique Identifier"
+            },
+            "title": {
+              "label": "Title"
+            },
+            "value": {
+              "label": "Value"
+            },
+            "precision": {
+              "label": "Decimal Places"
+            },
+            "prefix": {
+              "label": "Prefix"
+            },
+            "suffix": {
+              "label": "Suffix"
+            },
+            "icon": {
+              "label": "Icon"
+            },
+            "icon_size": {
+              "label": "Icon Size"
+            },
+            "color": {
+              "label": "Icon color (legacy)",
+              "options": {
+                "blue": "Blue",
+                "green": "Green",
+                "orange": "Orange",
+                "purple": "Purple",
+                "red": "Red",
+                "gray": "Gray"
+              }
+            },
+            "icon_color": {
+              "label": "Icon color"
+            },
+            "value_color": {
+              "label": "Value color"
+            },
+            "statistic_type": {
+              "label": "Statistic Type",
+              "options": {
+                "manual": "Manual",
+                "count": "Count",
+                "sum": "Sum",
+                "avg": "Average",
+                "max": "Maximum",
+                "min": "Minimum"
+              }
+            },
+            "dataset_id": {
+              "label": "Dataset ID"
+            },
+            "statistic_field": {
+              "label": "Statistic Field"
+            },
+            "statistic_condition": {
+              "label": "Statistic Condition"
+            },
+            "trend": {
+              "label": "Trend",
+              "children": {
+                "enabled": {
+                  "label": "Enable Trend"
+                },
+                "value": {
+                  "label": "Change Value"
+                },
+                "type": {
+                  "label": "Change Type",
+                  "options": {
+                    "up": "Up",
+                    "down": "Down"
+                  }
+                },
+                "suffix": {
+                  "label": "Suffix"
+                },
+                "status": {
+                  "label": "Status",
+                  "options": {
+                    "success": "Success",
+                    "warning": "Warning",
+                    "error": "Error"
+                  }
+                },
+                "description": {
+                  "label": "Description"
+                },
+                "trend_condition": {
+                  "label": "Trend Statistic Condition"
+                },
+                "up_style": {
+                  "label": "Up Style",
+                  "options": {
+                    "success": "Success",
+                    "warning": "Warning",
+                    "error": "Error"
+                  }
+                },
+                "down_style": {
+                  "label": "Down Style",
+                  "options": {
+                    "success": "Success",
+                    "warning": "Warning",
+                    "error": "Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "data_grid_card": {
+      "title": "Data Card",
+      "description": "For displaying data lists, supports search and operations",
+      "prop_types": {
+        "title": {
+          "label": "Title",
+          "default_value": "Data Card"
+        },
+        "pagination": {
+          "label": "Pagination"
+        },
+        "row_key": {
+          "label": "Row Key"
+        },
+        "columns": {
+          "label": "Column Configuration",
+          "children": {
+            "title": {
+              "label": "Column Title"
+            },
+            "data_index": {
+              "label": "Data Field"
+            },
+            "key": {
+              "label": "Unique Identifier"
+            },
+            "primary": {
+              "label": "Primary Column"
+            },
+            "secondary": {
+              "label": "Secondary Column"
+            },
+            "searchable": {
+              "label": "Searchable"
+            },
+            "render": {
+              "label": "Render Configuration",
+              "children": {
+                "type": {
+                  "label": "Render Type",
+                  "options": {
+                    "tag": "Tag",
+                    "progress": "Progress"
+                  }
+                },
+                "props": {
+                  "label": "Property Configuration",
+                  "children": {
+                    "color": {
+                      "label": "Color Mapping",
+                      "children": {
+                        "color_value": {
+                          "label": "Color Value"
+                        }
+                      }
+                    },
+                    "status": {
+                      "label": "Status Expression"
+                    },
+                    "show_info": {
+                      "label": "Show Info"
+                    },
+                    "size": {
+                      "label": "Size",
+                      "options": {
+                        "small": "Small",
+                        "default": "Medium",
+                        "large": "Large"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "Dataset",
+          "children": {
+            "dataset_id": {
+              "label": "Dataset ID"
+            },
+            "params": {
+              "label": "Query Parameters",
+              "children": {
+                "filter": {
+                  "label": "Filter Condition",
+                  "description": "Example: status = \"active\""
+                },
+                "limit": {
+                  "label": "Items Per Page"
+                },
+                "offset": {
+                  "label": "Offset"
+                },
+                "output_fields": {
+                  "label": "Output Fields"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is array of objects",
+        "default_value": {
+          "card_1": {
+            "title": "Card 1",
+            "content": "Content 1"
+          },
+          "card_2": {
+            "title": "Card 2",
+            "content": "Content 2"
+          }
+        }
+      }
+    },
+    "container": {
+      "title": "Container",
+      "description": "For organizing other components, supports grid and flex layouts",
+      "prop_types": {
+        "layout": {
+          "label": "Layout Type",
+          "options": {
+            "grid": "Grid Layout",
+            "flex": "Flex Layout"
+          }
+        },
+        "cols": {
+          "label": "Column Configuration",
+          "children": {
+            "col_width": {
+              "label": "Column Width"
+            }
+          }
+        },
+        "gutter": {
+          "label": "Gutter"
+        },
+        "children": {
+          "label": "Child Components"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is object"
+      }
+    },
+    "tabs": {
+      "title": "Tabs",
+      "description": "For organizing content, supports multiple tab switching",
+      "prop_types": {
+        "default_active_key": {
+          "label": "Default Active Tab"
+        },
+        "type": {
+          "label": "Tab Type",
+          "options": {
+            "card": "Card",
+            "line": "Line"
+          }
+        },
+        "size": {
+          "label": "Size",
+          "options": {
+            "large": "Large",
+            "middle": "Medium",
+            "small": "Small"
+          }
+        },
+        "tab_bar_to_content_gap": {
+          "label": "Tab Bar to Content Gap",
+          "description": "Vertical spacing between tab bar and tab content, e.g. 8 or 16px"
+        },
+        "children": {
+          "label": "Tab Content",
+          "children": {
+            "key": {
+              "label": "Unique Identifier"
+            },
+            "label": {
+              "label": "Tab Label"
+            },
+            "component": {
+              "label": "Component Configuration",
+              "children": {
+                "type": {
+                  "label": "Component Type"
+                },
+                "id": {
+                  "label": "Component ID"
+                },
+                "props": {
+                  "label": "Component Properties"
+                },
+                "data_source": {
+                  "label": "Data Source Configuration"
+                }
+              }
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is object",
+        "default_value": {
+          "tab_1": {
+            "label": "Tab 1"
+          },
+          "tab_2": {
+            "label": "Tab 2"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title": "Typography",
+      "description": "For displaying text content, supports multiple styles",
+      "prop_types": {
+        "type": {
+          "label": "Type",
+          "options": {
+            "paragraph": "Paragraph",
+            "title": "Title",
+            "text": "Text",
+            "blockquote": "Blockquote"
+          }
+        },
+        "content": {
+          "label": "Content",
+          "default_value": "Text Content"
+        },
+        "content_segments": {
+          "label": "Content segments",
+          "description": "Optional: inline segments with colors and parameter bindings; when non-empty, overrides plain content at runtime."
+        },
+        "level": {
+          "label": "Title Level"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is object",
+        "default_value": {
+          "content": "This is an example text",
+          "segment_static": "Total: "
+        }
+      }
+    },
+    "card": {
+      "title": "Card",
+      "description": "For displaying content blocks, supports title and content",
+      "prop_types": {
+        "title": {
+          "label": "Title",
+          "default_value": "Card Title"
+        },
+        "content": {
+          "label": "Content",
+          "default_value": "Card Content"
+        },
+        "title_to_content_gap": {
+          "label": "Title to Content Gap",
+          "description": "Vertical spacing between card title and content, e.g. 8 or 12px"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is object",
+        "default_value": {
+          "title": "Card Title",
+          "content": "Card Content"
+        }
+      }
+    },
+    "list": {
+      "title": "List",
+      "description": "Display list data with slot-based layouts (ranking, task progress, etc.)",
+      "prop_types": {
+        "title": {
+          "label": "Title",
+          "default_value": "List"
+        },
+        "items": {
+          "label": "List Items"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing, format is object",
+        "default_value": {
+          "title": "List Title",
+          "items": {
+            "item_1": "List Item 1",
+            "item_2": "List Item 2"
+          }
+        }
+      }
+    },
+    "task_input": {
+      "title": "Task Input",
+      "description": "Input form component for executing tasks",
+      "prop_types": {
+        "task_id": {
+          "label": "Task ID",
+          "description": "Unique identifier of the task to execute"
+        },
+        "title": {
+          "label": "Component Title",
+          "default_value": "Task Execution",
+          "description": "Title displayed at the top of the component"
+        },
+        "description": {
+          "label": "Component Description",
+          "default_value": "Please fill in task parameters and execute",
+          "description": "Description text displayed below the component title"
+        },
+        "show_title": {
+          "label": "Show Title",
+          "description": "Whether to show component title"
+        },
+        "show_description": {
+          "label": "Show Description",
+          "description": "Whether to show component description"
+        },
+        "auto_submit": {
+          "label": "Auto Submit",
+          "description": "Automatically submit task when all required parameters are filled"
+        },
+        "submit_button_text": {
+          "label": "Submit Button Text",
+          "default_value": "Execute Task",
+          "description": "Text displayed on the submit button"
+        },
+        "show_optional_inputs": {
+          "label": "Show Optional Inputs by Default",
+          "description": "Whether to expand and show optional parameters by default"
+        },
+        "compact": {
+          "label": "Compact Mode",
+          "description": "Use compact layout style"
+        },
+        "use_mock_data": {
+          "label": "Enable Mock Mode",
+          "description": "When enabled, use mock data instead of real backend service"
+        },
+        "mock_file_data": {
+          "label": "Mock File Data",
+          "description": "Configure mock file data for testing file upload functionality"
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock data for development and testing",
+        "default_value": {
+          "title": "Sample Task",
+          "description": "This is a sample task input component",
+          "submit_button_text": "Execute Task",
+          "mock_file_data": {
+            "files": {
+              "sample_document": {
+                "content": "This is mock PDF document content.\n\nDocument contains the following information:\n- Project Overview\n- Technical Specifications\n- Implementation Plan\n- Risk Assessment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "tree": {
+      "title": "Tree Structure",
+      "description": "For displaying hierarchical data, supports expand/collapse, search, CRUD operations",
+      "prop_types": {
+        "title": {
+          "label": "Component Title",
+          "default_value": "Tree Structure",
+          "description": "Title displayed at the top of the component"
+        },
+        "key": {
+          "label": "Unique Identifier Field",
+          "description": "Field name used as unique identifier for nodes in data"
+        },
+        "label": {
+          "label": "Display Name Field",
+          "description": "Field name used as display name for nodes in data"
+        },
+        "parent_key": {
+          "label": "Parent Field",
+          "description": "Field name used as parent node identifier in data"
+        },
+        "sort_key": {
+          "label": "Sort Field",
+          "description": "Field name used for sorting sibling nodes in data"
+        },
+        "height": {
+          "label": "Container Height",
+          "description": "Height of tree container in pixels"
+        },
+        "searchable": {
+          "label": "Enable Search",
+          "description": "Whether to show search box, supports node name search"
+        },
+        "show_icon": {
+          "label": "Show Icon",
+          "description": "Whether to show folder and file icons"
+        },
+        "show_count": {
+          "label": "Show Child Count",
+          "description": "Whether to show child node count next to parent nodes"
+        },
+        "default_expand_level": {
+          "label": "Default Expand Level",
+          "description": "Number of levels to automatically expand on initial load (0-5)",
+          "options": {
+            "none": "No Expand",
+            "level_1": "Expand Level 1",
+            "level_2": "Expand Level 2",
+            "level_3": "Expand Level 3",
+            "level_4": "Expand Level 4",
+            "all": "Expand All"
+          }
+        },
+        "addable": {
+          "label": "Allow Add",
+          "description": "Whether to show add node action button"
+        },
+        "editable": {
+          "label": "Allow Edit",
+          "description": "Whether to show edit node action button"
+        },
+        "deletable": {
+          "label": "Allow Delete",
+          "description": "Whether to show delete node action button"
+        },
+        "insert_dataset_config": {
+          "label": "Add Node Configuration",
+          "description": "Configure data insertion method when adding nodes",
+          "properties": {
+            "target_dataset_id": {
+              "label": "Target Dataset ID",
+              "description": "Target dataset for inserting new node data"
+            },
+            "insert_fields": {
+              "label": "Insert Field Mapping",
+              "description": "Configure data source for each field",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "Data Source"
+                  },
+                  "value": {
+                    "label": "Value"
+                  },
+                  "required": {
+                    "label": "Required"
+                  },
+                  "field_type": {
+                    "label": "Field Type"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "update_dataset_config": {
+          "label": "Edit Node Configuration",
+          "description": "Configure data update method when editing nodes",
+          "properties": {
+            "target_dataset_id": {
+              "label": "Target Dataset ID",
+              "description": "Target dataset for updating edited node data"
+            },
+            "update_fields": {
+              "label": "Update Field Mapping",
+              "description": "Configure data source for each field",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "Data Source"
+                  },
+                  "value": {
+                    "label": "Value"
+                  },
+                  "required": {
+                    "label": "Required"
+                  },
+                  "field_type": {
+                    "label": "Field Type"
+                  }
+                }
+              }
+            },
+            "update_conditions": {
+              "label": "Update Condition Mapping",
+              "description": "Configure field mapping for update conditions",
+              "additional_properties": {
+                "properties": {
+                  "source": {
+                    "label": "Data Source"
+                  },
+                  "value": {
+                    "label": "Value"
+                  },
+                  "field_type": {
+                    "label": "Field Type"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "data_source_types": {
+        "dataset": {
+          "label": "Dataset",
+          "description": "Get tree data from dataset",
+          "children": {
+            "dataset_id": {
+              "label": "Dataset ID",
+              "description": "Unique identifier of target dataset"
+            },
+            "output_fields": {
+              "label": "Output Fields",
+              "description": "List of fields to retrieve from dataset"
+            },
+            "filter": {
+              "label": "Filter Condition",
+              "description": "Condition expression for data filtering"
+            },
+            "limit": {
+              "label": "Data Limit",
+              "description": "Maximum number of data records to retrieve"
+            }
+          }
+        }
+      },
+      "mock_data": {
+        "label": "Mock Data",
+        "description": "Mock tree data for development and testing, default uses enterprise organizational structure data",
+        "default_value": {
+          "headquarters": {
+            "name": "Tech Group Headquarters",
+            "description": "Group Headquarters"
+          },
+          "departments": {
+            "tech_center": {
+              "name": "Technology Center",
+              "description": "Responsible for technology R&D"
+            },
+            "product_center": {
+              "name": "Product Center",
+              "description": "Responsible for product planning"
+            },
+            "marketing_center": {
+              "name": "Marketing Center",
+              "description": "Responsible for marketing"
+            },
+            "hr": {
+              "name": "Human Resources Department",
+              "description": "Responsible for human resources management"
+            },
+            "finance": {
+              "name": "Finance Department",
+              "description": "Responsible for financial management"
+            }
+          },
+          "sub_departments": {
+            "frontend": {
+              "name": "Frontend Development Department",
+              "description": "Web and mobile development"
+            },
+            "backend": {
+              "name": "Backend Development Department",
+              "description": "Server-side development"
+            },
+            "data_center": {
+              "name": "Data Center",
+              "description": "Big data and AI"
+            },
+            "test_center": {
+              "name": "Testing Center",
+              "description": "Quality assurance"
+            },
+            "product_planning": {
+              "name": "Product Planning Department",
+              "description": "Product strategy planning"
+            },
+            "ux": {
+              "name": "User Experience Department",
+              "description": "UI/UX design"
+            }
+          },
+          "teams": {
+            "web_frontend": {
+              "name": "Web Frontend Team",
+              "description": "PC Web development"
+            },
+            "mobile": {
+              "name": "Mobile Team",
+              "description": "iOS/Android development"
+            },
+            "miniprogram": {
+              "name": "Mini Program Team",
+              "description": "WeChat mini program development"
+            },
+            "business_backend": {
+              "name": "Business Backend Team",
+              "description": "Business logic development"
+            },
+            "base_service": {
+              "name": "Base Service Team",
+              "description": "Base service development"
+            },
+            "b2b_product": {
+              "name": "B2B Product Team",
+              "description": "B2B product design"
+            },
+            "b2c_product": {
+              "name": "B2C Product Team",
+              "description": "B2C product design"
+            }
+          }
+        }
+      }
+    },
+    "filter_panel": {
+      "title": "Filter Panel",
+      "description": "For page data filtering, supports dropdown, date range, radio button group, text input, number input and other filter methods, can bind database data source",
+      "prop_types": {
+        "title": {
+          "label": "Title",
+          "default_value": "Filter Conditions"
+        },
+        "filters": {
+          "label": "Filter Configuration",
+          "item_config": {
+            "label": "Filter Item",
+            "children": {
+              "key": {
+                "label": "Identifier",
+                "description": "Unique identifier of filter item, used for component communication"
+              },
+              "type": {
+                "label": "Filter Type",
+                "options": {
+                  "select": "Dropdown",
+                  "date_range": "Date Range",
+                  "radio": "Radio Button Group",
+                  "text": "Text Input",
+                  "number": "Number Input",
+                  "tag_input": "Tag Input"
+                }
+              },
+              "label": {
+                "label": "Label",
+                "default_value": "Filter Item"
+              },
+              "options": {
+                "label": "Option List (Static)",
+                "item_config": {
+                  "label": "Option",
+                  "children": {
+                    "label": {
+                      "label": "Display Text"
+                    },
+                    "value": {
+                      "label": "Option Value"
+                    }
+                  }
+                }
+              },
+              "data_source": {
+                "label": "Data Source Configuration (Dynamic)",
+                "children": {
+                  "dataset_id": {
+                    "label": "Dataset ID",
+                    "description": "Bind database dataset to dynamically load options"
+                  },
+                  "value_field": {
+                    "label": "Value Field",
+                    "description": "Field name used as option value in dataset"
+                  },
+                  "label_field": {
+                    "label": "Label Field",
+                    "description": "Field name used as option label in dataset"
+                  }
+                }
+              },
+              "multiple": {
+                "label": "Support Multiple Selection",
+                "description": "Whether to support multiple selection (only for dropdown and radio button group)"
+              },
+              "quick_select": {
+                "label": "Show Quick Select",
+                "description": "Whether date range shows quick select buttons (Today, Yesterday, Last 7 Days, Last 30 Days)"
+              },
+              "quick_select_items": {
+                "label": "Quick select button visibility",
+                "description": "Set a preset key (today, yesterday, etc.) to false to hide that shortcut; omitted keys default to visible"
+              },
+              "use_specified_time": {
+                "label": "Specified time of day",
+                "description": "When enabled, parameters use the configured start/end clock times on the selected range dates; default presets and calendar behavior stay the same. When off, use 00:00:00 and 23:59:59 on those dates."
+              },
+              "specified_start_time": {
+                "label": "Start time of day",
+                "description": "Time only (HH:mm or HH:mm:ss) applied to the range start date"
+              },
+              "specified_end_time": {
+                "label": "End time of day",
+                "description": "Time only (HH:mm or HH:mm:ss) applied to the range end date"
+              },
+              "buttons": {
+                "label": "Button Configuration (Radio Button Group)",
+                "item_config": {
+                  "label": "Button",
+                  "children": {
+                    "label": {
+                      "label": "Button Text"
+                    },
+                    "value": {
+                      "label": "Button Value"
+                    }
+                  }
+                }
+              },
+              "default_value": {
+                "label": "Default Value",
+                "description": "Default value of filter item"
+              },
+              "placeholder": {
+                "label": "Placeholder"
+              },
+              "max_tags": {
+                "label": "Max Tags",
+                "description": "Maximum number of tags allowed (only for Tag Input type)"
+              },
+              "group_count_field": {
+                "label": "Group count field",
+                "description": "Pill Select (multi) only: option-row field (e.g. main_store_code) used to dedupe the selection into groups; publishes the distinct count as the numeric page param {componentId}_{key}GroupCount"
+              }
+            }
+          }
+        },
+        "presets": {
+          "label": "Preset Filters",
+          "item_config": {
+            "label": "Preset",
+            "children": {
+              "label": {
+                "label": "Preset Name"
+              },
+              "value": {
+                "label": "Preset Value",
+                "description": "Preset filter values, format: { filterKey: filterValue }"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hero_card": {
+      "shell": "Shell",
+      "card_width": "Card width",
+      "rows": "Rows",
+      "description": "Gradient KPI hero card with configurable rows"
+    },
+    "ring_stat": {
+      "title": "Ring Stat",
+      "description": "Progress ring with center value, legend and total (part-of-whole)"
+    },
+    "app_identity_list": {
+      "title": "Application Identities",
+      "description": "Lists application users or roles from RBAC; can inline-assign roles or edit a datasource-backed attribute merged by key",
+      "prop": {
+        "source": "Identity source",
+        "source_users": "Users",
+        "source_roles": "Roles",
+        "emit_param_key": "Selected-identity parameter",
+        "searchable": "Searchable",
+        "show_email": "Show email (users)",
+        "show_phone": "Show phone (users)",
+        "show_roles": "Show roles (users)",
+        "role_assignable": "Inline role assignment (users)",
+        "attribute_ds": "Attribute datasource id (roles)",
+        "attribute_save_ds": "Attribute save datasource id (roles)",
+        "attribute_key_field": "Attribute join field",
+        "attribute_value_field": "Attribute value field",
+        "attribute_kind": "Attribute editor (roles)",
+        "attribute_kind_none": "None",
+        "attribute_kind_toggle": "Toggle",
+        "attribute_kind_number": "Number",
+        "attribute_label": "Attribute column header",
+        "attribute_save_key_param": "Save key param",
+        "attribute_save_value_param": "Save value param",
+        "emit_attribute_param_key": "Selected-user attribute parameter (users)",
+        "show_member_count": "Show member count (roles)",
+        "show_permission_count": "Show permission count (roles)"
+      }
+    },
+    "identity_attribute_assign": {
+      "title_component": "Identity Attribute Assignment",
+      "description": "Assigns a set of datasource options (stores/regions/…) to a bus-selected identity",
+      "prop": {
+        "title": "Title",
+        "identity_param_key": "Selected-identity parameter",
+        "options_ds": "Options datasource id",
+        "current_ds": "Current-values datasource id",
+        "save_ds": "Save (transaction) datasource id",
+        "option_value_field": "Option value field",
+        "option_label_zh": "Option label field (zh)",
+        "option_label_en": "Option label field (en)",
+        "option_group_field": "Option group field",
+        "current_value_field": "Current value field",
+        "identity_value_param": "Identity value param",
+        "values_param": "Values JSON param",
+        "operator_param": "Operator param"
+      }
+    },
+    "publish_history": {
+      "title": "Publish History",
+      "description": "Read-only timeline of workbench publish records (version, note, publisher, time)"
+    },
+    "publish_preview_entry": {
+      "title": "Preview Entry",
+      "description": "Detect unpublished changes and offer preview"
+    }
+  },
+  "edit_mode_provider": {
+    "tabs_component_not_found": "Tabs component {{tabsId}} does not exist",
+    "card_component_not_found": "Card component {{cardId}} does not exist",
+    "page_not_found": "Page {{pageId}} does not exist"
+  },
+  "welcome": {
+    "workbench_created_successfully": "Workbench created successfully",
+    "creating": "Creating...",
+    "try_different_search": "Try a different search term",
+    "total_workbenches": "Total",
+    "active_workbenches": "Active",
+    "draft_workbenches": "Draft",
+    "filter_by_status": "Filter by status",
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive",
+      "draft": "Draft"
+    },
+    "title": "Build Powerful Applications with Low-Code",
+    "subtitle": "No-code visual development platform for rapid enterprise application delivery",
+    "get_started": "Get Started",
+    "hero": {
+      "badge": "Enterprise Low-Code Platform",
+      "title": "Build Applications Faster with Low-Code",
+      "subtitle": "GeniSpace Workbench enables you to quickly build enterprise applications without writing code",
+      "getStarted": "Get Started"
+    },
+    "features": {
+      "title": "Core Features",
+      "subtitle": "Everything you need to build powerful applications",
+      "visual": {
+        "title": "Visual Low-Code Development",
+        "description": "Build applications through drag-and-drop interface, no coding required"
+      },
+      "components": {
+        "title": "Rich Component Library",
+        "description": "Pre-built business components covering forms, tables, charts, and more"
+      },
+      "security": {
+        "title": "Enterprise Security",
+        "description": "Enterprise-level security standards and role-based access control"
+      }
+    },
+    "quickTips": {
+      "drag": "Drag and drop components to build your application",
+      "customize": "Customize styles and layouts without coding",
+      "deploy": "Deploy your application with one click"
+    },
+    "delete_workbench": "Delete workbench",
+    "delete_workbench_title": "Delete Workbench",
+    "delete_workbench_description": "This action will permanently delete the workbench \"{{name}}\", including all pages and configurations. This action cannot be undone.",
+    "delete_confirm_prompt": "Please enter the workbench name \"{{name}}\" to confirm deletion:",
+    "delete_warning": "Warning: This action cannot be undone.",
+    "confirm_delete": "Confirm Delete",
+    "deleting": "Deleting...",
+    "delete_success": "Workbench deleted",
+    "delete_success_message": "Workbench \"{{name}}\" has been deleted successfully",
+    "tabs": {
+      "workbenches": "Workbenches",
+      "templates": "Templates"
+    },
+    "templates": {
+      "title": "Start with Templates",
+      "subtitle": "Choose from professionally designed templates to accelerate your development",
+      "search": "Search templates...",
+      "category": "Category",
+      "all_categories": "All Categories",
+      "search_placeholder": "Search templates...",
+      "filter_by_category": "Filter by category",
+      "loading": "Loading templates...",
+      "no_templates_found": "No templates found",
+      "no_templates": "No templates available",
+      "try_different_search": "Try a different search term",
+      "check_back_later": "Check back later for new templates",
+      "found_count": "Found {{count}} templates",
+      "pages": "pages",
+      "create_from_template": "Create from Template",
+      "creating": "Creating workbench from template...",
+      "workbench_created": "Workbench created",
+      "workbench_created_from_template": "Workbench created successfully from template",
+      "categories": {
+        "all": "All Categories",
+        "education": "Education",
+        "recruiting": "Recruiting",
+        "logistics": "Logistics",
+        "finance": "Finance",
+        "retail": "Retail/E-commerce",
+        "healthcare": "Healthcare",
+        "real-estate": "Real Estate",
+        "restaurant": "Restaurant",
+        "manufacturing": "Manufacturing",
+        "general": "General"
+      }
+    },
+    "guide": {
+      "title": "Quick Start Guide",
+      "subtitle": "Follow these steps to create your first workbench",
+      "step1": {
+        "title": "Create Workbench",
+        "description": "Click the create button to start"
+      },
+      "step2": {
+        "title": "Design Application",
+        "description": "Drag and drop components to build"
+      },
+      "step3": {
+        "title": "Deploy & Share",
+        "description": "Publish your application instantly"
+      }
+    }
+  },
+  "object_array_input": {
+    "select_placeholder": "Please select...",
+    "item_fallback": "Item",
+    "empty_hint": "No items yet. Use the button below to add one.",
+    "add_label": "Add {{label}}"
+  },
+  "grid24": {
+    "unknown_component": "Unknown",
+    "unknown_type": "Unknown type",
+    "no_title": "Untitled",
+    "nesting_fallback": "Nesting depth is at or above the limit (≥{{max}}). The inner 24-column grid has fallen back to a simple vertical stack. Use a preset layout or reduce nesting.",
+    "presets": {
+      "single": "Single column",
+      "two_equal": "Two equal columns",
+      "three_equal": "Three equal columns",
+      "two_ratio_1_2": "1:2 split",
+      "two_ratio_2_1": "2:1 split",
+      "two_ratio_3_1": "3:1 split",
+      "four_equal": "Four equal columns",
+      "top_bottom": "Top full width + bottom two",
+      "top_three_bottom": "Top full width + bottom three",
+      "dashboard": "Dashboard"
+    }
+  },
+  "mobile": {
+    "back": "Back",
+    "open_menu": "Open menu",
+    "refresh": "Refresh",
+    "platform_logo_alt": "Platform logo",
+    "choose_application": "Back to workspace",
+    "choose_application_aria": "Back to workspace"
+  },
+  "viewport": {
+    "return_to_desktop": "Return to desktop view",
+    "return_to_desktop_short": "Return to PC"
+  },
+  "home": {
+    "features": {
+      "title": "Core Capabilities",
+      "subtitle": "Everything you need to build powerful applications"
+    },
+    "templates": {
+      "badge": "Rich Industry Templates",
+      "title": "Start from Professional Templates",
+      "subtitle": "Choose from our rich template library to quickly create workbenches for various industries"
+    }
+  },
+  "coming_soon": {
+    "title": "Coming Soon",
+    "description": "This page is under construction — stay tuned.",
+    "preview": "Preview page"
+  },
+  "preview_badge": "Preview",
+  "preview_banner": "You are previewing an unpublished version of this workbench.",
+  "preview_exit": "Exit preview",
+  "preview_link_invalid": "Preview link is invalid or expired",
+  "release_notes": {
+    "title": "New Version Released",
+    "got_it": "Confirm",
+    "published_by": "Published by {{name}}",
+    "published_at": "Published at {{time}}",
+    "load_failed": "Failed to load the release note",
+    "fallback_message": "A new version has been published."
+  },
+  "page_empty_hint": "This page has no content yet."
+}

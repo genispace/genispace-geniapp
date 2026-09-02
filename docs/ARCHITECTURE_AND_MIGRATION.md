@@ -247,7 +247,9 @@ sequenceDiagram
 
 ### 5.1 导出运行时与源码结构
 
-`@genispace/geniapp/workbench` 是导出应用唯一依赖的 Workbench 兼容运行时。它公开可移植组件、桌面/移动导航、亮暗主题、Shell 消息与多语言行为，但不包含 Workbench 编辑器、草稿状态或发布流程。生成源码按 `src/pages/<page>` 与 `src/components/<page>` 拆分，每个嵌套组件也有独立模块，开发者可直接调整配置或替换实现。
+`@genispace/geniapp/components` 是导出应用使用的通用组件运行时。它公开与 Workbench 查看态逐字节一致的 renderer、桌面/移动导航、亮暗主题、Shell 消息、多语言行为和平台适配器，但不包含 Workbench 编辑器、草稿状态或发布流程。生成源码按 `src/pages/<page>` 与 `src/components/<page>` 拆分，每个嵌套组件也有独立模块，开发者可直接调整配置或替换实现。
+
+导出功能在公共 `components` 合同建立前未正式发布，因此包中不存在旧子路径的 alias、re-export、迁移期或使用量监控。
 
 生成项目精确锁定 `@genispace/geniapp` 版本；预构建 `dist` 同时冻结该版本的浏览器运行时代码。因此下载后可以立即安装，执行 `pnpm build` 后也使用同一份公共合同，不会出现预构建版本与源码版本行为漂移。这不改变“只下载、不代部署”的产品边界。
 
@@ -260,7 +262,7 @@ sequenceDiagram
 | `applications` | 52 个第一方 GeniApp 全部改用 `@genispace/geniapp`，移除共享源码 alias |
 | `applications-custom` | 开发脚手架改用公开包合同 |
 | `applications-brightfood` | 实际客户应用改用公开包合同并通过回归 |
-| Workbench 导出 | 增加 `geniappContractVersion: 0.1.0`，保留源码/dist/平台合同的自包含下载 |
+| Workbench 导出 | 使用 `geniappContractVersion: 0.4.0`，保留结构化源码、预构建 dist 和完整平台合同的自包含下载 |
 | `frontend-packages` | 标记只读废止；现役仓库不再消费其源码 |
 
 ## 7. 验收标准与本地结果
@@ -269,14 +271,14 @@ sequenceDiagram
 |---|---|
 | `frontend` 私有包构建 | 5/5 package build 通过 |
 | `frontend` 全量类型检查 | 通过 |
-| `@genispace/geniapp` 类型、单测、构建 | 通过；2/2 测试通过 |
+| `@genispace/geniapp` 类型、单测、构建 | 通过；6 个测试文件、17/17 测试通过 |
 | 公共 Kit exports 完整性 | 101 个现有应用所需 symbol 均存在 |
 | 第一方 GeniApp 类型检查 | 52/52 通过 |
 | 第一方 GeniApp production build | 52/52 通过 |
 | `applications-brightfood` | 类型检查通过；78/78 测试通过；production build 通过 |
 | `applications-custom` | 类型检查、测试、production build 通过 |
-| Workbench 导出编译器 | 2 个 suite、6/6 测试通过；覆盖复杂多页面/多组件/自定义样式、移动导航、亮/暗主题、双语和平台合同 |
-| npm tarball 纯消费者 | 通过；独立临时项目安装 `.tgz` 后成功加载 17 个公共入口，无源码 alias |
+| Workbench 导出编译器 | 编译与导出 14/14 测试通过，25/25 个内置模板可生成；覆盖复杂多页面/多组件/自定义样式、移动导航、亮/暗主题、双语和平台合同 |
+| npm tarball 纯消费者 | 通过；独立临时项目安装 `.tgz` 后完成 type-check、test 和 production build，无源码 alias |
 
 完整的 Workbench 双应用对比证据见根目录 `docs/acceptance/workbench-to-geniapp-local-acceptance-report.md`。
 

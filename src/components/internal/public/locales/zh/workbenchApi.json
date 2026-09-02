@@ -1,0 +1,30 @@
+{
+  "workbenchApi": {
+    "endpoint_not_found": "未找到API端点: {{endpointKey}}",
+    "data_fetch_success": "数据获取成功",
+    "get_workbench_success": "获取工作台详情成功",
+    "get_workbench_failed": "获取工作台详情失败",
+    "get_app_config_success": "获取应用配置成功",
+    "get_app_config_failed": "获取应用配置失败",
+    "get_page_config_success": "获取页面配置成功",
+    "page_config_not_found": "页面配置 {{pageId}} 未找到",
+    "data_source_undefined": "数据源未定义",
+    "unsupported_data_source_type": "不支持的数据源类型: {{type}}",
+    "get_workbenches_failed": "获取工作台列表失败",
+    "workbench": "工作台",
+    "create_workbench_failed": "创建工作台失败",
+    "update_workbench_failed": "更新工作台失败",
+    "delete_workbench_failed": "删除工作台失败",
+    "toggle_workbench_status_failed": "切换工作台状态失败",
+    "restore_workbench_version_failed": "恢复工作台版本失败",
+    "get_datasets_failed": "获取数据集列表失败",
+    "get_dataset_failed": "获取数据集详情失败",
+    "update_app_config_failed": "更新工作台应用配置失败",
+    "update_page_failed": "更新页面配置失败",
+    "update_app_config_partial_failed": "更新应用配置失败",
+    "get_versions_failed": "获取工作台版本列表失败",
+    "response_data_empty": "响应数据为空",
+    "delete_dataset_data_failed": "删除数据集数据失败"
+  }
+}
+

@@ -1,0 +1,586 @@
+{
+  "appConfig": {
+    "name": "医院管理系统",
+    "description": "医疗健康行业管理系统，包含患者管理、预约挂号、病历管理、药品库存等功能",
+    "version": "1.0.0",
+    "defaultPage": "dashboard",
+    "navigation": {
+      "mode": "side",
+      "items": [
+        {
+          "key": "dashboard",
+          "title": "工作台",
+          "icon": "LayoutDashboard",
+          "linkedPage": "dashboard"
+        },
+        {
+          "key": "patients",
+          "title": "患者管理",
+          "icon": "Users",
+          "children": [
+            {
+              "key": "patient-list",
+              "title": "患者列表",
+              "icon": "List",
+              "linkedPage": "patient-list"
+            },
+            {
+              "key": "patient-register",
+              "title": "患者登记",
+              "icon": "UserPlus",
+              "linkedPage": "patient-register"
+            }
+          ]
+        },
+        {
+          "key": "appointments",
+          "title": "预约管理",
+          "icon": "Calendar",
+          "linkedPage": "appointments"
+        },
+        {
+          "key": "medical-records",
+          "title": "病历管理",
+          "icon": "FileText",
+          "linkedPage": "medical-records"
+        },
+        {
+          "key": "pharmacy",
+          "title": "药房管理",
+          "icon": "Pill",
+          "linkedPage": "pharmacy"
+        },
+        {
+          "key": "doctors",
+          "title": "医生管理",
+          "icon": "Stethoscope",
+          "linkedPage": "doctors"
+        }
+      ]
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "工作台",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "today-patients",
+                "title": "今日接诊",
+                "value": 156,
+                "icon": "Users",
+                "trend": {
+                  "value": 8,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "today-appointments",
+                "title": "今日预约",
+                "value": 89,
+                "icon": "Calendar",
+                "trend": {
+                  "value": 5,
+                  "type": "up",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "pending-appointments",
+                "title": "待处理预约",
+                "value": 12,
+                "icon": "Clock",
+                "trend": {
+                  "value": 3,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "success",
+                  "description": "较昨日"
+                }
+              },
+              {
+                "key": "low-medicine",
+                "title": "低库存药品",
+                "value": 8,
+                "icon": "AlertTriangle",
+                "trend": {
+                  "value": 2,
+                  "type": "down",
+                  "suffix": "",
+                  "status": "warning",
+                  "description": "较昨日"
+                }
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "appointment-chart",
+          "type": "Chart",
+          "props": {
+            "title": "预约趋势",
+            "chartType": "line",
+            "height": 300
+          },
+          "mockData": [
+            { "date": "2024-01-01", "count": 85 },
+            { "date": "2024-01-02", "count": 92 },
+            { "date": "2024-01-03", "count": 88 },
+            { "date": "2024-01-04", "count": 95 },
+            { "date": "2024-01-05", "count": 89 },
+            { "date": "2024-01-06", "count": 102 },
+            { "date": "2024-01-07", "count": 98 }
+          ],
+          "useMockData": true
+        },
+        {
+          "id": "recent-patients",
+          "type": "Table",
+          "props": {
+            "title": "最近接诊",
+            "columns": [
+              {
+                "key": "patientId",
+                "title": "患者ID",
+                "dataIndex": "patientId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "age",
+                "title": "年龄",
+                "dataIndex": "age"
+              },
+              {
+                "key": "department",
+                "title": "科室",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "医生",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "time",
+                "title": "就诊时间",
+                "dataIndex": "time"
+              }
+            ],
+            "pagination": {
+              "pageSize": 10
+            }
+          },
+          "mockData": [
+            {
+              "patientId": "P001",
+              "name": "张三",
+              "age": 35,
+              "department": "内科",
+              "doctor": "李医生",
+              "time": "2024-01-07 14:30:00"
+            },
+            {
+              "patientId": "P002",
+              "name": "李四",
+              "age": 28,
+              "department": "外科",
+              "doctor": "王医生",
+              "time": "2024-01-07 13:20:00"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "patient-list": {
+      "title": "患者列表",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "patient-table",
+          "type": "Table",
+          "props": {
+            "title": "患者列表",
+            "columns": [
+              {
+                "key": "patientId",
+                "title": "患者ID",
+                "dataIndex": "patientId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "gender",
+                "title": "性别",
+                "dataIndex": "gender"
+              },
+              {
+                "key": "age",
+                "title": "年龄",
+                "dataIndex": "age"
+              },
+              {
+                "key": "phone",
+                "title": "联系电话",
+                "dataIndex": "phone"
+              },
+              {
+                "key": "lastVisit",
+                "title": "最后就诊",
+                "dataIndex": "lastVisit"
+              }
+            ],
+            "actions": [
+              {
+                "key": "add",
+                "label": "新增患者",
+                "type": "primary",
+                "icon": "Plus"
+              }
+            ],
+            "rowActions": [
+              {
+                "key": "view",
+                "label": "查看",
+                "icon": "Eye"
+              },
+              {
+                "key": "edit",
+                "label": "编辑",
+                "icon": "Edit"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "patientId": "P001",
+              "name": "张三",
+              "gender": "男",
+              "age": 35,
+              "phone": "138****8888",
+              "lastVisit": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "appointments": {
+      "title": "预约管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "appointment-table",
+          "type": "Table",
+          "props": {
+            "title": "预约列表",
+            "columns": [
+              {
+                "key": "appointmentId",
+                "title": "预约号",
+                "dataIndex": "appointmentId"
+              },
+              {
+                "key": "patientName",
+                "title": "患者姓名",
+                "dataIndex": "patientName"
+              },
+              {
+                "key": "department",
+                "title": "科室",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "医生",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "appointmentTime",
+                "title": "预约时间",
+                "dataIndex": "appointmentTime"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "appointmentId": "APT20240107001",
+              "patientName": "张三",
+              "department": "内科",
+              "doctor": "李医生",
+              "appointmentTime": "2024-01-08 09:00",
+              "status": "已确认"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "pharmacy": {
+      "title": "药房管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "medicine-stats",
+          "type": "StatisticGroup",
+          "props": {
+            "grid": {
+              "cols": 4
+            },
+            "items": [
+              {
+                "key": "total-medicines",
+                "title": "药品总数",
+                "value": 1250,
+                "icon": "Pill"
+              },
+              {
+                "key": "total-stock",
+                "title": "总库存量",
+                "value": 45680,
+                "icon": "Warehouse"
+              },
+              {
+                "key": "low-stock",
+                "title": "低库存药品",
+                "value": 8,
+                "icon": "AlertTriangle"
+              },
+              {
+                "key": "expiring-soon",
+                "title": "即将过期",
+                "value": 5,
+                "icon": "Clock"
+              }
+            ]
+          },
+          "useMockData": true
+        },
+        {
+          "id": "medicine-table",
+          "type": "Table",
+          "props": {
+            "title": "药品库存",
+            "columns": [
+              {
+                "key": "medicineId",
+                "title": "药品编号",
+                "dataIndex": "medicineId"
+              },
+              {
+                "key": "name",
+                "title": "药品名称",
+                "dataIndex": "name"
+              },
+              {
+                "key": "specification",
+                "title": "规格",
+                "dataIndex": "specification"
+              },
+              {
+                "key": "stock",
+                "title": "库存",
+                "dataIndex": "stock"
+              },
+              {
+                "key": "expiryDate",
+                "title": "有效期",
+                "dataIndex": "expiryDate"
+              }
+            ]
+          },
+          "mockData": [
+            {
+              "medicineId": "M001",
+              "name": "阿莫西林胶囊",
+              "specification": "0.25g*24粒",
+              "stock": 150,
+              "expiryDate": "2025-06-30"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "patient-register": {
+      "title": "患者登记",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "register-form",
+          "type": "Form",
+          "props": {
+            "title": "患者信息登记",
+            "fields": [
+              {
+                "key": "name",
+                "label": "姓名",
+                "type": "text",
+                "required": true
+              },
+              {
+                "key": "gender",
+                "label": "性别",
+                "type": "select",
+                "required": true
+              },
+              {
+                "key": "age",
+                "label": "年龄",
+                "type": "number",
+                "required": true
+              },
+              {
+                "key": "phone",
+                "label": "联系电话",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          "useMockData": true
+        }
+      ]
+    },
+    "medical-records": {
+      "title": "病历管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "record-table",
+          "type": "Table",
+          "props": {
+            "title": "病历列表",
+            "columns": [
+              {
+                "key": "recordId",
+                "title": "病历编号",
+                "dataIndex": "recordId"
+              },
+              {
+                "key": "patientName",
+                "title": "患者姓名",
+                "dataIndex": "patientName"
+              },
+              {
+                "key": "department",
+                "title": "科室",
+                "dataIndex": "department"
+              },
+              {
+                "key": "doctor",
+                "title": "医生",
+                "dataIndex": "doctor"
+              },
+              {
+                "key": "visitDate",
+                "title": "就诊日期",
+                "dataIndex": "visitDate"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "recordId": "MR20240107001",
+              "patientName": "张三",
+              "department": "内科",
+              "doctor": "李医生",
+              "visitDate": "2024-01-07"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    },
+    "doctors": {
+      "title": "医生管理",
+      "layout": "fluid",
+      "components": [
+        {
+          "id": "doctor-table",
+          "type": "Table",
+          "props": {
+            "title": "医生列表",
+            "columns": [
+              {
+                "key": "doctorId",
+                "title": "医生ID",
+                "dataIndex": "doctorId"
+              },
+              {
+                "key": "name",
+                "title": "姓名",
+                "dataIndex": "name"
+              },
+              {
+                "key": "department",
+                "title": "科室",
+                "dataIndex": "department"
+              },
+              {
+                "key": "title",
+                "title": "职称",
+                "dataIndex": "title"
+              },
+              {
+                "key": "status",
+                "title": "状态",
+                "dataIndex": "status",
+                "render": "tag"
+              }
+            ],
+            "pagination": {
+              "pageSize": 20
+            }
+          },
+          "mockData": [
+            {
+              "doctorId": "D001",
+              "name": "李医生",
+              "department": "内科",
+              "title": "主任医师",
+              "status": "在岗"
+            }
+          ],
+          "useMockData": true
+        }
+      ]
+    }
+  }
+}

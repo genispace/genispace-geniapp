@@ -862,7 +862,11 @@
     "publish_required": "请先发布此工作台，再导出 GeniApp。",
     "identifier": "GeniApp 标识符",
     "identifier_hint": "仅支持小写字母、数字和连字符；该值将作为正式应用标识符。",
-    "version": "初始版本",
+    "version": "导出版本",
+    "version_loading": "正在检查版本历史…",
+    "version_policy_existing": "当前最高版本：{{latest}} · 建议版本：{{suggested}}",
+    "version_not_greater": "版本必须高于 {{latest}}，建议使用 {{suggested}}",
+    "version_policy_first": "首次导出从 1.0.0 开始。",
     "package_name": "包名（可选）",
     "completed": "GeniApp 安装包已就绪",
     "failed": "GeniApp 导出失败",
@@ -878,6 +882,23 @@
     "refresh_failed": "刷新导出状态失败",
     "create_missing": "未能创建导出任务",
     "create_failed": "创建 GeniApp 导出任务失败",
+    "history": "导出历史",
+    "history_empty": "该应用标识符还没有导出记录。",
+    "history_failed": "加载导出历史失败",
+    "retry": "重试",
+    "retry_failed": "重试导出失败",
+    "status": {
+      "pending": "等待中",
+      "running": "生成中",
+      "completed": "已完成",
+      "failed": "失败"
+    },
+    "artifact": {
+      "available": "可下载",
+      "expired": "已过期",
+      "deleted": "已清理",
+      "missing": "不可用"
+    },
     "steps": {
       "snapshot": "冻结已发布快照",
       "compatibility": "检查可移植兼容性",

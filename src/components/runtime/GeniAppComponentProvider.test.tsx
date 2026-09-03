@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { GeniAppComponentProvider } from './GeniAppComponentProvider';
 import { MultiPageRenderer } from './MultiPageRenderer';
 import PageRenderer from './PageRenderer';
+import { getRuntimeDatasourceVersions } from '../utils/datasourceVersion';
 
 const page = {
   components: [
@@ -75,6 +76,26 @@ describe('GeniAppComponentProvider', () => {
     expect(document.getElementById('inkOnyx-theme-css')).not.toBeNull();
     unmount();
     expect(document.documentElement).not.toHaveAttribute('data-theme');
+  });
+
+  it('syncs datasource version pins into the runtime registry and clears on unmount', async () => {
+    const { unmount, rerender } = render(
+      <GeniAppComponentProvider applicationId="pins-app" datasourceVersions={{ 'ds-a': 5 }}>
+        <div>pins probe</div>
+      </GeniAppComponentProvider>,
+    );
+
+    await waitFor(() => expect(getRuntimeDatasourceVersions()).toEqual({ 'ds-a': 5 }));
+
+    rerender(
+      <GeniAppComponentProvider applicationId="pins-app" datasourceVersions={{ 'ds-a': 6 }}>
+        <div>pins probe</div>
+      </GeniAppComponentProvider>,
+    );
+    await waitFor(() => expect(getRuntimeDatasourceVersions()).toEqual({ 'ds-a': 6 }));
+
+    unmount();
+    expect(getRuntimeDatasourceVersions()).toBeUndefined();
   });
 
   it('uses application-owned component modules inside the exact page layout', async () => {

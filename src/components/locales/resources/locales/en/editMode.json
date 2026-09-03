@@ -862,7 +862,11 @@
     "publish_required": "Publish this Workbench before exporting a GeniApp.",
     "identifier": "GeniApp identifier",
     "identifier_hint": "Lowercase letters, numbers, and hyphens; this becomes the normal application identifier.",
-    "version": "Initial version",
+    "version": "Export version",
+    "version_loading": "Checking version history…",
+    "version_policy_existing": "Current highest: {{latest}} · Suggested: {{suggested}}",
+    "version_not_greater": "Version must be greater than {{latest}}. Suggested: {{suggested}}",
+    "version_policy_first": "The first export starts at 1.0.0.",
     "package_name": "Package name (optional)",
     "completed": "GeniApp package is ready",
     "failed": "GeniApp export failed",
@@ -878,6 +882,23 @@
     "refresh_failed": "Failed to refresh export status",
     "create_missing": "Export job was not created",
     "create_failed": "Failed to create GeniApp export",
+    "history": "Export history",
+    "history_empty": "No exports have been created for this identifier.",
+    "history_failed": "Failed to load export history",
+    "retry": "Retry",
+    "retry_failed": "Failed to retry export",
+    "status": {
+      "pending": "Pending",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "artifact": {
+      "available": "Available",
+      "expired": "Expired",
+      "deleted": "Deleted",
+      "missing": "Unavailable"
+    },
     "steps": {
       "snapshot": "Freeze published snapshot",
       "compatibility": "Check portable compatibility",

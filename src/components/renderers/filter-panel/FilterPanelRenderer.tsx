@@ -2708,6 +2708,20 @@ function fmtDate(v: unknown, full = false): string {
   return full ? `${m[1]}-${m[2]}-${m[3]}` : `${m[2]}-${m[3]}`;
 }
 
+// Capsule-only (#71): Add 'YY-' prefix if the endpoint year is not the current natural year.
+// Check both ends independently.
+// Example: Last year → '25-02-23~25-03-01'; Cross-year → '25-12-23~01-01'.
+// All preset/custom branches follow this format.
+// Last year → '25-02-23~25-03-01'; Cross-year → '25-12-23~01-01'.
+// All preset/custom branches follow this format.
+function fmtChipDate(v: unknown): string {
+  if (v == null) return '';
+  const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return String(v);
+  const yy = m[1] !== String(new Date().getFullYear()) ? `${m[1].slice(2)}-` : '';
+  return `${yy}${m[2]}-${m[3]}`;
+}
+
 // 'YYYY-MM-DD' → local Date (avoid `new Date('YYYY-MM-DD')` which parses as UTC and can shift a day).
 function parseISODate(s: string): Date | undefined {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || '');
@@ -3044,7 +3058,7 @@ const PresetDateRangeFilterField: React.FC<PresetDateRangeFilterFieldProps> = ({
   const selectedPresetLabel =
     presetItems.find(p => p.value === value)?.label ||
     resolveBilingualLabel(presets.find(p => p.value === value)?.label, language);
-  const rangeText = resolved ? `${fmtDate(resolved.start)}~${fmtDate(resolved.end)}` : '';
+  const rangeText = resolved ? `${fmtChipDate(resolved.start)}~${fmtChipDate(resolved.end)}` : '';
   const triggerLabel =
     value === 'custom'
       ? rangeText || t('filter_panel.custom', 'Custom')

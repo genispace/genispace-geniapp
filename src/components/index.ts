@@ -9,6 +9,10 @@ export { GeniAppComponentProvider } from './runtime/GeniAppComponentProvider';
 export { GeniAppWorkbench } from './runtime/GeniAppWorkbench';
 export type { GeniAppWorkbenchConfig, GeniAppWorkbenchProps } from './runtime/GeniAppWorkbench';
 export { createGeniAppI18n, normalizeGeniAppLocale } from './runtime/i18n';
+export {
+  setRuntimeDatasourceVersions,
+  useSyncRuntimeDatasourceVersions,
+} from './utils/datasourceVersion';
 export { configureGeniAppHostAdapters, getGeniAppHostAdapters } from './adapters/host';
 export { createPlatformHostAdapters } from './adapters/platform';
 export type { CreatePlatformHostAdaptersOptions } from './adapters/platform';

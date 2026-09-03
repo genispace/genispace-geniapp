@@ -10,6 +10,7 @@ import { PageFullscreenProvider } from '../contexts/PageFullscreenContext';
 import { MobileFlowLayoutProvider } from '../mobile/mobileFlowLayoutContext';
 import { createGeniAppI18n, normalizeGeniAppLocale } from './i18n';
 import { useViewport } from '../contexts/ViewportContext';
+import { useSyncRuntimeDatasourceVersions } from '../utils/datasourceVersion';
 
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -21,6 +22,13 @@ export interface GeniAppComponentProviderProps {
   localeMetadata?: Record<string, unknown>;
   applicationId?: string;
   themeId?: string;
+  /**
+   * Workbench-level datasource version pins (`config.datasourceVersions`).
+   * The host passes the map here so the package's own runtime registry is
+   * populated — renderer data hooks inside this tree resolve `?version=N`
+   * from it. Omit/undefined means "follow each datasource's default version".
+   */
+  datasourceVersions?: Record<string, number>;
   /** Override the detected Workbench viewport. Omit for automatic mobile/desktop behavior. */
   mobile?: boolean;
   fullscreen?: boolean;
@@ -56,6 +64,7 @@ export function GeniAppComponentProvider({
   localeMetadata,
   applicationId,
   themeId,
+  datasourceVersions,
   mobile,
   fullscreen = false,
   provideAppearance = true,
@@ -66,6 +75,10 @@ export function GeniAppComponentProvider({
     () => configureGeniAppHostAdapters(adapters),
     [adapters],
   );
+
+  // Sync host-supplied version pins into this package's module registry
+  // (cleared on unmount), so renderer data hooks resolve pinned versions.
+  useSyncRuntimeDatasourceVersions({ datasourceVersions });
 
   useEffect(() => {
     const nextLocale = normalizeGeniAppLocale(locale);

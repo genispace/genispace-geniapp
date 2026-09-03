@@ -939,11 +939,31 @@ export interface WorkbenchGeniappExportJob {
   createdAt: string;
   finishedAt?: string | null;
   expiresAt?: string | null;
+  artifactState?: 'available' | 'expired' | 'deleted' | 'missing' | 'unavailable';
+  canDownload?: boolean;
+  canRetry?: boolean;
+  attemptCount?: number;
+  downloadCount?: number;
+  lastDownloadedAt?: string | null;
+}
+
+export interface WorkbenchGeniappVersionPolicy {
+  identifier: string;
+  latestVersion: string | null;
+  suggestedVersion: string;
+  firstExport: boolean;
+  totalExports: number;
+}
+
+export interface WorkbenchGeniappExportHistory {
+  items: WorkbenchGeniappExportJob[];
+  nextCursor: string | null;
+  summary: WorkbenchGeniappVersionPolicy & { total: number };
 }
 
 export const createWorkbenchGeniappExport = async (
   workbenchId: string,
-  target: { identifier: string; version: string; packageName?: string }
+  target: { identifier: string; version?: string; packageName?: string }
 ) => apiClient.post<WorkbenchGeniappExportJob>(`/workbenches/${workbenchId}/geniapp-exports`, target);
 
 export const getWorkbenchGeniappExport = async (workbenchId: string, jobId: string) =>
@@ -951,6 +971,26 @@ export const getWorkbenchGeniappExport = async (workbenchId: string, jobId: stri
 
 export const listWorkbenchGeniappExports = async (workbenchId: string, limit = 20) =>
   apiClient.get<WorkbenchGeniappExportJob[]>(`/workbenches/${workbenchId}/geniapp-exports`, { limit });
+
+export const getWorkbenchGeniappVersionPolicy = async (workbenchId: string, identifier: string) =>
+  apiClient.get<WorkbenchGeniappVersionPolicy>(
+    `/workbenches/${workbenchId}/geniapp-exports/version-policy`,
+    { identifier }
+  );
+
+export const getWorkbenchGeniappExportHistory = async (
+  workbenchId: string,
+  options: { identifier: string; status?: WorkbenchGeniappExportJob['status']; limit?: number; cursor?: string }
+) => apiClient.get<WorkbenchGeniappExportHistory>(
+  `/workbenches/${workbenchId}/geniapp-exports/history`,
+  options
+);
+
+export const retryWorkbenchGeniappExport = async (workbenchId: string, jobId: string) =>
+  apiClient.post<WorkbenchGeniappExportJob>(
+    `/workbenches/${workbenchId}/geniapp-exports/${jobId}/retry`,
+    {}
+  );
 
 export const downloadWorkbenchGeniappExport = async (
   workbenchId: string,

@@ -1426,7 +1426,24 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
       if (same) return prev;
       // Mirror the inbound value onto its partner key (store dropdown <-> sheet store tab) so the
       // sheet draft + shared chips stay consistent. Local-only (no re-emit) — same as before.
-      return { ...prev, ...expandStoreMirror({ [target.key]: parsed }, storeMirrorMap) };
+      const patch = expandStoreMirror({ [target.key]: parsed }, storeMirrorMap);
+      // Externally-driven commits (e.g. ProductReport drill-through: click a store/category/season/
+      // series row → emit sw-filter-global_* straight onto the bus) bypass sendParameters, so they
+      // never reach sharedPanelValues. On tab revisit ParameterContext strips filter params from the
+      // page bus expecting the panel to re-emit its state — mount hydration (defaults < shared store
+      // < bus) then can't restore the drill-set value and the selection silently vanishes. Publish
+      // the patch (page-private keys excluded) so hydration restores it like a panel-committed value.
+      // No ping-pong: sibling folds re-emit with publish:false, and self-instance emits are ignored.
+      const sharedPatch = pageScopedKeys.size === 0
+        ? patch
+        : Object.fromEntries(Object.entries(patch).filter(([k]) => !pageScopedKeys.has(k)));
+      if (Object.keys(sharedPatch).length > 0) {
+        publishSharedPanelValues(componentId, commInstanceId, {
+          ...(sharedPanelValues.get(componentId) ?? {}),
+          ...sharedPatch,
+        });
+      }
+      return { ...prev, ...patch };
     });
   };
   const onExternalParamChange = useCallback(
@@ -2708,6 +2725,20 @@ function fmtDate(v: unknown, full = false): string {
   return full ? `${m[1]}-${m[2]}-${m[3]}` : `${m[2]}-${m[3]}`;
 }
 
+// Capsule-only (#71): Add 'YY-' prefix if the endpoint year is not the current natural year.
+// Check both ends independently.
+// Example: Last year → '25-02-23~25-03-01'; Cross-year → '25-12-23~01-01'.
+// All preset/custom branches follow this format.
+// Last year → '25-02-23~25-03-01'; Cross-year → '25-12-23~01-01'.
+// All preset/custom branches follow this format.
+function fmtChipDate(v: unknown): string {
+  if (v == null) return '';
+  const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return String(v);
+  const yy = m[1] !== String(new Date().getFullYear()) ? `${m[1].slice(2)}-` : '';
+  return `${yy}${m[2]}-${m[3]}`;
+}
+
 // 'YYYY-MM-DD' → local Date (avoid `new Date('YYYY-MM-DD')` which parses as UTC and can shift a day).
 function parseISODate(s: string): Date | undefined {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || '');
@@ -3044,7 +3075,7 @@ const PresetDateRangeFilterField: React.FC<PresetDateRangeFilterFieldProps> = ({
   const selectedPresetLabel =
     presetItems.find(p => p.value === value)?.label ||
     resolveBilingualLabel(presets.find(p => p.value === value)?.label, language);
-  const rangeText = resolved ? `${fmtDate(resolved.start)}~${fmtDate(resolved.end)}` : '';
+  const rangeText = resolved ? `${fmtChipDate(resolved.start)}~${fmtChipDate(resolved.end)}` : '';
   const triggerLabel =
     value === 'custom'
       ? rangeText || t('filter_panel.custom', 'Custom')

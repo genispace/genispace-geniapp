@@ -94,6 +94,14 @@ export interface BuiltInApp {
   /** From catalog `metadata.locales`; enables header label to follow UI language. */
   locales?: BuiltInAppLocales | null;
   pinnedVersion: string | null;
+  /** Stable version currently visible to users outside the preview audience. */
+  stableVersion?: string | null;
+  /** Candidate version assigned to the application's preview channel. */
+  previewVersion?: string | null;
+  /** Server-authorized version for the current user. */
+  effectiveVersion?: string | null;
+  /** Server-authorized channel for the current user. */
+  releaseChannel?: 'stable' | 'preview';
   /** Expanded iframe document base for this team's pinned version (manifest `iframeEntryTemplate`). */
   iframeEntryTemplate?: string | null;
   /** Optional `sandbox` attribute override for the iframe (space-separated tokens). */

@@ -25,7 +25,7 @@ const relativeFiles = (root) => {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
       const fullPath = path.join(directory, entry.name);
       if (entry.isDirectory()) visit(fullPath);
-      else result.push(path.relative(root, fullPath));
+      else if (entry.name !== '.DS_Store') result.push(path.relative(root, fullPath));
     }
   };
   visit(root);

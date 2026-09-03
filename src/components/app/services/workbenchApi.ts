@@ -6,6 +6,7 @@ import { resolveRuntimeDatasourceVersion } from '@/utils/datasourceVersion';
 import { Workbench, AppConfig } from '../../types';
 import { handleApiError } from '@/utils/errorHandler';
 import type { VisibleWhen } from '@/utils/visibleWhen';
+import { startNativeDownload } from '@/lib/nativeDownload';
 
 import { getMockData } from '@/mocks/index';
 import i18next from 'i18next';
@@ -939,11 +940,39 @@ export interface WorkbenchGeniappExportJob {
   createdAt: string;
   finishedAt?: string | null;
   expiresAt?: string | null;
+  artifactState?: 'available' | 'expired' | 'deleted' | 'missing' | 'unavailable';
+  canDownload?: boolean;
+  canRetry?: boolean;
+  attemptCount?: number;
+  downloadCount?: number;
+  lastDownloadedAt?: string | null;
+}
+
+export interface WorkbenchGeniappVersionPolicy {
+  identifier: string;
+  latestVersion: string | null;
+  suggestedVersion: string;
+  firstExport: boolean;
+  totalExports: number;
+}
+
+export interface WorkbenchGeniappExportHistory {
+  items: WorkbenchGeniappExportJob[];
+  nextCursor: string | null;
+  summary: WorkbenchGeniappVersionPolicy & { total: number };
+}
+
+export interface WorkbenchGeniappExportDownload {
+  delivery: 'signed-url' | 'authenticated-api';
+  url: string | null;
+  artifactFileName: string | null;
+  artifactSha256: string | null;
+  artifactSize: string | null;
 }
 
 export const createWorkbenchGeniappExport = async (
   workbenchId: string,
-  target: { identifier: string; version: string; packageName?: string }
+  target: { identifier: string; version?: string; packageName?: string }
 ) => apiClient.post<WorkbenchGeniappExportJob>(`/workbenches/${workbenchId}/geniapp-exports`, target);
 
 export const getWorkbenchGeniappExport = async (workbenchId: string, jobId: string) =>
@@ -952,14 +981,45 @@ export const getWorkbenchGeniappExport = async (workbenchId: string, jobId: stri
 export const listWorkbenchGeniappExports = async (workbenchId: string, limit = 20) =>
   apiClient.get<WorkbenchGeniappExportJob[]>(`/workbenches/${workbenchId}/geniapp-exports`, { limit });
 
+export const getWorkbenchGeniappVersionPolicy = async (workbenchId: string, identifier: string) =>
+  apiClient.get<WorkbenchGeniappVersionPolicy>(
+    `/workbenches/${workbenchId}/geniapp-exports/version-policy`,
+    { identifier }
+  );
+
+export const getWorkbenchGeniappExportHistory = async (
+  workbenchId: string,
+  options: { identifier: string; status?: WorkbenchGeniappExportJob['status']; limit?: number; cursor?: string }
+) => apiClient.get<WorkbenchGeniappExportHistory>(
+  `/workbenches/${workbenchId}/geniapp-exports/history`,
+  options
+);
+
+export const retryWorkbenchGeniappExport = async (workbenchId: string, jobId: string) =>
+  apiClient.post<WorkbenchGeniappExportJob>(
+    `/workbenches/${workbenchId}/geniapp-exports/${jobId}/retry`,
+    {}
+  );
+
 export const downloadWorkbenchGeniappExport = async (
   workbenchId: string,
   jobId: string,
   filename?: string
-) => apiClient.downloadFile(
-  `/workbenches/${workbenchId}/geniapp-exports/${jobId}/artifact`,
-  filename || 'workbench-geniapp.zip'
-);
+) => {
+  const artifactPath = `/workbenches/${workbenchId}/geniapp-exports/${jobId}/artifact`;
+  const response = await apiClient.get<WorkbenchGeniappExportDownload>(`${artifactPath}-url`);
+  const prepared = response.data;
+
+  if (prepared?.delivery === 'signed-url' && prepared.url) {
+    startNativeDownload(prepared.url, prepared.artifactFileName || filename || 'workbench-geniapp.zip');
+    return;
+  }
+
+  await apiClient.downloadFile(
+    artifactPath,
+    prepared?.artifactFileName || filename || 'workbench-geniapp.zip'
+  );
+};
 
 export const createWorkbenchPreviewToken = async (workbenchId: string, expiresInHours?: number) => {
   return await apiClient.post<import('@/types').WorkbenchPreviewToken>(

@@ -6,6 +6,7 @@ import { resolveRuntimeDatasourceVersion } from '@/utils/datasourceVersion';
 import { Workbench, AppConfig } from '../../types';
 import { handleApiError } from '@/utils/errorHandler';
 import type { VisibleWhen } from '@/utils/visibleWhen';
+import { startNativeDownload } from '@/lib/nativeDownload';
 
 import { getMockData } from '@/mocks/index';
 import i18next from 'i18next';
@@ -961,6 +962,14 @@ export interface WorkbenchGeniappExportHistory {
   summary: WorkbenchGeniappVersionPolicy & { total: number };
 }
 
+export interface WorkbenchGeniappExportDownload {
+  delivery: 'signed-url' | 'authenticated-api';
+  url: string | null;
+  artifactFileName: string | null;
+  artifactSha256: string | null;
+  artifactSize: string | null;
+}
+
 export const createWorkbenchGeniappExport = async (
   workbenchId: string,
   target: { identifier: string; version?: string; packageName?: string }
@@ -996,10 +1005,21 @@ export const downloadWorkbenchGeniappExport = async (
   workbenchId: string,
   jobId: string,
   filename?: string
-) => apiClient.downloadFile(
-  `/workbenches/${workbenchId}/geniapp-exports/${jobId}/artifact`,
-  filename || 'workbench-geniapp.zip'
-);
+) => {
+  const artifactPath = `/workbenches/${workbenchId}/geniapp-exports/${jobId}/artifact`;
+  const response = await apiClient.get<WorkbenchGeniappExportDownload>(`${artifactPath}-url`);
+  const prepared = response.data;
+
+  if (prepared?.delivery === 'signed-url' && prepared.url) {
+    startNativeDownload(prepared.url, prepared.artifactFileName || filename || 'workbench-geniapp.zip');
+    return;
+  }
+
+  await apiClient.downloadFile(
+    artifactPath,
+    prepared?.artifactFileName || filename || 'workbench-geniapp.zip'
+  );
+};
 
 export const createWorkbenchPreviewToken = async (workbenchId: string, expiresInHours?: number) => {
   return await apiClient.post<import('@/types').WorkbenchPreviewToken>(

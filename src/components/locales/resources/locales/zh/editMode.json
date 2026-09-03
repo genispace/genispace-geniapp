@@ -910,6 +910,8 @@
       "generic": "无法完成 GeniApp 导出，请查看兼容性报告后重试。",
       "WORKBENCH_EXPORT_INCOMPATIBLE": "已发布工作台包含不支持的组件，无法安全导出。",
       "WORKBENCH_EXPORT_SNAPSHOT_MISMATCH": "导出期间已发布快照发生变化，请重新开始导出。",
+      "WORKBENCH_EXPORT_DATASET_NOT_FOUND": "当前使用真实数据的组件引用了空间中已不存在的 Dataset。请恢复或重新绑定 Dataset，发布工作台后重试。",
+      "WORKBENCH_EXPORT_DATASOURCE_NOT_FOUND": "当前使用真实数据的组件引用了空间中已不存在的 DataSource。请恢复或重新绑定 DataSource，发布工作台后重试。",
       "VALIDATION_ERROR": "已发布工作台配置不合法，请重新发布后再试。",
       "unknown": "无法完成 GeniApp 导出，请查看兼容性报告后重试。"
     }

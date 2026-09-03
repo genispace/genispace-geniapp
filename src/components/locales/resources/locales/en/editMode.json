@@ -910,6 +910,8 @@
       "generic": "The GeniApp export could not be completed. Please review the compatibility report and try again.",
       "WORKBENCH_EXPORT_INCOMPATIBLE": "The published Workbench contains unsupported components and cannot be exported safely.",
       "WORKBENCH_EXPORT_SNAPSHOT_MISMATCH": "The published snapshot changed while the export was running. Start a new export.",
+      "WORKBENCH_EXPORT_DATASET_NOT_FOUND": "A live component references a Dataset that no longer exists in this space. Restore or rebind that Dataset, publish the Workbench, and try again.",
+      "WORKBENCH_EXPORT_DATASOURCE_NOT_FOUND": "A live component references a DataSource that no longer exists in this space. Restore or rebind that DataSource, publish the Workbench, and try again.",
       "VALIDATION_ERROR": "The published Workbench configuration is invalid. Republish it and try again.",
       "unknown": "The GeniApp export could not be completed. Please review the compatibility report and try again."
     }

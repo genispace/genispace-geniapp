@@ -785,7 +785,7 @@ function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin }: { cells: Ov
   return (
     <div
       className={cn(
-        'mx-1 mb-3 flex items-center rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-3 py-2.5',
+        'mx-1 mb-3 flex items-center rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-1 py-2.5',
         narrow && 'flex-wrap'
       )}
       style={sideMargin != null ? { marginLeft: sideMargin, marginRight: sideMargin } : undefined}
@@ -824,7 +824,7 @@ function OverlapSummaryBarSkeleton({ cells, overlapSideMargin }: { cells: number
   return (
     <div
       className={cn(
-        'mx-1 mb-3 flex items-center rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-3 py-2.5',
+        'mx-1 mb-3 flex items-center rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-1 py-2.5',
         narrow && 'flex-wrap'
       )}
       style={overlapSideMargin != null ? { marginLeft: overlapSideMargin, marginRight: overlapSideMargin } : undefined}

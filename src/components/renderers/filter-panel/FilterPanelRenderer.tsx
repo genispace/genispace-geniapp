@@ -1426,7 +1426,24 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
       if (same) return prev;
       // Mirror the inbound value onto its partner key (store dropdown <-> sheet store tab) so the
       // sheet draft + shared chips stay consistent. Local-only (no re-emit) — same as before.
-      return { ...prev, ...expandStoreMirror({ [target.key]: parsed }, storeMirrorMap) };
+      const patch = expandStoreMirror({ [target.key]: parsed }, storeMirrorMap);
+      // Externally-driven commits (e.g. ProductReport drill-through: click a store/category/season/
+      // series row → emit sw-filter-global_* straight onto the bus) bypass sendParameters, so they
+      // never reach sharedPanelValues. On tab revisit ParameterContext strips filter params from the
+      // page bus expecting the panel to re-emit its state — mount hydration (defaults < shared store
+      // < bus) then can't restore the drill-set value and the selection silently vanishes. Publish
+      // the patch (page-private keys excluded) so hydration restores it like a panel-committed value.
+      // No ping-pong: sibling folds re-emit with publish:false, and self-instance emits are ignored.
+      const sharedPatch = pageScopedKeys.size === 0
+        ? patch
+        : Object.fromEntries(Object.entries(patch).filter(([k]) => !pageScopedKeys.has(k)));
+      if (Object.keys(sharedPatch).length > 0) {
+        publishSharedPanelValues(componentId, commInstanceId, {
+          ...(sharedPanelValues.get(componentId) ?? {}),
+          ...sharedPatch,
+        });
+      }
+      return { ...prev, ...patch };
     });
   };
   const onExternalParamChange = useCallback(

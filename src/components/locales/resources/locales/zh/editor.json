@@ -814,6 +814,7 @@
     "overlap_bar_width": "柱子宽度 (px)",
     "overlap_bar_width_ph": "自动",
     "overlap_summary_font_size": "汇总条数值字号 (px)",
+    "overlap_summary_auto_fit": "汇总条数值超宽时自动缩字号",
     "overlap_value_color": "数值柱颜色（销售额）",
     "overlap_summary_color": "数值颜色",
     "overlap_summary_cell_font_size": "该格数值字号 (px)",

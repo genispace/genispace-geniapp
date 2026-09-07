@@ -800,6 +800,7 @@
     "overlap_bar_width": "Bar width (px)",
     "overlap_bar_width_ph": "auto",
     "overlap_summary_font_size": "Summary value font size (px)",
+    "overlap_summary_auto_fit": "Auto-shrink summary values when too wide",
     "overlap_value_color": "Value bar color (sales)",
     "overlap_summary_color": "Value color",
     "overlap_summary_cell_font_size": "Value font size (px)",

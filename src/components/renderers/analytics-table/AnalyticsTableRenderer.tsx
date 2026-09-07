@@ -58,7 +58,10 @@ export type DerivedField =
 
 export interface AnalyticsColumn {
   key: string;
-  label?: unknown;            
+  label?: unknown;
+  /** 表头第二行副标签（小字灰显）。pivot 动态日期列用它放 M/D 日期，主 label 放星期
+   *  （demo 方案1 双行表头：上周几、下 M/D）；数据驱动，由 pivot.subLabelField 注入。 */
+  subLabel?: unknown;
   align?: 'left' | 'right' | 'center';
   sticky?: boolean;           
   sortField?: string;         
@@ -74,9 +77,36 @@ export interface AnalyticsColumn {
   rowMarker?: boolean;
   /** Threshold -> text color for `text` cells (e.g. SMI% >= 100 -> emerald). */
   colorRules?: ColorRule[];
+  /** `text` cells only: render NULL/empty as a neutral '—' (no colorRules) instead of letting the
+   *  number formatter coerce them to 0. Pivot-generated columns set this so missing days don't read
+   *  as zero-sales days. */
+  emptyDash?: boolean;
   /** Render this column only while one of these quick-filter pills is active
    *  (e.g. the live-share column exists only under the 'live' pill). Unset = always shown. */
   showForPills?: string[];
+}
+
+/** Pivot (long → wide) mode: rows arrive in long format (one row per rowKey × column value) and the
+ *  table generates one dynamic column per distinct `columnField` value, appended after the static
+ *  `columns`. Used by the 0-sales store view (rows = stores, columns = one per day in range). */
+export interface AnalyticsTablePivot {
+  /** Field whose distinct values, sorted ascending, become the dynamic columns (e.g. 'biz_date'). */
+  columnField: string;
+  /** Field holding the column header label; each dynamic column takes the first row's value (e.g. 'hdr' → '8/16'). */
+  labelField: string;
+  /** 可选：表头第二行副标签字段（e.g. 'hdr_sub' → '8/16' 小字灰显，主 label 放星期 '周日'）。
+   *  同样取该列首行值（数据驱动，同 labelField 的 B 方案口径）。 */
+  subLabelField?: string;
+  /** Cell value field (e.g. 'day_val'). */
+  valueField: string;
+  /** Row grouping key (e.g. 'row_key'); the group's first row supplies label_zh/label_en and other fields. */
+  rowKeyField: string;
+  /** Cell renderer — only 'text' currently (formatSwValue + colorRules). */
+  cellKind: 'text';
+  /** Threshold → text color for pivot cells (e.g. [{ lte: 0, color: 'text-rose-600 dark:text-rose-400' }]). */
+  colorRules?: ColorRule[];
+  /** Cell number format; default 'number' so NULL/non-numeric values render '—'. */
+  format?: SwCellFormat;
 }
 
 export interface AnalyticsTableRendererProps {
@@ -148,6 +178,12 @@ export interface AnalyticsTableRendererProps {
    *  ellipsis. Row height grows to fit; other columns stay aligned via the shared table row. Off by
    *  default (keeps the ellipsis behavior). Turn on for long store/city names (dashboard acceptance 0709 #8). */
   wrapLabel?: boolean;
+  /** Pivot long-format rows into dynamic per-value columns (see AnalyticsTablePivot). Unset = the
+   *  table renders exactly the static `columns`, unchanged behavior. */
+  pivot?: AnalyticsTablePivot;
+  /** 数值单位标注（双语，如 { zh: '单位：¥K', en: 'Unit: ¥K' }）：右对齐小字灰显在表格上方，
+   *  防止 pivot/汇总数值的单位口径被误读。Unset = 不显示。 */
+  unitLabel?: unknown;
 }
 
 
@@ -195,6 +231,8 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   freezeFirstColumn = false,
   fetchLimit = 1000,
   wrapLabel = false,
+  pivot,
+  unitLabel,
 }) => {
   // Content font sizes (px) — 13px floor for header/body, 12px for badges; raise via props for
   // low-vision users. Applied inline so they override the table's Tailwind `text-xs` per element.
@@ -268,16 +306,58 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   const { rows: summaryRows } = useBoundRows(summaryDataSourceConfig, componentParameterConfig, pageParams, `${id}-sum`, 'detail-summary', rowsExtraParams);
   const summary = summaryRows[0];
 
-  
+  // Pivot mode: group the long-format rows by `rowKeyField` (first row of each group supplies the
+  // label and other static fields) and generate one column per distinct `columnField` value, sorted
+  // ascending. Cell values land on a synthetic `__pivot_<value>` field read by the generated column.
+  const pivotModel = useMemo(() => {
+    if (!pivot) return null;
+    const colOrder: string[] = [];
+    const colSeen = new Set<string>();
+    const colLabel = new Map<string, unknown>();
+    const colSubLabel = new Map<string, unknown>();
+    const groups = new Map<string, Record<string, unknown>>();
+    for (const r of rows) {
+      const cv = String(r[pivot.columnField] ?? '');
+      if (!colSeen.has(cv)) {
+        colSeen.add(cv);
+        colOrder.push(cv);
+        colLabel.set(cv, r[pivot.labelField]);
+        if (pivot.subLabelField) colSubLabel.set(cv, r[pivot.subLabelField]);
+      }
+      const rk = String(r[pivot.rowKeyField] ?? '');
+      let g = groups.get(rk);
+      if (!g) { g = { ...r }; groups.set(rk, g); }
+      g[`__pivot_${cv}`] = r[pivot.valueField];
+    }
+    colOrder.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    const pivotColumns: AnalyticsColumn[] = colOrder.map(cv => ({
+      key: `__pivot_${cv}`,
+      kind: pivot.cellKind,
+      label: colLabel.get(cv),
+      ...(pivot.subLabelField ? { subLabel: colSubLabel.get(cv) } : {}),
+      field: `__pivot_${cv}`,
+      sortField: `__pivot_${cv}`,
+      format: pivot.format ?? 'number',
+      colorRules: pivot.colorRules,
+      emptyDash: true,
+      align: 'right',
+    }));
+    return { rows: [...groups.values()], columns: pivotColumns };
+  }, [pivot, rows]);
+  const baseRows = pivotModel ? pivotModel.rows : rows;
+  if (pivotModel) {
+    effectiveColumns = [...effectiveColumns, ...pivotModel.columns];
+  }
+
   const derivedRows = useMemo(() => {
-    if (!derivedFields || derivedFields.length === 0) return rows;
+    if (!derivedFields || derivedFields.length === 0) return baseRows;
     const sums: Record<string, number> = {};
     for (const d of derivedFields) {
       if (d.kind === 'shareOfTotal') {
-        sums[d.field] = rows.reduce((s, r) => s + (Number.isFinite(n(r[d.field])) ? n(r[d.field]) : 0), 0);
+        sums[d.field] = baseRows.reduce((s, r) => s + (Number.isFinite(n(r[d.field])) ? n(r[d.field]) : 0), 0);
       }
     }
-    return rows.map(r => {
+    return baseRows.map(r => {
       const out: Record<string, unknown> = { ...r };
       for (const d of derivedFields) {
         if (d.kind === 'shareOfTotal') {
@@ -290,7 +370,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
       }
       return out;
     });
-  }, [rows, derivedFields]);
+  }, [baseRows, derivedFields]);
 
   const view = useMemo(() => {
     let r = derivedRows.slice();
@@ -384,6 +464,9 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
     }
     if (col.kind === 'text') {
       const raw = r[col.field ?? col.key];
+      if (col.emptyDash && (raw == null || raw === '')) {
+        return <span className="tabular-nums text-slate-400 dark:text-neutral-500">—</span>;
+      }
       const txt = formatSwValue(raw, col.format ?? 'plain', 'CNY');
       const ruleColor = matchColorRule(raw, col.colorRules);
       return <span className={cn('tabular-nums', ruleColor ?? (col.muted ? 'text-slate-500 dark:text-neutral-400' : 'text-slate-700 dark:text-neutral-300'))}>{txt}</span>;
@@ -446,6 +529,14 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
         </div>
       )}
 
+      {unitLabel != null && bi(unitLabel) !== '' && (
+        // 单位标注（如「单位：¥K」）：右对齐小字灰显，避免数值口径被误读。
+        // 必须在 stickyOverlayRef 之前——克隆层靠 marginBottom:-h 与后续滚动容器表头重合，
+        // 插在中间会被克隆表头盖住。
+        <div className="mb-1 flex justify-end text-[10px] leading-tight text-slate-400 dark:text-neutral-500">
+          {bi(unitLabel)}
+        </div>
+      )}
       {isMobile && freezeFirstColumn && <div ref={stickyOverlayRef} aria-hidden />}
       <div
         className={cn('overflow-auto', isMobile && 'overscroll-x-contain', fillCell && !isMobile && 'flex-1 min-h-0')}
@@ -484,6 +575,15 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                   ? (bi(col.label ?? dimLabel) || t('analytics_table.item', 'Item'))
                   : bi(col.label);
                 const sortable = !!col.sortField;
+                const justifyCls = col.align === 'center' ? 'justify-center' : col.sticky || col.align === 'left' ? 'justify-start' : 'justify-end';
+                const alignItemsCls = col.align === 'center' ? 'items-center' : col.sticky || col.align === 'left' ? 'items-start' : 'items-end';
+                const sortIcon = sortable && (
+                  sortField === col.sortField
+                    ? (sortAsc
+                      ? <ChevronUp className="h-3 w-3 shrink-0 text-indigo-500 dark:text-indigo-300" />
+                      : <ChevronDown className="h-3 w-3 shrink-0 text-indigo-500 dark:text-indigo-300" />)
+                    : <ChevronsUpDown className="h-3 w-3 shrink-0 text-slate-300 dark:text-neutral-600" />
+                );
                 return (
                   <th
                     key={col.key}
@@ -501,16 +601,21 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                     style={{ ...colStyle(col), fontSize: headerFs }}
                     onClick={sortable ? () => toggleSort(col.sortField!) : undefined}
                   >
-                    <span className={cn('inline-flex items-center gap-0.5', col.align === 'center' ? 'justify-center' : col.sticky || col.align === 'left' ? 'justify-start' : 'justify-end')}>
-                      {headerText}
-                      {sortable && (
-                        sortField === col.sortField
-                          ? (sortAsc
-                              ? <ChevronUp className="h-3 w-3 shrink-0 text-indigo-500 dark:text-indigo-300" />
-                              : <ChevronDown className="h-3 w-3 shrink-0 text-indigo-500 dark:text-indigo-300" />)
-                          : <ChevronsUpDown className="h-3 w-3 shrink-0 text-slate-300 dark:text-neutral-600" />
-                      )}
-                    </span>
+                    {col.subLabel != null ? (
+                      // 双行表头（demo 方案1）：主行 label（星期）+ 副行 subLabel（M/D 小字灰显）
+                      <span className={cn('inline-flex flex-col', alignItemsCls)}>
+                        <span className={cn('inline-flex items-center gap-0.5', justifyCls)}>
+                          {headerText}
+                          {sortIcon}
+                        </span>
+                        <span className="text-[9px] font-normal leading-tight text-slate-400 dark:text-neutral-500">{bi(col.subLabel)}</span>
+                      </span>
+                    ) : (
+                      <span className={cn('inline-flex items-center gap-0.5', justifyCls)}>
+                        {headerText}
+                        {sortIcon}
+                      </span>
+                    )}
                   </th>
                 );
               })}

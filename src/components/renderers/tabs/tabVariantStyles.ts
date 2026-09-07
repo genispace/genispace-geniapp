@@ -14,8 +14,8 @@
  *   - `card`:           segmented-pill tabs (single, immutable tab strip)
  *   - `editable-card`:  segmented-pill tabs with per-tab × close button
  *                       and a trailing "+ Add" button for adding tabs
- *   - `pill`:           each tab is its own floating rounded pill,
- *                       no shared container
+ *   - `pill`:           胶囊样式 —— 每个 tab 是独立的 rounded-full 白底描边
+ *                       胶囊，无共享容器、无下边框，选中态深蓝反白
  *   - `boxed`:          tabs sit on top of a bordered container; the
  *                       active tab "punches through" the bottom border
  *                       so the tab appears connected to the panel below
@@ -126,25 +126,28 @@ const EDITABLE_CARD: TabVariantClasses = {
 };
 
 /**
- * Each tab is its own floating button. The container is transparent (no
- * shared grey rail), inactive tabs hover-tint to muted, active tab fills
- * with primary color and inverts text. Corner radius uses `rounded-md`
- * to match the inner-element radius used elsewhere in the system
- * (card / editable-card triggers, inputs, buttons) rather than the
- * fully-circular `rounded-full`.
+ * 胶囊（capsule）变体：每个 tab 是独立的圆角胶囊（rounded-full 全圆角），
+ * 白底 + 浅灰描边，选中态品牌蓝 #6366F1 反白（2026-09-07 由 slate-900 改 #6366F1，
+ * 见 SW 门店子 Tab 验收）。容器透明，无共享轨道、无下边框。
+ * `justify-start` 必须显式写出：shared-ui TabsList 基类自带 `justify-center`，
+ * 内容横向溢出时居中会让左缘溢出区域永远滚动不到（最左 tab 被裁切）。
  */
 const PILL: TabVariantClasses = {
   list:
-    'inline-flex items-center gap-2 bg-transparent p-0 text-muted-foreground',
+    'inline-flex items-center justify-start gap-2 bg-transparent p-0 text-muted-foreground',
   trigger:
-    'inline-flex items-center justify-center whitespace-nowrap rounded-md ' +
-    'px-4 py-1.5 text-sm font-medium transition-all ' +
+    'inline-flex items-center justify-center whitespace-nowrap rounded-full ' +
+    'px-3 py-1 text-sm font-medium transition-all ' +
     `${BASE_FOCUS_RING} ` +
     'disabled:pointer-events-none disabled:opacity-50 ' +
-    'bg-transparent text-muted-foreground ' +
-    'hover:bg-muted hover:text-foreground ' +
-    'data-[state=active]:bg-primary data-[state=active]:text-primary-foreground ' +
-    'data-[state=active]:shadow-sm data-[state=active]:hover:bg-primary',
+    'border border-slate-200 bg-white text-slate-600 ' +
+    'hover:bg-slate-50 hover:text-slate-800 ' +
+    'data-[state=active]:border-[#6366F1] data-[state=active]:bg-[#6366F1] ' +
+    'data-[state=active]:text-white data-[state=active]:shadow-sm ' +
+    'dark:border-neutral-700 dark:bg-neutral-800 dark:text-slate-300 ' +
+    'dark:hover:bg-neutral-700 ' +
+    'dark:data-[state=active]:border-[#6366F1] dark:data-[state=active]:bg-[#6366F1] ' +
+    'dark:data-[state=active]:text-white',
   closableButton: 'hidden',
   addButton: 'hidden',
 };
@@ -184,7 +187,8 @@ const BOXED: TabVariantClasses = {
 
 const SEGMENTED: TabVariantClasses = {
   list:
-    'flex w-full items-center gap-1 rounded-xl bg-slate-100 p-1 text-slate-500 ' +
+    // justify-start 显式覆盖基类 justify-center：横向溢出时居中会裁掉左缘（同 pill 注释）
+    'flex w-full items-center justify-start gap-1 rounded-xl bg-slate-100 p-1 text-slate-500 ' +
     'dark:bg-neutral-800',
   trigger:
     'flex-1 inline-flex items-center justify-center whitespace-nowrap rounded-lg ' +

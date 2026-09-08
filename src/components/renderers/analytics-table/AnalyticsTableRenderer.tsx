@@ -109,6 +109,11 @@ export interface AnalyticsTablePivot {
   colorRules?: ColorRule[];
   /** Cell number format; default 'number' so NULL/non-numeric values render '—'. */
   format?: SwCellFormat;
+  /** Dynamic-column cell/header alignment; default 'right' (e.g. 'center' for the 0-sales day grid). */
+  align?: 'left' | 'right' | 'center';
+  /** Set false to drop header-click sorting on the dynamic columns (e.g. SQL-preformatted text values
+   *  would sort lexicographically). Static columns keep their own sortField. */
+  sortable?: boolean;
 }
 
 export interface AnalyticsTableRendererProps {
@@ -339,11 +344,11 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
       label: colLabel.get(cv),
       ...(pivot.subLabelField ? { subLabel: colSubLabel.get(cv) } : {}),
       field: `__pivot_${cv}`,
-      sortField: `__pivot_${cv}`,
+      ...(pivot.sortable === false ? {} : { sortField: `__pivot_${cv}` }),
       format: pivot.format ?? 'number',
       colorRules: pivot.colorRules,
       emptyDash: true,
-      align: 'right',
+      align: pivot.align ?? 'right',
     }));
     return { rows: [...groups.values()], columns: pivotColumns };
   }, [pivot, rows]);

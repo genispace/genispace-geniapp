@@ -14,8 +14,9 @@
  *   - `card`:           segmented-pill tabs (single, immutable tab strip)
  *   - `editable-card`:  segmented-pill tabs with per-tab × close button
  *                       and a trailing "+ Add" button for adding tabs
- *   - `pill`:           胶囊样式 —— 每个 tab 是独立的 rounded-full 白底描边
- *                       胶囊，无共享容器、无下边框，选中态深蓝反白
+ *   - `pill`:           capsule style — each tab is a standalone rounded-full
+ *                       white pill with a light border; no shared container,
+ *                       no bottom border; active state is deep blue on white
  *   - `boxed`:          tabs sit on top of a bordered container; the
  *                       active tab "punches through" the bottom border
  *                       so the tab appears connected to the panel below
@@ -126,11 +127,14 @@ const EDITABLE_CARD: TabVariantClasses = {
 };
 
 /**
- * 胶囊（capsule）变体：每个 tab 是独立的圆角胶囊（rounded-full 全圆角），
- * 白底 + 浅灰描边，选中态品牌蓝 #6366F1 反白（2026-09-07 由 slate-900 改 #6366F1，
- * 见 SW 门店子 Tab 验收）。容器透明，无共享轨道、无下边框。
- * `justify-start` 必须显式写出：shared-ui TabsList 基类自带 `justify-center`，
- * 内容横向溢出时居中会让左缘溢出区域永远滚动不到（最左 tab 被裁切）。
+ * Capsule (pill) variant: each tab is a standalone rounded-full capsule with
+ * a white background and light grey border; the active state is brand blue
+ * #6366F1 with white text (changed from slate-900 to #6366F1 on 2026-09-07,
+ * per the SW store sub-tab acceptance). The container is transparent — no
+ * shared track, no bottom border.
+ * `justify-start` must be explicit: the shared-ui TabsList base class ships
+ * `justify-center`, and with horizontal overflow, centering would leave the
+ * left overflow region unreachable (the leftmost tab gets clipped).
  */
 const PILL: TabVariantClasses = {
   list:
@@ -187,7 +191,8 @@ const BOXED: TabVariantClasses = {
 
 const SEGMENTED: TabVariantClasses = {
   list:
-    // justify-start 显式覆盖基类 justify-center：横向溢出时居中会裁掉左缘（同 pill 注释）
+    // justify-start explicitly overrides the base-class justify-center: with horizontal
+    // overflow, centering would clip the left edge (same rationale as the pill variant)
     'flex w-full items-center justify-start gap-1 rounded-xl bg-slate-100 p-1 text-slate-500 ' +
     'dark:bg-neutral-800',
   trigger:

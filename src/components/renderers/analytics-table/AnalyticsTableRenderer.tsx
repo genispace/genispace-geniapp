@@ -59,8 +59,9 @@ export type DerivedField =
 export interface AnalyticsColumn {
   key: string;
   label?: unknown;
-  /** 表头第二行副标签（小字灰显）。pivot 动态日期列用它放 M/D 日期，主 label 放星期
-   *  （demo 方案1 双行表头：上周几、下 M/D）；数据驱动，由 pivot.subLabelField 注入。 */
+  /** Secondary label rendered as a small grey line under the column header. Pivot dynamic date
+   *  columns use it for the M/D date while the main label holds the weekday (demo option 1 dual-row
+   *  header: weekday on top, M/D below); data-driven, injected via pivot.subLabelField. */
   subLabel?: unknown;
   align?: 'left' | 'right' | 'center';
   sticky?: boolean;           
@@ -94,8 +95,9 @@ export interface AnalyticsTablePivot {
   columnField: string;
   /** Field holding the column header label; each dynamic column takes the first row's value (e.g. 'hdr' → '8/16'). */
   labelField: string;
-  /** 可选：表头第二行副标签字段（e.g. 'hdr_sub' → '8/16' 小字灰显，主 label 放星期 '周日'）。
-   *  同样取该列首行值（数据驱动，同 labelField 的 B 方案口径）。 */
+  /** Optional: secondary-label field for the header's second row (e.g. 'hdr_sub' → '8/16' in small
+   *  grey text while the main label holds the weekday). Also takes the column's first-row value
+   *  (data-driven, same convention as labelField). */
   subLabelField?: string;
   /** Cell value field (e.g. 'day_val'). */
   valueField: string;
@@ -181,8 +183,9 @@ export interface AnalyticsTableRendererProps {
   /** Pivot long-format rows into dynamic per-value columns (see AnalyticsTablePivot). Unset = the
    *  table renders exactly the static `columns`, unchanged behavior. */
   pivot?: AnalyticsTablePivot;
-  /** 数值单位标注（双语，如 { zh: '单位：¥K', en: 'Unit: ¥K' }）：右对齐小字灰显在表格上方，
-   *  防止 pivot/汇总数值的单位口径被误读。Unset = 不显示。 */
+  /** Unit note for the numeric values (bilingual, e.g. { en: 'Unit: ¥K' }): rendered right-aligned
+   *  in small grey text above the table so pivot/summary value scales are not misread.
+   *  Unset = hidden. */
   unitLabel?: unknown;
 }
 
@@ -530,9 +533,10 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
       )}
 
       {unitLabel != null && bi(unitLabel) !== '' && (
-        // 单位标注（如「单位：¥K」）：右对齐小字灰显，避免数值口径被误读。
-        // 必须在 stickyOverlayRef 之前——克隆层靠 marginBottom:-h 与后续滚动容器表头重合，
-        // 插在中间会被克隆表头盖住。
+        // Unit note (e.g. "Unit: ¥K"): right-aligned small grey text so the value scale is not
+        // misread. Must render before stickyOverlayRef — the clone layer overlaps the following
+        // scroll container's header via marginBottom:-h; inserting it in between would get
+        // covered by the cloned header.
         <div className="mb-1 flex justify-end text-[10px] leading-tight text-slate-400 dark:text-neutral-500">
           {bi(unitLabel)}
         </div>
@@ -602,7 +606,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                     onClick={sortable ? () => toggleSort(col.sortField!) : undefined}
                   >
                     {col.subLabel != null ? (
-                      // 双行表头（demo 方案1）：主行 label（星期）+ 副行 subLabel（M/D 小字灰显）
+                      // Dual-row header (demo option 1): main row label (weekday) + secondary row subLabel (M/D, small grey)
                       <span className={cn('inline-flex flex-col', alignItemsCls)}>
                         <span className={cn('inline-flex items-center gap-0.5', justifyCls)}>
                           {headerText}

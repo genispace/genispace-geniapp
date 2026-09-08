@@ -800,6 +800,7 @@
     "overlap_bar_width": "Bar width (px)",
     "overlap_bar_width_ph": "auto",
     "overlap_summary_font_size": "Summary value font size (px)",
+    "overlap_summary_auto_fit": "Auto-shrink summary values when too wide",
     "overlap_value_color": "Value bar color (sales)",
     "overlap_summary_color": "Value color",
     "overlap_summary_cell_font_size": "Value font size (px)",
@@ -3761,7 +3762,21 @@
     "pill_label_en": "Label (English)",
     "show_for_pills": "Show only under these pills (CSV, blank = always)",
     "wrap_label": "Wrap label column text",
-    "wrap_label_hint": "Wrap the first (label/dimension) column onto multiple lines instead of truncating with an ellipsis; row height grows to fit."
+    "wrap_label_hint": "Wrap the first (label/dimension) column onto multiple lines instead of truncating with an ellipsis; row height grows to fit.",
+    "pivot_title": "Pivot dynamic columns (long → wide)",
+    "pivot_hint": "Rows arrive in long format (one row per row-key × column value). Rows are grouped by the row-key field and one dynamic column is generated per distinct column-field value, sorted ascending (e.g. one column per day). Cell renderer is fixed to plain text; the header takes the first row value of the label field, optionally with a second small grey line from the sub-label field.",
+    "pivot_column_field": "Column field (distinct → columns)",
+    "pivot_row_key_field": "Row key field (groups rows)",
+    "pivot_value_field": "Cell value field",
+    "pivot_label_field": "Header label field",
+    "pivot_sub_label_field": "Header sub-label field (optional)",
+    "pivot_format": "Cell format",
+    "unit_label_title": "Unit label",
+    "unit_label_hint": "Small grey note right-aligned above the table (e.g. \"Unit: ¥K\") so the value scale is not misread. Leave both empty to hide.",
+    "unit_label_zh": "Unit label (Chinese)",
+    "unit_label_en": "Unit label (English)",
+    "unit_label_zh_placeholder": "e.g. 单位：¥K",
+    "unit_label_en_placeholder": "e.g. Unit: ¥K"
   },
   "common": {
     "chinese": "Chinese"

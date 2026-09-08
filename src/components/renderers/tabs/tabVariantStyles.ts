@@ -14,8 +14,9 @@
  *   - `card`:           segmented-pill tabs (single, immutable tab strip)
  *   - `editable-card`:  segmented-pill tabs with per-tab × close button
  *                       and a trailing "+ Add" button for adding tabs
- *   - `pill`:           each tab is its own floating rounded pill,
- *                       no shared container
+ *   - `pill`:           capsule style — each tab is a standalone rounded-full
+ *                       white pill with a light border; no shared container,
+ *                       no bottom border; active state is deep blue on white
  *   - `boxed`:          tabs sit on top of a bordered container; the
  *                       active tab "punches through" the bottom border
  *                       so the tab appears connected to the panel below
@@ -126,25 +127,31 @@ const EDITABLE_CARD: TabVariantClasses = {
 };
 
 /**
- * Each tab is its own floating button. The container is transparent (no
- * shared grey rail), inactive tabs hover-tint to muted, active tab fills
- * with primary color and inverts text. Corner radius uses `rounded-md`
- * to match the inner-element radius used elsewhere in the system
- * (card / editable-card triggers, inputs, buttons) rather than the
- * fully-circular `rounded-full`.
+ * Capsule (pill) variant: each tab is a standalone rounded-full capsule with
+ * a white background and light grey border; the active state is brand blue
+ * #6366F1 with white text (changed from slate-900 to #6366F1 on 2026-09-07,
+ * per the SW store sub-tab acceptance). The container is transparent — no
+ * shared track, no bottom border.
+ * `justify-start` must be explicit: the shared-ui TabsList base class ships
+ * `justify-center`, and with horizontal overflow, centering would leave the
+ * left overflow region unreachable (the leftmost tab gets clipped).
  */
 const PILL: TabVariantClasses = {
   list:
-    'inline-flex items-center gap-2 bg-transparent p-0 text-muted-foreground',
+    'inline-flex items-center justify-start gap-2 bg-transparent p-0 text-muted-foreground',
   trigger:
-    'inline-flex items-center justify-center whitespace-nowrap rounded-md ' +
-    'px-4 py-1.5 text-sm font-medium transition-all ' +
+    'inline-flex items-center justify-center whitespace-nowrap rounded-full ' +
+    'px-3 py-1 text-sm font-medium transition-all ' +
     `${BASE_FOCUS_RING} ` +
     'disabled:pointer-events-none disabled:opacity-50 ' +
-    'bg-transparent text-muted-foreground ' +
-    'hover:bg-muted hover:text-foreground ' +
-    'data-[state=active]:bg-primary data-[state=active]:text-primary-foreground ' +
-    'data-[state=active]:shadow-sm data-[state=active]:hover:bg-primary',
+    'border border-slate-200 bg-white text-slate-600 ' +
+    'hover:bg-slate-50 hover:text-slate-800 ' +
+    'data-[state=active]:border-[#6366F1] data-[state=active]:bg-[#6366F1] ' +
+    'data-[state=active]:text-white data-[state=active]:shadow-sm ' +
+    'dark:border-neutral-700 dark:bg-neutral-800 dark:text-slate-300 ' +
+    'dark:hover:bg-neutral-700 ' +
+    'dark:data-[state=active]:border-[#6366F1] dark:data-[state=active]:bg-[#6366F1] ' +
+    'dark:data-[state=active]:text-white',
   closableButton: 'hidden',
   addButton: 'hidden',
 };
@@ -184,7 +191,9 @@ const BOXED: TabVariantClasses = {
 
 const SEGMENTED: TabVariantClasses = {
   list:
-    'flex w-full items-center gap-1 rounded-xl bg-slate-100 p-1 text-slate-500 ' +
+    // justify-start explicitly overrides the base-class justify-center: with horizontal
+    // overflow, centering would clip the left edge (same rationale as the pill variant)
+    'flex w-full items-center justify-start gap-1 rounded-xl bg-slate-100 p-1 text-slate-500 ' +
     'dark:bg-neutral-800',
   trigger:
     'flex-1 inline-flex items-center justify-center whitespace-nowrap rounded-lg ' +

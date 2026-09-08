@@ -814,6 +814,7 @@
     "overlap_bar_width": "柱子宽度 (px)",
     "overlap_bar_width_ph": "自动",
     "overlap_summary_font_size": "汇总条数值字号 (px)",
+    "overlap_summary_auto_fit": "汇总条数值超宽时自动缩字号",
     "overlap_value_color": "数值柱颜色（销售额）",
     "overlap_summary_color": "数值颜色",
     "overlap_summary_cell_font_size": "该格数值字号 (px)",
@@ -3775,7 +3776,21 @@
     "pill_label_en": "标签（英文）",
     "show_for_pills": "仅这些快筛下显示（逗号分隔，留空=恒显）",
     "wrap_label": "维度列文字换行",
-    "wrap_label_hint": "首列（标签/维度列）文字换行为多行，代替省略号截断；行高自适应增高。"
+    "wrap_label_hint": "首列（标签/维度列）文字换行为多行，代替省略号截断；行高自适应增高。",
+    "pivot_title": "Pivot 动态列（长表转宽表）",
+    "pivot_hint": "行数据为长格式（每行=行键×列值）。按行键字段分组成行，按列字段去重升序生成动态列（如每天一列）。单元格固定为纯文本渲染；表头取该列首行的表头字段值，可经副行字段追加一行小字灰显。",
+    "pivot_column_field": "列字段（去重生成列）",
+    "pivot_row_key_field": "行键字段（分组成行）",
+    "pivot_value_field": "单元格值字段",
+    "pivot_label_field": "表头字段",
+    "pivot_sub_label_field": "表头副行字段（可选）",
+    "pivot_format": "单元格格式",
+    "unit_label_title": "单位标注",
+    "unit_label_hint": "右对齐小字灰显在表格上方（如「单位：¥K」），避免数值口径被误读。中英都留空则不显示。",
+    "unit_label_zh": "单位标注（中文）",
+    "unit_label_en": "单位标注（英文）",
+    "unit_label_zh_placeholder": "如：单位：¥K",
+    "unit_label_en_placeholder": "如：Unit: ¥K"
   },
   "common": {
     "chinese": "中文"

@@ -523,6 +523,7 @@ interface ChartRendererProps {
   overlapValueLabelColor?: string;                   // Color of the bar-top value (sales) label. Default '#6366f2'.
   overlapValueLabelFontSize?: number;                // Font size (px) of the bar-top value label. Default 11.
   overlapSummaryFontSize?: number;                   // Font size (px) of the summary strip value. Default 14.
+  overlapSummaryAutoFit?: boolean;                   // Strip-wide uniform auto-fit: shrink all value lines together when a value exceeds its cell. Default on.
   // color: per-cell value text color — a CSS color (#hex/rgb, applied inline) or a tailwind class
   //   (e.g. 'text-amber-600 dark:text-amber-400'); overrides the default color.
   // fontSize: per-cell value font size (px); overrides overlapSummaryFontSize.
@@ -779,11 +780,62 @@ function buildOverlapSummaryCells(
 
 // Shared top summary strip (overlapBar + column/bar): rounded grey bar of label-over-value cells
 // separated by vertical rules. Rendered above the chart, outside any horizontal scroll track.
-function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin }: { cells: OverlapSummaryCellView[]; defaultFontSize?: number; sideMargin?: number }) {
+// Strip-wide uniform auto-fit (task #83 comments #1559/#1562, mobile view): when a value
+// (e.g. YTD "¥116.77M / ¥107.76M") exceeds its cell on narrow screens, scale ALL value
+// lines down by one shared ratio instead of letting a cell break onto two lines.
+// Exported for unit tests.
+export function computeUniformFitScale(measurements: Array<{ available: number; needed: number }>): number {
+  let scale = 1;
+  for (const m of measurements) {
+    if (m.needed > 0 && m.available > 0) scale = Math.min(scale, m.available / m.needed);
+  }
+  // Floor at 0.5 (7px at the 14px default) — below that the value is unreadable anyway.
+  return Math.max(0.5, Math.min(1, scale));
+}
+
+function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin, autoFit = true }: { cells: OverlapSummaryCellView[]; defaultFontSize?: number; sideMargin?: number; autoFit?: boolean }) {
   const narrow = useMobileFlowLayout();
+  const stripRef = React.useRef<HTMLDivElement | null>(null);
+  const valueRefs = React.useRef<Array<HTMLDivElement | null>>([]);
+  const [fitScale, setFitScale] = React.useState(1);
+  // scrollWidth reflects the *currently applied* (scaled) font; dividing by fitScaleRef
+  // recovers the natural width at base size, otherwise re-measurement would oscillate.
+  const fitScaleRef = React.useRef(1);
+  const remeasure = React.useCallback(() => {
+    if (!autoFit) return;
+    const els = valueRefs.current.filter((e): e is HTMLDivElement => !!e);
+    if (!els.length) return;
+    const next = computeUniformFitScale(els.map((el) => ({ available: el.clientWidth, needed: el.scrollWidth / fitScaleRef.current })));
+    if (Math.abs(next - fitScaleRef.current) > 0.01) {
+      fitScaleRef.current = next;
+      setFitScale(next);
+    }
+  }, [autoFit]);
+  // Re-measure when values/data change and when the strip is resized (window, side panels).
+  // When auto-fit is off, reset the scale to 1 so the value renders at its configured size.
+  const fitKey = cells.map((c) => c.text).join('|');
+  React.useLayoutEffect(() => {
+    if (!autoFit) {
+      if (fitScaleRef.current !== 1) {
+        fitScaleRef.current = 1;
+        setFitScale(1);
+      }
+      return;
+    }
+    remeasure();
+  }, [autoFit, fitKey, cells.length, defaultFontSize, remeasure]);
+  React.useEffect(() => {
+    if (!autoFit) return;
+    const el = stripRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [autoFit, remeasure]);
   if (cells.length === 0) return null;
   return (
     <div
+      ref={stripRef}
       className={cn(
         'mx-1 mb-3 flex items-center rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-1 py-2.5',
         narrow && 'flex-wrap'
@@ -791,7 +843,7 @@ function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin }: { cells: Ov
       style={sideMargin != null ? { marginLeft: sideMargin, marginRight: sideMargin } : undefined}
     >
       {cells.map((c, k) => {
-        const valueSize = c.fontSize ?? defaultFontSize ?? 14;
+        const valueSize = Math.max(7, Math.round((c.fontSize ?? defaultFontSize ?? 14) * fitScale));
         // Sub lines: the single subTextField line first (kept as one-line sugar), then each
         // subTextFields line in array order — identical styling.
         const subLines = [...(c.subText != null ? [c.subText] : []), ...(c.subTexts ?? [])];
@@ -800,7 +852,10 @@ function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin }: { cells: Ov
           {k > 0 && <div className="mx-1 h-8 w-px bg-slate-200 dark:bg-neutral-700" />}
           <div className={cn('flex-1 text-center', narrow && 'min-w-0')} style={c.flex != null ? { flex: c.flex } : undefined}>
             <div className="text-[12px] text-slate-400 dark:text-neutral-500">{c.label}</div>
-            <div className={cn('tabular-nums', c.cls)} style={{ fontSize: valueSize, fontWeight: 700, ...(c.colorStyle ? { color: c.colorStyle } : {}) }}>{c.text}</div>
+            {/* Value line never wraps (task #83 comment #1542): narrow layouts shrink the cell,
+                and a wrapped merged text broke the one-line design; auto-fit above shrinks the
+                font first, nowrap is the final guarantee. */}
+            <div ref={(el) => { valueRefs.current[k] = el; }} className={cn('whitespace-nowrap tabular-nums', c.cls)} style={{ fontSize: valueSize, fontWeight: 700, ...(c.colorStyle ? { color: c.colorStyle } : {}) }}>{c.text}</div>
             {c.secondaryText != null && (
               <div className={cn('tabular-nums', c.cls)} style={{ fontSize: Math.max(8, valueSize - 2), fontWeight: 600, ...(c.colorStyle ? { color: c.colorStyle } : {}) }}>{c.secondaryText}</div>
             )}
@@ -915,6 +970,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
   overlapValueLabelColor = '#6366f2',
   overlapValueLabelFontSize = 11,
   overlapSummaryFontSize,
+  overlapSummaryAutoFit = true,
   overlapSummary,
   overlapShowSummary = true,
   seriesSameColor = false,
@@ -1736,7 +1792,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
             </div>
           )}
           {overlapShowSummary !== false && summaryCells.length > 0 && (
-            <OverlapSummaryStrip cells={summaryCells} defaultFontSize={overlapSummaryFontSize} sideMargin={overlapSideMargin} />
+            <OverlapSummaryStrip cells={summaryCells} defaultFontSize={overlapSummaryFontSize} sideMargin={overlapSideMargin} autoFit={overlapSummaryAutoFit} />
           )}
           <HorizontalScrollChart
             minWidth={overlapMinWidth}
@@ -2203,7 +2259,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
       return (
         <div className={cn('chart-container', fillCell && 'flex min-h-0 flex-1 flex-col')}>
           {overlapShowSummary !== false && barSummaryCells.length > 0 && (
-            <OverlapSummaryStrip cells={barSummaryCells} defaultFontSize={overlapSummaryFontSize} />
+            <OverlapSummaryStrip cells={barSummaryCells} defaultFontSize={overlapSummaryFontSize} autoFit={overlapSummaryAutoFit} />
           )}
           <BarChartAdaptiveContainer
             plotHeight={plotHeight}

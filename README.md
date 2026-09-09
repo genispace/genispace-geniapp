@@ -138,6 +138,33 @@ Release lifecycle presentation is available from `@genispace/geniapp/components/
 
 ## Vite
 
+### Installed releases and datasource versions
+
+Deploying an application version executes its migrations and installs its platform resources.
+After installation, the application owner chooses to publish it or make it visible to selected
+preview members. Preview does not isolate the shared database schema: developers must keep
+schema and shared resource changes forward-compatible with the serving application.
+
+Use `GeniAppShellBridge` and `createPlatformHostAdapters` for exported component requests.
+The bridge supplies the application identity and effective version; the adapter sends that
+context and the logical datasource identifier for every read, write and schema request.
+The server authorizes the audience and maps an optional source `version` number to the
+immutable execution revision installed for that application version. Do not substitute a
+physical revision returned by a previous request, or globally change a datasource default
+while a candidate version is being tested.
+
+The `queryManagedDatasourceRows` and `executeManagedDatasourceOperation` helpers from
+`@genispace/geniapp/ai` use the same binding when called for the application injected by
+the Shell. Cross-application helpers retain their existing shared-resource behavior.
+Custom SDK/fetch integrations must carry `X-Application-Id` and
+`X-GeniApp-Resource-Identifier` on datasource requests; an optional
+`X-GeniApp-Release-Channel: stable` can opt out of preview but cannot grant preview access.
+Allow these headers in API CORS configuration.
+
+Already deployed bundles are not rewritten by a platform upgrade. Rebuild a candidate that
+changes datasource execution with this runtime (or the equivalent request context contract).
+Unchanged datasource contracts can reuse their installed execution revisions.
+
 ```ts
 import fs from 'node:fs';
 import path from 'node:path';

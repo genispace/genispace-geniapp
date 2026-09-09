@@ -8,6 +8,22 @@ afterEach(() => {
 });
 
 describe('createPlatformHostAdapters', () => {
+  it.each(['GET', 'POST', 'PUT', 'DELETE'] as const)('forwards %s source version and application context for server-side binding', async method => {
+    sessionStorage.setItem('__genispace_shell_application_id__', 'application-1');
+    sessionStorage.setItem('__genispace_shell_release_channel__', 'preview');
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => new Response(JSON.stringify({ data:
+      String(input).includes('/runtime-resources/resolve?') ? { resourceId: 'physical-ds', resourceRevision: 'revision-9' } : { rows: [] },
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    const adapters = createPlatformHostAdapters({ apiRoot: 'https://platform.example/api', applicationIdentifier: 'orders', datasourceIdentifiers: { source: 'orders-query' } });
+    await adapters.request?.({ url: '/datasources/source/data', method, params: { version: 2 }, ...(method !== 'GET' ? { body: { id: 17 } } : {}) });
+    const execution = fetchMock.mock.calls[1] as unknown as [string, RequestInit];
+    expect(String(execution[0])).toBe('https://platform.example/api/datasources/physical-ds/data?version=2');
+    expect((execution[1].headers as Headers).get('X-Application-Id')).toBe('application-1');
+    expect((execution[1].headers as Headers).get('X-GeniApp-Resource-Identifier')).toBe('orders-query');
+    expect((execution[1].headers as Headers).has('X-GeniApp-Release-Channel')).toBe(false);
+  });
+
   it('resolves exported datasource identifiers once and forwards shell credentials', async () => {
     localStorage.setItem('token', 'acceptance-token');
     localStorage.setItem('i18nextLng', 'zh');

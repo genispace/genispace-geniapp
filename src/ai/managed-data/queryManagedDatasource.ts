@@ -1,4 +1,5 @@
 import { GeniSpace } from '@genispace/sdk';
+import { managedDatasourceTransport } from './managedDatasourceTransport';
 
 function metaBool(v: unknown): boolean {
   return v === true || v === 'true';
@@ -98,7 +99,7 @@ const API_DEFAULT_LIMIT = 20;
  *   cover the requested range.
  */
 export async function queryReadRowsPaged(
-  gs: GeniSpace,
+  gs: { dataSources: Pick<GeniSpace['dataSources'], 'queryDataSourceRead'> },
   datasourceId: string,
   params: DsQueryParams
 ): Promise<Record<string, unknown>[]> {
@@ -148,6 +149,13 @@ export async function queryManagedDatasourceRows(
   params: DsQueryParams = { limit: 50 }
 ): Promise<Record<string, unknown>[]> {
   if (!apiRoot || !accessToken) return [];
+  const transport = managedDatasourceTransport(apiRoot, accessToken, geniappIdentifier, seedIdentifier);
+  if (transport) return queryReadRowsPaged({ dataSources: {
+    queryDataSourceRead: async (_id, query) => {
+      const response = await transport<Awaited<ReturnType<GeniSpace['dataSources']['queryDataSourceRead']>>>('GET', query || {});
+      return response.data || { data: [], metadata: {} };
+    },
+  } }, seedIdentifier, params);
   const gs = createGeniSpaceClient(apiRoot, accessToken);
   const id = await findManagedAppDataSourceId(gs, seedIdentifier, geniappIdentifier);
   if (!id) return [];

@@ -35,16 +35,17 @@ interface DialogContentProps
   /** @default true */
   showCloseButton?: boolean;
   closeLabel?: string;
+  overlayClassName?: string;
 }
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, nested, showCloseButton = true, closeLabel = 'Close dialog', ...props }, ref) => {
+>(({ className, children, nested, showCloseButton = true, closeLabel = 'Close dialog', overlayClassName, ...props }, ref) => {
   const zIndexClass = nested ? Z_INDEX_CLASSES.NESTED_MODAL : Z_INDEX_CLASSES.MODAL;
   return (
   <DialogPortal>
-    <DialogOverlay className={nested ? zIndexClass : undefined} />
+    <DialogOverlay className={cn(nested ? zIndexClass : undefined, overlayClassName)} />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(

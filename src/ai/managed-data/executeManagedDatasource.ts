@@ -2,6 +2,7 @@ import {
   createGeniSpaceClient,
   findManagedAppDataSourceId,
 } from './queryManagedDatasource';
+import { managedDatasourceTransport } from './managedDatasourceTransport';
 
 /** Result from POST /datasources/:id/data for TRANSACTION / CREATE / UPDATE operations. */
 export type ManagedDatasourceOperationResult = {
@@ -34,6 +35,11 @@ export async function executeManagedDatasourceOperation(
     throw new Error('Authentication required to execute datasource operation.');
   }
 
+  const transport = managedDatasourceTransport(apiRoot, accessToken, geniappIdentifier, seedIdentifier);
+  if (transport) {
+    const body = Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null));
+    return (await transport<ManagedDatasourceOperationResult>('POST', body)).data || {};
+  }
   const gs = createGeniSpaceClient(apiRoot, accessToken);
   const id = await findManagedAppDataSourceId(gs, seedIdentifier, geniappIdentifier);
   if (!id) {

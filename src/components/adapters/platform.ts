@@ -2,6 +2,7 @@ import { createResolveApiRoot } from '../../hooks/shell/resolveApiRoot';
 import {
   GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY,
   GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY,
+  GENISPACE_SHELL_SESSION_VERSION_KEY,
 } from '../../hooks/shell/shell';
 import type {
   GeniAppHostAdapters,
@@ -147,7 +148,11 @@ export function createPlatformHostAdapters(
   ): Promise<string> => {
     const logicalIdentifier = resourceIdentifiers?.[type]?.[sourceId];
     if (!logicalIdentifier || !options.applicationIdentifier) return sourceId;
-    const cacheKey = `${type}:${sourceId}`;
+    const applicationId = readApplicationId();
+    const applicationVersion = typeof sessionStorage === 'undefined' ? '' : readStorage(sessionStorage, GENISPACE_SHELL_SESSION_VERSION_KEY);
+    const cacheKey = `${resolveRoot()}:${applicationId || ''}:${applicationVersion || ''}:${headers.get('X-GeniApp-Release-Channel') || ''}:${headers.get('Authorization') || ''}:${type}:${sourceId}`;
+    // Datasource bindings can change on publication/member updates. Keep only
+    // in-flight datasource resolutions; the execution API reauthorizes.
     let resolution = resolvedResourceIds.get(cacheKey);
     if (!resolution) {
       resolution = (async () => {
@@ -189,6 +194,8 @@ export function createPlatformHostAdapters(
     } catch (error) {
       resolvedResourceIds.delete(cacheKey);
       throw error;
+    } finally {
+      if (applicationId && type === 'datasource') resolvedResourceIds.delete(cacheKey);
     }
   };
 
@@ -202,7 +209,12 @@ export function createPlatformHostAdapters(
       const sourceId = decodeURIComponent(match[1]);
       if (!resourceIdentifiers?.[candidate.type]?.[sourceId]) return rawUrl;
       const resourceId = await resolveResourceId(candidate.type, sourceId, headers);
-      return rawUrl.replace(match[1], encodeURIComponent(resourceId));
+      if (candidate.type === 'datasource' && readApplicationId()) {
+        headers.set('X-Application-Id', readApplicationId()!);
+        headers.set('X-GeniApp-Resource-Identifier', resourceIdentifiers[candidate.type]![sourceId]);
+      }
+      const idStart = (match.index ?? 0) + match[0].length - match[1].length;
+      return `${rawUrl.slice(0, idStart)}${encodeURIComponent(resourceId)}${rawUrl.slice(idStart + match[1].length)}`;
     }
     return rawUrl;
   };

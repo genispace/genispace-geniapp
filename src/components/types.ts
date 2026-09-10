@@ -704,6 +704,11 @@ export interface AppConfig {
   hideTabBar?: boolean;
   /** Mobile drill-down pages show a floating, draggable back pill at the left edge. Default off. */
   floatingBackButton?: boolean;
+  /** Cross-page back history (task #92 req 4): when ON, tab/sidebar jumps also push the nav
+   *  stack, so the back pill can step back across pages/tabs. Default off — `_nav` sidebar
+   *  jumps reset the stack and only drill-downs are recorded (pre-#92 semantics). Distinct
+   *  from the productReport component-level `tabBackHistory` switch (task #80). */
+  tabBackHistory?: boolean;
   /** When on, every page footer shows a muted "View publish history" link. Default off. */
   showPublishHistory?: boolean;
   /** Existing page the footer link opens (required for the link to appear). */

@@ -50,6 +50,13 @@ import {
   readFilterSelectionMemory,
   writeFilterSelectionMemory,
 } from './filterSelectionMemory';
+import {
+  buildFilterInputHistoryKey,
+  deleteFilterInputHistory,
+  loadFilterInputHistory,
+  upsertFilterInputHistory,
+  type FilterInputHistoryMap,
+} from './filterInputHistory';
 import { useEscapedStickyPanel } from '../shared/useEscapedStickyPanel';
 
 function resolveBilingualLabel(label: unknown, language: string): string {
@@ -390,6 +397,16 @@ export interface FilterConfig {
   // presetDateRange: persist the user's committed choice (preset key / custom range) in
   // localStorage and restore it on the next visit. URL/bus params still win over memory.
   rememberSelection?: boolean;
+  // filterSheet: "recent input history" (B4 minimal text-link row under each text input).
+  // Default off — unconfigured panels render zero UI and fire zero history requests.
+  // Values persist server-side (wb_filter_input_history via the companion datasources;
+  // user isolation is server-enforced through {{__authUserId}}); a session cache accelerates.
+  inputHistory?: {
+    enabled?: boolean;
+    readDatasourceId?: string;    // READ: rows for (current user, workbench, component)
+    writeDatasourceId?: string;   // TRANSACTION: upsert + cap-10 eviction, on "Apply Filters"
+    deleteDatasourceId?: string;  // DELETE: single entry, the × control
+  };
   // presetDateRange: "show last update time" toggle (2026-07-21 requirement 2, revised) — when
   // configured, a matching slate-chip update-time label appears on the right of the headerBar
   // (value from the datasource's first-row field; the text template contains a {time} placeholder);
@@ -726,13 +743,16 @@ function resolvePresetDateRangeInitial(
   const validPresets = (filter.fiscalPresets || []).map(p => p.value);
   const startKey = `${filter.key}Start`;
   const endKey = `${filter.key}End`;
+  const holidayKeyKey = `${filter.key}HolidayKey`;
   const busVal = busParams[generateUniqueParameterName(componentId, filter.key)];
   if (typeof busVal === 'string' && busVal) {
     if (validPresets.includes(busVal)) return { [filter.key]: busVal };
     const busStart = busParams[generateUniqueParameterName(componentId, startKey)];
     const busEnd = busParams[generateUniqueParameterName(componentId, endKey)];
     if (busVal === 'custom' && isYmdDateString(busStart) && isYmdDateString(busEnd)) {
-      return { [filter.key]: 'custom', [startKey]: busStart, [endKey]: busEnd };
+      const busHolidayKey = busParams[generateUniqueParameterName(componentId, holidayKeyKey)];
+      return { [filter.key]: 'custom', [startKey]: busStart, [endKey]: busEnd,
+               [holidayKeyKey]: typeof busHolidayKey === 'string' ? busHolidayKey : '' };
     }
   }
   if (filter.rememberSelection) {
@@ -742,7 +762,7 @@ function resolvePresetDateRangeInitial(
     );
     if (mem) {
       return mem.v === 'custom'
-        ? { [filter.key]: 'custom', [startKey]: mem.start, [endKey]: mem.end }
+        ? { [filter.key]: 'custom', [startKey]: mem.start, [endKey]: mem.end, [holidayKeyKey]: mem.holidayKey || '' }
         : { [filter.key]: mem.v };
     }
   }
@@ -773,8 +793,9 @@ export function getFilterEmitParamNames(filter: FilterConfig, componentId: strin
     return collectFilterSheetKeys(filter).map(k => generateUniqueParameterName(componentId, k));
   }
   if (filter.type === 'presetDateRange') {
-    // emits the preset key + the resolved start/end dates
-    return [filter.key, `${filter.key}Start`, `${filter.key}End`].map(k =>
+    // emits the preset key + the resolved start/end dates + the picked holiday chip's
+    // option_key (HolidayKey; '' for every non-holiday choice — SQL treats '' as no-op)
+    return [filter.key, `${filter.key}Start`, `${filter.key}End`, `${filter.key}HolidayKey`].map(k =>
       generateUniqueParameterName(componentId, k)
     );
   }
@@ -2149,6 +2170,9 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
             committedValues={filterValues}
             onApply={handleMultiFilterChange}
             isMobileLayout={isMobileLayout}
+            workbenchId={workbenchId}
+            componentId={componentId}
+            historyEnabled={filter.inputHistory?.enabled ?? false}
           />
         );
       default:
@@ -2797,7 +2821,7 @@ interface DateCustomTabPanelProps {
   tab: DateCustomTab;
   appliedStart: string;
   appliedEnd: string;
-  onApplyRange: (start: string, end: string) => void;
+  onApplyRange: (start: string, end: string, holidayKey: string) => void;
   onPickDate: (start: string, end: string) => void;
   /** Multi-select tabs report the pending merged range up — committed by the sheet's big Apply button. */
   onSelectionChange?: (sel: { count: number; start: string; end: string } | null) => void;
@@ -2894,7 +2918,7 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
               <button
                 key={it.value}
                 type="button"
-                onClick={() => (multi ? toggle(it.value) : onApplyRange(it.start, it.end))}
+                onClick={() => (multi ? toggle(it.value) : onApplyRange(it.start, it.end, groupValue === 'holiday' ? it.value : ''))}
                 className={cn(
                   'flex flex-col items-start gap-0.5 px-2.5 py-1.5 rounded-xl border text-left transition-colors min-w-0',
                   active
@@ -2907,7 +2931,9 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
                   <span className="truncate">{it.label}</span>
                 </span>
                 <span className="text-[9px] text-slate-400 dark:text-neutral-500">
-                  {it.sub || `${fmtDate(it.start)}~${fmtDate(it.end)}`}
+                  {/* #92: holiday chips show the full 'YYYY-MM-DD~YYYY-MM-DD' range on the second line
+                      so the year is explicitly visible (de-emphasized year suffix was not enough). */}
+                  {groupValue === 'holiday' ? `${it.start}~${it.end}` : it.sub || `${fmtDate(it.start)}~${fmtDate(it.end)}`}
                 </span>
               </button>
             );
@@ -2966,6 +2992,7 @@ const PresetDateRangeFilterField: React.FC<PresetDateRangeFilterFieldProps> = ({
   const customSpan = Math.min(Math.max(Math.floor(filter.customSpan ?? 1), 1), presetCols);
   const startKey = `${filter.key}Start`;
   const endKey = `${filter.key}End`;
+  const holidayKeyKey = `${filter.key}HolidayKey`; // picked holiday chip's option_key; always '' for non-holiday choices
 
   // Resolved start/end + labels per preset value, from the date-range DataSource (cached, datasource-level).
   const rangeDsId = filter.dateRangeSource?.datasourceId || filter.dateRangeSource?.datasetId;
@@ -3093,7 +3120,8 @@ const PresetDateRangeFilterField: React.FC<PresetDateRangeFilterFieldProps> = ({
     const r = rangeMap[v];
     if (onMultiFilterChange && r?.start && r?.end) {
       emittedRef.current = `${v}|${r.start}|${r.end}`;
-      onMultiFilterChange({ [filter.key]: v, [startKey]: r.start, [endKey]: r.end });
+      // HolidayKey cleared in the same atomic patch — a fiscal preset is never a holiday pick.
+      onMultiFilterChange({ [filter.key]: v, [startKey]: r.start, [endKey]: r.end, [holidayKeyKey]: '' });
       return;
     }
     onFilterChange(filter.key, v);
@@ -3108,22 +3136,25 @@ const PresetDateRangeFilterField: React.FC<PresetDateRangeFilterFieldProps> = ({
   const confirmCustom = () => {
     if (!customStart || !customEnd) return;
     if (memoryKey) writeFilterSelectionMemory(memoryKey, { v: 'custom', start: customStart, end: customEnd });
-    onFilterChange(filter.key, 'custom');
+    // Legacy path never carries a holiday pick — clear HolidayKey alongside the custom commit.
+    if (onMultiFilterChange) onMultiFilterChange({ [filter.key]: 'custom', [holidayKeyKey]: '' });
+    else onFilterChange(filter.key, 'custom');
     setOpen(false);
   };
 
   // ── rich path (customTabs): commit a resolved custom range / a pending preset ──
-  const commitCustomRange = (s: string, e: string) => {
-    if (memoryKey) writeFilterSelectionMemory(memoryKey, { v: 'custom', start: s, end: e, tab: activeCustomTab });
+  const commitCustomRange = (s: string, e: string, holidayKey = '') => {
+    if (memoryKey) writeFilterSelectionMemory(memoryKey, { v: 'custom', start: s, end: e, tab: activeCustomTab, holidayKey });
     setAppliedStart(s);
     setAppliedEnd(e);
     // Atomic commit (0706 acceptance #9): period + start/end in ONE patch, mirroring commitPreset.
     // Emitting them separately lets listeners (e.g. trend-chart SQL, which recomputes its window from
     // {{period}} when it reads a preset key) refetch with period='custom' but a stale range — or with
     // the old preset key ('wtd') plus the new fiscal-week dates, showing wrong buckets/labels.
+    // holidayKey rides the same patch so consumers never see a new key with a stale range.
     if (onMultiFilterChange) {
       emittedRef.current = `custom|${s}|${e}`;
-      onMultiFilterChange({ [filter.key]: 'custom', [startKey]: s, [endKey]: e });
+      onMultiFilterChange({ [filter.key]: 'custom', [startKey]: s, [endKey]: e, [holidayKeyKey]: holidayKey });
     } else {
       onFilterChange(filter.key, 'custom'); // effect emits periodStart/End from appliedStart/End
     }
@@ -4280,11 +4311,145 @@ const SheetTabbedSection: React.FC<SheetTabbedSectionProps> = ({
   );
 };
 
+// ─── filterSheet input history row (B4 minimal text-link style) ───────────────
+// Clock icon + plain text links separated by middots — no fill, no border. Tapping a link
+// only backfills the input (the value still needs "Apply Filters" to take effect). ×
+// deletes one entry: hover-reveal on desktop, always-visible-but-muted on touch. A
+// ~500ms long-press (10px movement tolerance) enters edit mode: × turns into a solid red
+// dot for batch deletion, links stop backfilling, and "Done" / tapping outside exits.
+const HISTORY_LONG_PRESS_MS = 500;
+const HISTORY_LONG_PRESS_TOL_PX = 10;
+
+interface FilterInputHistoryRowProps {
+  values: string[];
+  editing: boolean;
+  deleteTitle: string;
+  doneLabel: string;
+  onPick: (value: string) => void;
+  onDelete: (value: string) => void;
+  onEditingChange: (editing: boolean) => void;
+}
+
+const FilterInputHistoryRow: React.FC<FilterInputHistoryRowProps> = ({
+  values,
+  editing,
+  deleteTitle,
+  doneLabel,
+  onPick,
+  onDelete,
+  onEditingChange,
+}) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const lpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lpOrigin = useRef<{ x: number; y: number } | null>(null);
+
+  const cancelLongPress = useCallback(() => {
+    if (lpTimer.current) {
+      clearTimeout(lpTimer.current);
+      lpTimer.current = null;
+    }
+    lpOrigin.current = null;
+  }, []);
+
+  const startLongPress = useCallback((e: React.PointerEvent) => {
+    if (editing) return;
+    cancelLongPress();
+    lpOrigin.current = { x: e.clientX, y: e.clientY };
+    lpTimer.current = setTimeout(() => {
+      lpTimer.current = null;
+      onEditingChange(true);
+    }, HISTORY_LONG_PRESS_MS);
+  }, [editing, cancelLongPress, onEditingChange]);
+
+  const moveLongPress = useCallback((e: React.PointerEvent) => {
+    if (!lpTimer.current || !lpOrigin.current) return;
+    if (
+      Math.abs(e.clientX - lpOrigin.current.x) > HISTORY_LONG_PRESS_TOL_PX ||
+      Math.abs(e.clientY - lpOrigin.current.y) > HISTORY_LONG_PRESS_TOL_PX
+    ) {
+      cancelLongPress();
+    }
+  }, [cancelLongPress]);
+
+  // "Done" or a tap outside the row exits edit mode.
+  useEffect(() => {
+    if (!editing) return;
+    const onDocPointerDown = (e: PointerEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) onEditingChange(false);
+    };
+    document.addEventListener('pointerdown', onDocPointerDown);
+    return () => document.removeEventListener('pointerdown', onDocPointerDown);
+  }, [editing, onEditingChange]);
+
+  // Never leave a pending long-press timer behind on unmount.
+  useEffect(() => cancelLongPress, [cancelLongPress]);
+
+  return (
+    <div
+      ref={rootRef}
+      className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 px-1 pt-1"
+      onContextMenu={e => e.preventDefault()}
+    >
+      <ClockIcon className="w-[11px] h-[11px] text-slate-400 dark:text-neutral-500 flex-shrink-0" />
+      {values.map((v, i) => (
+        <React.Fragment key={v}>
+          {i > 0 && (
+            <span className="text-[11px] leading-4 text-slate-300 dark:text-neutral-600 select-none">·</span>
+          )}
+          <span
+            className={cn(
+              'group inline-flex items-center select-none [-webkit-touch-callout:none] rounded-md',
+              editing ? 'bg-slate-100 dark:bg-neutral-800 px-1 py-0.5' : 'py-0.5'
+            )}
+            onPointerDown={startLongPress}
+            onPointerMove={moveLongPress}
+            onPointerUp={cancelLongPress}
+            onPointerCancel={cancelLongPress}
+            onClick={() => { if (!editing) onPick(v); }}
+          >
+            <span className="text-[11px] leading-4 text-slate-500 dark:text-neutral-400 active:text-slate-700 dark:active:text-neutral-200">
+              {v}
+            </span>
+            <button
+              type="button"
+              title={deleteTitle}
+              aria-label={deleteTitle}
+              onPointerDown={e => e.stopPropagation()}
+              onClick={e => { e.stopPropagation(); onDelete(v); }}
+              className={cn(
+                'ml-0.5 inline-flex items-center justify-center',
+                editing
+                  ? 'w-3.5 h-3.5 rounded-full bg-red-600 text-white opacity-100 active:bg-red-700'
+                  : 'text-slate-300 dark:text-neutral-600 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-[0.68] active:text-red-600'
+              )}
+            >
+              <XIcon className={editing ? 'w-2.5 h-2.5' : 'w-3 h-3'} />
+            </button>
+          </span>
+        </React.Fragment>
+      ))}
+      {editing && (
+        <button
+          type="button"
+          onClick={() => onEditingChange(false)}
+          className="ml-1 inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-950 px-2.5 py-[3px] text-[10px] leading-3 text-indigo-600 dark:text-indigo-400"
+        >
+          {doneLabel}
+        </button>
+      )}
+    </div>
+  );
+};
+
 interface FilterSheetFilterFieldProps {
   filter: FilterConfig;
   committedValues: Record<string, any>;
   onApply: (patch: Record<string, any>) => void;
   isMobileLayout: boolean;
+  // Input history (filter.inputHistory): panel/workbench scope for the companion datasources.
+  workbenchId?: string;
+  componentId?: string;
+  historyEnabled?: boolean;
 }
 
 const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
@@ -4292,6 +4457,9 @@ const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
   committedValues,
   onApply,
   isMobileLayout,
+  workbenchId,
+  componentId,
+  historyEnabled = false,
 }) => {
   const { language } = useWorkbenchConfigLocale();
   const { t } = useTranslation('renderers');
@@ -4322,10 +4490,39 @@ const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
     setTabState(s => ({ ...s, [sectionKey]: tabKey }));
   }, []);
 
+  // ─── Input history (B4 "recent inputs" row under each text input) ─────────────
+  // Fully gated: with the switch off (or ids unconfigured) there is zero UI and zero I/O.
+  const historyCfg = filter.inputHistory;
+  const historyReady = historyEnabled && !!workbenchId && !!componentId
+    && !!(historyCfg?.readDatasourceId && historyCfg?.writeDatasourceId && historyCfg?.deleteDatasourceId);
+  const historyReadDatasourceId = historyCfg?.readDatasourceId;
+  const historyWriteDatasourceId = historyCfg?.writeDatasourceId;
+  const historyDeleteDatasourceId = historyCfg?.deleteDatasourceId;
+  const historyCacheKey = useMemo(
+    () => (historyReady ? buildFilterInputHistoryKey(workbenchId, componentId) : ''),
+    [historyReady, workbenchId, componentId]
+  );
+  const [history, setHistory] = useState<FilterInputHistoryMap>({});
+  const [historyEditKey, setHistoryEditKey] = useState<string | null>(null);
+
   // Re-sync draft to the latest committed values each time the sheet opens.
   useEffect(() => {
-    if (open) setDraft(buildDraft());
+    if (open) {
+      setDraft(buildDraft());
+      setHistoryEditKey(null);
+    }
   }, [open]);
+
+  // Load recent inputs when the sheet opens: session cache first, read datasource on miss
+  // (fail fast & quiet — a missing table/datasource degrades to "no history row").
+  useEffect(() => {
+    if (!open || !historyReady || !historyReadDatasourceId || !workbenchId || !componentId) return;
+    let cancelled = false;
+    loadFilterInputHistory(historyCacheKey, historyReadDatasourceId, { workbenchId, componentId })
+      .then(fields => { if (!cancelled) setHistory(fields); })
+      .catch(err => console.warn('[FilterPanel] input history load failed:', err));
+    return () => { cancelled = true; };
+  }, [open, historyReady, historyCacheKey, historyReadDatasourceId, workbenchId, componentId]);
 
   const toggleChip = useCallback((key: string, value: string) => {
     setDraft(d => {
@@ -4351,8 +4548,35 @@ const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
 
   const apply = useCallback(() => {
     onApply(draft);
+    // Record anchor: each non-empty textInputs value writes through to the history table
+    // (TRANSACTION datasource: upsert dedupes/tops the entry + evicts beyond cap 10). The
+    // session cache updates optimistically; failures degrade quietly and never block apply.
+    if (historyReady && historyWriteDatasourceId && workbenchId && componentId) {
+      sections.forEach(sec => {
+        if (sec.kind !== 'textInputs') return;
+        (sec.inputs || []).forEach(inp => {
+          const v = typeof draft[inp.key] === 'string' ? draft[inp.key] : '';
+          if (v === '') return; // empty strings are not recorded
+          upsertFilterInputHistory(historyCacheKey, historyWriteDatasourceId, {
+            workbenchId, componentId, fieldKey: inp.key, value: v,
+          })
+            .then(fields => setHistory(fields))
+            .catch(err => console.warn('[FilterPanel] input history write failed:', err));
+        });
+      });
+    }
     setOpen(false);
-  }, [draft, onApply]);
+  }, [draft, onApply, historyReady, historyWriteDatasourceId, historyCacheKey, workbenchId, componentId, sections]);
+
+  // × on a history entry: optimistic cache removal + DELETE datasource (single PK row).
+  const handleHistoryDelete = useCallback((fieldKey: string, value: string) => {
+    if (!historyReady || !historyDeleteDatasourceId || !workbenchId || !componentId) return;
+    deleteFilterInputHistory(historyCacheKey, historyDeleteDatasourceId, {
+      workbenchId, componentId, fieldKey, value,
+    })
+      .then(fields => setHistory(fields))
+      .catch(err => console.warn('[FilterPanel] input history delete failed:', err));
+  }, [historyReady, historyDeleteDatasourceId, historyCacheKey, workbenchId, componentId]);
 
   const activeCount = useMemo(
     () => countActiveFilterSheetSections(sections, committedValues),
@@ -4427,21 +4651,36 @@ const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
       case 'textInputs':
         return (
           <div className="space-y-2">
-            {(sec.inputs || []).map(inp => (
-              <div
-                key={inp.key}
-                className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 rounded-xl px-3 py-2.5"
-              >
-                <Search className="w-4 h-4 text-slate-400 dark:text-neutral-500 flex-shrink-0" />
-                <input
-                  value={typeof draft[inp.key] === 'string' ? draft[inp.key] : ''}
-                  onChange={e => setText(inp.key, e.target.value)}
-                  placeholder={resolveBilingualLabel(inp.placeholder, language)}
-                  // text-base (16px): iOS WebView auto-zooms the page when a focused input is < 16px.
-                  className="flex-1 bg-transparent text-base outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
-                />
-              </div>
-            ))}
+            {(sec.inputs || []).map(inp => {
+              const historyValues = historyReady ? history[inp.key] || [] : [];
+              return (
+                <div key={inp.key}>
+                  <div
+                    className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 rounded-xl px-3 py-2.5"
+                  >
+                    <Search className="w-4 h-4 text-slate-400 dark:text-neutral-500 flex-shrink-0" />
+                    <input
+                      value={typeof draft[inp.key] === 'string' ? draft[inp.key] : ''}
+                      onChange={e => setText(inp.key, e.target.value)}
+                      placeholder={resolveBilingualLabel(inp.placeholder, language)}
+                      // text-base (16px): iOS WebView auto-zooms the page when a focused input is < 16px.
+                      className="flex-1 bg-transparent text-base outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
+                    />
+                  </div>
+                  {historyReady && historyValues.length > 0 && (
+                    <FilterInputHistoryRow
+                      values={historyValues}
+                      editing={historyEditKey === inp.key}
+                      deleteTitle={t('filter_panel.history_delete', 'Delete')}
+                      doneLabel={t('filter_panel.history_done', 'Done')}
+                      onPick={v => setText(inp.key, v)}
+                      onDelete={v => handleHistoryDelete(inp.key, v)}
+                      onEditingChange={on => setHistoryEditKey(on ? inp.key : null)}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         );
       default:

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import { useMobileNavigationCanGoBack } from '@/mobile/hooks/useMobileNavigationCanGoBack';
-import { popMobileNavigationEntry, formatMobileNavEntry } from '@/mobile/utils/mobileNavigationStore';
+import { goBackMobileNavigation } from '@/mobile/utils/mobileNavigationStore';
 import PageComponentRenderer from './ComponentRenderer';
 import { useEditMode } from './runtime-mode';
 import {
@@ -124,8 +124,9 @@ const PageLayoutRenderer: React.FC<PageLayoutRendererProps> = ({
   const canGoBack = useMobileNavigationCanGoBack();
   const backEnabled = isRealMobileViewport && canGoBack && Boolean((appConfig as any)?.subPageBackButton);
   const handleSubPageBack = useCallback(() => {
-    const prev = popMobileNavigationEntry();
-    if (prev) navigate(formatMobileNavEntry(prev), { replace: true });
+    // Shared with the floating back button: route entries navigate, component-tab entries
+    // (task #80) restore the tab in place via the workbench-component-tab-back event.
+    goBackMobileNavigation(navigate);
   }, [navigate]);
   const subPageBack = backEnabled ? (
     <button

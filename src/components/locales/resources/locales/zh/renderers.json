@@ -625,7 +625,9 @@
     "store_tags": "标签",
     "search_stores": "搜索门店",
     "select_all": "全选",
-    "clear": "清空"
+    "clear": "清空",
+    "history_done": "完成",
+    "history_delete": "删除"
   },
   "metric_carousel": {
     "swipe_hint": "← 左右滑动查看全部 →"

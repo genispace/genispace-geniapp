@@ -1178,6 +1178,7 @@ const PageComponentRenderer: React.FC<PageComponentRendererProps> = ({
           <ProductReportRenderer
             {...prProps}
             id={localComponent.id}
+            pageId={pageId}
             databaseDataSourceConfig={prPluCfg}
             dimDataSourceConfig={prDimCfg as DatabaseDataSourceConfig | null}
             summaryDataSourceConfig={prSumCfg as DatabaseDataSourceConfig | null}

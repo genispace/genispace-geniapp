@@ -12,6 +12,7 @@ export interface FilterSelectionMemory {
   start?: string; // YYYY-MM-DD, only when v === 'custom'
   end?: string;
   tab?: string; // last-used custom sub-tab, to restore the sheet UI
+  holidayKey?: string; // picked holiday chip's option_key (custom + holiday tab only); '' otherwise
   savedAt: number;
 }
 

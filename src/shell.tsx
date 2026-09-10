@@ -5,6 +5,8 @@ import {
   GENISPACE_SHELL_INIT_APPLIED_EVENT,
   GENISPACE_SHELL_SESSION_API_KEY,
   GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY,
+  GENISPACE_SHELL_SESSION_VERSION_KEY,
+  GENISPACE_SHELL_SESSION_IDENTIFIER_KEY,
   GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY,
 } from './hooks';
 import { setLanguage, setTheme } from './utils';
@@ -141,6 +143,8 @@ export function GeniAppShellBridge({
 
         setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_API_KEY, context.apiPublicBaseUrl);
         setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_APPLICATION_ID_KEY, context.applicationId);
+        setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_IDENTIFIER_KEY, context.identifier);
+        setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_VERSION_KEY, context.effectiveVersion || context.pinnedVersion);
         setStorageValue(sessionStorage, GENISPACE_SHELL_SESSION_RELEASE_CHANNEL_KEY, context.releaseChannel);
         if (accessTokenStorageKey) setStorageValue(localStorage, accessTokenStorageKey, context.accessToken);
 

@@ -92,7 +92,12 @@ const ProductDetailRenderer: React.FC<ProductDetailRendererProps> = ({
   const { rows: topRows } = useBoundRows(topStoresDataSourceConfig, componentParameterConfig, pageParams, `${id}-top`, 'plu-top', extra);
 
   const d = detailRows[0];
-  const back = () => { try { window.history.back(); } catch { /* noop */ } };
+  // Same pop logic as the floating back button, via the workbench-nav-back event: the nav stack
+  // lives in the workbench bundle (this renderer ships in the geniapp bundle in view mode, so a
+  // direct store import would be a second, empty module instance). history.back() was wrong here —
+  // detail navigation is replace-based, so the browser history has no in-workbench entry and the
+  // call fell out of the workbench / no-op'd.
+  const back = () => { window.dispatchEvent(new CustomEvent('workbench-nav-back')); };
 
   if (!pluId) {
     return (

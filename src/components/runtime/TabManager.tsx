@@ -12,6 +12,7 @@ import {
   isWorkbenchContentPath,
 } from '@/utils/workbenchPathUtils';
 import {
+  isMobileWorkbenchPath,
   pushMobileNavigationEntry,
   resetMobileNavigationStack,
   shouldPushMobileNavigation,
@@ -65,6 +66,12 @@ interface TabContextType {
 const TabContext = createContext<TabContextType | null>(null);
 
 export const workbenchHideTabBarRef = { current: false };
+
+/** Workbench-level cross-page back history gate (task #92 req 4, appConfig.tabBackHistory,
+ *  default off). Set by Workbench.tsx alongside workbenchHideTabBarRef from the EFFECTIVE
+ *  workbench config (draft in edit/preview, published in view), so the two environments can
+ *  differ while sharing this code. */
+export const workbenchTabBackHistoryRef = { current: false };
 
 export const useTabManager = () => {
   const context = useContext(TabContext);
@@ -382,19 +389,34 @@ export const TabProvider: React.FC<TabProviderProps> = ({
       }
 
       const urlPath = buildTabUrlPath(pageId, urlParams);
+      const currentPath = `${locationRef.current.pathname}${locationRef.current.search}`;
       if (shouldPushMobileNavigation(locationRef.current, urlPath)) {
         pushMobileNavigationEntry(locationRef.current);
+      } else if (
+        workbenchTabBackHistoryRef.current &&
+        isWorkbenchContentPath(locationRef.current.pathname)
+      ) {
+        // Cross-page back stack (task #92 req 4, opt-in via appConfig.tabBackHistory): EVERY
+        // forward page entry records the page being left — sidebar root jumps (`_nav`)
+        // included — so the floating back pill can step back across pages/tabs instead of a
+        // single drill-down hop. Back navigation never re-pushes here: goBack pops first and
+        // navigates, so by the time the route sync re-opens the target, locationRef.current
+        // already equals urlPath and the guard below skips.
+        if (currentPath !== urlPath) {
+          pushMobileNavigationEntry(locationRef.current);
+        }
       } else if (
         workbenchHideTabBarRef.current &&
         isWorkbenchContentPath(locationRef.current.pathname)
       ) {
-        // Desktop with a hidden tab bar navigates stack-style like mobile (the new page
-        // replaces the only tab): root/sidebar jumps are marked with `_nav` and reset the
-        // stack; drill-downs record the current page so the floating back pill (desktop
-        // variant, appConfig.floatingBackButton) can return to it.
+        // Legacy semantics (flag off/absent, e.g. the published env): desktop with a hidden
+        // tab bar navigates stack-style like mobile (the new page replaces the only tab):
+        // root/sidebar jumps are marked with `_nav` and reset the stack; drill-downs record
+        // the current page so the floating back pill (desktop variant,
+        // appConfig.floatingBackButton) can return to it.
         if (urlParams && '_nav' in urlParams) {
           resetMobileNavigationStack();
-        } else if (`${locationRef.current.pathname}${locationRef.current.search}` !== urlPath) {
+        } else if (currentPath !== urlPath) {
           pushMobileNavigationEntry(locationRef.current);
         }
       }
@@ -442,7 +464,17 @@ export const TabProvider: React.FC<TabProviderProps> = ({
     }
 
     if (needsNavigation) {
-
+      // User-driven tab switch records the page being left (task #92 req 4, opt-in via
+      // appConfig.tabBackHistory), so the back pill can return across tabs. Route re-syncs
+      // after close/back land here with needsNavigation === false (the location already
+      // updated) and never push.
+      if (
+        workbenchTabBackHistoryRef.current &&
+        (isMobileWorkbenchPath(loc.pathname) ||
+          isWorkbenchContentPath(loc.pathname))
+      ) {
+        pushMobileNavigationEntry(loc);
+      }
       navigate(urlPath, { replace: true, preventScrollReset: true });
     }
 

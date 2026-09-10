@@ -639,7 +639,9 @@
     "store_tags": "Tags",
     "search_stores": "Search stores",
     "select_all": "Select all",
-    "clear": "Clear"
+    "clear": "Clear",
+    "history_done": "Done",
+    "history_delete": "Delete"
   },
   "metric_carousel": {
     "swipe_hint": "← Swipe to see all →"

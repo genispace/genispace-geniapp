@@ -3693,6 +3693,36 @@ export const componentTypes: ComponentType[] = [
               defaultValue: false,
               description: t('filter_panel.prop_types.filters.item_config.children.remember_selection.description', 'Preset Date Range only: persist the committed choice in localStorage and restore it on the next visit')
             },
+            inputHistory: {
+              type: 'object',
+              label: t('filter_panel.prop_types.filters.item_config.children.input_history.label', 'Recent input history'),
+              description: t('filter_panel.prop_types.filters.item_config.children.input_history.description', 'Filter Sheet only: show a "recent inputs" row under each text input (server-persisted per user, cap 10 per field, recorded on Apply)'),
+              children: {
+                enabled: {
+                  type: 'boolean',
+                  label: t('filter_panel.prop_types.filters.item_config.children.input_history.children.enabled.label', 'Enabled'),
+                  defaultValue: false
+                },
+                readDatasourceId: {
+                  type: 'string',
+                  label: t('filter_panel.prop_types.filters.item_config.children.input_history.children.read_datasource_id.label', 'Read datasource ID'),
+                  defaultValue: '',
+                  description: t('filter_panel.prop_types.filters.item_config.children.input_history.children.read_datasource_id.description', 'READ datasource over wb_filter_input_history (user injected server-side)')
+                },
+                writeDatasourceId: {
+                  type: 'string',
+                  label: t('filter_panel.prop_types.filters.item_config.children.input_history.children.write_datasource_id.label', 'Write datasource ID'),
+                  defaultValue: '',
+                  description: t('filter_panel.prop_types.filters.item_config.children.input_history.children.write_datasource_id.description', 'TRANSACTION datasource: upsert + cap-10 eviction, called on Apply')
+                },
+                deleteDatasourceId: {
+                  type: 'string',
+                  label: t('filter_panel.prop_types.filters.item_config.children.input_history.children.delete_datasource_id.label', 'Delete datasource ID'),
+                  defaultValue: '',
+                  description: t('filter_panel.prop_types.filters.item_config.children.input_history.children.delete_datasource_id.description', 'DELETE datasource: removes a single history entry')
+                }
+              }
+            },
             updateTime: {
               type: 'object',
               label: t('filter_panel.prop_types.filters.item_config.children.update_time.label', 'Last update time label'),

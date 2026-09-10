@@ -278,6 +278,12 @@ export interface ProductReportConfig {
    *  FilterPanel as the page scrolls. Off by default — turn on only for wide/long tables. */
   freezeFirstColumn?: boolean;
 
+  /** Tab back-history (task #80): when ON — and the workbench-level floatingBackButton gate is
+   *  also on — every primary/sub-tab switch (incl. row drill-downs) pushes the previous selection
+   *  onto the shared nav stack and the floating back button restores it. Off by default, so
+   *  existing pages see zero behavior change. */
+  tabBackHistory?: boolean;
+
   /** Quick-scope pills row (store/national/retail/outlet/city…) shown under the dimension tabs.
    *  The selected value is injected into the data-source params via pillParam (storeScope SQL
    *  branches); visibleWhen typically gates it to store_manager so the HQ view stays unchanged. */
@@ -289,6 +295,30 @@ export interface ProductReportConfig {
   /** Footer total-row label (first column); used together with the dimension-level showTotalRow flag
    *  and the injected totalRowDataSourceConfig prop. Defaults to the zh/en Total label. */
   totalRowLabel?: BilingualText;
+
+  /** TopN header subtitle (2026-09-08 task #92): a single-row datasource result rendered as a
+   *  second line under each table column title (same wrap-aggregate pattern as totalRow, slot moved
+   *  from footer to header). Keyed by dimension key; only tabs with an entry fetch and render. */
+  topSummary?: { entries: Record<string, TopSummaryEntry> };
+}
+
+/** One subtitle item: `field` is the column dataIndex the value renders under; `valueField` picks
+ *  the field off the single-row datasource result. */
+export interface TopSummaryItem {
+  /** Column dataIndex (the subtitle value shows under this column's title). */
+  field: string;
+  /** Field on the datasource's single output row (total columns = TopN aggregate; ratio columns = recomputed value). */
+  valueField: string;
+  /** 'trend' = signed % plain text (no trend colors); 'wos' = n.n + 'w'; NULL degrades to '—'. */
+  format?: ReportValueFormat | 'trend' | 'wos';
+}
+
+export interface TopSummaryEntry {
+  /** Text under the first column's title, e.g. { zh: 'Top20 ...', en: 'Top 20' }. */
+  prefix: BilingualText;
+  /** Per-entry datasource (topN etc. are constants inside its parameters). */
+  dataSourceConfig: DatabaseDataSourceConfig;
+  items: TopSummaryItem[];
 }
 
 export interface QuickScopePill {

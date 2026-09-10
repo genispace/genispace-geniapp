@@ -15,6 +15,7 @@ import type {
   ReportColumn,
   DimensionConfig,
   SummaryCardConfig,
+  TopSummaryEntry,
 } from '@/types/productReport';
 import { renderReportCell, resolveFieldByLang, formatReportValue, ReportCard } from '../product-detail/productCellRender';
 import { useMobileViewport } from '@/hooks/useMobileViewport';
@@ -25,6 +26,9 @@ import { useVisibleWhenContext } from '@/hooks/useVisibleWhenContext';
 
 export interface ProductReportRendererProps extends ProductReportConfig {
   id?: string;
+  /** Owning page key — scopes tab-back-history stack entries and the restore-event filter
+   *  (MultiPageRenderer keeps all pages mounted, so events are double-filtered by pageId+id). */
+  pageId?: string;
   databaseDataSourceConfig?: DatabaseDataSourceConfig | null; // primary (e.g. PLU) source
   dimDataSourceConfig?: DatabaseDataSourceConfig | null; // dimension source
   summaryDataSourceConfig?: DatabaseDataSourceConfig | null; // summary cards
@@ -42,6 +46,7 @@ export interface ProductReportRendererProps extends ProductReportConfig {
 const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   const {
     id = 'product-report',
+    pageId = 'default',
     databaseDataSourceConfig,
     dimDataSourceConfig,
     summaryDataSourceConfig,
@@ -269,6 +274,33 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   }, [totalLoading, totalRows, displaySig, showTotalRow]);
   const totalRow = totalAcc.sig === displaySig ? totalAcc.row : undefined;
 
+  // TopN header subtitle (2026-09-08 task #92, ex-#60): same wrap-aggregate pattern as the footer
+  // total row above, slot moved to a second line under each column title. Keyed by dimension key —
+  // tabs without an entry (store/category/season on SW) neither fetch nor render. Fixed ranking by
+  // sales desc inside the DS; follows the current list scope (filters + quickScope), never pinned.
+  const topEntry: TopSummaryEntry | undefined = cfg.topSummary?.entries[activeDim?.key ?? ''];
+  const { rows: topRows, loading: topLoading } = useBoundRows(
+    topEntry?.dataSourceConfig,
+    componentParameterConfig, pageParams, `${id}-topn`, 'product-topn', totalExtra,
+  );
+  // Stale-data guard mirroring totalAcc: the subtitle must never show a previous result set's values.
+  const [topAcc, setTopAcc] = useState<{ sig: string; row: Record<string, unknown> | undefined }>(
+    { sig: displaySig, row: undefined },
+  );
+  if (topAcc.sig !== displaySig) setTopAcc({ sig: displaySig, row: undefined });
+  useEffect(() => {
+    if (topLoading) return;
+    const row = topEntry ? topRows[0] : undefined;
+    setTopAcc(prev => (prev.sig !== displaySig || prev.row === row ? prev : { sig: displaySig, row }));
+  }, [topLoading, topRows, displaySig, topEntry]);
+  const topRow = topAcc.sig === displaySig ? topAcc.row : undefined;
+  const headerSub = useMemo(() => {
+    if (!topEntry || !topRow) return undefined;
+    const values: Record<string, string> = {};
+    for (const it of topEntry.items) values[it.field] = formatTopSubValue(topRow[it.valueField], it.format, topRow.currency);
+    return { prefix: resolveBilingualText(topEntry.prefix, language), values };
+  }, [topEntry, topRow, language]);
+
   // Dynamic city pill label: union of the authorized stores' home cities (single-row `cities`
   // field). Only fetched while the pills are visible (HQ never requests it); unconfigured / query
   // failure / empty result → fall back to the pill's static label.
@@ -323,12 +355,50 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     if (o) handleSortBtn(o.key);
   };
 
+  // Tab back-history (task #80, opt-in via cfg.tabBackHistory + the workbench-level
+  // floatingBackButton gate): before a user-driven tab switch, push the CURRENT selection onto
+  // the shared nav stack through the workbench-component-tab-push event (in view mode this
+  // renderer runs in the geniapp bundle — never import the nav store directly, that instance
+  // is a different module). The floating back button pops the entry and answers with
+  // workbench-component-tab-back (listener below). The render-time subTab fallback above is
+  // NOT a user switch and never pushes.
+  const tabBackHistory = Boolean(cfg.tabBackHistory);
+  const pushTabHistory = useCallback((next: { primaryKey: string; subTabKey?: string }) => {
+    if (!tabBackHistory) return;
+    if (primaryKey === next.primaryKey && subTabKey === next.subTabKey) return; // no-op switch
+    window.dispatchEvent(new CustomEvent('workbench-component-tab-push', {
+      detail: { pageId, componentId: id, state: { primaryKey, subTabKey } },
+    }));
+  }, [tabBackHistory, primaryKey, subTabKey, pageId, id]);
+
+  // Restore answer to the floating back button: set the selection directly — NOT via
+  // changePrimaryTab, which would reset the sub-tab to defaultSubTab and lose the exact state.
+  useEffect(() => {
+    if (!tabBackHistory) return;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent).detail as
+        { pageId?: string; componentId?: string; state?: { primaryKey: string; subTabKey?: string } } | undefined;
+      if (!detail?.state || detail.pageId !== pageId || detail.componentId !== id) return;
+      setPrimaryKey(detail.state.primaryKey);
+      setSubTabKey(detail.state.subTabKey);
+    };
+    window.addEventListener('workbench-component-tab-back', handler);
+    return () => window.removeEventListener('workbench-component-tab-back', handler);
+  }, [tabBackHistory, pageId, id]);
+
   const changePrimaryTab = (k: string) => {
-    setPrimaryKey(k);
     const d = dims.find(x => x.key === k);
     // Land on the filtered visible subTabs: a hidden defaultSubTab also falls back to the first visible item.
     const vis = (d?.subTabs ?? []).filter(s => evaluateVisibleWhen(s.visibleWhen, visibleWhenCtx));
-    setSubTabKey((vis.find(s => s.key === d?.defaultSubTab) ?? vis[0])?.key);
+    const nextSub = (vis.find(s => s.key === d?.defaultSubTab) ?? vis[0])?.key;
+    pushTabHistory({ primaryKey: k, subTabKey: nextSub });
+    setPrimaryKey(k);
+    setSubTabKey(nextSub);
+  };
+
+  const handleSubTabChange = (k: string) => {
+    pushTabHistory({ primaryKey, subTabKey: k });
+    setSubTabKey(k);
   };
 
   const handleDimClick = (row: Record<string, unknown>) => {
@@ -341,7 +411,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     else addToken(drill.emitParam, key);
     const then = drill.then ?? { type: 'none' };
     if (then.type === 'primaryTab') changePrimaryTab(then.key);
-    else if (then.type === 'subTab') setSubTabKey(then.key);
+    else if (then.type === 'subTab') handleSubTabChange(then.key);
   };
 
   const resolveDetailTitle = (row: Record<string, unknown>, titleField: BilingualText | string | undefined): string => {
@@ -492,7 +562,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
         {visibleSubTabs.length > 0 && (
           <SubTabs
             value={subTabKey ?? visibleSubTabs[0].key}
-            onChange={setSubTabKey}
+            onChange={handleSubTabChange}
             items={visibleSubTabs.map(s => ({ key: s.key, label: resolveBilingualText(s.label, language) }))}
             fontSize={badgeFs}
             isMobileFlow={isMobileFlow}
@@ -529,6 +599,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
         </div>
       ) : columns.length > 0 ? (
         <ReportTable columns={columns} rows={view} language={language} keyField={keyField} onRowClick={onRowClick} rowClickColumn={isPrimary ? undefined : 'label'} scrollRef={scrollRef} cellFontSize={cellFs} stickyHeader={stickyHeader}
+          headerSub={headerSub}
           footerRow={totalRow} footerLabel={resolveBilingualText(cfg.totalRowLabel, language) || t('product_report.total', 'Total')}
           sort={sortOptions.length > 0 ? { fields: sortOptions.map(o => o.field).filter(Boolean), field: sortField, asc: sortAsc, onToggle: handleSortField } : undefined} />
       ) : (
@@ -565,6 +636,21 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
 function formatSummary(summary: Record<string, unknown> | undefined, c: SummaryCardConfig): string {
   if (!summary) return '—';
   return formatReportValue(summary[c.field], c.format, summary[c.currencyField ?? 'currency']);
+}
+
+/** TopN header-subtitle value formatting: reuses formatReportValue; 'trend' renders a signed %
+ *  as plain text (subtitle is uniformly de-emphasized — no trend colors); 'wos' appends 'w'. */
+function formatTopSubValue(raw: unknown, format: TopSummaryEntry['items'][number]['format'], currency: unknown): string {
+  if (raw == null || raw === '') return '—';
+  if (format === 'trend') {
+    const n = Number(raw);
+    return isNaN(n) ? '—' : `${n > 0 ? '+' : ''}${n.toFixed(1)}%`;
+  }
+  if (format === 'wos') {
+    const n = Number(raw);
+    return isNaN(n) ? '—' : `${n.toFixed(1)}w`;
+  }
+  return formatReportValue(raw, format, currency);
 }
 
 const DOT_CLASS: Record<string, string> = {
@@ -624,7 +710,7 @@ const colWidthStyle = (c: ReportColumn): React.CSSProperties | undefined =>
       }
     : undefined;
 
-function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickColumn, scrollRef, cellFontSize, stickyHeader, sort, footerRow, footerLabel }: {
+function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickColumn, scrollRef, cellFontSize, stickyHeader, sort, headerSub, footerRow, footerLabel }: {
   columns: ReportColumn[];
   rows: Record<string, unknown>[];
   language: string;
@@ -637,14 +723,18 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
   stickyHeader?: boolean;
   /** Column-header sorting: `fields` = sortable dataIndexes, `field`/`asc` = current sort. */
   sort?: { fields: string[]; field: string; asc: boolean; onToggle: (field: string) => void };
+  /** TopN header subtitle: a second line under each column title (prefix under the first column);
+   *  uniformly de-emphasized — slate-400, normal weight, no trend colors. */
+  headerSub?: { prefix?: string; values: Record<string, string> };
   /** Pinned footer total row (from a separate single-row datasource); label goes in the name column. */
   footerRow?: Record<string, unknown>;
   footerLabel?: string;
 }) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   // Re-clone when the header content (columns/language/font/sort indicator) changes; row-width
-  // drift is handled by the hook's ResizeObserver.
-  const cloneKey = `${language}|${cellFontSize}|${columns.map(c => c.dataIndex).join(',')}|${sort?.field ?? ''}|${sort?.asc ?? ''}`;
+  // drift is handled by the hook's ResizeObserver. headerSub values join the key — the subtitle
+  // makes the thead one line taller, so a value change must trigger a re-clone.
+  const cloneKey = `${language}|${cellFontSize}|${columns.map(c => c.dataIndex).join(',')}|${sort?.field ?? ''}|${sort?.asc ?? ''}|${headerSub ? `${headerSub.prefix ?? ''}~${columns.map(c => headerSub.values[c.dataIndex] ?? '').join(',')}` : ''}`;
   useStickyHeaderClone({ enabled: !!stickyHeader, overlayRef, cloneKey });
   return (
     <div className={cn('rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm', stickyHeader ? 'overflow-visible' : 'overflow-hidden')}>
@@ -669,6 +759,14 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
                       {resolveBilingualText(c.title, language)}
                       {sortActive ? (sort!.asc ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />) : null}
                     </span>
+                    {(() => {
+                      // TopN subtitle line: prefix under the first column's title, mapped values under
+                      // their columns; unmapped columns render no second line. Uniformly slate-400.
+                      const sub = i === 0 ? (headerSub?.prefix ?? headerSub?.values[c.dataIndex]) : headerSub?.values[c.dataIndex];
+                      return sub ? (
+                        <span className="block mt-0.5 text-[10px] leading-snug font-normal text-slate-400 dark:text-neutral-500" style={{ fontVariantNumeric: 'tabular-nums' }}>{sub}</span>
+                      ) : null;
+                    })()}
                   </th>
                 );
               })}

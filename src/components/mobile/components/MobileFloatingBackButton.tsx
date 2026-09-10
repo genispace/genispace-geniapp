@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import { useMobileNavigationCanGoBack } from '@/mobile/hooks/useMobileNavigationCanGoBack';
-import {
-  formatMobileNavEntry,
-  popMobileNavigationEntry,
-} from '@/mobile/utils/mobileNavigationStore';
+import { goBackMobileNavigation } from '@/mobile/utils/mobileNavigationStore';
 
 const BTN_HEIGHT = 36;
 const DRAG_THRESHOLD_PX = 4;
@@ -77,10 +74,9 @@ export const MobileFloatingBackButton: React.FC<MobileFloatingBackButtonProps> =
   }, [workbenchId, variant]);
 
   const goBack = useCallback(() => {
-    const prev = popMobileNavigationEntry();
-    if (prev) {
-      navigate(formatMobileNavEntry(prev), { replace: true });
-    }
+    // Pops route AND component-tab entries (task #80): the helper navigates for route entries
+    // and dispatches workbench-component-tab-back (no navigation) for tab entries.
+    goBackMobileNavigation(navigate);
   }, [navigate]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {

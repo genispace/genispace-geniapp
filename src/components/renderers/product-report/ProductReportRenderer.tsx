@@ -24,6 +24,11 @@ import { useStickyHeaderClone } from '../shared/useStickyHeaderClone';
 import { evaluateVisibleWhen } from '@/utils/visibleWhen';
 import { useVisibleWhenContext } from '@/hooks/useVisibleWhenContext';
 
+// Sort UX (task #104, 2026-09-14): header-click debounce before the request fires, and the minimum
+// time the skeleton stays up after the table blanks (fast responses must not strobe).
+const SORT_DEBOUNCE_MS = 300;
+const MIN_SKELETON_MS = 250;
+
 export interface ProductReportRendererProps extends ProductReportConfig {
   id?: string;
   /** Owning page key — scopes tab-back-history stack entries and the restore-event filter
@@ -186,17 +191,38 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   // Adjusting state during render (React's documented pattern) resets page BEFORE the row fetch fires, so
   // we never fetch page N of a freshly-changed dataset and then bounce back to page 1.
   const dateKey = dateKeys.map(k => String(comm.getCurrentParameter(k) ?? '')).join('|');
-  const resetSig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${sortKey}|${sortAsc}|${scopeKey}|${dateKey}`;
+  const displaySig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${scopeKey}|${dateKey}`;
+  const sortSig = `${sortKey}|${sortAsc}`;
+  // Sort debounce (task #104): a header click flips the arrow and blanks the table to the skeleton
+  // SAME FRAME (tableSig below), but the request params wait SORT_DEBOUNCE_MS — a click burst
+  // (column hopping, asc/desc toggling) restarts the timer and fires exactly one query with the
+  // final sort. A displaySig flip (filter/dimension/scope/date change) flushes a pending debounce
+  // immediately, so that query carries the latest sort instead of firing a stale-sort query first.
+  const [debouncedSort, setDebouncedSort] = useState({ key: sortKey, asc: sortAsc });
+  const sortDebouncing = debouncedSort.key !== sortKey || debouncedSort.asc !== sortAsc;
+  useEffect(() => {
+    if (!sortDebouncing) return;
+    const t = setTimeout(() => setDebouncedSort({ key: sortKey, asc: sortAsc }), SORT_DEBOUNCE_MS);
+    return () => clearTimeout(t);
+  }, [sortKey, sortAsc, sortDebouncing]);
+  const [sortFlushSig, setSortFlushSig] = useState(displaySig);
+  if (sortFlushSig !== displaySig) {
+    setSortFlushSig(displaySig);
+    if (sortDebouncing) setDebouncedSort({ key: sortKey, asc: sortAsc });
+  }
+  // resetSig rides the DEBOUNCED sort: the page-1 reset lands in the same render as the sort-param
+  // change, so the debounce settle fires a single query (new sort + page 1) — never a stale-sort one.
+  const resetSig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${debouncedSort.key}|${debouncedSort.asc}|${scopeKey}|${dateKey}`;
   const [pageResetSig, setPageResetSig] = useState(resetSig);
   if (resetSig !== pageResetSig) {
     setPageResetSig(resetSig);
     setPage(1);
   }
-  // Display identity EXCLUDES sort: a column-header sort click keeps the current rows on
-  // screen while the re-sorted page 1 loads, then swaps them in on completion — no skeleton
-  // flash. Filter/dimension/scope/date changes still blank to the skeleton immediately.
-  const displaySig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${scopeKey}|${dateKey}`;
-  const sortSig = `${sortKey}|${sortAsc}`;
+  // Table identity INCLUDES sort (task #104): a sort click blanks the rows accumulator during render,
+  // so the skeleton shows while the re-sorted page 1 loads — the same loading shape as a filter
+  // change. displaySig still EXCLUDES sort: the footer total / TopN subtitle aggregates don't change
+  // with sorting and must not blank on a re-sort.
+  const tableSig = `${displaySig}|${sortSig}`;
 
   const { dimension, groupBy } = useMemo((): { dimension: string; groupBy: string } => {
     if (!activeDim || activeDim.source === 'primary') return { dimension: '', groupBy: '' };
@@ -207,8 +233,10 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     };
   }, [activeDim, subTabKey, visibleSubTabs]);
 
-  const sortField = sortOptions.find(o => o.key === sortKey)?.field ?? '';
-  const sortDir = sortAsc ? 'asc' : 'desc';
+  // Request params ride the DEBOUNCED sort; the header arrow rides the immediate one (uiSortField).
+  const sortField = sortOptions.find(o => o.key === debouncedSort.key)?.field ?? '';
+  const sortDir = debouncedSort.asc ? 'asc' : 'desc';
+  const uiSortField = sortOptions.find(o => o.key === sortKey)?.field ?? '';
   // Server-side pagination + sorting: page/limit drive the endpoint's LIMIT/OFFSET (auto-wrapped for
   // enablePagination datasources), sortField/sortDir feed the SQL's dynamic ORDER BY. All params sit at
   // the top level of the request body (the /data endpoint reads params flat).
@@ -320,30 +348,51 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   const addToken = (k: string, key: string) => comm.emit(pname(k), [...new Set([...getCsv(k), key])].join(','));
 
   // Server-side "load more": each page fetch REPLACES rawRows with just that page, so accumulate pages
-  // here. The accumulator blanks (during render, mirroring the page reset) only when displaySig flips
-  // (filters/date/dimension); a pure re-sort keeps the old rows visible until the completion edge below
-  // swaps in the re-sorted page 1 (sortSig change ⇒ replace, never append).
-  const [acc, setAcc] = useState<{ sig: string; sortSig: string; rows: Record<string, unknown>[]; loadedPage: number }>(
-    { sig: displaySig, sortSig, rows: [], loadedPage: 0 },
+  // here. The accumulator blanks during render (mirroring the page reset) whenever tableSig flips —
+  // filters/date/dimension AND (since task #104) sort: a re-sort shows the skeleton, then the
+  // completion edge below fills in the re-sorted page 1.
+  const blankedAtRef = useRef(Date.now());
+  // True while a fast completion is being held back to honour MIN_SKELETON_MS — keeps the skeleton
+  // branch up (loading already flipped false) instead of flashing the empty state.
+  const [dwellHold, setDwellHold] = useState(false);
+  const [acc, setAcc] = useState<{ sig: string; rows: Record<string, unknown>[]; loadedPage: number }>(
+    { sig: tableSig, rows: [], loadedPage: 0 },
   );
-  if (acc.sig !== displaySig) setAcc({ sig: displaySig, sortSig, rows: [], loadedPage: 0 });
+  if (acc.sig !== tableSig) {
+    blankedAtRef.current = Date.now();
+    setAcc({ sig: tableSig, rows: [], loadedPage: 0 });
+  }
   // Append only on a load COMPLETION (loading true→false edge). Otherwise the effect could fire right
-  // after displaySig flips — while rawRows still holds the PREVIOUS result set and loading hasn't turned
-  // true yet — and append stale rows as "page 1" of the new set.
+  // after tableSig flips — while rawRows still holds the PREVIOUS result set and loading hasn't turned
+  // true yet — and append stale rows as "page 1" of the new set. A completion landing while a sort
+  // debounce is pending is dropped outright: that query predates the pending sort.
   const prevLoadingRef = useRef(loading);
   useEffect(() => {
     const wasLoading = prevLoadingRef.current;
     prevLoadingRef.current = loading;
     if (loading || !wasLoading) return;          // act only on the true→false completion edge
+    if (sortDebouncing) return;                  // stale completion from before the pending sort
     if (stale || rawRows.length === 0) return;
-    setAcc(prev => {
-      if (prev.sig !== displaySig) return prev;  // completion for a superseded result set
-      const resort = prev.sortSig !== sortSig;
-      if (!resort && prev.loadedPage >= page) return prev;  // this page already accumulated
-      return { sig: displaySig, sortSig, rows: page <= 1 || resort ? rawRows : [...prev.rows, ...rawRows], loadedPage: page };
+    const applyCommit = () => setAcc(prev => {
+      if (prev.sig !== tableSig) return prev;    // completion for a superseded result set
+      if (prev.loadedPage >= page) return prev;  // this page already accumulated
+      return { sig: tableSig, rows: page <= 1 ? rawRows : [...prev.rows, ...rawRows], loadedPage: page };
     });
-  }, [loading, rawRows, stale, page, displaySig, sortSig]);
-  const view = acc.sig === displaySig ? acc.rows : [];
+    // Minimum skeleton dwell: after a blank, keep the skeleton up at least MIN_SKELETON_MS so fast
+    // responses don't strobe (dwellHold holds the skeleton branch while loading is already false).
+    // The deferred commit is deliberately NOT cancelled on effect re-runs — rawRows gets a fresh
+    // identity per render in some feeds, which would clear the timer before it ever fires;
+    // applyCommit's sig guard drops the commit if the result set has moved on by then.
+    // Load-more appends (rows already on screen) commit instantly.
+    const elapsed = Date.now() - blankedAtRef.current;
+    if (acc.rows.length === 0 && elapsed < MIN_SKELETON_MS) {
+      setDwellHold(true);
+      setTimeout(() => { setDwellHold(false); applyCommit(); }, MIN_SKELETON_MS - elapsed);
+      return;
+    }
+    applyCommit();
+  }, [loading, rawRows, stale, page, tableSig, sortDebouncing, acc.rows.length]);
+  const view = acc.sig === tableSig ? acc.rows : [];
 
   const handleSortBtn = (key: string) => {
     if (sortKey === key) setSortAsc(v => !v);
@@ -576,7 +625,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
         </div>
       )}
 
-      {(loading || stale) && view.length === 0 ? (
+      {(loading || stale || sortDebouncing || dwellHold) && view.length === 0 ? (
         <div className="space-y-2" aria-busy="true">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 shadow-sm">
@@ -601,7 +650,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
         <ReportTable columns={columns} rows={view} language={language} keyField={keyField} onRowClick={onRowClick} rowClickColumn={isPrimary ? undefined : 'label'} scrollRef={scrollRef} cellFontSize={cellFs} stickyHeader={stickyHeader}
           headerSub={headerSub}
           footerRow={totalRow} footerLabel={resolveBilingualText(cfg.totalRowLabel, language) || t('product_report.total', 'Total')}
-          sort={sortOptions.length > 0 ? { fields: sortOptions.map(o => o.field).filter(Boolean), field: sortField, asc: sortAsc, onToggle: handleSortField } : undefined} />
+          sort={sortOptions.length > 0 ? { fields: sortOptions.map(o => o.field).filter(Boolean), field: uiSortField, asc: sortAsc, onToggle: handleSortField } : undefined} />
       ) : (
         <EmptyState />
       )}

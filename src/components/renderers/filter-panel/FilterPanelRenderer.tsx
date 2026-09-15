@@ -3612,9 +3612,10 @@ const PillSelectFilterField: React.FC<PillSelectFilterFieldProps> = ({
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder={t('filter_panel.search_stores', 'Search...')}
-        // text-base (16px) on mobile: iOS WebView auto-zooms the page when a focused input is < 16px;
-        // md:text-sm keeps the desktop popover at 14px.
-        className="w-full h-9 px-3 text-base md:text-sm rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-slate-700 dark:text-neutral-200 outline-none focus:border-indigo-400 dark:focus:border-indigo-500"
+        // text-[16px] on mobile: iOS WebView auto-zooms the page when a focused input is < 16px.
+        // Must be explicit px — base.css sets :root{font-size:14px}, so text-base (1rem) computes
+        // to 14px and still zooms (task #92, 2026-09-15). md:text-sm keeps the desktop popover at 14px.
+        className="w-full h-9 px-3 text-[16px] md:text-sm rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-slate-700 dark:text-neutral-200 outline-none focus:border-indigo-400 dark:focus:border-indigo-500"
       />
     </div>
   ) : null;
@@ -4207,8 +4208,9 @@ const SheetChipGroup: React.FC<SheetChipGroupProps> = ({
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t('filter_panel.search_name_code', 'Search name or code')}
-            // text-base (16px): iOS WebView auto-zooms the page when a focused input is < 16px.
-            className="flex-1 bg-transparent text-base outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
+            // text-[16px]: iOS WebView auto-zooms the page when a focused input is < 16px.
+            // Explicit px required — base.css :root{font-size:14px} makes text-base compute to 14px (task #92).
+            className="flex-1 bg-transparent text-[16px] md:text-sm outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
           />
           {search && (
             <button type="button" onClick={() => setSearch('')}>
@@ -4663,8 +4665,9 @@ const FilterSheetFilterField: React.FC<FilterSheetFilterFieldProps> = ({
                       value={typeof draft[inp.key] === 'string' ? draft[inp.key] : ''}
                       onChange={e => setText(inp.key, e.target.value)}
                       placeholder={resolveBilingualLabel(inp.placeholder, language)}
-                      // text-base (16px): iOS WebView auto-zooms the page when a focused input is < 16px.
-                      className="flex-1 bg-transparent text-base outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
+                      // text-[16px]: iOS WebView auto-zooms the page when a focused input is < 16px.
+                      // Explicit px required — base.css :root{font-size:14px} makes text-base compute to 14px (task #92).
+                      className="flex-1 bg-transparent text-[16px] md:text-sm outline-none text-slate-700 dark:text-neutral-300 placeholder:text-slate-400 dark:placeholder:text-neutral-500"
                     />
                   </div>
                   {historyReady && historyValues.length > 0 && (

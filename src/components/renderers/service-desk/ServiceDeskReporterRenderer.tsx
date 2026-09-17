@@ -144,6 +144,21 @@ function statusLabel(state: string, t?: StatusTranslate) {
   return t ? t(entry[0], entry[1]) : entry[1];
 }
 
+// Same tone mapping as the service-desk app's StateBadge (TicketBadges.tsx).
+const stateTone: Record<string, string> = {
+  new: 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300',
+  assigned: 'bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300',
+  in_progress: 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300',
+  pending: 'bg-orange-50 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300',
+  resolved: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300',
+  closed: 'bg-muted text-muted-foreground',
+  cancelled: 'bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300'
+};
+
+function stateBadgeTone(state: string) {
+  return stateTone[state] ?? 'bg-muted text-muted-foreground';
+}
+
 function relatedRecordStatusLabel(
   state?: string | null,
   fallback?: string | null,
@@ -257,23 +272,30 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     // Auto-inject the current workbench language so notification emails follow it.
     // An explicit contextParams mapping for the `locale` key wins over the injected value.
     const base: Record<string, unknown> = i18n?.language ? { locale: i18n.language } : {};
+    // Null page params are omitted entirely: the service-desk email template renderer
+    // walks context with jsonb_each_text, and a JSON null entry NULL-poisons the strict
+    // SQL REPLACE(), blanking the rendered notification subject.
+    const put = (acc: Record<string, unknown>, key: string, value: unknown) =>
+      value == null ? acc : { ...acc, [key]: value };
     // Dynamic mapping wins; fall back to the legacy four fixed props so existing
     // pages keep working without any migration.
     if (Array.isArray(contextParams) && contextParams.length > 0) {
       return contextParams
         .filter((mapping) => mapping?.pageParam && mapping?.contextKey)
         .reduce<Record<string, unknown>>(
-          (acc, mapping) => ({ ...acc, [mapping.contextKey]: pageParams[mapping.pageParam] ?? null }),
+          (acc, mapping) => put(acc, mapping.contextKey, pageParams[mapping.pageParam]),
           base
         );
     }
-    return {
-      ...base,
-      store_id: pageParams[contextStoreParam] ?? null,
-      brand: pageParams[contextBrandParam] ?? null,
-      dashboard_id: pageParams[contextDashboardParam] ?? null,
-      widget_id: pageParams[contextWidgetParam] ?? null
-    };
+    return [
+      [contextStoreParam, 'store_id'],
+      [contextBrandParam, 'brand'],
+      [contextDashboardParam, 'dashboard_id'],
+      [contextWidgetParam, 'widget_id']
+    ].reduce<Record<string, unknown>>(
+      (acc, [param, key]) => put(acc, key, pageParams[param]),
+      base
+    );
   }, [contextParams, contextBrandParam, contextDashboardParam, contextStoreParam, contextWidgetParam, i18n?.language, pageParams]);
 
   const load = async (silent = false) => {
@@ -432,7 +454,12 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       const result = typeof raw === 'string'
         ? JSON.parse(raw) as { id?: string; number?: string }
         : raw as { id?: string; number?: string } | undefined;
-      setReceipt(result?.number || t('service_desk_reporter.submit.receipt_fallback', 'Ticket submitted'));
+      const receiptText = result?.number || t('service_desk_reporter.submit.receipt_fallback', 'Ticket submitted');
+      setReceipt(receiptText);
+      toast({
+        title: t('service_desk_reporter.toast.submit_success', 'Ticket submitted'),
+        description: t('service_desk_reporter.submit.receipt_created', 'Created {{receipt}}', { receipt: receiptText })
+      });
       setForm({ title: '', description: '', category_id: defaultCategoryId, impact: defaultImpact, urgency: defaultUrgency });
       setFiles([]);
       await load();
@@ -573,28 +600,28 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
               <div className="space-y-5">
                 <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{selected.title}</h3><p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{selected.description}</p></section>
                 {selected.resolution_summary && <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900"><div className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4" />{t('service_desk_reporter.detail.resolution_summary', 'Resolution summary')}</div><p className="mt-2 text-sm">{selected.resolution_summary}</p>{selected.auto_close_at && <p className="mt-2 text-xs">{t('service_desk_reporter.detail.auto_close_hint', 'If not confirmed, the ticket will close automatically at {{time}}.', { time: new Date(selected.auto_close_at).toLocaleString() })}</p>}</section>}
-                {selected.related_records.length > 0 && <section className="rounded-xl border border-border p-4"><div className="flex items-center gap-2"><Link2 className="h-4 w-4 text-primary" /><h3 className="font-semibold">{t('service_desk_reporter.related.title', 'Related work progress')}</h3></div><p className="mt-1 text-xs leading-5 text-muted-foreground">{t('service_desk_reporter.related.description', 'Only work explicitly shared by the support team is shown here. You do not need access to internal support tools.')}</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{selected.related_records.map((record) => <article key={record.id} className="rounded-lg border border-border bg-muted/20 p-3"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{record.number}</span><span className="rounded-full bg-background px-2 py-0.5 text-[11px]">{relatedRecordStatusLabel(record.state, record.state_label, t)}</span></div><p className="mt-2 text-sm font-medium">{record.label}</p>{record.last_verified_at && <p className="mt-1 text-xs text-muted-foreground">{t('service_desk_reporter.related.last_verified', 'Last confirmed {{time}}', { time: new Date(record.last_verified_at).toLocaleString() })}</p>}</article>)}</div></section>}
+                {selected.related_records.length > 0 && <section className="rounded-xl border border-border p-4"><div className="flex items-center gap-2"><Link2 className="h-4 w-4 text-primary" /><h3 className="font-semibold">{t('service_desk_reporter.related.title', 'Related work progress')}</h3></div><p className="mt-1 text-xs leading-5 text-muted-foreground/60">{t('service_desk_reporter.related.description', 'Only work explicitly shared by the support team is shown here. You do not need access to internal support tools.')}</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{selected.related_records.map((record) => <article key={record.id} className="rounded-lg border border-border bg-muted/20 p-3"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{record.number}</span><span className="rounded-full bg-background px-2 py-0.5 text-[11px]">{relatedRecordStatusLabel(record.state, record.state_label, t)}</span></div><p className="mt-2 text-sm font-medium">{record.label}</p>{record.last_verified_at && <p className="mt-1 text-xs text-muted-foreground/60">{t('service_desk_reporter.related.last_verified', 'Last confirmed {{time}}', { time: new Date(record.last_verified_at).toLocaleString() })}</p>}</article>)}</div></section>}
                 <section>
                   <h3 className="font-semibold">{t('service_desk_reporter.detail.public_progress', 'Public progress')}</h3>
                   <div className="mt-3 space-y-3 border-l border-border pl-5">
-                    {!createdActivity && orphanAttachments.length > 0 && <article className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground">{t('service_desk_reporter.detail.ticket_attachments', 'Ticket attachments')}</div><div className="mt-2 grid gap-2 sm:grid-cols-2">{orphanAttachments.map(renderAttachmentCard)}</div></article>}
+                    {!createdActivity && orphanAttachments.length > 0 && <article className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.ticket_attachments', 'Ticket attachments')}</div><div className="mt-2 grid gap-2 sm:grid-cols-2">{orphanAttachments.map(renderAttachmentCard)}</div></article>}
                     {selected.activities.map((activity) => {
                       const activityAttachments = selected.attachments.filter((attachment) => attachment.activity_id === activity.id);
                       const shownAttachments = activity.id === createdActivity?.id
                         ? [...activityAttachments, ...orphanAttachments]
                         : activityAttachments;
-                      return <article key={activity.id} className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground">{activity.activity_type} · {new Date(activity.created_at).toLocaleString()}</div>{activity.body && <p className="mt-1 text-sm">{activity.body}</p>}{shownAttachments.length > 0 && <div className="mt-2 grid gap-2 sm:grid-cols-2">{shownAttachments.map(renderAttachmentCard)}</div>}</article>;
+                      return <article key={activity.id} className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{activity.activity_type} · {new Date(activity.created_at).toLocaleString()}</div>{activity.body && <p className="mt-1 text-sm">{activity.body}</p>}{shownAttachments.length > 0 && <div className="mt-2 grid gap-2 sm:grid-cols-2">{shownAttachments.map(renderAttachmentCard)}</div>}</article>;
                     })}
-                    {!selected.activities.length && <p className="text-sm text-muted-foreground">{t('service_desk_reporter.detail.no_progress', 'No public progress yet')}</p>}
+                    {!selected.activities.length && <p className="text-sm text-muted-foreground/60">{t('service_desk_reporter.detail.no_progress', 'No public progress yet')}</p>}
                   </div>
                 </section>
-                {!['closed', 'cancelled'].includes(selected.state) && <section className="rounded-xl border border-border bg-muted/20 p-4"><Label htmlFor="service-desk-public-reply">{t('service_desk_reporter.detail.reply_label', 'Add information or reply to the support team')}</Label><Textarea id="service-desk-public-reply" className="mt-2 min-h-24 bg-background" value={reply} onChange={(event) => setReply(event.target.value)} /><div className="mt-3 flex flex-wrap items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.detail.add_attachment', 'Add attachment')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, setReplyFiles)} /></label><Button disabled={submitting || (!reply.trim() && !replyFiles.length)} onClick={() => void addReply()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{t('service_desk_reporter.detail.submit_reply', 'Submit reply')}</Button></div>{replyFiles.length > 0 && <p className="mt-2 text-xs text-muted-foreground">{t('service_desk_reporter.detail.attachments_selected', '{{count}} attachments selected', { count: replyFiles.length })}</p>}</section>}
+                {!['closed', 'cancelled'].includes(selected.state) && <section className="rounded-xl border border-border bg-muted/20 p-4"><Label htmlFor="service-desk-public-reply">{t('service_desk_reporter.detail.reply_label', 'Add information or reply to the support team')}</Label><Textarea id="service-desk-public-reply" className="mt-2 min-h-24 bg-background" value={reply} onChange={(event) => setReply(event.target.value)} /><div className="mt-3 flex flex-wrap items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.detail.add_attachment', 'Add attachment')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, setReplyFiles)} /></label><Button disabled={submitting || (!reply.trim() && !replyFiles.length)} onClick={() => void addReply()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{t('service_desk_reporter.detail.submit_reply', 'Submit reply')}</Button></div>{replyFiles.length > 0 && <p className="mt-2 text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.attachments_selected', '{{count}} attachments selected', { count: replyFiles.length })}</p>}</section>}
               </div>
               <aside className="space-y-4">
-                {selected.state === 'resolved' && !selected.csat && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.confirm.title', 'Confirm resolution')}</h3><p className="mt-1 text-sm text-muted-foreground">{t('service_desk_reporter.confirm.description', 'Confirm to close the ticket and submit your satisfaction rating.')}</p><div className="mt-4 flex gap-1">{[1,2,3,4,5].map((score) => <button key={score} type="button" aria-label={t('service_desk_reporter.confirm.star_label', '{{score}} stars', { score })} onClick={() => setCsatScore(score)} className="p-1"><Star className={`h-5 w-5 ${score <= csatScore ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} /></button>)}</div><Textarea className="mt-3 min-h-20" value={csatComment} onChange={(event) => setCsatComment(event.target.value)} placeholder={t('service_desk_reporter.confirm.comment_placeholder', 'Optional: tell us how we did')} /><Button className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('confirm_resolution')}><CheckCircle2 className="mr-2 h-4 w-4" />{t('service_desk_reporter.confirm.button', 'Confirm and close')}</Button></section>}
+                {selected.state === 'resolved' && !selected.csat && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.confirm.title', 'Confirm resolution')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.confirm.description', 'Confirm to close the ticket and submit your satisfaction rating.')}</p><div className="mt-4 flex gap-1">{[1,2,3,4,5].map((score) => <button key={score} type="button" aria-label={t('service_desk_reporter.confirm.star_label', '{{score}} stars', { score })} onClick={() => setCsatScore(score)} className="p-1"><Star className={`h-5 w-5 ${score <= csatScore ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} /></button>)}</div><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={csatComment} onChange={(event) => setCsatComment(event.target.value)} placeholder={t('service_desk_reporter.confirm.comment_placeholder', 'Optional: tell us how we did')} /><Button className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('confirm_resolution')}><CheckCircle2 className="mr-2 h-4 w-4" />{t('service_desk_reporter.confirm.button', 'Confirm and close')}</Button></section>}
                 {selected.csat && <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-4"><h3 className="font-semibold text-emerald-900">{t('service_desk_reporter.csat.submitted', 'Satisfaction submitted')}</h3><p className="mt-2 text-sm text-emerald-800">{selected.csat.score} / 5{selected.csat.comment ? ` · ${selected.csat.comment}` : ''}</p></section>}
-                {canReopen && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.reopen.title', 'Still need help?')}</h3><p className="mt-1 text-sm text-muted-foreground">{t('service_desk_reporter.reopen.deadline_hint', 'You can reopen it before {{time}}.', { time: new Date(selected.reopen_until as string).toLocaleString() })}</p><Textarea className="mt-3 min-h-20" value={reopenComment} onChange={(event) => setReopenComment(event.target.value)} placeholder={t('service_desk_reporter.reopen.placeholder', 'Describe the issue that still exists')} /><Button variant="outline" className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('reopen')}><RotateCcw className="mr-2 h-4 w-4" />{t('service_desk_reporter.reopen.button', 'Reopen')}</Button></section>}
-                <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.email.title', 'About email notifications')}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{t('service_desk_reporter.email.description', 'Emails are sent automatically as the ticket progresses. You can reply to the Reply-To address from your regular mailbox, but email replies are not written back to the ticket. Please add updates here.')}</p></section>
+                {canReopen && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.reopen.title', 'Still need help?')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.reopen.deadline_hint', 'You can reopen it before {{time}}.', { time: new Date(selected.reopen_until as string).toLocaleString() })}</p><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={reopenComment} onChange={(event) => setReopenComment(event.target.value)} placeholder={t('service_desk_reporter.reopen.placeholder', 'Describe the issue that still exists')} /><Button variant="outline" className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('reopen')}><RotateCcw className="mr-2 h-4 w-4" />{t('service_desk_reporter.reopen.button', 'Reopen')}</Button></section>}
+                <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.email.title', 'About email notifications')}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground/60">{t('service_desk_reporter.email.description', 'Emails are sent automatically as the ticket progresses. You can reply to the Reply-To address from your regular mailbox, but email replies are not written back to the ticket. Please add updates here.')}</p></section>
               </aside>
             </div>
           )}
@@ -605,7 +632,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
           <DialogHeader><DialogTitle>{preview?.attachment.file_name}</DialogTitle></DialogHeader>
           <div className="flex min-h-48 items-center justify-center">
             {preview?.loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
-            {!preview?.loading && preview?.failed && <p className="text-sm text-muted-foreground">{t('service_desk_reporter.detail.preview_failed', 'Unable to load the image preview')}</p>}
+            {!preview?.loading && preview?.failed && <p className="text-sm text-muted-foreground/60">{t('service_desk_reporter.detail.preview_failed', 'Unable to load the image preview')}</p>}
             {!preview?.loading && !preview?.failed && preview?.url && <img src={preview.url} alt={preview.attachment.file_name} className="max-h-[70vh] max-w-full rounded-md object-contain" />}
           </div>
         </DialogContent>
@@ -622,8 +649,8 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       <CardContent className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-4">
           {receipt && <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"><CheckCircle2 className="h-4 w-4" />{t('service_desk_reporter.submit.receipt_created', 'Created {{receipt}}', { receipt })}</div>}
-          <div className="space-y-2"><Label>{t('service_desk_reporter.form.subject_label', 'Subject')}</Label><Input value={form.title} maxLength={160} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder={t('service_desk_reporter.form.subject_placeholder', 'Briefly describe the issue that needs support')} /><p className="text-xs text-muted-foreground">{t('service_desk_reporter.form.subject_hint', 'Enter at least 3 non-space characters.')}</p></div>
-          <div className="space-y-2"><Label>{t('service_desk_reporter.form.description_label', 'Detailed description')}</Label><Textarea className="min-h-28" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder={t('service_desk_reporter.form.description_placeholder', 'Describe the symptoms, the expected result, and what you have already tried')} /><p className="text-xs text-muted-foreground">{t('service_desk_reporter.form.description_hint', 'Enter at least 3 non-space characters so support can understand the issue.')}</p></div>
+          <div className="space-y-2"><Label>{t('service_desk_reporter.form.subject_label', 'Subject')}</Label><Input value={form.title} maxLength={160} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder={t('service_desk_reporter.form.subject_placeholder', 'Briefly describe the issue that needs support')} className="placeholder:text-muted-foreground/60" /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.subject_hint', 'Enter at least 3 non-space characters.')}</p></div>
+          <div className="space-y-2"><Label>{t('service_desk_reporter.form.description_label', 'Detailed description')}</Label><Textarea className="min-h-28 placeholder:text-muted-foreground/60" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder={t('service_desk_reporter.form.description_placeholder', 'Describe the symptoms, the expected result, and what you have already tried')} /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.description_hint', 'Enter at least 3 non-space characters so support can understand the issue.')}</p></div>
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.category_label', 'Category')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.category_id} onChange={(event) => setForm({ ...form, category_id: event.target.value })}><option value="">{t('service_desk_reporter.form.category_placeholder', 'Select')}</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.impact_label', 'Impact')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.impact} onChange={(event) => setForm({ ...form, impact: event.target.value as typeof form.impact })}><option value="high">{t('service_desk_reporter.form.level_high', 'High')}</option><option value="medium">{t('service_desk_reporter.form.level_medium', 'Medium')}</option><option value="low">{t('service_desk_reporter.form.level_low', 'Low')}</option></select></label>
@@ -632,7 +659,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
           {allowAttachments && <div className="space-y-2"><Label>{t('service_desk_reporter.form.attachments_label', 'Attachments')}</Label><label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.form.choose_files', 'Choose files')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, setFiles)} /></label>{files.length > 0 && <div className="space-y-1">{files.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm"><Paperclip className="h-3.5 w-3.5" /><span className="min-w-0 flex-1 truncate">{file.name}</span><button type="button" onClick={() => setFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}><X className="h-3.5 w-3.5" /></button></div>)}</div>}</div>}
           <Button className="w-full sm:w-auto" disabled={submitting || !formIsValid} onClick={() => void submit()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{submitting ? t('service_desk_reporter.submit.submitting', 'Submitting…') : submitButtonText}</Button>
         </div>
-        {showRecentTickets && <aside className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0"><h3 className="text-sm font-semibold">{t('service_desk_reporter.recent.title', 'My recent tickets')}</h3><p className="mt-1 text-xs text-muted-foreground">{canUseDetail ? t('service_desk_reporter.recent.hint_enabled', 'Click to view progress, reply, and confirm resolution') : t('service_desk_reporter.recent.hint_disabled', 'Detail data sources and requester permissions must also be configured')}</p><div className="mt-3 space-y-2">{recent.map((ticket) => <button type="button" disabled={!canUseDetail || detailLoading} onClick={() => void loadDetail(ticket.id)} key={ticket.id} className="w-full rounded-lg border border-border p-3 text-left transition enabled:hover:border-primary/50"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{ticket.number}</span><span className="rounded-full bg-muted px-2 py-0.5 text-[11px]">{statusLabel(ticket.state, t)}</span></div><p className="mt-2 line-clamp-2 text-sm font-medium">{ticket.title}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{ticket.priority}</p></button>)}{!recent.length && <p className="py-6 text-center text-sm text-muted-foreground">{t('service_desk_reporter.recent.empty', 'No submissions yet')}</p>}</div></aside>}
+        {showRecentTickets && <aside className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0"><h3 className="text-sm font-semibold">{t('service_desk_reporter.recent.title', 'My recent tickets')}</h3><p className="mt-1 text-xs text-muted-foreground/60">{canUseDetail ? t('service_desk_reporter.recent.hint_enabled', 'Click to view progress, reply, and confirm resolution') : t('service_desk_reporter.recent.hint_disabled', 'Detail data sources and requester permissions must also be configured')}</p><div className="mt-3 space-y-2">{recent.map((ticket) => <button type="button" disabled={!canUseDetail || detailLoading} onClick={() => void loadDetail(ticket.id)} key={ticket.id} className="w-full rounded-lg border border-border p-3 text-left transition enabled:hover:border-primary/50"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{ticket.number}</span><span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${stateBadgeTone(ticket.state)}`}>{statusLabel(ticket.state, t)}</span></div><p className="mt-2 line-clamp-2 text-sm font-medium">{ticket.title}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{ticket.priority}</p></button>)}{!recent.length && <p className="py-6 text-center text-sm text-muted-foreground/60">{t('service_desk_reporter.recent.empty', 'No submissions yet')}</p>}</div></aside>}
       </CardContent>
     </Card>
   );

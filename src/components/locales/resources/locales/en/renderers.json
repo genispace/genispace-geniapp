@@ -737,6 +737,7 @@
       "preview_missing_url": "The access grant response is missing a preview URL"
     },
     "toast": {
+      "submit_success": "Ticket submitted",
       "open_failed": "Unable to open ticket",
       "file_too_large": "Attachment too large",
       "file_too_large_desc": "{{name}} exceeds {{max}} MB.",

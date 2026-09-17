@@ -734,7 +734,14 @@
       "upload_grant_failed": "Failed to create the attachment upload grant",
       "upload_missing_file_id": "The attachment upload response is missing a file identifier",
       "download_missing_url": "The access grant response is missing a download URL",
-      "preview_missing_url": "The access grant response is missing a preview URL"
+      "preview_missing_url": "The access grant response is missing a preview URL",
+      "conflict_retry": "The ticket was just updated and has been refreshed. Please try again.",
+      "reopen_state": "Only resolved or closed tickets can be reopened.",
+      "reopen_expired": "The reopen window has expired.",
+      "no_permission": "You do not have permission to perform this action.",
+      "state_changed": "The ticket status has changed. Please refresh and try again.",
+      "generic": "The operation failed. Please try again later.",
+      "reopen_unavailable": "The reopen window has passed or the ticket status has changed."
     },
     "toast": {
       "submit_success": "Ticket submitted",
@@ -744,7 +751,9 @@
       "submit_failed": "Submission failed",
       "reply_failed": "Reply failed",
       "action_failed": "Action failed",
-      "download_failed": "Unable to download attachment"
+      "download_failed": "Unable to download attachment",
+      "too_many_files": "Too many attachments",
+      "too_many_files_desc": "You can upload up to {{max}} attachments."
     },
     "not_configured": "Bind the Service Desk application and data sources in the component properties.",
     "submit": {
@@ -825,6 +834,11 @@
       "hint_enabled": "Click to view progress, reply, and confirm resolution",
       "hint_disabled": "Detail data sources and requester permissions must also be configured",
       "empty": "No submissions yet"
+    },
+    "load_error": {
+      "title": "Unable to load tickets",
+      "description": "Check your network connection and try again.",
+      "retry": "Retry"
     }
   }
 }

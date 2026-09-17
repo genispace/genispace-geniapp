@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -129,6 +129,32 @@ function accessCodes(response: unknown): string[] {
 
 type StatusTranslate = (key: string, fallback: string) => string;
 
+const CONFLICT_MESSAGE_PREFIX = 'Ticket was changed by another user';
+
+// Exact messages raised by the service-desk PostgreSQL functions (prefix match).
+const backendErrorMappings: Array<[string, string, string]> = [
+  [CONFLICT_MESSAGE_PREFIX, 'service_desk_reporter.error.conflict_retry', 'The ticket was just updated and has been refreshed. Please try again.'],
+  ['Only resolved or closed tickets can be reopened', 'service_desk_reporter.error.reopen_state', 'Only resolved or closed tickets can be reopened.'],
+  ['Reopen window has expired', 'service_desk_reporter.error.reopen_expired', 'The reopen window has expired.'],
+  ['Requester ticket not found', 'service_desk_reporter.error.ticket_not_found', 'Ticket not found or no permission to view it'],
+  ['Analyst permission is required', 'service_desk_reporter.error.no_permission', 'You do not have permission to perform this action.'],
+  ['Requester permission is required', 'service_desk_reporter.error.no_permission', 'You do not have permission to perform this action.'],
+  ['Illegal ticket state transition', 'service_desk_reporter.error.state_changed', 'The ticket status has changed. Please refresh and try again.']
+];
+
+function isVersionConflict(reason: unknown) {
+  return reason instanceof Error && reason.message.startsWith(CONFLICT_MESSAGE_PREFIX);
+}
+
+// Backend functions raise English messages; translate the known ones and keep
+// unknown ones behind a generic notice instead of leaking raw text to requesters.
+function describeBackendError(reason: unknown, t: StatusTranslate) {
+  const message = reason instanceof Error ? reason.message : '';
+  const mapping = backendErrorMappings.find(([prefix]) => message.startsWith(prefix));
+  if (mapping) return t(mapping[1], mapping[2]);
+  return t('service_desk_reporter.error.generic', 'The operation failed. Please try again later.');
+}
+
 function statusLabel(state: string, t?: StatusTranslate) {
   const labels: Record<string, [string, string]> = {
     new: ['service_desk_reporter.status.new', 'New'],
@@ -235,13 +261,14 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   const [recent, setRecent] = useState<RecentTicket[]>([]);
   const [selected, setSelected] = useState<RequesterDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [replyFiles, setReplyFiles] = useState<File[]>([]);
   const [reply, setReply] = useState('');
   const [reopenComment, setReopenComment] = useState('');
-  const [csatScore, setCsatScore] = useState(5);
+  const [csatScore, setCsatScore] = useState<number | null>(null);
   const [csatComment, setCsatComment] = useState('');
   const [receipt, setReceipt] = useState('');
   const [preview, setPreview] = useState<{
@@ -253,6 +280,10 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   const [form, setForm] = useState({
     title: '', description: '', category_id: defaultCategoryId, impact: defaultImpact, urgency: defaultUrgency
   });
+  // The auto-refresh timer closes over the mount-time render; track the open
+  // ticket id in a ref so it can silently refresh the detail as well.
+  const selectedIdRef = useRef<string | null>(null);
+  selectedIdRef.current = selected?.id ?? null;
 
   // Re-apply the configured defaults when they change (e.g. edited in the property panel).
   useEffect(() => {
@@ -306,6 +337,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     }
     if (!silent) setLoading(true);
     try {
+      setLoadError(false);
       const access = await apiClient.get(`/applications/${applicationId}/users/me/access`);
       const codes = accessCodes(access);
       const canSubmit = codes.includes('service-desk.intake.submit');
@@ -338,8 +370,15 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
         record_version: Number(row.record_version),
         created_at: String(row.created_at)
       })));
-    } catch {
-      setAllowed(false);
+    } catch (reason) {
+      // Hide the component only on an explicit authorization denial; other
+      // failures show a retryable error. Silent background refreshes stay quiet.
+      const status = (reason as { response?: { status?: number } })?.response?.status;
+      if (status === 401 || status === 403) {
+        setAllowed(false);
+      } else if (!silent) {
+        setLoadError(true);
+      }
     } finally {
       if (!silent) setLoading(false);
     }
@@ -348,7 +387,12 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   useEffect(() => {
     void load();
     const refreshVisibleTickets = () => {
-      if (document.visibilityState === 'visible') void load(true);
+      if (document.visibilityState !== 'visible') return;
+      void load(true);
+      // An open detail holds record_version for optimistic locking; refresh it
+      // silently too, otherwise the next requester action is guaranteed to conflict.
+      const openTicketId = selectedIdRef.current;
+      if (openTicketId) void loadDetail(openTicketId, true);
     };
     const interval = window.setInterval(refreshVisibleTickets, 30_000);
     window.addEventListener('focus', refreshVisibleTickets);
@@ -360,14 +404,14 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     };
   }, [applicationId, intakeDatasourceId, myTicketsDatasourceId, showRecentTickets, defaultCategoryId]);
 
-  const loadDetail = async (ticketId: string) => {
-    if (!requesterDetailDatasourceId) return;
-    setDetailLoading(true);
+  const loadDetail = async (ticketId: string, silent = false): Promise<RequesterDetail | null> => {
+    if (!requesterDetailDatasourceId) return null;
+    if (!silent) setDetailLoading(true);
     try {
       const response = await apiClient.get(`/datasources/${requesterDetailDatasourceId}/data`, { ticket_id: ticketId });
       const row = rowsFromResponse(response)[0];
-      if (!row) throw new Error(t('service_desk_reporter.error.ticket_not_found', 'Ticket not found or no permission to view it'));
-      setSelected({
+      if (!row) throw new Error('Requester ticket not found');
+      const detail: RequesterDetail = {
         id: String(row.id), number: String(row.number), title: String(row.title),
         description: String(row.description || ''), state: String(row.state),
         priority: String(row.priority), resolution_summary: row.resolution_summary ? String(row.resolution_summary) : null,
@@ -379,16 +423,22 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
         attachments: parseJsonField<PublicAttachment[]>(row.attachments, []),
         related_records: parseJsonField<PublicRelatedRecord[]>(row.related_records, []),
         csat: parseJsonField<RequesterDetail['csat']>(row.csat, null)
-      });
+      };
+      setSelected(detail);
+      return detail;
     } catch (reason) {
-      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.open_failed', 'Unable to open ticket'), description: (reason as Error).message });
+      if (!silent) {
+        toast({ variant: 'destructive', title: t('service_desk_reporter.toast.open_failed', 'Unable to open ticket'), description: describeBackendError(reason, t) });
+      }
+      return null;
     } finally {
-      setDetailLoading(false);
+      if (!silent) setDetailLoading(false);
     }
   };
 
   const addFiles = (
     selectedFiles: FileList | null,
+    currentFiles: File[],
     setter: Dispatch<SetStateAction<File[]>>
   ) => {
     if (!selectedFiles) return;
@@ -402,7 +452,13 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       });
       return;
     }
-    setter((current) => [...current, ...incoming].slice(0, maxFiles));
+    if (currentFiles.length + incoming.length > maxFiles) {
+      toast({
+        title: t('service_desk_reporter.toast.too_many_files', 'Too many attachments'),
+        description: t('service_desk_reporter.toast.too_many_files_desc', 'You can upload up to {{max}} attachments.', { max: maxFiles })
+      });
+    }
+    setter([...currentFiles, ...incoming].slice(0, maxFiles));
   };
 
   const uploadAttachment = async (file: File): Promise<UploadedAttachment> => {
@@ -465,7 +521,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       await load();
       if (result?.id && canUseDetail) await loadDetail(result.id);
     } catch (reason) {
-      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.submit_failed', 'Submission failed'), description: (reason as Error).message });
+      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.submit_failed', 'Submission failed'), description: describeBackendError(reason, t) });
     } finally {
       setSubmitting(false);
     }
@@ -490,7 +546,10 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       await loadDetail(selected.id);
       await load();
     } catch (reason) {
-      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.reply_failed', 'Reply failed'), description: (reason as Error).message });
+      // On an optimistic-lock conflict, silently refresh the detail so the next
+      // attempt carries the current record_version.
+      if (isVersionConflict(reason)) await loadDetail(selected.id, true);
+      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.reply_failed', 'Reply failed'), description: describeBackendError(reason, t) });
     } finally {
       setSubmitting(false);
     }
@@ -506,7 +565,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
           action,
           expected_record_version: selected.record_version,
           comment: action === 'reopen' ? reopenComment.trim() : undefined,
-          score: action === 'confirm_resolution' ? csatScore : undefined,
+          score: action === 'confirm_resolution' ? csatScore ?? undefined : undefined,
           csat_comment: action === 'confirm_resolution' ? csatComment.trim() : undefined
         })
       });
@@ -514,10 +573,32 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       await loadDetail(selected.id);
       await load();
     } catch (reason) {
-      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.action_failed', 'Action failed'), description: (reason as Error).message });
+      // On an optimistic-lock conflict, silently refresh the detail so the next
+      // attempt carries the current record_version.
+      if (isVersionConflict(reason)) await loadDetail(selected.id, true);
+      toast({ variant: 'destructive', title: t('service_desk_reporter.toast.action_failed', 'Action failed'), description: describeBackendError(reason, t) });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const reopenTicket = async () => {
+    if (!selected || !requesterActionDatasourceId) return;
+    // canReopen is a render-time snapshot; revalidate against a fresh silent read.
+    const fresh = await loadDetail(selected.id, true);
+    const stillReopenable = fresh !== null
+      && ['resolved', 'closed'].includes(fresh.state)
+      && Boolean(fresh.reopen_until)
+      && new Date(fresh.reopen_until as string).getTime() > Date.now();
+    if (!stillReopenable) {
+      toast({
+        variant: 'destructive',
+        title: t('service_desk_reporter.toast.action_failed', 'Action failed'),
+        description: t('service_desk_reporter.error.reopen_unavailable', 'The reopen window has passed or the ticket status has changed.')
+      });
+      return;
+    }
+    await requesterAction('reopen');
   };
 
   const fetchAccessUrl = async (attachment: PublicAttachment, disposition: 'download' | 'inline') => {
@@ -572,6 +653,9 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   if (!configured) {
     return <Card className="border-dashed"><CardContent className="flex min-h-48 items-center gap-3 p-6 text-sm text-muted-foreground"><AlertCircle className="h-5 w-5" />{t('service_desk_reporter.not_configured', 'Bind the Service Desk application and data sources in the component properties.')}</CardContent></Card>;
   }
+  if (loadError) {
+    return <Card className="border-dashed"><CardContent className="flex min-h-48 flex-col items-center justify-center gap-3 p-6 text-sm text-muted-foreground"><AlertCircle className="h-5 w-5" />{t('service_desk_reporter.load_error.title', 'Unable to load tickets')}<p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.load_error.description', 'Check your network connection and try again.')}</p><Button variant="outline" size="sm" onClick={() => void load()}>{t('service_desk_reporter.load_error.retry', 'Retry')}</Button></CardContent></Card>;
+  }
   if (!allowed) return null;
 
   if (selected) {
@@ -615,12 +699,12 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
                     {!selected.activities.length && <p className="text-sm text-muted-foreground/60">{t('service_desk_reporter.detail.no_progress', 'No public progress yet')}</p>}
                   </div>
                 </section>
-                {!['closed', 'cancelled'].includes(selected.state) && <section className="rounded-xl border border-border bg-muted/20 p-4"><Label htmlFor="service-desk-public-reply">{t('service_desk_reporter.detail.reply_label', 'Add information or reply to the support team')}</Label><Textarea id="service-desk-public-reply" className="mt-2 min-h-24 bg-background" value={reply} onChange={(event) => setReply(event.target.value)} /><div className="mt-3 flex flex-wrap items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.detail.add_attachment', 'Add attachment')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, setReplyFiles)} /></label><Button disabled={submitting || (!reply.trim() && !replyFiles.length)} onClick={() => void addReply()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{t('service_desk_reporter.detail.submit_reply', 'Submit reply')}</Button></div>{replyFiles.length > 0 && <p className="mt-2 text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.attachments_selected', '{{count}} attachments selected', { count: replyFiles.length })}</p>}</section>}
+                {!['closed', 'cancelled'].includes(selected.state) && <section className="rounded-xl border border-border bg-muted/20 p-4"><Label htmlFor="service-desk-public-reply">{t('service_desk_reporter.detail.reply_label', 'Add information or reply to the support team')}</Label><Textarea id="service-desk-public-reply" className="mt-2 min-h-24 bg-background" value={reply} onChange={(event) => setReply(event.target.value)} /><div className="mt-3 flex flex-wrap items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.detail.add_attachment', 'Add attachment')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, replyFiles, setReplyFiles)} /></label><Button disabled={submitting || (!reply.trim() && !replyFiles.length)} onClick={() => void addReply()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{t('service_desk_reporter.detail.submit_reply', 'Submit reply')}</Button></div>{replyFiles.length > 0 && <p className="mt-2 text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.attachments_selected', '{{count}} attachments selected', { count: replyFiles.length })}</p>}</section>}
               </div>
               <aside className="space-y-4">
-                {selected.state === 'resolved' && !selected.csat && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.confirm.title', 'Confirm resolution')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.confirm.description', 'Confirm to close the ticket and submit your satisfaction rating.')}</p><div className="mt-4 flex gap-1">{[1,2,3,4,5].map((score) => <button key={score} type="button" aria-label={t('service_desk_reporter.confirm.star_label', '{{score}} stars', { score })} onClick={() => setCsatScore(score)} className="p-1"><Star className={`h-5 w-5 ${score <= csatScore ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} /></button>)}</div><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={csatComment} onChange={(event) => setCsatComment(event.target.value)} placeholder={t('service_desk_reporter.confirm.comment_placeholder', 'Optional: tell us how we did')} /><Button className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('confirm_resolution')}><CheckCircle2 className="mr-2 h-4 w-4" />{t('service_desk_reporter.confirm.button', 'Confirm and close')}</Button></section>}
+                {selected.state === 'resolved' && !selected.csat && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.confirm.title', 'Confirm resolution')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.confirm.description', 'Confirm to close the ticket and submit your satisfaction rating.')}</p><div className="mt-4 flex gap-1">{[1,2,3,4,5].map((score) => <button key={score} type="button" aria-label={t('service_desk_reporter.confirm.star_label', '{{score}} stars', { score })} onClick={() => setCsatScore(score)} className="p-1"><Star className={`h-5 w-5 ${score <= (csatScore ?? 0) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} /></button>)}</div><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={csatComment} onChange={(event) => setCsatComment(event.target.value)} placeholder={t('service_desk_reporter.confirm.comment_placeholder', 'Optional: tell us how we did')} /><Button className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('confirm_resolution')}><CheckCircle2 className="mr-2 h-4 w-4" />{t('service_desk_reporter.confirm.button', 'Confirm and close')}</Button></section>}
                 {selected.csat && <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-4"><h3 className="font-semibold text-emerald-900">{t('service_desk_reporter.csat.submitted', 'Satisfaction submitted')}</h3><p className="mt-2 text-sm text-emerald-800">{selected.csat.score} / 5{selected.csat.comment ? ` · ${selected.csat.comment}` : ''}</p></section>}
-                {canReopen && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.reopen.title', 'Still need help?')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.reopen.deadline_hint', 'You can reopen it before {{time}}.', { time: new Date(selected.reopen_until as string).toLocaleString() })}</p><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={reopenComment} onChange={(event) => setReopenComment(event.target.value)} placeholder={t('service_desk_reporter.reopen.placeholder', 'Describe the issue that still exists')} /><Button variant="outline" className="mt-3 w-full" disabled={submitting} onClick={() => void requesterAction('reopen')}><RotateCcw className="mr-2 h-4 w-4" />{t('service_desk_reporter.reopen.button', 'Reopen')}</Button></section>}
+                {canReopen && <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.reopen.title', 'Still need help?')}</h3><p className="mt-1 text-sm text-muted-foreground/60">{t('service_desk_reporter.reopen.deadline_hint', 'You can reopen it before {{time}}.', { time: new Date(selected.reopen_until as string).toLocaleString() })}</p><Textarea className="mt-3 min-h-20 placeholder:text-muted-foreground/60" value={reopenComment} onChange={(event) => setReopenComment(event.target.value)} placeholder={t('service_desk_reporter.reopen.placeholder', 'Describe the issue that still exists')} /><Button variant="outline" className="mt-3 w-full" disabled={submitting} onClick={() => void reopenTicket()}><RotateCcw className="mr-2 h-4 w-4" />{t('service_desk_reporter.reopen.button', 'Reopen')}</Button></section>}
                 <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{t('service_desk_reporter.email.title', 'About email notifications')}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground/60">{t('service_desk_reporter.email.description', 'Emails are sent automatically as the ticket progresses. You can reply to the Reply-To address from your regular mailbox, but email replies are not written back to the ticket. Please add updates here.')}</p></section>
               </aside>
             </div>
@@ -656,7 +740,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.impact_label', 'Impact')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.impact} onChange={(event) => setForm({ ...form, impact: event.target.value as typeof form.impact })}><option value="high">{t('service_desk_reporter.form.level_high', 'High')}</option><option value="medium">{t('service_desk_reporter.form.level_medium', 'Medium')}</option><option value="low">{t('service_desk_reporter.form.level_low', 'Low')}</option></select></label>
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.urgency_label', 'Urgency')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.urgency} onChange={(event) => setForm({ ...form, urgency: event.target.value as typeof form.urgency })}><option value="high">{t('service_desk_reporter.form.level_high', 'High')}</option><option value="medium">{t('service_desk_reporter.form.level_medium', 'Medium')}</option><option value="low">{t('service_desk_reporter.form.level_low', 'Low')}</option></select></label>
           </div>
-          {allowAttachments && <div className="space-y-2"><Label>{t('service_desk_reporter.form.attachments_label', 'Attachments')}</Label><label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.form.choose_files', 'Choose files')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, setFiles)} /></label>{files.length > 0 && <div className="space-y-1">{files.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm"><Paperclip className="h-3.5 w-3.5" /><span className="min-w-0 flex-1 truncate">{file.name}</span><button type="button" onClick={() => setFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}><X className="h-3.5 w-3.5" /></button></div>)}</div>}</div>}
+          {allowAttachments && <div className="space-y-2"><Label>{t('service_desk_reporter.form.attachments_label', 'Attachments')}</Label><label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.form.choose_files', 'Choose files')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, files, setFiles)} /></label>{files.length > 0 && <div className="space-y-1">{files.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm"><Paperclip className="h-3.5 w-3.5" /><span className="min-w-0 flex-1 truncate">{file.name}</span><button type="button" onClick={() => setFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}><X className="h-3.5 w-3.5" /></button></div>)}</div>}</div>}
           <Button className="w-full sm:w-auto" disabled={submitting || !formIsValid} onClick={() => void submit()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{submitting ? t('service_desk_reporter.submit.submitting', 'Submitting…') : submitButtonText}</Button>
         </div>
         {showRecentTickets && <aside className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0"><h3 className="text-sm font-semibold">{t('service_desk_reporter.recent.title', 'My recent tickets')}</h3><p className="mt-1 text-xs text-muted-foreground/60">{canUseDetail ? t('service_desk_reporter.recent.hint_enabled', 'Click to view progress, reply, and confirm resolution') : t('service_desk_reporter.recent.hint_disabled', 'Detail data sources and requester permissions must also be configured')}</p><div className="mt-3 space-y-2">{recent.map((ticket) => <button type="button" disabled={!canUseDetail || detailLoading} onClick={() => void loadDetail(ticket.id)} key={ticket.id} className="w-full rounded-lg border border-border p-3 text-left transition enabled:hover:border-primary/50"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{ticket.number}</span><span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${stateBadgeTone(ticket.state)}`}>{statusLabel(ticket.state, t)}</span></div><p className="mt-2 line-clamp-2 text-sm font-medium">{ticket.title}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{ticket.priority}</p></button>)}{!recent.length && <p className="py-6 text-center text-sm text-muted-foreground/60">{t('service_desk_reporter.recent.empty', 'No submissions yet')}</p>}</div></aside>}
@@ -667,6 +751,8 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
 
 export const serviceDeskReporterTestUtils = {
   accessCodes,
+  describeBackendError,
+  isVersionConflict,
   parseJsonField,
   relatedRecordStatusLabel,
   rowsFromResponse,

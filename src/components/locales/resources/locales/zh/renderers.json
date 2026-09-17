@@ -720,7 +720,14 @@
       "upload_grant_failed": "未能创建附件上传授权",
       "upload_missing_file_id": "附件上传响应缺少文件标识",
       "download_missing_url": "读取授权响应缺少下载地址",
-      "preview_missing_url": "读取授权响应缺少预览地址"
+      "preview_missing_url": "读取授权响应缺少预览地址",
+      "conflict_retry": "工单刚有更新，已为你刷新，请重试。",
+      "reopen_state": "仅已解决或已关闭的工单可重新打开。",
+      "reopen_expired": "重新打开期限已过。",
+      "no_permission": "没有执行此操作的权限。",
+      "state_changed": "工单状态已变化，请刷新后重试。",
+      "generic": "操作失败，请稍后重试。",
+      "reopen_unavailable": "重新打开期限已过或工单状态已变化。"
     },
     "toast": {
       "submit_success": "提交成功",
@@ -730,7 +737,9 @@
       "submit_failed": "提交失败",
       "reply_failed": "回复失败",
       "action_failed": "操作失败",
-      "download_failed": "无法下载附件"
+      "download_failed": "无法下载附件",
+      "too_many_files": "附件数量超出限制",
+      "too_many_files_desc": "最多上传 {{max}} 个附件。"
     },
     "not_configured": "请在组件属性中绑定 Service Desk 应用与数据源。",
     "submit": {
@@ -811,6 +820,11 @@
       "hint_enabled": "点击查看进展、回复与确认解决",
       "hint_disabled": "需同时配置详情数据源与请求人权限",
       "empty": "暂无提交记录"
+    },
+    "load_error": {
+      "title": "加载失败",
+      "description": "无法加载工单数据，请检查网络后重试。",
+      "retry": "重试"
     }
   }
 }

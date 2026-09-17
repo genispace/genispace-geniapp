@@ -723,6 +723,7 @@
       "preview_missing_url": "读取授权响应缺少预览地址"
     },
     "toast": {
+      "submit_success": "提交成功",
       "open_failed": "无法打开工单",
       "file_too_large": "附件过大",
       "file_too_large_desc": "{{name}} 超过 {{max}} MB。",

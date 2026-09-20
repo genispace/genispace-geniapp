@@ -73,7 +73,7 @@ export interface SwCellProps {
   baselineField?: string;
   
   emptyDash?: boolean;
-  /** Delta cells only: when the displayed (1-decimal) value is 0, render it without the leading '+'. */
+  /** Delta cells only: when the displayed (1-decimal) value is 0, render it without the leading '+' and in the neutral text color (not the up/down color). */
   hideSignWhenZero?: boolean;
 
   currency?: string;
@@ -226,7 +226,7 @@ function DeltaCell({
   // Judge by the displayed value, not the raw one: 0.04 shows as 0.0, and a visible zero should not carry a sign.
   const hideSign = cfg.hideSignWhenZero === true && Number(shown) === 0;
   return (
-    <span className={cn('tabular-nums', diffCls(up))}>
+    <span className={cn('tabular-nums', hideSign ? 'text-slate-700 dark:text-neutral-300' : diffCls(up))}>
       {up && !hideSign ? '+' : ''}
       {shown}%
     </span>

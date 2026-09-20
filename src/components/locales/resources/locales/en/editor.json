@@ -3673,6 +3673,7 @@
     "header_color": "Header text color (Tailwind class, optional)",
     "header_en": "Header (English)",
     "header_zh": "Header (Chinese)",
+    "hide_sign_when_zero": "Hide the sign when the value shows as 0",
     "highlight_badge_en": "Badge text (English)",
     "highlight_badge_zh": "Badge text (Chinese)",
     "highlight_field": "Match field (row field to compare)",

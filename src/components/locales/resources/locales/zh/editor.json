@@ -3687,6 +3687,7 @@
     "header_color": "表头文字颜色(Tailwind 类,可选)",
     "header_en": "列标题（英文）",
     "header_zh": "列标题（中文）",
+    "hide_sign_when_zero": "零值隐藏正负号",
     "highlight_badge_en": "徽章文字(英文)",
     "highlight_badge_zh": "徽章文字(中文)",
     "highlight_field": "匹配字段(用于比对的行字段)",

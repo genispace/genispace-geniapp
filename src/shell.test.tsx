@@ -95,4 +95,58 @@ describe('GeniAppShellBridge', () => {
       'https://shell.example.com',
     ));
   });
+
+  it('evicts a stale persisted token when INIT explicitly carries accessToken: null', () => {
+    vi.spyOn(window.parent, 'postMessage').mockImplementation(() => undefined);
+    localStorage.setItem('token', 'stale-token');
+    localStorage.setItem('refreshToken', 'stale-refresh');
+    render(
+      <MemoryRouter>
+        <GeniAppShellBridge identifier="orders" allowedShellOrigins={['https://shell.example.com']} />
+      </MemoryRouter>,
+    );
+
+    fireEvent(window, new MessageEvent('message', {
+      origin: 'https://shell.example.com',
+      data: {
+        type: 'GENISPACE_SHELL_INIT',
+        v: 1,
+        payload: {
+          identifier: 'orders',
+          applicationId: 'app-42',
+          pinnedVersion: '1.0.0',
+          shellOrigin: 'https://shell.example.com',
+          accessToken: null,
+        },
+      },
+    }));
+
+    expect(localStorage.getItem('token')).toBeNull();
+  });
+
+  it('leaves a persisted token untouched when the INIT payload omits accessToken', () => {
+    vi.spyOn(window.parent, 'postMessage').mockImplementation(() => undefined);
+    localStorage.setItem('token', 'kept-token');
+    render(
+      <MemoryRouter>
+        <GeniAppShellBridge identifier="orders" allowedShellOrigins={['https://shell.example.com']} />
+      </MemoryRouter>,
+    );
+
+    fireEvent(window, new MessageEvent('message', {
+      origin: 'https://shell.example.com',
+      data: {
+        type: 'GENISPACE_SHELL_INIT',
+        v: 1,
+        payload: {
+          identifier: 'orders',
+          applicationId: 'app-42',
+          pinnedVersion: '1.0.0',
+          shellOrigin: 'https://shell.example.com',
+        },
+      },
+    }));
+
+    expect(localStorage.getItem('token')).toBe('kept-token');
+  });
 });

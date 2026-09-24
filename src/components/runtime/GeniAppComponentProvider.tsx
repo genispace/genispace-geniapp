@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, type ReactNode } from 'react';
+import { useContext, useEffect, useLayoutEffect, useMemo, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import type { i18n as I18nInstance } from 'i18next';
 import { configureGeniAppHostAdapters } from '../adapters/host';
+import { UserContext, UserProvider } from '../app/context/UserContext';
 import type { GeniAppHostAdapters } from '../types/host-adapters';
 import { WorkbenchConfigLocaleProvider } from '../contexts/WorkbenchConfigLocaleContext';
 import { WorkbenchThemeProvider } from '../contexts/WorkbenchThemeContext';
@@ -9,6 +10,7 @@ import { ViewportProvider } from '../contexts/ViewportContext';
 import { PageFullscreenProvider } from '../contexts/PageFullscreenContext';
 import { MobileFlowLayoutProvider } from '../mobile/mobileFlowLayoutContext';
 import { createGeniAppI18n, normalizeGeniAppLocale } from './i18n';
+import { GeniAppHostProvider } from './GeniAppHostContext';
 import { useViewport } from '../contexts/ViewportContext';
 import { useSyncRuntimeDatasourceVersions } from '../utils/datasourceVersion';
 
@@ -34,6 +36,13 @@ export interface GeniAppComponentProviderProps {
   fullscreen?: boolean;
   /** Set false when the host already owns the document-level Workbench appearance. */
   provideAppearance?: boolean;
+  /**
+   * Set false to skip the built-in UserProvider fallback. When the host tree
+   * already mounts a UserProvider (Workbench view mode does), the existing
+   * context is detected and reused either way — this prop only matters for
+   * hosts that deliberately want no user context at all.
+   */
+  provideUserContext?: boolean;
 }
 
 function RuntimeContexts({
@@ -68,8 +77,13 @@ export function GeniAppComponentProvider({
   mobile,
   fullscreen = false,
   provideAppearance = true,
+  provideUserContext = true,
 }: GeniAppComponentProviderProps) {
   const ownedI18n = useMemo(() => i18n ?? createGeniAppI18n(locale), [i18n]);
+  // Hosts that already mount a UserProvider (Workbench view mode) keep it — the
+  // fallback below only activates for standalone trees with no user context,
+  // where useCurrentUser/visibleWhen would otherwise evaluate against nothing.
+  const hostUserContext = useContext(UserContext);
 
   useIsomorphicLayoutEffect(
     () => configureGeniAppHostAdapters(adapters),
@@ -93,7 +107,7 @@ export function GeniAppComponentProvider({
     </WorkbenchConfigLocaleProvider>
   );
 
-  return (
+  const runtimeTree = (
     <I18nextProvider i18n={ownedI18n}>
       <ViewportProvider>
         {provideAppearance ? (
@@ -106,5 +120,14 @@ export function GeniAppComponentProvider({
         ) : localizedRuntime}
       </ViewportProvider>
     </I18nextProvider>
+  );
+
+  if (!provideUserContext || hostUserContext !== undefined) {
+    return <GeniAppHostProvider applicationId={applicationId}>{runtimeTree}</GeniAppHostProvider>;
+  }
+  return (
+    <GeniAppHostProvider applicationId={applicationId}>
+      <UserProvider>{runtimeTree}</UserProvider>
+    </GeniAppHostProvider>
   );
 }

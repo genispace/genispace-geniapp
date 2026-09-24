@@ -58,6 +58,7 @@ export function mountGeniApp(
         localeMetadata={config.metadata}
         applicationId={options.identifier}
         themeId={config.themeId}
+        datasourceVersions={config.datasourceVersions}
       >
         <GeniAppWorkbench
           identifier={options.identifier}

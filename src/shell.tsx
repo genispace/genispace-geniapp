@@ -92,12 +92,27 @@ function isShellContext(value: unknown): value is GeniAppShellContext {
 }
 
 function setStorageValue(storage: Storage, key: string, value?: string | null) {
-  if (!value) return;
   try {
-    storage.setItem(key, value);
+    if (value) {
+      storage.setItem(key, value);
+    } else if (value === null) {
+      // INIT explicitly clearing a field (e.g. accessToken: null for a signed-out Shell
+      // session) must evict a stale value a previous session left on this origin;
+      // undefined means "field absent from the payload" and leaves storage untouched.
+      storage.removeItem(key);
+    }
   } catch {
     // Storage can be unavailable in privacy-restricted iframes.
   }
+}
+
+// Set once a trusted GENISPACE_SHELL_INIT has been fully applied. The standalone
+// workbench's first-paint gate consults this so an INIT that landed before the
+// workbench mounted doesn't wait for an event that already fired.
+let shellInitApplied = false;
+
+export function hasShellInitApplied(): boolean {
+  return shellInitApplied;
 }
 
 /**
@@ -156,6 +171,7 @@ export function GeniAppShellBridge({
         if (context.theme === 'light' || context.theme === 'dark') setTheme(context.theme);
         onContext?.(context);
 
+        shellInitApplied = true;
         window.dispatchEvent(new Event(GENISPACE_SHELL_INIT_APPLIED_EVENT));
         window.parent.postMessage(
           {

@@ -6,6 +6,8 @@ export type { RenderGeniAppPage, RenderGeniAppPageContext } from './runtime/Mult
 export { default as Grid24Renderer } from './layout/Grid24Renderer';
 export { ParameterProvider, useParameterContext } from './contexts/ParameterContext';
 export { GeniAppComponentProvider } from './runtime/GeniAppComponentProvider';
+export { useGeniAppHost } from './runtime/GeniAppHostContext';
+export type { GeniAppHostContextValue } from './runtime/GeniAppHostContext';
 export { GeniAppWorkbench } from './runtime/GeniAppWorkbench';
 export type { GeniAppWorkbenchConfig, GeniAppWorkbenchProps } from './runtime/GeniAppWorkbench';
 export { createGeniAppI18n, normalizeGeniAppLocale } from './runtime/i18n';

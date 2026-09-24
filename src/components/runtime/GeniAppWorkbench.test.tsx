@@ -1,8 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useParams } from 'react-router-dom';
 import { afterEach, describe, expect, it } from 'vitest';
 import { GeniAppComponentProvider } from './GeniAppComponentProvider';
 import { GeniAppWorkbench, type GeniAppWorkbenchConfig } from './GeniAppWorkbench';
+import {
+  getMobileNavigationCanGoBack,
+  resetMobileNavigationStack,
+} from '../mobile/utils/mobileNavigationStore';
 
 const config = {
   appConfig: {
@@ -50,7 +54,45 @@ function renderApplication(locale = 'zh') {
 
 afterEach(() => {
   sessionStorage.removeItem('viewportOverride');
+  resetMobileNavigationStack();
 });
+
+const toolbarConfig = {
+  ...config,
+  appConfig: {
+    ...config.appConfig,
+    floatingBackButton: true,
+    navigation: {
+      items: [
+        ...config.appConfig.navigation.items,
+        {
+          key: 'reports-nav',
+          title: { en: 'Reports', zh: '报表' },
+          icon: 'BarChart',
+          linkedPage: 'reports',
+          mobileToolbar: true,
+          visibility: { devices: ['desktop'] },
+        },
+      ],
+    },
+  },
+  pages: {
+    ...config.pages,
+    reports: {
+      title: { en: 'Reports', zh: '报表' },
+      components: [{ id: 'reports-copy', type: 'Typography', props: { content: 'Reports content' } }],
+    },
+  },
+} as unknown as GeniAppWorkbenchConfig;
+
+function RouteParamsProbe() {
+  const params = useParams();
+  return (
+    <div data-testid="route-params">
+      {String(params.workbenchId ?? '')}|{String(params.pageId ?? '')}
+    </div>
+  );
+}
 
 describe('GeniAppWorkbench', () => {
   it('uses the standard GeniApp sidebar and updates locale and theme controls', async () => {
@@ -104,5 +146,90 @@ describe('GeniAppWorkbench', () => {
     expect(await screen.findByRole('navigation', { name: 'Application navigation' })).toBeInTheDocument();
     expect(screen.getByTestId('application-page')).toHaveTextContent('overview:');
     expect(screen.queryByText('Overview content')).not.toBeInTheDocument();
+  });
+
+  it('injects workbenchId/pageId route params into the rendered page tree', async () => {
+    render(
+      <MemoryRouter initialEntries={['/acceptance-app/orders?store=S001']}>
+        <GeniAppComponentProvider applicationId="acceptance-app" locale="en">
+          <GeniAppWorkbench
+            identifier="acceptance-app"
+            config={config}
+            renderPage={() => <RouteParamsProbe />}
+          />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByTestId('route-params')).toHaveTextContent('acceptance-app|orders');
+  });
+
+  it('redirects the bare root to the landing page and then exposes route params', async () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <GeniAppComponentProvider applicationId="acceptance-app" locale="en">
+          <GeniAppWorkbench
+            identifier="acceptance-app"
+            config={config}
+            renderPage={() => <RouteParamsProbe />}
+          />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    // The landing redirect fires after the first paint, so params only settle
+    // asynchronously — mirrored renderers gate on workbenchId the same way.
+    await waitFor(() => expect(screen.getByTestId('route-params')).toHaveTextContent('acceptance-app|overview'));
+  });
+
+  it('surfaces mobileToolbar-flagged navigation entries in the mobile top toolbar', async () => {
+    sessionStorage.setItem('viewportOverride', 'mobile');
+    render(
+      <MemoryRouter initialEntries={['/acceptance-app/overview']}>
+        <GeniAppComponentProvider applicationId="acceptance-app" locale="en" localeMetadata={toolbarConfig.metadata}>
+          <GeniAppWorkbench identifier="acceptance-app" config={toolbarConfig} />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    // devices:['desktop'] keeps the entry out of the bottom tab bar.
+    await screen.findByRole('navigation', { name: 'Application bottom navigation' });
+    expect(screen.queryByRole('button', { name: 'Reports' })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'More' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Reports' }));
+
+    expect(await screen.findByText('Reports content')).toBeInTheDocument();
+  });
+
+  it('wires the mobile back stack: component-tab pushes surface the floating back button', async () => {
+    sessionStorage.setItem('viewportOverride', 'mobile');
+    render(
+      <MemoryRouter initialEntries={['/acceptance-app/overview']}>
+        <GeniAppComponentProvider applicationId="acceptance-app" locale="en" localeMetadata={toolbarConfig.metadata}>
+          <GeniAppWorkbench identifier="acceptance-app" config={toolbarConfig} />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    await screen.findByRole('navigation', { name: 'Application bottom navigation' });
+    expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
+
+    window.dispatchEvent(new CustomEvent('workbench-component-tab-push', {
+      detail: { pageId: 'overview', componentId: 'report-1', state: { primaryKey: 'tab-a' } },
+    }));
+    await waitFor(() => expect(getMobileNavigationCanGoBack()).toBe(true));
+    expect(await screen.findByRole('button', { name: 'Back' })).toBeInTheDocument();
+
+    const backEvents: Array<{ componentId?: string; state?: { primaryKey?: string } }> = [];
+    const listener = (event: Event) => {
+      backEvents.push((event as CustomEvent).detail);
+    };
+    window.addEventListener('workbench-component-tab-back', listener);
+    window.dispatchEvent(new CustomEvent('workbench-nav-back'));
+    window.removeEventListener('workbench-component-tab-back', listener);
+
+    expect(backEvents).toEqual([{ kind: 'component-tab', pageId: 'overview', componentId: 'report-1', state: { primaryKey: 'tab-a' } }]);
+    await waitFor(() => expect(getMobileNavigationCanGoBack()).toBe(false));
   });
 });

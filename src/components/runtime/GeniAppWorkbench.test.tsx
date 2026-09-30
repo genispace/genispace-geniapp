@@ -7,6 +7,7 @@ import {
   getMobileNavigationCanGoBack,
   resetMobileNavigationStack,
 } from '../mobile/utils/mobileNavigationStore';
+import { isWorkbenchContentPath } from '../utils/workbenchPathUtils';
 
 const config = {
   appConfig: {
@@ -113,6 +114,48 @@ describe('GeniAppWorkbench', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     await waitFor(() => expect(document.documentElement).toHaveClass('dark'));
     expect(screen.getByRole('button', { name: 'Light' })).toBeInTheDocument();
+  });
+
+  it('fits the mobile content container into the flex slot (no h-dvh) and layers the bottom nav above page content', async () => {
+    sessionStorage.setItem('viewportOverride', 'mobile');
+    const { container } = renderApplication('en');
+
+    await screen.findByRole('navigation', { name: 'Application bottom navigation' });
+    await screen.findByText('Overview content');
+
+    // The content wrapper must obey the flex-1 slot height; an h-dvh container would
+    // overflow the slot by the toolbar/bottom-nav height and cover the bottom nav.
+    const multiPageRoot = container.querySelector('.h-full.w-full.overflow-hidden.relative');
+    const contentContainer = multiPageRoot?.parentElement;
+    expect(contentContainer?.className).toContain('h-full');
+    expect(contentContainer?.className).not.toContain('h-dvh');
+
+    // Fuse against stacking-context leaks: the active tab wrapper uses zIndex 10.
+    const bottomNav = screen.getByRole('navigation', { name: 'Application bottom navigation' });
+    expect(bottomNav.className).toContain('z-20');
+  });
+
+  it('keeps the desktop content container at full viewport height', async () => {
+    const { container } = renderApplication('en');
+
+    await screen.findByRole('navigation', { name: 'Application navigation' });
+    await screen.findByText('Overview content');
+
+    const multiPageRoot = container.querySelector('.h-full.w-full.overflow-hidden.relative');
+    expect(multiPageRoot?.parentElement?.className).toContain('h-dvh');
+  });
+
+  it('registers the application identifier as a workbench content path segment while mounted', async () => {
+    const { unmount } = renderApplication();
+
+    await screen.findByRole('navigation', { name: 'Application navigation' });
+    // `/{identifier}/...` routes must pass the shared content-path gate (mobile back
+    // stack, content-path checks) while the app is mounted — and only then.
+    expect(isWorkbenchContentPath('/acceptance-app/publish-history')).toBe(true);
+    expect(isWorkbenchContentPath('/some-other-app/publish-history')).toBe(false);
+
+    unmount();
+    expect(isWorkbenchContentPath('/acceptance-app/publish-history')).toBe(false);
   });
 
   it('uses Workbench bottom navigation in an explicit mobile session', async () => {

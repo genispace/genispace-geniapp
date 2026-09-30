@@ -149,11 +149,24 @@ export function formatMobileNavEntry(entry: RouteMobileNavEntry): string {
 /** Shared floating-back behavior (task #80): pop the stack; a route entry navigates,
  *  a component-tab entry dispatches workbench-component-tab-back so the owning renderer
  *  restores its tab selection in place (the renderer may live in another bundle, so the
- *  answer goes through a CustomEvent, never a direct store import). */
+ *  answer goes through a CustomEvent, never a direct store import). When currentPageId is
+ *  given, component-tab entries belonging to a different page are stale — their owning
+ *  renderer is unmounted, so restoring them would be an invisible no-op that swallows the
+ *  back action (seen on drill-down pages whose route pushes were gated off). They are
+ *  discarded and popping continues until a route entry or a same-page tab entry. */
 export function goBackMobileNavigation(
-  navigate: (to: string, options?: { replace?: boolean }) => void
+  navigate: (to: string, options?: { replace?: boolean }) => void,
+  currentPageId?: string
 ): void {
-  const prev = popMobileNavigationEntry();
+  let prev = popMobileNavigationEntry();
+  while (
+    prev &&
+    prev.kind === 'component-tab' &&
+    currentPageId &&
+    prev.pageId !== currentPageId
+  ) {
+    prev = popMobileNavigationEntry();
+  }
   if (!prev) {
     return;
   }
@@ -168,7 +181,11 @@ export function shouldPushMobileNavigation(
   location: { pathname: string; search: string },
   targetPath: string
 ): boolean {
-  if (!isMobileWorkbenchPath(location.pathname)) {
+  // No viewport gate: desktop drill-downs record the page being left too — the desktop
+  // floating back pill (variant="desktop") consumes the same stack, and the Workbench
+  // TabManager's tabBackHistory branch never gated on viewport either. Only the workbench
+  // content-path check remains.
+  if (!isWorkbenchContentPath(stripLegacyMobileRoutePrefix(location.pathname))) {
     return false;
   }
   const currentPath = `${location.pathname}${location.search}`;

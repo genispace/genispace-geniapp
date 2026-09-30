@@ -39,6 +39,10 @@ export interface AppSidebarProps {
   openLabel?: string;
   closeLabel?: string;
   storageKey?: string;
+  /** Notified with the current collapsed state on mount and on every toggle, so
+   *  fixed-position overlays (e.g. the desktop floating back pill) can track the
+   *  sidebar width without owning the collapse state. */
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 export interface AppSidebarNavGroup {
@@ -140,6 +144,7 @@ export function AppSidebar({
   openLabel = 'Open navigation',
   closeLabel = 'Close navigation',
   storageKey = 'app_sidebar_collapsed',
+  onCollapsedChange,
 }: AppSidebarProps) {
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (!collapsible) return false;
@@ -153,7 +158,8 @@ export function AppSidebar({
     if (collapsible) {
       localStorage.setItem(storageKey, JSON.stringify(collapsed));
     }
-  }, [collapsed, collapsible, storageKey]);
+    onCollapsedChange?.(collapsed);
+  }, [collapsed, collapsible, storageKey, onCollapsedChange]);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 

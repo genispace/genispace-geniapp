@@ -135,4 +135,61 @@ describe('useWorkbenchAppAccess / useResolvedApplicationId', () => {
     await waitFor(() => expect(readProbe().roles).toEqual(['analyst']));
     expect(mockGet).toHaveBeenCalledWith(`/workbenches/${WB_UUID}`);
   });
+
+  it('viewer bug: host prop carries the WORKBENCH id — the reverse lookup wins and role rules resolve', async () => {
+    // frontend Workbench.tsx hands the workbench id (not the owning application id) to
+    // GeniAppComponentProvider's applicationId in view mode. Trusting that UUID 404s
+    // /me/access into fail-open and silently kills every role rule; the reverse lookup
+    // (GET /workbenches/:id) must outrank it and settle on the real applicationId.
+    const WB_UUID = '8a9f8bf6-0000-4000-8000-000000000001';
+    const APP_UUID = '4981bbbc-0000-4000-8000-000000000002';
+    mockGet.mockImplementation((url: string) => {
+      if (url === `/workbenches/${WB_UUID}`) {
+        return Promise.resolve({ data: { applicationId: APP_UUID } });
+      }
+      if (url === `/applications/${APP_UUID}/users/me/access`) {
+        return Promise.resolve({
+          data: { isUser: true, roles: [{ code: 'store_manager' }], permissionCodes: [] },
+        });
+      }
+      // The transient fetch against the workbench id 404s — fail-open absorbs it.
+      return Promise.reject(new Error(`unexpected ${url}`));
+    });
+
+    render(
+      <MemoryRouter initialEntries={[`/workbench/${WB_UUID}`]}>
+        <GeniAppHostProvider applicationId={WB_UUID}>
+          <Routes>
+            <Route path="/workbench/:workbenchId" element={<AccessProbe />} />
+          </Routes>
+        </GeniAppHostProvider>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(readProbe().roles).toEqual(['store_manager']));
+    expect(readProbe().applicationId).toBe(APP_UUID);
+    expect(mockGet).toHaveBeenCalledWith(`/workbenches/${WB_UUID}`);
+    // The transient wrong-id fetch did happen and failed — fail-open covered the window.
+    expect(mockGet).toHaveBeenCalledWith(`/applications/${WB_UUID}/users/me/access`);
+  });
+
+  it('keeps fail-open and the host-UUID fallback when the reverse lookup fails', async () => {
+    const WB_UUID = '55555555-6666-4777-8888-999999999999';
+    mockGet.mockImplementation(() => Promise.reject(new Error('boom')));
+
+    render(
+      <MemoryRouter initialEntries={[`/workbench/${WB_UUID}`]}>
+        <GeniAppHostProvider applicationId={WB_UUID}>
+          <Routes>
+            <Route path="/workbench/:workbenchId" element={<AccessProbe />} />
+          </Routes>
+        </GeniAppHostProvider>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(readProbe().loading).toBe(false));
+    expect(readProbe().roles).toEqual([]);
+    // Reverse lookup produced nothing → the host UUID still applies (old behavior kept).
+    expect(readProbe().applicationId).toBe(WB_UUID);
+  });
 });

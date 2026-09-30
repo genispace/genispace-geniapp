@@ -56,6 +56,11 @@ export interface ParameterContextValue {
     parameterKeys: string[],
     callback: ParameterReadyCallback
   ) => () => void;
+
+  // PageParam names the current page's FilterPanel components emit (statically derived from the
+  // page config). Fetch gates use it to wait on panel-owned params even when the datasource
+  // binding opted out via waitForValue:false; absent/empty on pages without a FilterPanel.
+  filterPanelParamNames?: string[];
 }
 
 export interface ParameterParseConfig {

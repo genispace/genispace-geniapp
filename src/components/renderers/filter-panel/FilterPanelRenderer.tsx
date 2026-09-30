@@ -58,6 +58,12 @@ import {
   type FilterInputHistoryMap,
 } from './filterInputHistory';
 import { useEscapedStickyPanel } from '../shared/useEscapedStickyPanel';
+import {
+  getSharedPanelValues,
+  publishSharedPanelValues,
+  subscribeSharedPanelValues,
+  __resetFilterPanelSharedStore,
+} from '@/utils/filterPanelSharedStore';
 
 function resolveBilingualLabel(label: unknown, language: string): string {
   return resolveBilingualText(label, language);
@@ -113,6 +119,72 @@ export function buildStoreMirrorMap(filters: FilterConfig[]): Record<string, str
   return map;
 }
 
+// Mirror-pair option-binding normalization: a paired pillSelect ↔ sheet-tab presents ONE logical
+// option list (selection is merged, chips render once), so `bindGlobalDateRange` set on EITHER
+// side must apply to BOTH — otherwise the two sides fetch the same datasource with different
+// params and the visible lists disagree (dropdown 4 stores vs pinned chips 3). Rule: explicit
+// `true` on either side propagates to the partner; an unset side inherits. There is no downgrade
+// path — the editor writes `checked || undefined`, so `false` is currently indistinguishable
+// from unset; a future tri-state can let explicit `false` block propagation without changing
+// this rule's shape. Returns only the keys that need upgrading (this side unset, partner bound),
+// keyed by filterValues key (pill filter.key / sheet tab key), so untouched filters keep object
+// identity.
+export function buildMirrorBindDateRangeOverrides(
+  filters: FilterConfig[],
+  mirrorMap: Record<string, string>
+): Record<string, true> {
+  const keys = Object.keys(mirrorMap);
+  if (keys.length === 0) return {};
+  const boundByKey = new Map<string, boolean>();
+  filters.forEach(f => {
+    if (f.type === 'pillSelect') {
+      boundByKey.set(f.key, f.dataSource?.bindGlobalDateRange === true);
+      return;
+    }
+    if (f.type !== 'filterSheet') return;
+    (f.sections || []).forEach(sec => {
+      if (sec.kind === 'layeredStore' || sec.kind === 'tabbedChip') {
+        (sec.tabs || []).forEach(t => {
+          boundByKey.set(t.key, t.dataSource?.bindGlobalDateRange === true);
+        });
+      }
+    });
+  });
+  const overrides: Record<string, true> = {};
+  keys.forEach(k => {
+    if (boundByKey.get(k) === true) return;
+    if (boundByKey.get(mirrorMap[k]) === true) overrides[k] = true;
+  });
+  return overrides;
+}
+
+// Apply the upgrades to one filter config, amending `dataSource.bindGlobalDateRange` on the
+// pill itself or on the paired sheet tab. Returns the SAME object when nothing changes, so
+// non-mirrored filters (and already-consistent pairs) are identity-stable for downstream memos.
+function applyMirrorBindOverride(filter: FilterConfig, overrides: Record<string, true>): FilterConfig {
+  if (filter.type === 'pillSelect') {
+    if (!overrides[filter.key] || !filter.dataSource) return filter;
+    return { ...filter, dataSource: { ...filter.dataSource, bindGlobalDateRange: true } };
+  }
+  if (filter.type === 'filterSheet' && filter.sections) {
+    let changed = false;
+    const sections = filter.sections.map(sec => {
+      if (sec.kind !== 'layeredStore' && sec.kind !== 'tabbedChip') return sec;
+      let secChanged = false;
+      const tabs = (sec.tabs || []).map(t => {
+        if (!overrides[t.key] || !t.dataSource) return t;
+        secChanged = true;
+        return { ...t, dataSource: { ...t.dataSource, bindGlobalDateRange: true } };
+      });
+      if (!secChanged) return sec;
+      changed = true;
+      return { ...sec, tabs };
+    });
+    return changed ? { ...filter, sections } : filter;
+  }
+  return filter;
+}
+
 // Bus param name -> { filterValues key, array-ness } for every filter this panel owns.
 // Used both to fold live external emits into state and to hydrate state from the bus at
 // mount (panels on different pages share one componentId, so the bus — not this instance's
@@ -160,26 +232,9 @@ export function parseBusValue(v: unknown, isArray: boolean): string[] | string |
 // lifetime as non-persisted filter selections today.
 const partitionSnapshots = new Map<string, Record<string, unknown>>();
 
-// Cross-page committed-state sharing between panel instances configured with the SAME
-// componentId (one logical filter bar rendered once per page). Each page has an isolated
-// parameter bus (ParameterProvider per tab), so carrying selections across pages requires
-// two pieces: new panels hydrate from this store at mount, and live sibling panels fold
-// published values and re-emit them onto their own page's bus (data components only read
-// their own page's bus). Dates are intentionally excluded (per-page preset memory is the
-// established behavior).
-const sharedPanelValues = new Map<string, Record<string, any>>();
-const sharedPanelSubscribers = new Map<string, Set<(values: Record<string, any>, fromInstance: string) => void>>();
-function publishSharedPanelValues(componentId: string, fromInstance: string, values: Record<string, any>) {
-  sharedPanelValues.set(componentId, { ...values });
-  sharedPanelSubscribers.get(componentId)?.forEach(fn => {
-    try { fn(values, fromInstance); } catch { /* one broken sibling must not block the rest */ }
-  });
-}
-
 /** Test-only: module-level stores otherwise leak committed state across test cases. */
 export function __resetFilterPanelSharedState() {
-  sharedPanelValues.clear();
-  sharedPanelSubscribers.clear();
+  __resetFilterPanelSharedStore();
   partitionSnapshots.clear();
   updateTimeValueCache.clear();
 }
@@ -1350,7 +1405,7 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     // and anything committed on this page). Without this, the initial sendParameters below
     // would overwrite the page bus with defaults, dropping selections made on other pages.
     const syncMap = buildBusSyncMap(filters, componentId);
-    const shared = sharedPanelValues.get(componentId);
+    const shared = getSharedPanelValues(componentId);
     if (shared) {
       const pageKeys = new Set(collectEffectScopeKeys(filters, 'page'));
       Object.values(syncMap).forEach(target => {
@@ -1409,6 +1464,13 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     return set;
   }, [roleRulesActive, roleFilterRules, storeMirrorMap]);
 
+  // Mirror-pair date-binding normalization (see buildMirrorBindDateRangeOverrides): a bound side
+  // upgrades its unbound partner so both fetch the same period-aware option list.
+  const mirrorBindOverrides = useMemo(
+    () => buildMirrorBindDateRangeOverrides(filters, storeMirrorMap),
+    [filters, storeMirrorMap]
+  );
+
   // All value keys owned by partition-scoped filters (a filterSheet contributes every section key).
   const partitionScopedKeys = useMemo(() => {
     if (!partition?.key) return [];
@@ -1460,9 +1522,11 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
         : Object.fromEntries(Object.entries(patch).filter(([k]) => !pageScopedKeys.has(k)));
       if (Object.keys(sharedPatch).length > 0) {
         publishSharedPanelValues(componentId, commInstanceId, {
-          ...(sharedPanelValues.get(componentId) ?? {}),
+          ...(getSharedPanelValues(componentId) ?? {}),
           ...sharedPatch,
-        });
+        }, Object.fromEntries(
+          Object.entries(sharedPatch).map(([k, v]) => [generateUniqueParameterName(componentId, k), v])
+        ));
       }
       return { ...prev, ...patch };
     });
@@ -1550,6 +1614,21 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
 
           paramsToEmit[paramName] = '';
         }
+
+        if (filter.type === 'presetDateRange') {
+          // HolidayKey is in the emit allow-list and the ready marks (getFilterEmitParamNames)
+          // but only reaches the payload when a holiday chip was picked. Owned params gate
+          // consumers on a real bus value, so an owned-but-never-emitted HolidayKey would block
+          // every strict-gated datasource forever. '' is the documented no-op for non-holiday
+          // presets — publish it explicitly.
+          const holidayKeyKey = `${filter.key}HolidayKey`;
+          const holidayParamName = generateUniqueParameterName(componentId, holidayKeyKey);
+          if (!(holidayParamName in paramsToEmit)) {
+            const picked = values[holidayKeyKey];
+            paramsToEmit[holidayParamName] = typeof picked === 'string' ? picked : '';
+          }
+          processedKeys.add(holidayKeyKey);
+        }
       }
     });
 
@@ -1587,7 +1666,10 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
       const toPublish = pageScopedKeys.size === 0
         ? values
         : Object.fromEntries(Object.entries(values).filter(([k]) => !pageScopedKeys.has(k)));
-      publishSharedPanelValues(componentId, commInstanceId, toPublish);
+      // paramsToEmit is the same commit keyed by bus param name — the param-name index lets
+      // ParameterContext's re-init reconciliation refresh kept owned values without having
+      // to reverse-engineer param names from filter keys.
+      publishSharedPanelValues(componentId, commInstanceId, toPublish, paramsToEmit);
     }
   }, [componentId, filters, emitBatch, commInstanceId, pageScopedKeys]);
 
@@ -1662,8 +1744,6 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
   const pageScopedKeysRef = useRef(pageScopedKeys);
   pageScopedKeysRef.current = pageScopedKeys;
   useEffect(() => {
-    let subs = sharedPanelSubscribers.get(componentId);
-    if (!subs) { subs = new Set(); sharedPanelSubscribers.set(componentId, subs); }
     const handler = (values: Record<string, any>, fromInstance: string) => {
       if (fromInstance === commInstanceId) return;
       setFilterValues(prev => {
@@ -1678,8 +1758,7 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
         return next;
       });
     };
-    subs.add(handler);
-    return () => { subs.delete(handler); };
+    return subscribeSharedPanelValues(componentId, handler);
   }, [componentId, commInstanceId]);
 
   const handlePresetClick = useCallback((preset: { label: string; value: Record<string, any> }) => {
@@ -2046,7 +2125,7 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     return (
       <RoleAutoSelectApplier
         key={`rsa-${k}`}
-        filter={f}
+        filter={applyMirrorBindOverride(f, mirrorBindOverrides)}
         lang={language}
         onApply={(patch) => { roleSelectAllDone.add(applyKey); handleMultiFilterChange(patch); }}
       />
@@ -2065,7 +2144,7 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     .map(f => (
       <GroupCountParamPublisher
         key={`gcp-${f.key}`}
-        filter={f}
+        filter={applyMirrorBindOverride(f, mirrorBindOverrides)}
         value={filterValues[f.key]}
         lang={language}
         paramName={generateUniqueParameterName(componentId, `${f.key}GroupCount`)}
@@ -2074,8 +2153,9 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     ));
 
   const renderFilter = (rawFilter: FilterConfig) => {
-    // Role-driven option/segment restriction (e.g. store manager sees only the 'store' segment).
-    const filter = applyRoleRestriction(rawFilter);
+    // Mirror-pair normalization first (option-fetch semantics), then role restriction
+    // (option/segment visibility) — neither touches the other's fields.
+    const filter = applyRoleRestriction(applyMirrorBindOverride(rawFilter, mirrorBindOverrides));
 
     if (filter.type === 'select' && (filter.dataSource?.datasourceId || filter.dataSource?.datasetId)) {
       return (
@@ -2382,10 +2462,10 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
     return (
       <div className="mb-3 flex flex-col gap-2">
         {pillBars.map(f => (
-          <SelectedFilterChipsBar key={f.key} filter={f} value={filterValues[f.key]} onFilterChange={handleFilterChange} pinned={rolePinnedChipsSet.has(f.key)} />
+          <SelectedFilterChipsBar key={f.key} filter={applyMirrorBindOverride(f, mirrorBindOverrides)} value={filterValues[f.key]} onFilterChange={handleFilterChange} pinned={rolePinnedChipsSet.has(f.key)} />
         ))}
         {sheetBars.map(f => (
-          <FilterSheetSelectedChips key={f.key} filter={f} values={filterValues} onChange={handleMultiFilterChange} pinnedKeys={rolePinnedChipsSet} />
+          <FilterSheetSelectedChips key={f.key} filter={applyMirrorBindOverride(f, mirrorBindOverrides)} values={filterValues} onChange={handleMultiFilterChange} pinnedKeys={rolePinnedChipsSet} />
         ))}
       </div>
     );
@@ -3571,9 +3651,22 @@ const PillSelectFilterField: React.FC<PillSelectFilterFieldProps> = ({
     onFilterChange(filter.key, isMultiple ? [first] : first);
   }, [options, dsLoading, value, isMultiple, filter.useFirstOptionAsDefault, filter.defaultValue, filter.key]);
 
+  // Display count: only values backed by a loaded option count. Ghost values (selected but no
+  // longer in the option list — e.g. a store auto-selected before the date params were ready,
+  // then filtered out by the bound date window) render nowhere (chips and the dropdown only
+  // show option-backed values), so they must not inflate "N selected" / "Confirm (N)". While
+  // the datasource list is still loading, fall back to the raw count so the label doesn't
+  // flicker through 0.
+  const selectedDisplayCount = (() => {
+    if (selectedValues.length === 0) return 0;
+    if (datasourceId && dsLoading) return selectedValues.length;
+    const optionValues = new Set(options.map(o => o.value));
+    return selectedValues.filter(v => optionValues.has(v)).length;
+  })();
+
   const triggerLabel = selectedValues.length > 0
     ? (isMultiple
-        ? t('filter_panel.items_selected', '{{count}} items selected', { count: selectedValues.length })
+        ? t('filter_panel.items_selected', '{{count}} items selected', { count: selectedDisplayCount })
         : (options.find(o => o.value === selectedValues[0])?.label ?? selectedValues[0]))
     : (displayFilterLabel(filter.placeholder, language, localizeText) || displayFilterLabel(filter.label, language, localizeText) || t('filter_panel.please_select', 'Please select'));
 
@@ -3637,7 +3730,7 @@ const PillSelectFilterField: React.FC<PillSelectFilterFieldProps> = ({
     </button>
   );
 
-  const confirmLabel = `${t('filter_panel.confirm', 'Confirm')}${selectedValues.length ? ` (${selectedValues.length})` : ''}`;
+  const confirmLabel = `${t('filter_panel.confirm', 'Confirm')}${selectedDisplayCount ? ` (${selectedDisplayCount})` : ''}`;
 
   if (isMobileLayout) {
     return (

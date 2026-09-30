@@ -123,21 +123,46 @@ export interface DatasourceFetchGateParams {
   all: string[];
 }
 
+export interface DatasourceFetchGateOptions {
+  // PageParam names owned by the current page's FilterPanel components (from ParameterContext).
+  // An owned source gates the first fetch even when its binding opted out (waitForValue:false)
+  // or carries a configured default: the panel may not have published its value yet on the first
+  // frame, and an ungated fetch would freeze an empty-param intermediate response. Owned sources
+  // land in `strict` — only an actual value on the bus releases them ('' counts once EMITTED:
+  // it is the panel's deliberate "no filter"). Readiness marks must NOT release owned params:
+  // FilterPanelRenderer marks its params ready synchronously in the same effect whose
+  // `setFilterValues(prev => sendParameters(prev))` emit is deferred, so the mark lands one
+  // commit BEFORE the value — a ready-based escape fetches in that window with default-empty
+  // params, and the late empty response overwrites the correct one.
+  filterPanelOwnedParams?: string[];
+}
+
 export function extractFetchGateParamsFromDatasourceParameters(
-  parameters: Record<string, unknown> | undefined
+  parameters: Record<string, unknown> | undefined,
+  options?: DatasourceFetchGateOptions
 ): DatasourceFetchGateParams {
   const strict = new Set<string>();
   const legacy = new Set<string>();
+  const owned = options?.filterPanelOwnedParams?.length
+    ? new Set(options.filterPanelOwnedParams)
+    : undefined;
   if (parameters) {
     Object.values(parameters).forEach((value) => {
       if (!value || typeof value !== 'object' || (value as { type?: string }).type !== 'parameter') {
         return;
       }
       const cfg = value as { source?: string; waitForValue?: boolean };
-      if (!cfg.source || cfg.waitForValue === false) return;
+      if (!cfg.source) return;
       if (cfg.waitForValue === true) {
         strict.add(cfg.source);
-      } else if (!('value' in (value as object))) {
+        return;
+      }
+      if (owned?.has(cfg.source)) {
+        strict.add(cfg.source);
+        return;
+      }
+      if (cfg.waitForValue === false) return;
+      if (!('value' in (value as object))) {
         legacy.add(cfg.source);
       }
     });

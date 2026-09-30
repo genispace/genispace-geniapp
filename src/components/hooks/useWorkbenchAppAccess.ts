@@ -155,7 +155,14 @@ export function useResolvedApplicationId(): string | undefined {
       alive = false;
     };
   }, [hostIdentifier, ctxAppId, hostUuidAppId, uuidWorkbenchId, shellAppId]);
-  return ctxAppId || hostUuidAppId || fetchedAppId || shellAppId || resolvedHostAppId;
+  // Priority: workbench context (edit mode) → reverse lookup by UUID route param → host prop
+  // UUID → shell session injection → host identifier via my-installations. The reverse lookup
+  // must beat the host UUID prop: the workbench VIEWER hands the WORKBENCH id (not the owning
+  // application id) to GeniAppComponentProvider's applicationId prop, so trusting it 404s
+  // /me/access into fail-open and every role rule silently dies; GET /workbenches/:id always
+  // returns the real applicationId. Standalone/iframe routes carry a non-UUID identifier, so
+  // uuidWorkbenchId/fetchedAppId stay undefined there and this reorder is a no-op for them.
+  return ctxAppId || fetchedAppId || hostUuidAppId || shellAppId || resolvedHostAppId;
 }
 
 // Module-level cache/dedupe keyed by applicationId so multiple FilterPanel instances (and any

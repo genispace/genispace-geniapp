@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo, useContext } from 'react';
 import { Card, CardContent } from '@genispace/shared-ui';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@genispace/shared-ui';
 import { cn } from '@genispace/shared-utils';
@@ -28,6 +28,7 @@ import { useMobileFlowLayout } from '@/mobile/mobileFlowLayoutContext';
 import { useGrid24FillCell } from '@/layout/grid24CellContext';
 import { formatCompactCurrency, formatCompactK } from '../hero-card/heroCardUtils';
 import { usePageFullscreen } from '@/contexts/PageFullscreenContext';
+import { ParameterContext } from '@/contexts/ParameterContext';
 
 const queryCache = new Map<string, { promise: Promise<StatisticResult>; timestamp: number }>();
 const CACHE_DURATION = 5000; 
@@ -330,10 +331,12 @@ const StatisticGroup: React.FC<StatisticGroupProps> = React.memo(({
 
   // waitForValue contract (see extractFetchGateParamsFromDatasourceParameters): strict
   // (waitForValue:true) params gate on actual VALUES; legacy (no waitForValue, no default) keep
-  // the readiness escapes; defaulted/opt-out params never gate. Mirrors useBoundRows.
+  // the readiness escapes; defaulted/opt-out params never gate unless owned by the page's
+  // FilterPanel. Mirrors useBoundRows.
+  const filterPanelParamNames = useContext(ParameterContext)?.filterPanelParamNames;
   const fetchGateParams = useMemo(
-    () => extractFetchGateParamsFromDatasourceParameters(globalDatabaseDataSourceConfig?.parameters),
-    [parametersKey, globalDatabaseDataSourceConfig?.parameters]
+    () => extractFetchGateParamsFromDatasourceParameters(globalDatabaseDataSourceConfig?.parameters, { filterPanelOwnedParams: filterPanelParamNames }),
+    [parametersKey, globalDatabaseDataSourceConfig?.parameters, filterPanelParamNames]
   );
 
   const refreshAllStatisticsRef = useRef<() => void>(() => {});

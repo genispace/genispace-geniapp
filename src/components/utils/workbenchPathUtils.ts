@@ -15,8 +15,29 @@ function isDemoWorkbenchId(workbenchId: string): boolean {
   return workbenchId.startsWith('demo-') || workbenchId.endsWith('-demo');
 }
 
+// Host runtimes whose content routes are not UUID-shaped (exported GeniApps mount under
+// `/{applicationIdentifier}/...`) register their first-segment identifier here so
+// isWorkbenchContentPath accepts those paths (mobile back-stack gating, content-path
+// checks). The Workbench never registers anything, keeping its UUID/demo-only gating
+// unchanged.
+const extraContentPathSegments = new Set<string>();
+
+export function registerWorkbenchContentPathSegment(segment: string | null | undefined): void {
+  const normalized = segment?.trim();
+  if (normalized) {
+    extraContentPathSegments.add(normalized);
+  }
+}
+
+export function unregisterWorkbenchContentPathSegment(segment: string | null | undefined): void {
+  const normalized = segment?.trim();
+  if (normalized) {
+    extraContentPathSegments.delete(normalized);
+  }
+}
+
 function isValidWorkbenchIdSegment(segment: string): boolean {
-  return UUID_REGEX.test(segment) || isDemoWorkbenchId(segment);
+  return UUID_REGEX.test(segment) || isDemoWorkbenchId(segment) || extraContentPathSegments.has(segment);
 }
 
 export function stripLegacyMobileRoutePrefix(pathname: string): string {

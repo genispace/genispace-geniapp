@@ -16,12 +16,17 @@ import {
   resolveDefaultWorkbenchLanding,
   serializeWorkbenchUrlSearchParams,
 } from '../utils/navigationUtils';
+import {
+  registerWorkbenchContentPathSegment,
+  unregisterWorkbenchContentPathSegment,
+} from '../utils/workbenchPathUtils';
 import { resolveMobileBottomNavTabs } from '../mobile/utils/mobileBottomNav';
 import {
   resolveMobileToolbarNavItems,
   type MobileToolbarNavItem,
 } from '../mobile/utils/mobileToolbarNav';
 import { MobileFloatingBackButton } from '../mobile/components/MobileFloatingBackButton';
+import { useMobileNavigationCanGoBack } from '../mobile/hooks/useMobileNavigationCanGoBack';
 import {
   goBackMobileNavigation,
   mobileNavigateFromBottomTab,
@@ -218,7 +223,7 @@ function MobileNavigation({
   return (
     <nav
       aria-label="Application bottom navigation"
-      className="workbench-bottom-tab-nav relative shrink-0 border-t border-neutral-200/80 bg-white pt-2 dark:border-neutral-700/80 dark:bg-neutral-950"
+      className="workbench-bottom-tab-nav relative z-20 shrink-0 border-t border-neutral-200/80 bg-white pt-2 dark:border-neutral-700/80 dark:bg-neutral-950"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)' }}
     >
       <div className="flex h-14 items-stretch">
@@ -445,6 +450,27 @@ function GeniAppWorkbenchShell({
     ?? landing?.pageId
     ?? Object.keys(pages)[0]
     ?? '';
+  const canGoBackMobileNav = useMobileNavigationCanGoBack();
+  const isNavigationRootPage = visibleNavigation.some(
+    (item) => getNavigationTargetPageId(item) === activePageId,
+  );
+  // Drill-down/detail pages (not reachable from the bottom nav) hide the bottom navigation
+  // once a back target exists: bottom-tab taps reset the nav stack (2026-07-15 "bottom tab =
+  // exit" semantics), so a stray tap on a detail page would wipe the very stack the floating
+  // back button needs. Root pages always keep it; stack-less deep links keep it too — with no
+  // back target it is the only way out. The top toolbar stays rendered on every page: it is a
+  // collapsed strip (no stray-tap surface), and its nav entries go through the same
+  // stack-clearing bottom-tab path, so jumping away from it is a deliberate, approved exit.
+  const showMobileBottomNav = isNavigationRootPage || !canGoBackMobileNav;
+  const sidebarStorageKey = `${identifier}:sidebar-collapsed`;
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem(sidebarStorageKey);
+      return saved !== null ? (JSON.parse(saved) as boolean) : false;
+    } catch {
+      return false;
+    }
+  });
 
   const goToPage = useCallback((pageId: string, params: Record<string, unknown> = {}, options?: { pushMobileEntry?: boolean }) => {
     if (!pages[pageId]) return;
@@ -472,6 +498,14 @@ function GeniAppWorkbenchShell({
     resetMobileNavigationStack();
   }, [identifier]);
 
+  // Exported apps route under `/{identifier}/...` — whitelist that first segment so the
+  // shared workbench-path gate (mobile back-stack push gating, content-path checks)
+  // accepts it. The Workbench never registers a segment and keeps UUID/demo-only gating.
+  useEffect(() => {
+    registerWorkbenchContentPathSegment(identifier);
+    return () => unregisterWorkbenchContentPathSegment(identifier);
+  }, [identifier]);
+
   useEffect(() => {
     const handleComponentTabPush = (event: Event) => {
       const detail = (event as CustomEvent<{
@@ -487,14 +521,19 @@ function GeniAppWorkbenchShell({
         state: detail.state,
       });
     };
-    const handleNavBack = () => goBackMobileNavigation(navigate);
+    // Pass the page currently on screen so goBack can discard stale component-tab entries
+    // left behind by other pages instead of letting them swallow the back action.
+    const handleNavBack = () => goBackMobileNavigation(
+      navigate,
+      pathnamePageId(locationRef.current.pathname, pages) ?? undefined,
+    );
     window.addEventListener('workbench-component-tab-push', handleComponentTabPush);
     window.addEventListener('workbench-nav-back', handleNavBack);
     return () => {
       window.removeEventListener('workbench-component-tab-push', handleComponentTabPush);
       window.removeEventListener('workbench-nav-back', handleNavBack);
     };
-  }, [navigate]);
+  }, [navigate, pages]);
 
   useEffect(() => {
     document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en-US';
@@ -542,7 +581,15 @@ function GeniAppWorkbenchShell({
   );
 
   const content = (
-    <div className="h-dvh min-h-0 w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950">
+    <div
+      className={cn(
+        'min-h-0 w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950',
+        // Mobile sits in the flex-1 slot between toolbar and bottom nav — a dvh
+        // height would overflow that slot by the chrome height and cover the
+        // bottom nav. Desktop keeps the full-viewport height inside AppSidebar.
+        viewport.isMobile ? 'h-full' : 'h-dvh',
+      )}
+    >
       <MultiPageRenderer
         tabs={tab}
         activeTabId={tab[0]?.id ?? null}
@@ -569,44 +616,64 @@ function GeniAppWorkbenchShell({
             />
           )}
           <div className="min-h-0 flex-1">{content}</div>
-          <MobileFloatingBackButton enabled={floatingBackEnabled} workbenchId={identifier} />
-          <MobileNavigation
-            items={visibleNavigation}
-            activePageId={activePageId}
-            onNavigate={(pageId, key, params) => mobileNavigateFromBottomTab(
-              navigate,
-              navigationPath(identifier, pageId, { ...(params ?? {}), _nav: key }),
-            )}
+          <MobileFloatingBackButton
+            enabled={floatingBackEnabled}
+            workbenchId={identifier}
+            currentPageId={activePageId}
           />
-        </div>
-      ) : (
-        <AppSidebar
-          collapsible
-          storageKey={`${identifier}:sidebar-collapsed`}
-          navAriaLabel="Application navigation"
-          sidebarHeader={(collapsed) => (
-            <div className={cn('flex min-w-0 items-center', collapsed ? 'justify-center' : 'gap-3')}>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground">
-                {headerIcon ?? (localizedAppConfig?.logo
-                  ? <img src={localizedAppConfig.logo} alt="" className="h-full w-full object-cover" />
-                  : <PanelsTopLeft className="h-5 w-5" />)}
-              </span>
-              {!collapsed && <span className="truncate text-sm font-semibold text-foreground">{appName}</span>}
-            </div>
-          )}
-          sidebarNav={(collapsed) => (
-            <NavigationRows
+          {showMobileBottomNav && (
+            <MobileNavigation
               items={visibleNavigation}
               activePageId={activePageId}
-              collapsed={collapsed}
-              onNavigate={goToItem}
-              resolveTitle={resolveBilingualText}
+              onNavigate={(pageId, key, params) => mobileNavigateFromBottomTab(
+                navigate,
+                navigationPath(identifier, pageId, { ...(params ?? {}), _nav: key }),
+              )}
             />
           )}
-          sidebarFooter={showRuntimeControls ? (collapsed) => collapsed ? null : <RuntimeControls /> : undefined}
-        >
-          {content}
-        </AppSidebar>
+        </div>
+      ) : (
+        <>
+          <AppSidebar
+            collapsible
+            storageKey={sidebarStorageKey}
+            onCollapsedChange={setSidebarCollapsed}
+            navAriaLabel="Application navigation"
+            sidebarHeader={(collapsed) => (
+              <div className={cn('flex min-w-0 items-center', collapsed ? 'justify-center' : 'gap-3')}>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground">
+                  {headerIcon ?? (localizedAppConfig?.logo
+                    ? <img src={localizedAppConfig.logo} alt="" className="h-full w-full object-cover" />
+                    : <PanelsTopLeft className="h-5 w-5" />)}
+                </span>
+                {!collapsed && <span className="truncate text-sm font-semibold text-foreground">{appName}</span>}
+              </div>
+            )}
+            sidebarNav={(collapsed) => (
+              <NavigationRows
+                items={visibleNavigation}
+                activePageId={activePageId}
+                collapsed={collapsed}
+                onNavigate={goToItem}
+                resolveTitle={resolveBilingualText}
+              />
+            )}
+            sidebarFooter={showRuntimeControls ? (collapsed) => collapsed ? null : <RuntimeControls /> : undefined}
+          >
+            {content}
+          </AppSidebar>
+          {/* Desktop floating back pill (parity with the Workbench shell's WorkbenchLayout):
+              left edge tracks the sidebar width so the pill sits at the content area's left
+              edge; stack entries arrive from drill-down route pushes (viewport gate removed)
+              and component-tab pushes. */}
+          <MobileFloatingBackButton
+            enabled={floatingBackEnabled}
+            workbenchId={identifier}
+            variant="desktop"
+            leftOffset={(sidebarCollapsed ? 80 : 256) - 18}
+            currentPageId={activePageId}
+          />
+        </>
       )}
     </>
   );

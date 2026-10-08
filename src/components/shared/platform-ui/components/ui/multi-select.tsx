@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Check, ChevronDown, X } from "lucide-react"
+import { useTranslation } from 'react-i18next'
 import { cn } from '@genispace/shared-utils'
 import { Popover, PopoverTrigger, PopoverContent } from './popover'
 import { Checkbox } from './checkbox'
@@ -42,6 +43,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     },
     ref
   ) => {
+    const { t } = useTranslation('common')
     const [open, setOpen] = React.useState(false)
     const selectedValues = React.useMemo(
       () => (Array.isArray(value) ? value : []),
@@ -147,7 +149,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         onClick={(e) => e.stopPropagation()}
                       />
                       <span className="text-sm font-medium">
-                        {allSelected ? 'Deselect all' : 'Select all'}
+                        {allSelected
+                          ? t('multi_select.deselect_all', 'Deselect all')
+                          : t('multi_select.select_all', 'Select all')}
                       </span>
                     </div>
                   </div>

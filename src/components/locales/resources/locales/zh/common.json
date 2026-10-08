@@ -703,5 +703,9 @@
     "upload_and_recognize": "上传并识别",
     "complete_previous_steps": "请先完成前面的步骤"
   },
+  "multi_select": {
+    "select_all": "全选",
+    "deselect_all": "取消全选"
+  },
   "none": "无"
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@genispace/shared-ui';
 import { useDatabaseDataSource } from '@/hooks/useDatabaseDataSource';
@@ -13,6 +13,7 @@ import {
   processDataSourceParametersForQuery,
 } from '@/utils/databaseDatasourceParams';
 import { resolveDatasourceVersion, useDatasourceVersions } from '@/utils/datasourceVersion';
+import { ParameterContext } from '@/contexts/ParameterContext';
 import type { DatabaseDataSourceConfig } from '@/types/databaseDataSource';
 import type { EnhancedDataSource } from '@/types/datasource';
 import type { ComponentParameterConfig, ParameterRecord } from '@/types/parameters';
@@ -136,10 +137,12 @@ export function useListDataSource(options: UseListDataSourceOptions) {
 
   // waitForValue contract (see extractFetchGateParamsFromDatasourceParameters): strict
   // (waitForValue:true) params gate on actual VALUES; legacy (no waitForValue, no default) keep
-  // the readiness escapes; defaulted/opt-out params never gate. Mirrors useBoundRows.
+  // the readiness escapes; defaulted/opt-out params never gate unless owned by the page's
+  // FilterPanel. Mirrors useBoundRows.
+  const filterPanelParamNames = useContext(ParameterContext)?.filterPanelParamNames;
   const fetchGateParams = useMemo(
-    () => extractFetchGateParamsFromDatasourceParameters(resolvedDatabaseConfig?.parameters),
-    [resolvedDatabaseConfig?.parameters]
+    () => extractFetchGateParamsFromDatasourceParameters(resolvedDatabaseConfig?.parameters, { filterPanelOwnedParams: filterPanelParamNames }),
+    [resolvedDatabaseConfig?.parameters, filterPanelParamNames]
   );
 
   const handleParameterChange = useCallback((key: string) => {

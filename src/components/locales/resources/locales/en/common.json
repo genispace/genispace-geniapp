@@ -702,5 +702,9 @@
     "upload_and_recognize": "Upload & recognize",
     "complete_previous_steps": "Please complete previous steps"
   },
+  "multi_select": {
+    "select_all": "Select all",
+    "deselect_all": "Deselect all"
+  },
   "none": "None"
 }

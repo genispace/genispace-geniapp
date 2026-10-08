@@ -7,6 +7,13 @@ import tailwindPreset from './src/ui/styles/tailwind-preset.js';
 const root = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  // The frozen standalone bundle is served raw in the browser (no bundler and
+  // no Node globals): React CJS chunks pick their production branch through
+  // top-level `process.env.NODE_ENV` ternaries, so the identifier must be
+  // compile-time defined or the whole runtime throws `process is not defined`.
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
   resolve: {
     alias: {
       '@': path.resolve(root, 'src/components'),

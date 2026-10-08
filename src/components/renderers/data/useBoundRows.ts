@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useContext } from 'react';
 import type { DatabaseDataSourceConfig } from '@/types/databaseDataSource';
 import type { ComponentParameterConfig } from '@/types/parameters';
 import { useDatabaseDataSource } from '@/hooks/useDatabaseDataSource';
 import { useParameterHandler } from '@/hooks/useParameterHandler';
 import { useComponentCommunication } from '@/hooks/useComponentCommunication';
 import { useWaitForParameters } from '@/hooks/useWaitForParameters';
+import { ParameterContext } from '@/contexts/ParameterContext';
 import { resolveDatasourceVersion, useDatasourceVersions } from '@/utils/datasourceVersion';
 import {
   extractFetchGateParamsFromDatasourceParameters,
@@ -27,10 +28,17 @@ export function useBoundRows(
 ): { rows: Record<string, unknown>[]; loading: boolean; total: number; totalPages: number } {
   const { rawParams } = useParameterHandler({ componentParameterConfig: cpc, pageParams, componentId: id });
   const bound = useMemo(() => extractParameterNamesFromDatasourceParameters(config?.parameters), [config?.parameters]);
+  // FilterPanel-owned params of the current page gate the first fetch even when their binding
+  // opted out (waitForValue:false) or carries a default — see DatasourceFetchGateOptions.
+  // useContext (not the throwing hook) so the hook still works outside a ParameterProvider.
+  const filterPanelParamNames = useContext(ParameterContext)?.filterPanelParamNames;
   // waitForValue contract (see extractFetchGateParamsFromDatasourceParameters):
   // strict (waitForValue:true) params gate on actual VALUES; legacy (no waitForValue, no default)
-  // keep the readiness escapes; defaulted/opt-out params never gate.
-  const gate = useMemo(() => extractFetchGateParamsFromDatasourceParameters(config?.parameters), [config?.parameters]);
+  // keep the readiness escapes; defaulted/opt-out params never gate unless FilterPanel-owned.
+  const gate = useMemo(
+    () => extractFetchGateParamsFromDatasourceParameters(config?.parameters, { filterPanelOwnedParams: filterPanelParamNames }),
+    [config?.parameters, filterPanelParamNames]
+  );
   const boundSet = useMemo(() => new Set(bound), [bound]);
   const listen = useMemo(
     () => Array.from(new Set([...(cpc?.listenToParameters ?? []), ...bound])),

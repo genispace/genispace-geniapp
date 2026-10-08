@@ -46,6 +46,10 @@ interface MobileFloatingBackButtonProps {
    *  content area's left edge instead of covering the sidebar nav; mobile keeps the
    *  viewport left edge (safe-area aware) when omitted. */
   leftOffset?: number;
+  /** Page currently on screen. Forwarded to goBackMobileNavigation so component-tab
+   *  entries belonging to other (unmounted) pages are discarded instead of swallowing
+   *  the back action. Optional: omitted keeps the legacy pop-whatever-is-on-top behavior. */
+  currentPageId?: string;
 }
 
 /**
@@ -60,6 +64,7 @@ export const MobileFloatingBackButton: React.FC<MobileFloatingBackButtonProps> =
   workbenchId,
   variant = 'mobile',
   leftOffset,
+  currentPageId,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation(['workbench', 'common']);
@@ -76,8 +81,8 @@ export const MobileFloatingBackButton: React.FC<MobileFloatingBackButtonProps> =
   const goBack = useCallback(() => {
     // Pops route AND component-tab entries (task #80): the helper navigates for route entries
     // and dispatches workbench-component-tab-back (no navigation) for tab entries.
-    goBackMobileNavigation(navigate);
-  }, [navigate]);
+    goBackMobileNavigation(navigate, currentPageId);
+  }, [navigate, currentPageId]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
     dragState.current = { dragging: true, moved: false, startY: e.clientY, startTop: top };

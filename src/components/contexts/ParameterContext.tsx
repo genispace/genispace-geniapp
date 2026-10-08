@@ -11,6 +11,7 @@ import {
   ParameterReadyCallback
 } from '../types/parameters';
 import { ParameterUtils } from '@/utils/parameterUtils';
+import { getSharedPanelParamValue, hasSharedPanelParamValue } from '@/utils/filterPanelSharedStore';
 
 const ParameterContext = createContext<ParameterContextValue | null>(null);
 
@@ -21,6 +22,11 @@ interface ParameterProviderProps {
   tabId: string;
   pageId: string;
   initialParams?: ParameterRecord;
+  // PageParam names the current page's FilterPanel components emit (derived statically from the
+  // page config via collectPageFilterPanelParamNames). Re-init reconciliation keeps these — value
+  // AND ready mark — because the remounting panel dedupes its re-emit and would never re-publish
+  // them; params no longer owned are stripped and unmarked instead.
+  filterPanelParamNames?: string[];
 }
 
 const globalTabParametersStore = new Map<string, TabParameterInfo>();
@@ -97,7 +103,8 @@ export const ParameterProvider: React.FC<ParameterProviderProps> = ({
   children,
   tabId,
   pageId,
-  initialParams = {}
+  initialParams = {},
+  filterPanelParamNames
 }) => {
   const [globalUrlParams, setGlobalUrlParams] = useState<ParameterRecord>(() => 
     parseUrlParameters({ enableJsonParsing: true, defaultValues: {} })
@@ -357,16 +364,6 @@ export const ParameterProvider: React.FC<ParameterProviderProps> = ({
     return false;
   }, []);
 
-  const filterOutFilterPanelParams = useCallback((params: ParameterRecord): ParameterRecord => {
-    const filtered: ParameterRecord = {};
-    Object.entries(params).forEach(([key, value]) => {
-      if (!isFilterPanelParameter(key)) {
-        filtered[key] = value;
-      }
-    });
-    return filtered;
-  }, [isFilterPanelParameter]);
-
   const markParametersReady = useCallback((parameterKeys: string[]) => {
     if (!parameterKeys || parameterKeys.length === 0) {
       return;
@@ -416,7 +413,7 @@ export const ParameterProvider: React.FC<ParameterProviderProps> = ({
   // NOT in a useEffect. Child effects run before a parent's effect, so an effect-timed init
   // here runs AFTER children already emitted their mount defaults (e.g. FilterPanel resolving
   // presetDateRange start/end from a warm option cache). The old effect then saw the entry
-  // those emits had just created, took the "stale entry" branch, and filterOutFilterPanelParams
+  // those emits had just created, took the "stale entry" branch, and the filter-param strip
   // wiped the fresh values — and since the emitters dedupe (emittedRef / initialParamsSent),
   // nothing re-emitted: every consumer bound to periodStart/periodEnd waited forever.
   // Rendering parent-before-children guarantees this init happens before any child can emit.
@@ -434,14 +431,47 @@ export const ParameterProvider: React.FC<ParameterProviderProps> = ({
       });
     } else {
       // Entry left over from a previous incarnation of this tab (revisit / page switch):
-      // strip FilterPanel-owned params — the panel remounts with us and re-emits fresh values.
-      const filteredParams = filterOutFilterPanelParams(existingInfo.parameters);
+      // reconcile against the NEW page's FilterPanel ownership instead of blanket-stripping.
+      // The remounting panel dedupes its re-emit (emittedRef / initialParamsSent), so a param it
+      // still owns would never be re-published — stripping it (or dropping its ready mark) wedges
+      // every consumer waiting on it. Params no longer owned by the new page's panels are stale:
+      // strip their values AND unmark readiness so gates wait for the new owner's first emit.
+      const ownedParams = new Set(filterPanelParamNames ?? []);
+      const keptParams: ParameterRecord = {};
+      const strippedKeys: string[] = [];
+      Object.entries(existingInfo.parameters).forEach(([key, value]) => {
+        if (isFilterPanelParameter(key) && !ownedParams.has(key)) {
+          strippedKeys.push(key);
+        } else {
+          keptParams[key] = value;
+        }
+      });
+      // Kept owned values are only safe against the panel-dedupe wedge; they are NOT freshness
+      // guaranteed. While this tab was unmounted, a sibling page's panel may have committed a
+      // newer value for the same logical filter (every commit is mirrored into the shared panel
+      // store by bus param name). An unmounted page's panel cannot re-emit, and mount hydration
+      // prefers the bus over the shared store — so without this refresh the stale kept value
+      // wins, the panel re-publishes it, and the page is stuck on yesterday's selection (seen
+      // as: drill right after changing stores shows the previous/empty store set). Refresh kept
+      // owned values from the latest cross-page commit; params the shared store has never seen
+      // keep their lingering value (the wedge-safe status quo).
+      ownedParams.forEach((paramName) => {
+        if (paramName in keptParams && hasSharedPanelParamValue(paramName)) {
+          keptParams[paramName] = getSharedPanelParamValue(paramName);
+        }
+      });
+      if (strippedKeys.length > 0) {
+        const tabReadyMap = globalParameterReadyStore.get(tabId);
+        if (tabReadyMap) {
+          strippedKeys.forEach((key) => tabReadyMap.delete(key));
+        }
+      }
       globalTabParametersStore.set(tabId, {
         ...existingInfo,
         tabId,
         pageId,
         parameters: {
-          ...filteredParams,
+          ...keptParams,
           ...initialParams
         },
         timestamp: Date.now()
@@ -533,11 +563,12 @@ export const ParameterProvider: React.FC<ParameterProviderProps> = ({
     broadcastParameterChange,
     markParametersReady,
     isParametersReady,
-    subscribeToParametersReady
+    subscribeToParametersReady,
+    filterPanelParamNames
   }), [
     currentTabParams, getCurrentTabParams, globalUrlParams, updateTabParams, getTabParams,
     cleanupTabParams, subscribeToParameter, unsubscribeFromParameter, broadcastParameterChange,
-    markParametersReady, isParametersReady, subscribeToParametersReady
+    markParametersReady, isParametersReady, subscribeToParametersReady, filterPanelParamNames
   ]);
 
   return (

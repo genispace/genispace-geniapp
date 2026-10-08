@@ -72,7 +72,7 @@ function rowShell(ctx: ListItemTemplateContext, children: React.ReactNode) {
         'list-renderer-item',
         rowPadding(ctx),
         ctx.split && 'border-b border-border last:border-b-0',
-        ctx.highlighted ? 'border-l-2 border-l-indigo-400 bg-indigo-50' : ctx.isSelected && 'bg-muted/40',
+        ctx.highlighted ? 'border-l-2 border-l-indigo-400 bg-indigo-50 dark:bg-indigo-950/30' : ctx.isSelected && 'bg-muted/40',
         ctx.onRowClick && 'cursor-pointer'
       )}
       onClick={ctx.onRowClick}
@@ -108,7 +108,7 @@ export function renderRankingListItem(ctx: ListItemTemplateContext): React.React
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex min-w-0 items-center gap-1.5">
             <div
-              className={cn('flex min-w-0 flex-1 items-center gap-1.5', ctx.highlighted ? 'text-indigo-700' : 'text-foreground')}
+              className={cn('flex min-w-0 flex-1 items-center gap-1.5', ctx.highlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-foreground')}
               style={{ fontSize: fs.title }}
             >
               {ctx.statusDots}
@@ -154,7 +154,7 @@ export function renderRankingListItem(ctx: ListItemTemplateContext): React.React
       <div className="flex-1 min-w-0 space-y-1">
         {slots.title && (
           <div
-            className={cn('flex min-w-0 items-center gap-1.5', ctx.highlighted ? 'text-indigo-700' : 'text-foreground')}
+            className={cn('flex min-w-0 items-center gap-1.5', ctx.highlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-foreground')}
             style={{ fontSize: fs.title }}
           >
             {ctx.statusDots}

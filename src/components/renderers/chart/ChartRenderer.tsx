@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useId } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useId, useContext } from 'react';
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   RadarChart, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -21,7 +21,7 @@ import {
 } from '@/utils/databaseDatasourceParams';
 import { useWaitForParameters } from '@/hooks/useWaitForParameters';
 import { useComponentCommunication } from '@/hooks/useComponentCommunication';
-import { useParameters } from '@/contexts/ParameterContext';
+import { useParameters, ParameterContext } from '@/contexts/ParameterContext';
 import type { ComponentParameterConfig } from '@/types/parameters';
 import { ChartAreaSkeleton, ChartEmptyState, Skeleton } from '../../skeleton';
 import { resolveEchartsChartPalette, SEMANTIC_COLORS } from '@/utils/colors';
@@ -1036,9 +1036,16 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
   // waitForValue contract: only gating params (strict waitForValue:true + legacy no-default)
   // hold the first fetch; opt-out (waitForValue:false) and defaulted bindings never do. When
   // listenToParameters is configured explicitly, keep waiting on that list (legacy behavior).
+  // FilterPanel-owned params of the current page gate the first fetch even when their binding
+  // opted out (waitForValue:false) or carries a default — same patch as useBoundRows, so a
+  // chart mounting on a visibleWhen flip doesn't fire its first fetch with the panel's
+  // intermediate empty selection. useContext (not the throwing hook) so the chart still works
+  // outside a ParameterProvider. NOTE: [] is a legitimate COMMITTED value, so this only
+  // reduces mount-time flicker — it cannot block a committed clear.
+  const filterPanelParamNames = useContext(ParameterContext)?.filterPanelParamNames;
   const fetchGateParams = useMemo(
-    () => extractFetchGateParamsFromDatasourceParameters(databaseDataSourceConfig?.parameters),
-    [parametersKey]
+    () => extractFetchGateParamsFromDatasourceParameters(databaseDataSourceConfig?.parameters, { filterPanelOwnedParams: filterPanelParamNames }),
+    [parametersKey, filterPanelParamNames]
   );
   const fetchWaitParams = useMemo(
     () =>
@@ -1139,7 +1146,6 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
   );
 
   const refetchRef = useRef(refetchDatabaseData);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastConfigKeyRef = useRef<string>('');
 
   useEffect(() => {
@@ -1150,21 +1156,6 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
 
     if (!databaseDataSourceConfig?.datasourceId) {
       return;
-    }
-
-    const configKey = JSON.stringify({
-      datasourceId: databaseDataSourceConfig.datasourceId,
-      parameters: resolvedDatabaseDataSourceConfig?.parameters || {},
-      listenParams: listenParams
-    });
-
-    if (configKey === lastConfigKeyRef.current) {
-      return;
-    }
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
     }
 
     const hasWaitParams = fetchWaitParams.length > 0;
@@ -1184,17 +1175,34 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
       return;
     }
 
-    lastConfigKeyRef.current = configKey;
-    timeoutRef.current = setTimeout(() => {
-      refetchRef.current();
-    }, 0);
+    const configKey = JSON.stringify({
+      datasourceId: databaseDataSourceConfig.datasourceId,
+      parameters: resolvedDatabaseDataSourceConfig?.parameters || {},
+      listenParams: listenParams
+    });
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
+    // Coherence guard (mirrors useBoundRows): the request body is the render-time snapshot, but
+    // rapid commits interleave their emit/render chains (mirror expand), so the LAST render can
+    // still carry a superseded snapshot. The old setTimeout(0) trailing edge died here: its only
+    // surviving timer held the stale config (or was cancelled by the stale render's cleanup and
+    // never rescheduled because the dedupe mark already matched) — the chart stuck on No data.
+    // Firing synchronously removes the window: a stale snapshot is skipped against the LIVE bus
+    // key, and the broadcast re-render for the latest value re-runs this effect with a body that
+    // matches the bus. Once fired, a request cannot be un-fired by a later stale render.
+    const liveConfigKey = JSON.stringify({
+      datasourceId: databaseDataSourceConfig.datasourceId,
+      parameters: resolveDataSourceConfig(databaseDataSourceConfig)?.parameters || {},
+      listenParams: listenParams
+    });
+    if (liveConfigKey !== configKey) {
+      return;
+    }
+
+    if (configKey === lastConfigKeyRef.current) {
+      return;
+    }
+    lastConfigKeyRef.current = configKey;
+    refetchRef.current();
   }, [
     databaseDataSourceConfig?.datasourceId,
     listenParams,

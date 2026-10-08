@@ -13,8 +13,10 @@ import {
   createInitialPublishHistoryState,
   formatVersionBadge,
   publishHistoryReducer,
+  releaseNotesToDescription,
   type PublishHistoryItem,
 } from './publishHistoryHelpers';
+import { isUuid, useResolvedApplicationId } from '@/hooks/useWorkbenchAppAccess';
 
 type Bi = string | { zh?: string; en?: string };
 
@@ -41,9 +43,14 @@ const PublishHistoryRenderer: React.FC<PublishHistoryRendererProps> = ({
   customStyles,
 }) => {
   const { t } = useTranslation('renderers');
-  const { resolveBilingualText: bi } = useWorkbenchConfigLocale();
-  // Always the CURRENT workbench — same route-param sourcing as FilterPanelRenderer.
+  const { resolveBilingualText: bi, language } = useWorkbenchConfigLocale();
+  // Workbench context: the route param is the workbench UUID. In exported GeniApps the
+  // standalone shell's `/:workbenchId/...` route param carries the application identifier
+  // (or nothing), so only a UUID-shaped param may hit the workbench publish-history API;
+  // otherwise the application releases API is used with the resolved instance id.
   const { workbenchId } = useParams();
+  const workbenchUuid = isUuid(workbenchId) ? workbenchId : undefined;
+  const applicationId = useResolvedApplicationId();
   const fillCell = useGrid24FillCell();
 
   const [state, dispatch] = useReducer(publishHistoryReducer, undefined, createInitialPublishHistoryState);
@@ -53,19 +60,59 @@ const PublishHistoryRenderer: React.FC<PublishHistoryRendererProps> = ({
 
   const load = useCallback(
     async (offset: number) => {
-      if (!workbenchId) return;
+      if (workbenchUuid) {
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+        dispatch({ type: 'load-start', append: offset > 0 });
+        try {
+          const res = await apiClient.get<{ items: PublishHistoryItem[]; total: number }>(
+            `/workbenches/${workbenchUuid}/publish-history`,
+            { limit: pageSize, offset },
+            { signal: controller.signal }
+          );
+          if (controller.signal.aborted) return;
+          const items = Array.isArray(res.data?.items) ? res.data.items : [];
+          const total = Number(res.data?.total) || 0;
+          dispatch({ type: 'load-success', items, total, offset });
+        } catch (err) {
+          if (controller.signal.aborted) return;
+          const message =
+            (err as { message?: string })?.message ||
+            t('publish_history.load_failed', 'Failed to load publish history');
+          dispatch({ type: 'load-error', message });
+        }
+        return;
+      }
+      // GeniApp export context — resolve the application instance id (async on first
+      // mount); until then there is nothing to request.
+      if (!applicationId) return;
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
       dispatch({ type: 'load-start', append: offset > 0 });
       try {
-        const res = await apiClient.get<{ items: PublishHistoryItem[]; total: number }>(
-          `/workbenches/${workbenchId}/publish-history`,
+        const res = await apiClient.get<{
+          items: Array<{
+            version: string;
+            releaseNotes?: unknown;
+            publishedAt: string;
+            publishedByName: string;
+          }>;
+          total: number;
+        }>(
+          `/applications/${applicationId}/releases/published-notes`,
           { limit: pageSize, offset },
           { signal: controller.signal }
         );
         if (controller.signal.aborted) return;
-        const items = Array.isArray(res.data?.items) ? res.data.items : [];
+        const rawItems = Array.isArray(res.data?.items) ? res.data.items : [];
+        const items: PublishHistoryItem[] = rawItems.map((item) => ({
+          version: String(item?.version ?? ''),
+          description: releaseNotesToDescription(item?.releaseNotes, language),
+          publishedByName: String(item?.publishedByName ?? ''),
+          createdAt: String(item?.publishedAt ?? ''),
+        }));
         const total = Number(res.data?.total) || 0;
         dispatch({ type: 'load-success', items, total, offset });
       } catch (err) {
@@ -76,7 +123,7 @@ const PublishHistoryRenderer: React.FC<PublishHistoryRendererProps> = ({
         dispatch({ type: 'load-error', message });
       }
     },
-    [workbenchId, pageSize, t]
+    [workbenchUuid, applicationId, pageSize, language, t]
   );
 
   useEffect(() => {

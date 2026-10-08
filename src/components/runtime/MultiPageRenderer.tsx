@@ -20,6 +20,7 @@ import { usePageFullscreen } from '../contexts/PageFullscreenContext';
 import { TabActivityProvider } from '../contexts/TabActivityContext';
 import { PageComingSoonOverlay } from './PageComingSoonOverlay';
 import { applyCustomStyles } from '@/utils/styleUtils';
+import { collectPageFilterPanelParamNames } from '@/utils/filterPanelParamOwnership';
 import type { ParameterRecord } from '../types/parameters';
 
 const ParameterDebugPanel: React.FC = () => {
@@ -132,6 +133,13 @@ const TabContent = memo<TabContentProps>(({ tab, appConfig, availableParameters,
     pageConfig.customStyles,
     ''
   );
+  // FilterPanel-owned pageParams of this page, from the same (localized) config the renderers
+  // see. ParameterContext's re-init reconciliation keeps these across page switches; datasource
+  // fetch gates wait on them even when the binding opted out via waitForValue:false.
+  const filterPanelParamNames = useMemo(
+    () => collectPageFilterPanelParamNames(pageConfig?.components),
+    [pageConfig]
+  );
 
   return (
     <TabActivityProvider value={isTabActive}>
@@ -170,6 +178,7 @@ const TabContent = memo<TabContentProps>(({ tab, appConfig, availableParameters,
           tabId={tab.id}
           pageId={tab.pageId}
           initialParams={tab.urlParams || {}}
+          filterPanelParamNames={filterPanelParamNames}
         >
           <ParameterDebugPanel />
 

@@ -336,14 +336,24 @@ export const useDatabaseDataSource = (
     const coreParams = extractCoreParams(params);
     const coreAdditionalParams = extractCoreParams(additionalParams);
 
+    // The key MUST cover everything that shapes the request body — including config.parameters,
+    // whose VALUES drive the body on the config branch (Chart/Form style callers resolve bound
+    // params INTO the config and call refetch() with no args). Without it, every such refetch
+    // keys identically and a superseding refetch (new filter value) is silently dropped while
+    // the previous request is in flight — the fresh-value query never reaches the wire and the
+    // component freezes on the stale response (sales-trend chart stuck on No data).
+    // additionalParams callers (useBoundRows) were already covered, which is why hero/detail
+    // superseded correctly.
     const requestKey = JSON.stringify({
       datasourceId: config.datasourceId,
+      configParameters: config.parameters ?? {},
       params: coreParams,
       additionalParams: coreAdditionalParams
     });
 
     const dedupeRequestKey = JSON.stringify({
       datasourceId: config.datasourceId,
+      configParameters: config.parameters ?? {},
       params: { ...coreParams, outputFields: undefined },
       additionalParams: coreAdditionalParams,
     });
@@ -652,10 +662,17 @@ export const useDatabaseDataSource = (
 
       const msg = (err?.response?.data?.message ?? err?.message ?? '').toString().toLowerCase();
       if (
+        // This request's own controller was aborted (superseded by a newer key or unmount):
+        // swallow it no matter how the HTTP layer re-wraps the rejection. Retrying here would
+        // replay the STALE params captured by this call and an empty-param late response
+        // overwrites the newer correct one (the size-grid "empty body finishes last" freeze).
+        abortController.signal.aborted ||
         err?.name === 'AbortError' ||
         err?.code === 'ERR_CANCELED' ||
         msg.includes('canceled') ||
-        msg.includes('cancelled')
+        msg.includes('cancelled') ||
+        // e.g. DOMException "signal is aborted without reason" rethrown as a plain Error.
+        msg.includes('aborted')
       ) {
         return;
       }

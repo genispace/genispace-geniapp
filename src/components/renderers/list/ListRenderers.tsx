@@ -597,7 +597,7 @@ export const ListRenderer: React.FC<ListRendererProps> = (props) => {
     const highlightBadgeNode =
       highlighted && highlightRow?.badge != null ? (
         <span
-          className="flex-shrink-0 rounded-full bg-indigo-100 px-1.5 py-0.5 text-indigo-600"
+          className="flex-shrink-0 rounded-full bg-indigo-100 px-1.5 py-0.5 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-200"
           style={{ fontSize: fs.badge }}
         >
           {resolveBilingualText(highlightRow.badge)}

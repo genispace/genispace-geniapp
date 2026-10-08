@@ -1,10 +1,21 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { useContext } from 'react';
 import { describe, expect, it } from 'vitest';
 import { GeniAppComponentProvider } from './GeniAppComponentProvider';
 import { MultiPageRenderer } from './MultiPageRenderer';
 import PageRenderer from './PageRenderer';
 import { getRuntimeDatasourceVersions } from '../utils/datasourceVersion';
+import { UserContext } from '../app/context/UserContext';
+
+function UserContextProbe() {
+  const context = useContext(UserContext);
+  return (
+    <div data-testid="user-context">
+      {context ? `present:${context.user?.id ?? 'anonymous'}` : 'missing'}
+    </div>
+  );
+}
 
 const page = {
   components: [
@@ -98,8 +109,41 @@ describe('GeniAppComponentProvider', () => {
     expect(getRuntimeDatasourceVersions()).toBeUndefined();
   });
 
-  it('uses application-owned component modules inside the exact page layout', async () => {
+  it('mounts a UserProvider fallback when the host tree has none (standalone export)', async () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     render(
+      <MemoryRouter>
+        <GeniAppComponentProvider applicationId="standalone-app">
+          <UserContextProbe />
+        </GeniAppComponentProvider>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByTestId('user-context')).toHaveTextContent('present:anonymous');
+  });
+
+  it('reuses a host-provided UserContext instead of mounting a second provider', async () => {
+    const hostValue = {
+      user: { isLoggedIn: true, id: 'host-user', name: 'Host User', email: 'host@example.com' },
+      setUser: () => undefined,
+      signOut: async () => undefined,
+    };
+    render(
+      <MemoryRouter>
+        <UserContext.Provider value={hostValue}>
+          <GeniAppComponentProvider applicationId="workbench-view">
+            <UserContextProbe />
+          </GeniAppComponentProvider>
+        </UserContext.Provider>
+      </MemoryRouter>,
+    );
+
+    // The probe reads the host's user — a second built-in provider would shadow it.
+    expect(await screen.findByTestId('user-context')).toHaveTextContent('present:host-user');
+  });
+
+  it('uses application-owned component modules inside the exact page layout', async () => {    render(
       <MemoryRouter>
         <GeniAppComponentProvider applicationId="source-app" locale="en">
           <PageRenderer

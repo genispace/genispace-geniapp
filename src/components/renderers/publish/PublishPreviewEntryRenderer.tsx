@@ -7,6 +7,7 @@ import { toast } from '@genispace/shared-ui';
 import apiClient from '@/lib/api/apiClient';
 import { createWorkbenchPreviewToken } from '@/app/services/workbenchApi';
 import { useEditMode } from '@/runtime/runtime-mode';
+import { isUuid } from '@/hooks/useWorkbenchAppAccess';
 import { tabIsolation } from '@/utils/tabIsolation';
 import { useGrid24FillCell } from '@/layout/grid24CellContext';
 import { applyCustomStyles } from '@/utils/styleUtils';
@@ -38,6 +39,10 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
 }) => {
   const { t } = useTranslation('renderers');
   const { workbenchId } = useParams();
+  // GeniApp export context: the standalone shell's `/:workbenchId/...` route param
+  // carries the application identifier (or nothing). This entry is workbench-only —
+  // render nothing and never probe GET /workbenches/:id there.
+  const workbenchUuid = isUuid(workbenchId) ? workbenchId : undefined;
   const fillCell = useGrid24FillCell();
 
   const [workbench, setWorkbench] = useState<WorkbenchPublishStatus | null>(null);
@@ -47,7 +52,7 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
   const abortRef = useRef<AbortController | null>(null);
 
   const load = useCallback(async () => {
-    if (!workbenchId) return;
+    if (!workbenchUuid) return;
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -56,7 +61,7 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
     try {
       // Default published view already returns hasUnpublishedChanges + permissions.
       const res = await apiClient.get<WorkbenchPublishStatus>(
-        `/workbenches/${workbenchId}`,
+        `/workbenches/${workbenchUuid}`,
         undefined,
         { signal: controller.signal }
       );
@@ -71,7 +76,7 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
-  }, [workbenchId, t]);
+  }, [workbenchUuid, t]);
 
   useEffect(() => {
     void load();
@@ -86,18 +91,18 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
   // source as useWorkbenchPreview.resolveConfigView. Recomputed per render —
   // entering preview is a full navigation, so the token is fresh on mount.
   const { isEditMode } = useEditMode();
-  const isPreviewMode = workbenchId
-    ? Boolean(tabIsolation.getItem(`workbench-preview-token-${workbenchId}`))
+  const isPreviewMode = workbenchUuid
+    ? Boolean(tabIsolation.getItem(`workbench-preview-token-${workbenchUuid}`))
     : false;
   const modeNoteKey = entryModeNoteKey(resolveEntryMode({ isPreviewMode, isEditMode }));
 
   const handleEnterPreview = async () => {
-    if (!workbenchId || entering) return;
+    if (!workbenchUuid || entering) return;
     setEntering(true);
     try {
-      const token = extractPreviewToken(await createWorkbenchPreviewToken(workbenchId));
+      const token = extractPreviewToken(await createWorkbenchPreviewToken(workbenchUuid));
       if (!token) throw new Error('missing preview token');
-      window.location.href = buildWorkbenchPreviewUrl(window.location.origin, workbenchId, token);
+      window.location.href = buildWorkbenchPreviewUrl(window.location.origin, workbenchUuid, token);
     } catch {
       toast({
         variant: 'destructive',
@@ -106,6 +111,8 @@ const PublishPreviewEntryRenderer: React.FC<PublishPreviewEntryRendererProps> = 
       setEntering(false);
     }
   };
+
+  if (!workbenchUuid) return null;
 
   const descriptionKey =
     status === 'no-changes'

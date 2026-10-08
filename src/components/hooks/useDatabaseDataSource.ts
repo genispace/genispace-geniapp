@@ -341,8 +341,9 @@ export const useDatabaseDataSource = (
     // params INTO the config and call refetch() with no args). Without it, every such refetch
     // keys identically and a superseding refetch (new filter value) is silently dropped while
     // the previous request is in flight — the fresh-value query never reaches the wire and the
-    // component freezes on the stale response (销售趋势图 No data). additionalParams callers
-    // (useBoundRows) were already covered, which is why hero/明细 superseded correctly.
+    // component freezes on the stale response (sales-trend chart stuck on No data).
+    // additionalParams callers (useBoundRows) were already covered, which is why hero/detail
+    // superseded correctly.
     const requestKey = JSON.stringify({
       datasourceId: config.datasourceId,
       configParameters: config.parameters ?? {},

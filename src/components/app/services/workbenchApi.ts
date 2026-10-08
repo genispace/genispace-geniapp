@@ -1319,25 +1319,19 @@ export const deleteDatabaseData = async (
       ...whereConditions  
     };
 
-    const axiosInstance = apiClient.withoutAuth().getInstance();
-    const response = await axiosInstance.request<{
-      success: boolean;
-      data?: {
-        operationType?: string;
-        affectedRows?: number;
-        deletedCount?: number;
-        executionTime?: number;
-      };
-      message?: string;
-    }>({
-      url: withDatasourceVersion(`/datasources/${datasourceId}/data`, resolvedVersion),
-      method: 'DELETE',
-      data: requestBody
-    });
+    // Standard channel (deleteWithBody → BaseApiClient.request → hostRequest adapter): the
+    // adapter injects the API base, translates datasource identifiers to UUIDs and binds the
+    // application version. A bare axios DELETE used to bypass all of that — in standalone
+    // (no __APP_CONFIG__) it hit the hardcoded cloud base and the 401 cascaded into a global
+    // /sso/login redirect.
+    const response = await apiClient.deleteWithBody<{
+      operationType?: string;
+      affectedRows?: number;
+      deletedCount?: number;
+      executionTime?: number;
+    }>(withDatasourceVersion(`/datasources/${datasourceId}/data`, resolvedVersion), requestBody);
 
-    const apiResponse = response.data as { success: boolean; data?: { operationType?: string; affectedRows?: number; deletedCount?: number; executionTime?: number }; message?: string };
-
-    return apiResponse;
+    return response;
   } catch (error) {
     console.error('删除数据库数据失败:', error);
     throw error;

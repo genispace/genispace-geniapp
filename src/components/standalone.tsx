@@ -4,6 +4,7 @@ import { setLanguage, setTheme } from '../utils';
 import { GeniAppComponentProvider } from './runtime/GeniAppComponentProvider';
 import { GeniAppWorkbench, type GeniAppWorkbenchConfig } from './runtime/GeniAppWorkbench';
 import { createPlatformHostAdapters } from './adapters/platform';
+import { createResolveApiRoot } from '../hooks/shell/resolveApiRoot';
 import type { GeniAppHostAdapters } from './types/host-adapters';
 import './styles.css';
 
@@ -34,6 +35,19 @@ export function mountGeniApp(
     || (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
   setLanguage(locale);
   setTheme(theme);
+
+  // Defense in depth: any transport that bypasses the host adapter (bare axios fallbacks in
+  // BaseApiClient) reads window.__APP_CONFIG__.API_BASE_URL and otherwise defaults to the
+  // CLOUD api — fatal for a self-contained static app (wrong-host 401 → global login jump).
+  // Seed it from the same root the adapter resolves, unless a real config.js already set one.
+  if (!window.__APP_CONFIG__?.API_BASE_URL) {
+    const resolvedApiRoot = typeof options.apiRoot === 'function'
+      ? options.apiRoot()
+      : options.apiRoot ?? createResolveApiRoot()();
+    if (resolvedApiRoot) {
+      window.__APP_CONFIG__ = { ...window.__APP_CONFIG__, API_BASE_URL: resolvedApiRoot };
+    }
+  }
 
   const root = createRoot(element);
   root.render(

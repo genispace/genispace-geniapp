@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ApiResponse, HttpMethod, PaginatedResponse } from '../types/api';
 
 import { getConfig, waitForConfig, isConfigLoaded } from '../config';
@@ -60,9 +60,14 @@ baseAxiosInstance.interceptors.request.use(
 );
 
 class BaseApiClient {
-  private axiosInstance = baseAxiosInstance;
+  private axiosInstance: AxiosInstance;
 
-  constructor() {}
+  // Optional instance override: AuthApiClient's withoutAuth() must hand out a client on a
+  // DEDICATED instance — the shared baseAxiosInstance carries the auth interceptors
+  // (401 → refresh → global /sso/login redirect), which "withoutAuth" callers must not get.
+  constructor(instance?: AxiosInstance) {
+    this.axiosInstance = instance ?? baseAxiosInstance;
+  }
 
   public getInstance() {
     return this.axiosInstance;
@@ -147,6 +152,14 @@ class BaseApiClient {
 
   public delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     return this.request<T>(url, 'DELETE', undefined, config);
+  }
+
+  // DELETE with a request body (e.g. datasource row delete carrying where-conditions).
+  // Goes through the same request() channel as every other verb, so the hostRequest adapter
+  // injects the base URL, translates datasource identifiers and binds the application version —
+  // a bare axios DELETE used to bypass all of that and hit the hardcoded cloud base.
+  public deleteWithBody<T>(url: string, body?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return this.request<T>(url, 'DELETE', body, config);
   }
 
   public patch<T>(url: string, body?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {

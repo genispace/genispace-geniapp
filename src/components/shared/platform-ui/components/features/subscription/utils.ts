@@ -76,7 +76,7 @@ export function generateResourceUpgradePrompt(
     currentPlan,
     suggestedPlan,
     title: `${resourceName} limit reached`,
-    description: `Your current plan allows up to ${limit} ${resourceName}(s). Upgrade to ${getPlanDisplayName(suggestedPlan)} for a higher quota.`,
+    description: `Your current plan allows up to ${limit} ${resourceName}(s). Upgrade to ${getPlanDisplayName(suggestedPlan)} for a higher credit.`,
     blockedItem: resourceType,
   };
 }

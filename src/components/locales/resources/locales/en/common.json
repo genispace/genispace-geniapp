@@ -157,6 +157,7 @@
   "console": "Console",
   "workbench": "Workbench",
   "chat": "Chat",
+  "models": "Models",
   "go_to_console": "Go to Console",
   "standalone": {
     "title": "GeniSpace AIP",

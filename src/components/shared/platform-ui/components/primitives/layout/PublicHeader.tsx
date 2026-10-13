@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Z_INDEX_CLASSES } from '../../../styles/z-index-layers';
 import { Link, useNavigate } from 'react-router-dom';
-import { Globe, Menu, X, BarChart3, MessageSquare, User, LogOut, LayoutGrid } from 'lucide-react';
+import { Globe, Menu, X, BarChart3, MessageSquare, User, LogOut, LayoutGrid, Boxes } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ThemeToggle } from './ThemeToggle';
 import type { UserSettingsApiClient } from '../../../hooks/useUserSettings';
@@ -108,6 +108,13 @@ export function PublicHeader({
       },
     },
     {
+      name: t('common:models', 'Models'),
+      icon: Boxes,
+      url: () => {
+        return `${hubBase.replace(/\/$/, '')}/models`;
+      },
+    },
+    {
       name: t('common:console', 'Console'),
       icon: BarChart3,
       url: () => {
@@ -120,6 +127,7 @@ export function PublicHeader({
   const defaultNavigation = isStandalone ? [] : [
     { name: t('common:navigation.applications', 'App Store'), href: `${hubBase}/store` },
     { name: t('common:navigation.explore', 'Explore'), href: `${hubBase}/explore` },
+    { name: t('common:navigation.models', 'Models'), href: `${hubBase}/model-services` },
   ];
   const navItems = navigation || defaultNavigation;
 

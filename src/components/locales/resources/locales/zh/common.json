@@ -158,6 +158,7 @@
   "console": "控制台",
   "workbench": "工作台",
   "chat": "对话",
+  "models": "模型",
   "go_to_console": "前往控制台",
   "standalone": {
     "title": "GeniSpace 智慧平台",

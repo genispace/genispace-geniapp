@@ -55,6 +55,7 @@ export function PublicFooter({ navigationConfig }: PublicFooterProps) {
       { name: t('footer.navigation.features', "Features"), href: '/features', baseUrl: navigationConfig.webUrl },
       { name: t('footer.navigation.applications', "App Store"), href: '/store', baseUrl: navigationConfig.appUrl },
       { name: t('footer.navigation.explore', "Explore"), href: '/explore', baseUrl: navigationConfig.appUrl },
+      { name: t('footer.navigation.models', "Models"), href: '/model-services', baseUrl: navigationConfig.appUrl },
     ],
     resources: [
       { name: t('footer.navigation.docs', "Documentation"), href: 'https://docs.genispace.com', external: true },
@@ -98,8 +99,8 @@ export function PublicFooter({ navigationConfig }: PublicFooterProps) {
                   GeniSpace
                 </span>
               </Link>
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                {t('footer.description', "Enterprise-Grade Artificial Intelligence Platform")}
+              <span className="inline-block max-w-md break-keep text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                {t('footer.description', "Enterprise AI platform that builds an intelligent, human-machine collaborative work environment to help enterprises achieve digital transformation and upgrading.")}
               </span>
             </div>
 
@@ -171,9 +172,9 @@ export function PublicFooter({ navigationConfig }: PublicFooterProps) {
               </span>
             </Link>
             <p 
-              className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-400"
+              className="max-w-md break-keep text-sm leading-relaxed text-neutral-700 dark:text-neutral-400"
             >
-              {t('footer.description', "Enterprise-Grade Artificial Intelligence Platform")}
+              {t('footer.description', "Enterprise AI platform that builds an intelligent, human-machine collaborative work environment to help enterprises achieve digital transformation and upgrading.")}
             </p>
 
             <div 

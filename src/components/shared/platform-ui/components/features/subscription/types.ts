@@ -38,7 +38,7 @@ export interface SubscriptionLimits {
 
   maxFileSize: number;
 
-  quotasPerMonth?: number;
+  creditsPerMonth?: number;
 
   quotasCarryOver?: boolean;
 
@@ -234,7 +234,7 @@ export interface PlanDetails {
   datasetLimit: number;
   maxFileSize: number;
 
-  quotasPerMonth: number;
+  creditsPerMonth: number;
   quotasCarryOver: boolean;
   quotasCarryOverMaxMonths: number;
 

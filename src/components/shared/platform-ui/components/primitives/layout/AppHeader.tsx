@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Z_INDEX_CLASSES } from '../../../styles/z-index-layers';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Menu, User, LogOut, Globe, MessageSquare, BarChart3, LayoutGrid,
+  Menu, User, LogOut, Globe, MessageSquare, BarChart3, LayoutGrid, Boxes,
   X, AlertCircle, History as HistoryIcon, Sun, Moon, Bell, Layers, Pin,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +52,7 @@ export interface EnabledBuiltInAppItem {
 
 export interface AppHeaderProps {
 
-  currentApp?: 'console' | 'workbench' | 'chat' | 'workspace';
+  currentApp?: 'console' | 'workbench' | 'chat' | 'workspace' | 'models';
 
   /** Whether to show the Console entry. Gate this by the user's console access
    *  (e.g. in the Hub, application-only members have no console access). Default true. */
@@ -221,6 +221,7 @@ export function AppHeader({
   const isInConsole = currentApp === 'console';
   const isInChat = currentApp === 'chat';
   const isInWorkspace = currentApp === 'workspace';
+  const isInModels = currentApp === 'models';
 
   const profileIsAbsolute = Boolean(profileUrl && isAbsoluteUrl(profileUrl));
 
@@ -253,11 +254,16 @@ export function AppHeader({
   // Workspace lives on the Hub home. Mirror the brand link's base; a missing
   // Hub base degrades to the in-app relative route.
   const workspaceUrl = `${brandUrl.replace(/\/$/, '')}/workspace`;
+  const modelsUrl = `${brandUrl.replace(/\/$/, '')}/models`;
 
   const openInNewTabHint = t('header.open_in_new_tab_hint', '⌘/Ctrl+Click to open in new tab');
 
   const handleGoToWorkspace = (event: React.MouseEvent) => {
     handleHeaderNavigationClick(event, workspaceUrl);
+  };
+
+  const handleGoToModels = (event: React.MouseEvent) => {
+    handleHeaderNavigationClick(event, modelsUrl);
   };
 
   const handleGoToConsole = (event: React.MouseEvent) => {
@@ -507,6 +513,19 @@ export function AppHeader({
                 <span className="text-sm font-medium">{t('chat', 'Chat')}</span>
               </button>
             )}
+
+            <button
+              onClick={handleGoToModels}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 ${
+                isInModels
+                  ? 'bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-400 dark:to-purple-500 text-white'
+                  : 'hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:bg-gradient-to-r dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 text-neutral-900 dark:text-neutral-50'
+              }`}
+              title={`${t('models', 'Models')} (${openInNewTabHint})`}
+            >
+              <Boxes className={`w-4 h-4 ${isInModels ? 'text-white' : 'text-neutral-900 dark:text-neutral-50'}`} />
+              <span className="text-sm font-medium">{t('models', 'Models')}</span>
+            </button>
 
             {showConsoleEntry && (
               <button
@@ -778,6 +797,20 @@ export function AppHeader({
                           <span className="text-sm">{t('chat', 'Chat')}</span>
                         </button>
                       )}
+                      <button
+                        onClick={(event) => {
+                          handleGoToModels(event);
+                          setShowMobileMenu(false);
+                        }}
+                        className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors text-neutral-900 dark:text-neutral-50 ${
+                          isInModels
+                            ? 'bg-neutral-100 dark:bg-neutral-800'
+                            : 'hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                        }`}
+                      >
+                        <Boxes className="w-4 h-4 text-neutral-900 dark:text-neutral-50" />
+                        <span className="text-sm">{t('models', 'Models')}</span>
+                      </button>
                       {showConsoleEntry && (
                         <button
                           onClick={(event) => {

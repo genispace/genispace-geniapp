@@ -82,7 +82,7 @@ export const DEFAULT_SUBSCRIPTION_CONTEXT = {
     datasetLimit: 1,
     maxFileSize: 5,
 
-    quotasPerMonth: 100000,
+    creditsPerMonth: 1400000,
     quotasCarryOver: false,
     quotasCarryOverMaxMonths: 0,
 
@@ -147,7 +147,7 @@ export const STANDALONE_SUBSCRIPTION_CONTEXT = {
     datasetLimit: Infinity,
     maxFileSize: Infinity,
 
-    quotasPerMonth: Infinity,
+    creditsPerMonth: Infinity,
     quotasCarryOver: true,
     quotasCarryOverMaxMonths: Infinity,
 

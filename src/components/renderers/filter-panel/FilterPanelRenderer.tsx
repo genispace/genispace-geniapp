@@ -368,6 +368,8 @@ export interface DateCustomTabSource {
   groupKey?: string;        // client-side filter column — e.g. 'ui_group'
   groupValue?: string;      // ...keep only rows where row[groupKey] === groupValue
   scope?: string;           // cache scope ('date') → maps to dataStamp
+  extraLabelI18nKey?: string; // optional third-line text column — reads `{base}_zh`/`{base}_en`; text is produced verbatim by the datasource (e.g. 'LY: 2025-11-11~2025-11-11'), the chip renders it as-is
+  subGroupI18nKey?: string; // optional sub-tab grouping column — reads `{base}_zh`/`{base}_en`; group text is produced verbatim by the datasource, groups are first-seen deduped in row order (no client-side sorting)
 }
 
 export interface DateCustomTab {
@@ -2927,6 +2929,8 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
   const subLabelKey = src?.subLabelKey;
   const groupKey = src?.groupKey;
   const groupValue = src?.groupValue;
+  const extraLabelI18nKey = src?.extraLabelI18nKey;
+  const subGroupI18nKey = src?.subGroupI18nKey;
   const cols = tab.cols && tab.cols > 0 ? tab.cols : 3;
   const multi = tab.select === 'multi';
 
@@ -2937,8 +2941,10 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
     if (labelI18nKey) { f.add(`${labelI18nKey}_zh`); f.add(`${labelI18nKey}_en`); }
     if (subLabelKey) f.add(subLabelKey);
     if (groupKey) f.add(groupKey);
+    if (extraLabelI18nKey) { f.add(`${extraLabelI18nKey}_zh`); f.add(`${extraLabelI18nKey}_en`); }
+    if (subGroupI18nKey) { f.add(`${subGroupI18nKey}_zh`); f.add(`${subGroupI18nKey}_en`); }
     return Array.from(f);
-  }, [valueKey, startKey, endKey, labelKey, labelI18nKey, subLabelKey, groupKey]);
+  }, [valueKey, startKey, endKey, labelKey, labelI18nKey, subLabelKey, groupKey, extraLabelI18nKey, subGroupI18nKey]);
 
   const { rows, loading } = useCachedFilterOptions({
     datasourceId: src?.datasourceId || src?.datasetId,
@@ -2958,14 +2964,53 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
             ? resolveBilingualLabel({ zh: r[`${labelI18nKey}_zh`], en: r[`${labelI18nKey}_en`] }, language)
             : String(r[labelKey || valueKey] ?? ''),
           sub: subLabelKey ? String(r[subLabelKey] ?? '') : '',
+          extra: extraLabelI18nKey
+            ? resolveBilingualLabel({ zh: r[`${extraLabelI18nKey}_zh`], en: r[`${extraLabelI18nKey}_en`] }, language)
+            : '',
+          subGroup: subGroupI18nKey
+            ? resolveBilingualLabel({ zh: r[`${subGroupI18nKey}_zh`], en: r[`${subGroupI18nKey}_en`] }, language)
+            : '',
           start: fmtDate(r[startKey], true),
           end: fmtDate(r[endKey], true),
         }))
         .filter(it => it.start && it.end),
-    [rows, groupKey, groupValue, valueKey, labelKey, labelI18nKey, subLabelKey, startKey, endKey, language]
+    [rows, groupKey, groupValue, valueKey, labelKey, labelI18nKey, subLabelKey, startKey, endKey, extraLabelI18nKey, subGroupI18nKey, language]
   );
 
   const [selected, setSelected] = useState<string[]>([]);
+
+  // Sub-tab groups (#152): first-seen dedupe in datasource row order (no client-side sorting);
+  // empty/NULL group values fall into a trailing fallback bucket.
+  const otherSubGroup = t('filter_panel.sub_group_other', 'Others');
+  const subGroups = useMemo(() => {
+    if (!subGroupI18nKey) return [] as string[];
+    const seen = new Set<string>();
+    const groups: string[] = [];
+    let hasEmpty = false;
+    for (const it of items) {
+      if (!it.subGroup) { hasEmpty = true; continue; }
+      if (!seen.has(it.subGroup)) { seen.add(it.subGroup); groups.push(it.subGroup); }
+    }
+    if (hasEmpty) groups.push(otherSubGroup);
+    return groups;
+  }, [items, subGroupI18nKey, otherSubGroup]);
+
+  const [selectedSubGroup, setSelectedSubGroup] = useState('');
+
+  // Default to the group containing the applied item; fall back to the first group when the
+  // current selection no longer exists (items/tab change).
+  useEffect(() => {
+    if (!subGroupI18nKey || subGroups.length === 0) return;
+    setSelectedSubGroup(prev => {
+      if (prev && subGroups.includes(prev)) return prev;
+      const hit = items.find(it => appliedStart === it.start && appliedEnd === it.end);
+      return (hit && (hit.subGroup || otherSubGroup)) || subGroups[0];
+    });
+  }, [subGroupI18nKey, subGroups, items, appliedStart, appliedEnd, otherSubGroup]);
+
+  const visibleItems = subGroupI18nKey && subGroups.length > 0
+    ? items.filter(it => (it.subGroup || otherSubGroup) === selectedSubGroup)
+    : items;
 
   // Report the pending multi-selection (merged range) to the sheet footer; clear on unmount/tab switch.
   useEffect(() => {
@@ -2988,9 +3033,31 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
 
   return (
     <div className="space-y-2">
+      {subGroupI18nKey && subGroups.length > 0 && (
+        <div
+          className="flex gap-1 overflow-x-auto rounded-lg border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 p-0.5"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {subGroups.map(g => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setSelectedSubGroup(g)}
+              className={cn(
+                'flex-none px-3 py-1 text-[11px] rounded-md transition-colors',
+                selectedSubGroup === g
+                  ? 'bg-white dark:bg-neutral-900 shadow-sm font-semibold text-slate-900 dark:text-neutral-100'
+                  : 'text-slate-500 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-300'
+              )}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
         {!loading &&
-          items.map(it => {
+          visibleItems.map(it => {
             const active = multi
               ? selected.includes(it.value)
               : appliedStart === it.start && appliedEnd === it.end;
@@ -3015,6 +3082,9 @@ const DateCustomTabPanel: React.FC<DateCustomTabPanelProps> = ({
                       so the year is explicitly visible (de-emphasized year suffix was not enough). */}
                   {groupValue === 'holiday' ? `${it.start}~${it.end}` : it.sub || `${fmtDate(it.start)}~${fmtDate(it.end)}`}
                 </span>
+                {extraLabelI18nKey && it.extra && (
+                  <span className="text-[9px] text-slate-400 dark:text-neutral-500">{it.extra}</span>
+                )}
               </button>
             );
           })}

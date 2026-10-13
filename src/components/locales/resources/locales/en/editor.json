@@ -3434,6 +3434,8 @@
     "custom_tab_label_i18n_key": "Label i18n key",
     "custom_tab_start_key": "Start key",
     "custom_tab_end_key": "End key",
+    "custom_tab_extra_label_i18n_key": "Extra-line label i18n key",
+    "custom_tab_sub_group_i18n_key": "Sub-tab group i18n key",
     "custom_tab_advanced": "Advanced",
     "custom_tab_sub_label_key": "Sub-label key",
     "custom_tab_group_key": "Group key",

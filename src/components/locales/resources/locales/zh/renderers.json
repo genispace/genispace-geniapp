@@ -618,6 +618,7 @@
     "pick_range": "选择范围",
     "please_select": "请选择",
     "no_options": "暂无选项",
+    "sub_group_other": "其他",
     "loading": "加载中...",
     "items_selected": "已选 {{count}} 项",
     "selected_count": "已选 {{count}} 项",

@@ -632,6 +632,7 @@
     "pick_range": "Pick range",
     "please_select": "Please select",
     "no_options": "No options",
+    "sub_group_other": "Others",
     "loading": "Loading...",
     "items_selected": "{{count}} items selected",
     "selected_count": "{{count}} selected",

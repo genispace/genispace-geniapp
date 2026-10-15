@@ -7,6 +7,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { Z_INDEX_CLASSES } from '../../../styles/z-index-layers';
 import { useNavigate } from 'react-router-dom';
 import { isLogoutBroadcastInProgress, type SSOClient } from '@genispace/shared-utils';
@@ -408,31 +409,56 @@ export function RequireAuth({
 
     case 'error':
       return (
-        <div className={`fixed inset-0 bg-white dark:bg-neutral-900 flex items-center justify-center ${Z_INDEX_CLASSES.MODAL_BACKDROP}`}>
-          <div className="text-center max-w-md mx-auto px-4">
-            <div className="text-red-500 text-lg font-semibold mb-4">
-              {t('require_auth.sso_error', 'SSO Login Failed')}
+        <div className={`fixed inset-0 flex items-center justify-center bg-neutral-50 px-4 dark:bg-neutral-950 ${Z_INDEX_CLASSES.MODAL_BACKDROP}`}>
+          <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-8 shadow-xl dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="text-center">
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/40">
+                <AlertCircle className="h-7 w-7 text-red-500" aria-hidden />
+              </div>
+              <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+                {t('require_auth.sso_error', 'SSO Login Failed')}
+              </h1>
+              <p className="mt-2 text-sm leading-6 text-neutral-500 dark:text-neutral-400">
+                {t('require_auth.error_hint', 'Sign-in could not be completed. Check your network and try again.')}
+              </p>
             </div>
-            <div className="text-neutral-600 dark:text-neutral-400 text-sm mb-4 bg-neutral-100 dark:bg-neutral-800 p-4 rounded-lg font-mono text-left overflow-auto max-h-40">
-              {errorMessage || 'Unknown error'}
-            </div>
-            <div className="text-neutral-500 dark:text-neutral-400 text-xs mb-4 p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
-              <div>{t('require_auth.current_url', 'Current URL')}: {window.location.href}</div>
-              <div>{t('require_auth.current_path', 'Current path')}: {window.location.pathname + window.location.search}</div>
-            </div>
-            <div className="flex gap-4 justify-center">
+
+            <details className="mt-5 rounded-lg border border-neutral-200 dark:border-neutral-800">
+              <summary className="cursor-pointer select-none px-3 py-2 text-xs font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
+                {t('require_auth.technical_details', 'Technical details')}
+              </summary>
+              <div className="space-y-3 border-t border-neutral-200 px-3 py-3 text-xs leading-5 text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                <div className="break-words">{errorMessage || 'Unknown error'}</div>
+                <div>
+                  <div className="font-medium text-neutral-600 dark:text-neutral-300">
+                    {t('require_auth.current_url', 'Current URL')}
+                  </div>
+                  <div className="mt-1 break-all font-mono">{window.location.href}</div>
+                </div>
+                <div>
+                  <div className="font-medium text-neutral-600 dark:text-neutral-300">
+                    {t('require_auth.current_path', 'Current path')}
+                  </div>
+                  <div className="mt-1 break-all font-mono">{window.location.pathname + window.location.search}</div>
+                </div>
+              </div>
+            </details>
+
+            <div className="mt-6 flex flex-col gap-3">
               <button
+                type="button"
                 onClick={() => {
                   setErrorMessage(null);
                   hasProcessedTokenRef.current = false;
                   hasValidatedTokenRef.current = false;
                   setAuthState('initializing');
                 }}
-                className="px-4 py-2 bg-brand-primary-light text-white rounded hover:bg-brand-primary"
+                className="btn btn-primary w-full"
               >
                 {t('require_auth.retry', 'Retry')}
               </button>
               <button
+                type="button"
                 onClick={() => {
                   localStorage.removeItem('token');
                   localStorage.removeItem('user');
@@ -442,7 +468,7 @@ export function RequireAuth({
                   hasValidatedTokenRef.current = false;
                   setAuthState('initializing');
                 }}
-                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                className="btn btn-secondary w-full"
               >
                 {t('require_auth.clear_and_retry', 'Clear cache and retry')}
               </button>

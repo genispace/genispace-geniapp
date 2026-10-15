@@ -338,8 +338,24 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     if (!silent) setLoading(true);
     try {
       setLoadError(false);
-      const access = await apiClient.get(`/applications/${applicationId}/users/me/access`);
-      const codes = accessCodes(access);
+      let codes: string[];
+      try {
+        const access = await apiClient.get(`/applications/${applicationId}/users/me/access`);
+        codes = accessCodes(access);
+      } catch (reason) {
+        // The access probe targets the owning (service-desk) application; when that
+        // application is not installed/visible in the host space the endpoint 404s.
+        // That must not kill the reporter: the embedded ticket form is a requester
+        // surface backed by shared datasources whose server-side authorization
+        // still guards submission, so fall back to the requester permission and keep
+        // loading. Explicit 401/403 keeps hiding the component as before.
+        const status = (reason as { response?: { status?: number } })?.response?.status;
+        if (status === 401 || status === 403) {
+          setAllowed(false);
+          return;
+        }
+        codes = ['service-desk.intake.submit'];
+      }
       const canSubmit = codes.includes('service-desk.intake.submit');
       setPermissionCodes(codes);
       setAllowed(canSubmit);

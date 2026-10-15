@@ -101,6 +101,26 @@ describe('GeniAppWorkbench release notes prompt', () => {
     expect(screen.getByText('New dashboard')).toBeInTheDocument();
   });
 
+  it('stays silent inside a host iframe (the host shell shows the release note itself)', async () => {
+    const topDescriptor = Object.getOwnPropertyDescriptor(window, 'top');
+    Object.defineProperty(window, 'top', { configurable: true, value: {} });
+    vi.useFakeTimers();
+    try {
+      renderApplication('zh');
+      // 越过 shell-init gate 超时，让被门禁拦住的正文（和发布说明检查）真正挂载
+      await vi.advanceTimersByTimeAsync(2000);
+      expect(screen.getByText('Overview content')).toBeInTheDocument();
+      expect(
+        mockGet.mock.calls.some((call) => String(call[0]).includes('latest-published-note')),
+      ).toBe(false);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+      if (topDescriptor) Object.defineProperty(window, 'top', topDescriptor);
+      else delete (window as Partial<Window>).top;
+    }
+  });
+
   it('stays silent when there is no unread note and when the request fails', async () => {
     mockGet.mockResolvedValue({ data: null });
     const { unmount } = renderApplication('en');

@@ -349,6 +349,10 @@ interface LatestPublishedNote {
  * server-side per application member: the latest-published-note GET returns null once
  * the receipt PUT has acknowledged the version. One check per resolved application per
  * mount; non-members (403) and fetch failures stay silent.
+ *
+ * Silent while embedded in a host iframe: the GeniSpace App Shell (and the legacy
+ * Workbench shell) query the same endpoint and render their own release-notes dialog,
+ * so showing this one as well would double-notify on every version publish.
  */
 function GeniAppReleaseNotesPrompt() {
   const applicationId = useResolvedApplicationId();
@@ -358,6 +362,7 @@ function GeniAppReleaseNotesPrompt() {
 
   useEffect(() => {
     if (!applicationId || checkedAppRef.current === applicationId) return;
+    if (isEmbeddedIframe()) return;
     checkedAppRef.current = applicationId;
     let alive = true;
     void apiClient

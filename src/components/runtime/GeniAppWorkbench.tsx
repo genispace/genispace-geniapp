@@ -26,7 +26,6 @@ import {
   type MobileToolbarNavItem,
 } from '../mobile/utils/mobileToolbarNav';
 import { MobileFloatingBackButton } from '../mobile/components/MobileFloatingBackButton';
-import { useMobileNavigationCanGoBack } from '../mobile/hooks/useMobileNavigationCanGoBack';
 import {
   goBackMobileNavigation,
   mobileNavigateFromBottomTab,
@@ -42,6 +41,7 @@ import { useVisibleWhenContext } from '../hooks/useVisibleWhenContext';
 import { useResolvedApplicationId, useWorkbenchAppAccess } from '../hooks/useWorkbenchAppAccess';
 import apiClient from '../lib/api/apiClient';
 import { ReleaseNotesDialog, type LocalizedReleaseNotes } from '../release/ReleaseNotesDialog';
+import { syncDefaultI18nLanguage } from './i18n';
 import type { WorkbenchConfig } from '../types/components';
 import type { NavigationItem } from '../types';
 
@@ -455,18 +455,9 @@ function GeniAppWorkbenchShell({
     ?? landing?.pageId
     ?? Object.keys(pages)[0]
     ?? '';
-  const canGoBackMobileNav = useMobileNavigationCanGoBack();
-  const isNavigationRootPage = visibleNavigation.some(
-    (item) => getNavigationTargetPageId(item) === activePageId,
-  );
-  // Drill-down/detail pages (not reachable from the bottom nav) hide the bottom navigation
-  // once a back target exists: bottom-tab taps reset the nav stack (2026-07-15 "bottom tab =
-  // exit" semantics), so a stray tap on a detail page would wipe the very stack the floating
-  // back button needs. Root pages always keep it; stack-less deep links keep it too — with no
-  // back target it is the only way out. The top toolbar stays rendered on every page: it is a
-  // collapsed strip (no stray-tap surface), and its nav entries go through the same
-  // stack-clearing bottom-tab path, so jumping away from it is a deliberate, approved exit.
-  const showMobileBottomNav = isNavigationRootPage || !canGoBackMobileNav;
+  // The bottom navigation stays rendered on every page (task #187): bottom-tab taps push the
+  // current page onto the mobile nav stack instead of resetting it, so the floating back
+  // button keeps its stack even after leaving a drill-down/detail page via a tab.
   const sidebarStorageKey = `${identifier}:sidebar-collapsed`;
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try {
@@ -544,6 +535,12 @@ function GeniAppWorkbenchShell({
     document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en-US';
   }, [language]);
 
+  // Renderers translating through the global default i18n instance (plain i18n.t calls) read
+  // the bundled resources seeded at runtime/i18n import time; keep that instance on the
+  // app-config language too (task #187). Called in render — before the page tree below
+  // evaluates any default-instance t() — and no-ops when the language already matches.
+  void syncDefaultI18nLanguage(language);
+
   useEffect(() => {
     if (!landingContextReady) return;
     if (pathnamePageId(location.pathname, pages) || !activePageId) return;
@@ -616,6 +613,7 @@ function GeniAppWorkbenchShell({
               showRuntimeControls={showRuntimeControls}
               onNavigate={(item) => mobileNavigateFromBottomTab(
                 navigate,
+                locationRef.current,
                 navigationPath(identifier, item.pageId, { ...(item.pageParameters ?? {}), _nav: item.key }),
               )}
             />
@@ -626,16 +624,15 @@ function GeniAppWorkbenchShell({
             workbenchId={identifier}
             currentPageId={activePageId}
           />
-          {showMobileBottomNav && (
-            <MobileNavigation
-              items={visibleNavigation}
-              activePageId={activePageId}
-              onNavigate={(pageId, key, params) => mobileNavigateFromBottomTab(
-                navigate,
-                navigationPath(identifier, pageId, { ...(params ?? {}), _nav: key }),
-              )}
-            />
-          )}
+          <MobileNavigation
+            items={visibleNavigation}
+            activePageId={activePageId}
+            onNavigate={(pageId, key, params) => mobileNavigateFromBottomTab(
+              navigate,
+              locationRef.current,
+              navigationPath(identifier, pageId, { ...(params ?? {}), _nav: key }),
+            )}
+          />
         </div>
       ) : (
         <>

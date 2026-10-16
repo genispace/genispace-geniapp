@@ -99,7 +99,7 @@ afterEach(() => {
 });
 
 describe('GeniAppWorkbench mobile chrome on drill-down pages', () => {
-  it('hides the bottom navigation on a drill-down page and restores it after back', async () => {
+  it('keeps the bottom navigation on a drill-down page and tab taps preserve the back stack', async () => {
     sessionStorage.setItem('viewportOverride', 'mobile');
     mockAccess(APP_UUIDS.mobileDetail);
     renderBackNavApplication(APP_UUIDS.mobileDetail);
@@ -109,24 +109,35 @@ describe('GeniAppWorkbench mobile chrome on drill-down pages', () => {
     expect(screen.getByRole('button', TOOLBAR)).toBeInTheDocument();
     expect(screen.queryByRole('button', BACK_BUTTON)).not.toBeInTheDocument();
 
-    // Drill into the detail page: route entry pushed, bottom nav hides, back pill shows.
-    // The top toolbar stays — hiding it was the 1.0.26 regression; its nav entries reuse the
-    // stack-clearing bottom-tab path, so they are deliberate exits, not back-stack bypasses.
+    // Drill into the detail page: route entry pushed, back pill shows — and the bottom nav
+    // stays rendered (task #187: bottom-tab taps push the current page instead of resetting
+    // the stack, so there is no stray-tap wipe left to protect against).
     await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/nav-app/products'));
     fireEvent(window, new CustomEvent('workbench-open-tab', {
       detail: { pageId: 'product-detail', urlParams: { id: '1' } },
     }));
     await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/nav-app/product-detail'));
-    await waitFor(() => expect(screen.queryByRole('navigation', BOTTOM_NAV)).not.toBeInTheDocument());
+    expect(screen.getByRole('navigation', BOTTOM_NAV)).toBeInTheDocument();
     expect(screen.getByRole('button', TOOLBAR)).toBeInTheDocument();
-    const backButton = await screen.findByRole('button', BACK_BUTTON);
+    await screen.findByRole('button', BACK_BUTTON);
 
-    // Back: route entry popped → root page, bottom nav restored.
+    // Bottom-tab tap on the detail page pushes it instead of clearing the stack: back from
+    // the tab page returns to the detail, and the next back returns to the products root.
+    fireEvent.click(screen.getByRole('button', { name: '会员' }));
+    await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/nav-app/members'));
+    expect(screen.getByRole('navigation', BOTTOM_NAV)).toBeInTheDocument();
+
+    let backButton = await screen.findByRole('button', BACK_BUTTON);
+    pointer('pointerdown', backButton);
+    pointer('pointerup', backButton);
+    await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/nav-app/product-detail'));
+
+    backButton = await screen.findByRole('button', BACK_BUTTON);
     pointer('pointerdown', backButton);
     pointer('pointerup', backButton);
     await waitFor(() => expect(screen.getByTestId('path')).toHaveTextContent('/nav-app/products'));
-    expect(await screen.findByRole('navigation', BOTTOM_NAV)).toBeInTheDocument();
-    expect(screen.getByRole('button', TOOLBAR)).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('button', BACK_BUTTON)).not.toBeInTheDocument());
+    expect(screen.getByRole('navigation', BOTTOM_NAV)).toBeInTheDocument();
   });
 
   it('keeps the bottom navigation on a root page even with tab-history entries stacked', async () => {

@@ -66,6 +66,7 @@ export function BottomTabNavigation({
     const search = queryString ? `?${queryString}` : '';
     mobileNavigateFromBottomTab(
       navigate,
+      location,
       buildWorkbenchPagePath(workbenchId, tab.pageId, search, location.pathname)
     );
   };

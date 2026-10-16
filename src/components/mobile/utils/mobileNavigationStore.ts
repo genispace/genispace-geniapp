@@ -209,17 +209,19 @@ export function mobilePushNavigate(
   }
 }
 
-/** Bottom tab navigation — clears stack and opens a root tab page. */
+/** Bottom tab navigation — pushes the current page and opens a root tab page.
+ *  Task #187 (2026-10-16): tabs no longer reset the stack. The bottom nav stays visible on
+ *  drill-down/detail pages, and a tab tap is an ordinary jump the floating back button can
+ *  undo (detail → tab → back returns to the detail; the 2026-07-15 "bottom tab = exit" reset
+ *  existed only to protect the stack from stray taps while the nav was hidden there).
+ *  replace, not push, for the webview history: a growing history makes WeCom iOS pop up its
+ *  native "< >" bottom toolbar — the biggest trigger of the bottom-nav height jitter — so
+ *  hardware back / WeCom swipe-back on a tab page still exits the workbench. Only the in-app
+ *  back stack (floating back button) accumulates; it is capped by MAX_MOBILE_NAVIGATION_STACK. */
 export function mobileNavigateFromBottomTab(
   navigate: (to: string, options?: { replace?: boolean }) => void,
+  location: { pathname: string; search: string },
   to: string
 ): void {
-  resetMobileNavigationStack();
-  // replace, not push: tabs are peer entry points (the stack was just reset), and a growing
-  // webview history makes WeCom iOS pop up its native "< >" bottom toolbar — the biggest
-  // trigger of the bottom-nav height jitter. Trade-off (approved 2026-07-15): hardware back /
-  // WeCom swipe-back on a tab page exits the workbench instead of stepping through tab
-  // history. Drill-down navigation (mobilePushNavigate) still pushes, so detail-page back
-  // behavior is unchanged.
-  navigate(to, { replace: true });
+  mobilePushNavigate(navigate, location, to, { replace: true });
 }

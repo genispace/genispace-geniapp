@@ -28,7 +28,7 @@ describe('mobileNavigationStore', () => {
     });
   });
 
-  it('tracks stack for in-app navigation and clears on bottom tab', () => {
+  it('tracks stack for in-app navigation and preserves it on bottom tab', () => {
     sessionStorage.setItem(VIEWPORT_OVERRIDE_STORAGE_KEY, 'mobile');
 
     const navigated: string[] = [];
@@ -49,9 +49,22 @@ describe('mobileNavigationStore', () => {
     );
     expect(getMobileNavigationCanGoBack()).toBe(false);
 
+    // Bottom-tab jumps push the page being left instead of resetting the stack (task #187),
+    // so the floating back button can undo a tab switch on drill-down/detail pages.
     pushMobileNavigationEntry({ pathname: '/demo-example/page-a', search: '' });
-    mobileNavigateFromBottomTab(navigate, '/demo-example/page-c');
+    mobileNavigateFromBottomTab(
+      navigate,
+      { pathname: '/demo-example/page-b', search: '' },
+      '/demo-example/page-c'
+    );
     expect(navigated).toEqual(['/demo-example/page-b', '/demo-example/page-c']);
+    expect(getMobileNavigationCanGoBack()).toBe(true);
+    expect(formatMobileNavEntry(popMobileNavigationEntry()! as RouteMobileNavEntry)).toBe(
+      '/demo-example/page-b'
+    );
+    expect(formatMobileNavEntry(popMobileNavigationEntry()! as RouteMobileNavEntry)).toBe(
+      '/demo-example/page-a'
+    );
     expect(getMobileNavigationCanGoBack()).toBe(false);
   });
 
@@ -138,7 +151,7 @@ describe('mobileNavigationStore', () => {
     expect(getMobileNavigationCanGoBack()).toBe(false);
   });
 
-  it('bottom-tab reset clears component-tab entries together with route entries', () => {
+  it('resetMobileNavigationStack clears component-tab entries together with route entries', () => {
     pushMobileNavigationEntry({
       kind: 'component-tab',
       pageId: 'product-page',

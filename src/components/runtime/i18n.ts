@@ -1,5 +1,6 @@
 import i18next, { type i18n as I18nInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import defaultI18n from '../locales/i18n';
 import enCommon from '../locales/resources/locales/en/common.json';
 import enWorkbench from '../locales/resources/locales/en/workbench.json';
 import enEditor from '../locales/resources/locales/en/editor.json';
@@ -88,4 +89,41 @@ export function createGeniAppI18n(locale: string = 'en'): I18nInstance {
   });
   return instance;
 }
+
+const bundledResources: Record<GeniAppLocale, Record<string, unknown>> = { en, zh };
+
+/**
+ * Renderers that translate through the global default i18n instance (@/locales/i18n, plain
+ * i18n.t calls instead of the useTranslation context) rely on its http-backend fetching
+ * /locales/{lng}/{ns}.json from the site root. Exported standalone apps serve no such
+ * endpoint — the fetch returns the app shell's HTML, namespace loading fails, and every one
+ * of those texts falls back to its English defaultValue (task #187). Seed the default
+ * instance with the same bundled resources the embedded instance uses so those lookups
+ * resolve offline. Hosts with a working backend (Workbench view mode) are unaffected: the
+ * seeded content is identical to what their /locales endpoint serves (parity-checked).
+ */
+export function seedDefaultI18nWithBundledResources(): void {
+  for (const lng of Object.keys(bundledResources) as GeniAppLocale[]) {
+    for (const [ns, bundle] of Object.entries(bundledResources[lng])) {
+      defaultI18n.addResourceBundle(lng, ns, bundle, true, true);
+    }
+  }
+}
+
+/**
+ * Standalone shells drive the UI language from the app config, not the default instance's
+ * detector — keep the default instance in sync so default-instance t() callers follow the
+ * same language as the useTranslation context. Returns the changeLanguage promise (if any)
+ * so callers/tests can await the switch.
+ */
+export function syncDefaultI18nLanguage(locale: string): Promise<unknown> | undefined {
+  const target = normalizeGeniAppLocale(locale);
+  if (defaultI18n.language === target) return undefined;
+  return defaultI18n.changeLanguage(target);
+}
+
+// Seed at import time (not in an effect): renderers calling the default instance's t() are
+// not subscribed to it, so resources must be in the store before their first render. The
+// standalone shell (GeniAppWorkbench) keeps the instance's language in sync separately.
+seedDefaultI18nWithBundledResources();
 

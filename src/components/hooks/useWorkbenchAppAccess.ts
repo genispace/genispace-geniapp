@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import apiClient from '@/lib/api/apiClient';
+import { getAuthToken } from '../shared/platform-api/auth/tokenStorage';
 import { useEditMode } from '@/runtime/runtime-mode';
 import { useGeniAppHost } from '../runtime/GeniAppHostContext';
 import {
@@ -14,6 +15,77 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 export function isUuid(value: string | undefined | null): value is string {
   return !!value && UUID_PATTERN.test(value);
 }
+
+// ---- Platform-API fallback for dedicated-instance domains ------------------
+// Dedicated GeniApp hosting domains proxy only data routes (e.g.
+// /api/datasources/managed/*); every other /api/* path falls through to the app
+// container, which answers plain-text 404 "API route not found". The role-resolution
+// routes below are platform APIs, unreachable same-origin there, so on that signature
+// 404 we retry against the token issuer (the platform API that issued the JWT).
+// Platform business errors are JSON, so a string 404 body reliably identifies the
+// infra case and never double-hits the platform on a real business 404.
+
+type ApiErrorLike = { response?: { status?: number; data?: unknown } };
+
+const isRouteMissing404 = (error: unknown): boolean => {
+  const response = (error as ApiErrorLike)?.response;
+  return response?.status === 404 && typeof response.data === 'string';
+};
+
+const getTokenIssuerBase = (): string | null => {
+  const token = getAuthToken();
+  if (!token) return null;
+  try {
+    const [, payload] = token.split('.');
+    if (!payload) return null;
+    const claims = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    const iss = claims?.iss;
+    if (typeof iss !== 'string' || !/^https?:\/\//.test(iss)) return null;
+    return iss.replace(/\/+$/, '');
+  } catch {
+    return null;
+  }
+};
+
+const buildQueryString = (params?: Record<string, unknown>): string => {
+  if (!params) return '';
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) search.set(key, String(value));
+  });
+  const qs = search.toString();
+  return qs ? `?${qs}` : '';
+};
+
+const platformFetchFallback = async <T>(
+  path: string,
+  params?: Record<string, unknown>
+): Promise<T> => {
+  const base = getTokenIssuerBase();
+  if (!base) throw new Error('platform-api fallback unavailable: token issuer unknown');
+  const response = await fetch(`${base}/api${path}${buildQueryString(params)}`, {
+    headers: {
+      Authorization: `Bearer ${getAuthToken() ?? ''}`,
+      'X-Language': localStorage.getItem('i18nextLng') || 'en',
+    },
+  });
+  if (!response.ok) {
+    const error = new Error(`platform-api fallback failed: ${response.status}`) as Error & ApiErrorLike;
+    error.response = { status: response.status, data: await response.text().catch(() => null) };
+    throw error;
+  }
+  return (await response.json()) as T;
+};
+
+const platformGet = async <T>(path: string, params?: Record<string, unknown>): Promise<T> => {
+  try {
+    // Pass params positionally only when present: callers/tests assert exact arg lists.
+    return (await (params === undefined ? apiClient.get(path) : apiClient.get(path, params))) as T;
+  } catch (error) {
+    if (!isRouteMissing404(error)) throw error;
+    return platformFetchFallback<T>(path, params);
+  }
+};
 
 /**
  * Current user's access within the workbench's owning application.
@@ -63,8 +135,7 @@ function resolveHostApplicationId(identifier: string): Promise<string | null> {
   if (cached !== undefined) return Promise.resolve(cached);
   let p = hostAppIdInflight.get(identifier);
   if (!p) {
-    p = apiClient
-      .get('/applications/my-installations', { limit: 100 })
+    p = platformGet('/applications/my-installations', { limit: 100 })
       .then(r => {
         const items =
           ((r as { data?: { items?: MyInstallationsItem[] } })?.data?.items ?? []) as MyInstallationsItem[];
@@ -172,7 +243,7 @@ const inflight = new Map<string, Promise<Omit<WorkbenchAppAccess, 'loading'>>>()
 
 async function fetchAppAccess(applicationId: string): Promise<Omit<WorkbenchAppAccess, 'loading'>> {
   // workbench apiClient.get returns the raw backend body ({ success, data }) — see baseApiClient.
-  const resp = (await apiClient.get(`/applications/${applicationId}/users/me/access`)) as {
+  const resp = (await platformGet(`/applications/${applicationId}/users/me/access`)) as {
     data?: { isUser?: boolean; roles?: Array<{ code?: string }>; permissionCodes?: string[] };
   };
   const d = resp?.data ?? {};

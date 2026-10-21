@@ -1647,7 +1647,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
 
     if (chartType === 'overlapBar') {
       const toNum = (v: unknown): number | undefined => { const n = Number(v); return Number.isFinite(n) ? n : undefined; };
-      const fmtVal = (v: unknown) => formatCompactCurrency(v, 'CNY');
+      const fmtVal = (v: unknown, currency?: unknown) => formatCompactCurrency(v, currency ?? 'CNY');
       // Bar-top label: compact to thousands (K) — keeps the ÷1000 calculation but caps the unit at K
       // (never M), no currency symbol, no decimals. e.g. 12,930,000 -> "12,930K". Tooltip + summary
       // keep the full compact ¥ format via fmtVal.
@@ -1850,7 +1850,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
                               return (
                                 <div key={k} className="flex items-center gap-1.5">
                                   <span className="inline-block h-2 w-2 rounded-sm" style={{ background: s.color }} />
-                                  {s.name}: <span className="tabular-nums">{row[s.key] != null ? fmtVal(row[s.key]) : '—'}</span>
+                                  {s.name}: <span className="tabular-nums">{row[s.key] != null ? fmtVal(row[s.key], row.currency) : '—'}</span>
                                   {hasComp && (
                                     Number.isFinite(comp)
                                       ? <span className={cn('tabular-nums', comp >= 0 ? 'text-green-600' : 'text-red-600')}>{comp >= 0 ? '+' : ''}{comp.toFixed(1)}%</span>
@@ -1873,7 +1873,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
                           </>
                         ) : (
                           <>
-                        <div className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: valueColor }} />{valueName}: <span className="tabular-nums">{row[overlapValueKey] != null ? fmtVal(row[overlapValueKey]) : '—'}</span></div>
+                        <div className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: valueColor }} />{valueName}: <span className="tabular-nums">{row[overlapValueKey] != null ? fmtVal(row[overlapValueKey], row.currency) : '—'}</span></div>
                         {(() => {
                           // YoY line mirrors the bar-top comp% label (0706 acceptance #3).
                           // compKey set but value null/non-numeric (zero or missing LY base) → muted '—'.
@@ -1904,11 +1904,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
                           const ach = overlapTargetAchievement && Number.isFinite(den) && den > 0 && Number.isFinite(num)
                             ? ` (${((num / den) * 100).toFixed(1)}%)` : '';
                           return (
-                            <div key={k} className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: tg.color }} />{tg.name}: <span className="tabular-nums">{fmtVal(row[tg.dataKey])}{ach}</span></div>
+                            <div key={k} className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: tg.color }} />{tg.name}: <span className="tabular-nums">{fmtVal(row[tg.dataKey], row.currency)}{ach}</span></div>
                           );
                         })}
                         {showLine && overlapLineKey && row[overlapLineKey] != null && (
-                          <div className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: overlapLineColor }} />{lineName}: <span className="tabular-nums">{fmtVal(row[overlapLineKey])}</span></div>
+                          <div className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm" style={{ background: overlapLineColor }} />{lineName}: <span className="tabular-nums">{fmtVal(row[overlapLineKey], row.currency)}</span></div>
                         )}
                           </>
                         )}

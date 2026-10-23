@@ -109,12 +109,20 @@ function TrendBadge({ value, suffix = '%', onDark, fontSize }: { value: unknown;
  * - The inner `width: max-content` wrapper is essential: without it the child's scrollWidth CLAMPS at
  *   the container width as soon as the shrunk content fits, making natural = clientWidth/scaleRef an
  *   overestimate that ratchets the scale to the floor with no way back up.
+ * - The row keeps its scale=1 natural height as min-height: shrinking the FONT no longer shrinks the
+ *   ROW, so sibling cards with the same row structure (e.g. carousel hero cards whose text differs in
+ *   width) stay equal height and the vertical rhythm doesn't jitter with the data. The height is
+ *   captured ONLY while scaleRef is still 1 (content unscaled, measurement exact) — de-naturing a
+ *   post-scale scrollHeight is unreliable because not everything scales (e.g. the trend icon floor
+ *   of 9px inflates the divided value), which would give sibling rows different min-heights.
  */
 const AUTOFIT_MIN_SCALE = 0.45;
 function AutoFitBox({ deps, fill, children }: { deps: unknown[]; fill?: boolean; children: (scale: number) => React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
   const scaleRef = React.useRef(1);
+  const minHRef = React.useRef(0);
   const [scale, setScale] = React.useState(1);
+  const [minH, setMinH] = React.useState(0);
   React.useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -133,6 +141,27 @@ function AutoFitBox({ deps, fill, children }: { deps: unknown[]; fill?: boolean;
         natural = textW / scaleRef.current + gapPx * Math.max(0, kids.length - 1);
       } else {
         natural = content.scrollWidth / scaleRef.current;
+      }
+      // Capture the natural (scale=1) row height as the row's min-height — but ONLY while the
+      // content is still unscaled: once fonts are shrunk, fixed-px elements (the trend icon's 9px
+      // floor) stop scaling, so scrollHeight/scaleRef would overestimate and sibling cards would
+      // capture different min-heights. Guarded against sub-pixel oscillation from the
+      // ResizeObserver re-firing when applying min-height grows the outer box.
+      // Measure the actual ROW element (in non-fill mode the firstElementChild is the max-content
+      // wrapper; the row is its child) and include its vertical margins (rows carry mt-1.5) —
+      // scrollHeight/getBoundingClientRect exclude own margins, so without them the floor lands
+      // ~6px under the true natural height and a scaled sibling row still ends up shorter.
+      if (scaleRef.current === 1) {
+        const rowEl = ((fill ? content : content.firstElementChild) || content) as HTMLElement;
+        const cs = getComputedStyle(rowEl);
+        const naturalH =
+          rowEl.getBoundingClientRect().height +
+          (parseFloat(cs.marginTop) || 0) +
+          (parseFloat(cs.marginBottom) || 0);
+        if (naturalH > 0 && Math.abs(naturalH - minHRef.current) > 0.5) {
+          minHRef.current = naturalH;
+          setMinH(naturalH);
+        }
       }
       const cw = el.clientWidth;
       if (cw <= 0 || natural <= 0) return;
@@ -153,7 +182,7 @@ function AutoFitBox({ deps, fill, children }: { deps: unknown[]; fill?: boolean;
   // relies on its content overflowing (nowrap, no shrink) instead of a max-content wrapper — so the
   // row's original spread look survives scaling.
   return (
-    <div ref={ref} className="overflow-hidden">
+    <div ref={ref} className="overflow-hidden" style={minH > 0 ? { minHeight: minH } : undefined}>
       {fill ? children(scale) : <div style={{ width: 'max-content' }}>{children(scale)}</div>}
     </div>
   );

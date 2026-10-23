@@ -139,6 +139,10 @@ const MetricCarouselRenderer: React.FC<MetricCarouselRendererProps> = ({
           // render their shell as display:contents and carry the same var on each card, so every
           // card scrolls as its own item. The fillCell h-full/min-h-0 is kept the same way.
           '[&>*]:flex-[0_0_var(--mc-item-w)] [&>*]:max-w-[var(--mc-item-w)]',
+          // Hero cards fill the stretched item shell vertically: sibling cards with different content
+          // heights (e.g. autoFit rows that shrank their fonts) still render equal-height card bodies.
+          // flex-1 works through the shell's flex-col; h-full is the fallback for wrapped variants.
+          '[&_.hero-card]:h-full [&_.hero-card]:flex-1',
           fillCell && 'min-h-0 flex-1 [&>*]:h-full [&>*]:min-h-0',
           hideScrollbar && '[&::-webkit-scrollbar]:hidden'
         )}

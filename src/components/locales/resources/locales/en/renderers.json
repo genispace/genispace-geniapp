@@ -777,7 +777,15 @@
       "level_medium": "Medium",
       "level_low": "Low",
       "attachments_label": "Attachments",
+      "attachments_hint": "Optional: attach screenshots or photos to help the support team.",
+      "attachments_suggested": "(suggested)",
       "choose_files": "Choose files"
+    },
+    "no_attachment": {
+      "title": "Submit without an attachment?",
+      "description": "Attaching a screenshot or photo helps the support team resolve the issue faster.",
+      "back": "Go back",
+      "submit": "Submit anyway"
     },
     "detail": {
       "back": "Back to submit",

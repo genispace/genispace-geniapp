@@ -763,7 +763,15 @@
       "level_medium": "中",
       "level_low": "低",
       "attachments_label": "附件",
+      "attachments_hint": "可选：建议附上截图或照片，帮助支持团队更快定位问题。",
+      "attachments_suggested": "（建议）",
       "choose_files": "选择文件"
+    },
+    "no_attachment": {
+      "title": "确定不带附件提交吗？",
+      "description": "附上截图或照片可以帮助支持团队更快定位问题。",
+      "back": "返回补充",
+      "submit": "仍要提交"
     },
     "detail": {
       "back": "返回提交",

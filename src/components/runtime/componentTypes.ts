@@ -3151,7 +3151,8 @@ export const componentTypes: ComponentType[] = [
     description: t('service_desk_reporter.description', 'Submit dashboard and store IT issues to an installed Service Desk GeniApp'),
     icon: 'life-buoy',
     propTypes: {
-      applicationId: { type: 'string', label: 'Service Desk application ID', required: true },
+      applicationId: { type: 'string', label: 'Service Desk application ID' },
+      applicationIdentifier: { type: 'string', label: 'Service Desk application identifier (resolves the application ID at runtime)' },
       intakeDatasourceId: { type: 'string', label: 'Intake configuration datasource', required: true },
       submitDatasourceId: { type: 'string', label: 'Ticket submission datasource', required: true },
       myTicketsDatasourceId: { type: 'string', label: 'Requester tickets datasource' },
@@ -3167,6 +3168,7 @@ export const componentTypes: ComponentType[] = [
       maxFileSizeMb: { type: 'number', label: 'Maximum file size (MB)', defaultValue: 10 },
       acceptedFileTypes: { type: 'string', label: 'Accepted file types', defaultValue: 'image/*,.pdf,.txt,.csv,.xlsx' },
       defaultCategoryId: { type: 'string', label: 'Default category ID', defaultValue: '' },
+      defaultCategoryCode: { type: 'string', label: 'Default category code (resolves the category ID at runtime)', defaultValue: '' },
       defaultImpact: { type: 'string', label: 'Default impact', defaultValue: 'medium', options: [{ label: 'High', value: 'high' }, { label: 'Medium', value: 'medium' }, { label: 'Low', value: 'low' }] },
       defaultUrgency: { type: 'string', label: 'Default urgency', defaultValue: 'medium', options: [{ label: 'High', value: 'high' }, { label: 'Medium', value: 'medium' }, { label: 'Low', value: 'low' }] },
       contextParams: {

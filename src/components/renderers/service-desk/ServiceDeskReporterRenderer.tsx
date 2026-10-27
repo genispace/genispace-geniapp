@@ -16,6 +16,8 @@ import apiClient from '@/lib/api/apiClient';
 
 export interface ServiceDeskReporterProps {
   applicationId?: string;
+  /** Stable application identifier (e.g. "service-desk"); resolves the environment-specific application UUID at runtime when applicationId is not set. */
+  applicationIdentifier?: string;
   intakeDatasourceId?: string;
   submitDatasourceId?: string;
   myTicketsDatasourceId?: string;
@@ -31,6 +33,8 @@ export interface ServiceDeskReporterProps {
   maxFileSizeMb?: number;
   acceptedFileTypes?: string;
   defaultCategoryId?: string;
+  /** Stable category code (e.g. "general-it"); resolves the environment-specific category UUID at runtime. */
+  defaultCategoryCode?: string;
   defaultImpact?: 'high' | 'medium' | 'low';
   defaultUrgency?: 'high' | 'medium' | 'low';
   contextParams?: Array<{ pageParam: string; contextKey: string }>;
@@ -231,6 +235,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   const { t, i18n } = useTranslation('renderers');
   const {
     applicationId,
+    applicationIdentifier,
     intakeDatasourceId,
     submitDatasourceId,
     myTicketsDatasourceId,
@@ -246,6 +251,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     maxFileSizeMb = 10,
     acceptedFileTypes = 'image/*,.pdf,.txt,.csv,.xlsx',
     defaultCategoryId = '',
+    defaultCategoryCode = '',
     defaultImpact = 'medium',
     defaultUrgency = 'medium',
     contextParams,
@@ -271,6 +277,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   const [csatScore, setCsatScore] = useState<number | null>(null);
   const [csatComment, setCsatComment] = useState('');
   const [receipt, setReceipt] = useState('');
+  const [noAttachmentConfirm, setNoAttachmentConfirm] = useState(false);
   const [preview, setPreview] = useState<{
     attachment: PublicAttachment;
     url?: string;
@@ -284,13 +291,24 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   // ticket id in a ref so it can silently refresh the detail as well.
   const selectedIdRef = useRef<string | null>(null);
   selectedIdRef.current = selected?.id ?? null;
+  // Identifier -> resolution results, cached per identifier so the 30s
+  // auto-refresh does not re-query the application list every cycle.
+  const applicationIdCacheRef = useRef<{
+    identifier: string;
+    id: string;
+    codes: string[] | null;
+    denied: boolean;
+  }>({ identifier: '', id: '', codes: null, denied: false });
+  // The application UUID that grants/uploads must reference: the explicit prop,
+  // or the identifier resolved during load().
+  const effectiveApplicationIdRef = useRef<string>(applicationId || '');
 
   // Re-apply the configured defaults when they change (e.g. edited in the property panel).
   useEffect(() => {
     setForm((current) => ({ ...current, category_id: defaultCategoryId, impact: defaultImpact, urgency: defaultUrgency }));
   }, [defaultCategoryId, defaultImpact, defaultUrgency]);
 
-  const configured = Boolean(applicationId && intakeDatasourceId && submitDatasourceId);
+  const configured = Boolean((applicationId || applicationIdentifier) && intakeDatasourceId && submitDatasourceId);
   const detailConfigured = Boolean(
     requesterDetailDatasourceId && addActivityDatasourceId && requesterActionDatasourceId
   );
@@ -330,7 +348,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   }, [contextParams, contextBrandParam, contextDashboardParam, contextStoreParam, contextWidgetParam, i18n?.language, pageParams]);
 
   const load = async (silent = false) => {
-    if (!configured || !applicationId) {
+    if (!configured) {
       setAllowed(false);
       setLoading(false);
       return;
@@ -338,23 +356,74 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     if (!silent) setLoading(true);
     try {
       setLoadError(false);
-      let codes: string[];
-      try {
-        const access = await apiClient.get(`/applications/${applicationId}/users/me/access`);
-        codes = accessCodes(access);
-      } catch (reason) {
-        // The access probe targets the owning (service-desk) application; when that
-        // application is not installed/visible in the host space the endpoint 404s.
-        // That must not kill the reporter: the embedded ticket form is a requester
-        // surface backed by shared datasources whose server-side authorization
-        // still guards submission, so fall back to the requester permission and keep
-        // loading. Explicit 401/403 keeps hiding the component as before.
-        const status = (reason as { response?: { status?: number } })?.response?.status;
-        if (status === 401 || status === 403) {
+      // Resolve the owning service-desk application UUID: an explicit applicationId
+      // wins, otherwise the stable identifier is resolved against this environment,
+      // so one page config works on every platform without editing UUIDs.
+      let effectiveApplicationId = applicationId || '';
+      let codes: string[] | null = null;
+      if (!effectiveApplicationId && applicationIdentifier) {
+        if (applicationIdCacheRef.current.identifier !== applicationIdentifier) {
+          const resolved = { identifier: applicationIdentifier, id: '', codes: null as string[] | null, denied: false };
+          try {
+            const response = await apiClient.get('/applications', { search: applicationIdentifier, limit: 100 });
+            // The search spans spaces; probe each exact identifier match and keep the
+            // one that answers the access check — candidates from other spaces 404.
+            const candidates = rowsFromResponse(response).filter((row) => row.identifier === applicationIdentifier);
+            for (const candidate of candidates) {
+              const candidateId = String(candidate.id || '');
+              if (!candidateId) continue;
+              try {
+                const access = await apiClient.get(`/applications/${candidateId}/users/me/access`);
+                resolved.id = candidateId;
+                resolved.codes = accessCodes(access);
+                break;
+              } catch (reason) {
+                const status = (reason as { response?: { status?: number } })?.response?.status;
+                if (status === 401 || status === 403) {
+                  resolved.id = candidateId;
+                  resolved.denied = true;
+                  break;
+                }
+              }
+            }
+          } catch {
+            // Best-effort (e.g. the caller lacks space.application.read): fall through
+            // to the degraded requester-only mode instead of hiding the whole form.
+          }
+          applicationIdCacheRef.current = resolved;
+        }
+        const cached = applicationIdCacheRef.current;
+        effectiveApplicationId = cached.id;
+        codes = cached.codes;
+        if (cached.denied) {
           setAllowed(false);
           return;
         }
-        codes = ['service-desk.intake.submit'];
+      }
+      effectiveApplicationIdRef.current = effectiveApplicationId;
+      if (!codes) {
+        if (!effectiveApplicationId) {
+          // No resolvable application: same degraded mode as an unreachable probe.
+          codes = ['service-desk.intake.submit'];
+        } else {
+          try {
+            const access = await apiClient.get(`/applications/${effectiveApplicationId}/users/me/access`);
+            codes = accessCodes(access);
+          } catch (reason) {
+            // The access probe targets the owning (service-desk) application; when that
+            // application is not installed/visible in the host space the endpoint 404s.
+            // That must not kill the reporter: the embedded ticket form is a requester
+            // surface backed by shared datasources whose server-side authorization
+            // still guards submission, so fall back to the requester permission and keep
+            // loading. Explicit 401/403 keeps hiding the component as before.
+            const status = (reason as { response?: { status?: number } })?.response?.status;
+            if (status === 401 || status === 403) {
+              setAllowed(false);
+              return;
+            }
+            codes = ['service-desk.intake.submit'];
+          }
+        }
       }
       const canSubmit = codes.includes('service-desk.intake.submit');
       setPermissionCodes(codes);
@@ -370,13 +439,23 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
         description: row.description ? String(row.description) : undefined
       }));
       setCategories(categoryRows);
-      // Drop the configured default category if it no longer exists in the intake config.
-      setForm((current) => (
-        current.category_id && current.category_id === defaultCategoryId
-          && !categoryRows.some((category) => category.id === current.category_id)
-          ? { ...current, category_id: '' }
-          : current
-      ));
+      // Drop a configured default category id that no longer exists in the intake
+      // config, and resolve the code-based default (stable across environments) for
+      // a pristine form. A form the user already touched keeps their selection.
+      setForm((current) => {
+        const defaultIdValid = Boolean(defaultCategoryId)
+          && categoryRows.some((category) => category.id === defaultCategoryId);
+        const codeMatch = defaultCategoryCode
+          ? categoryRows.find((category) => category.code === defaultCategoryCode)
+          : undefined;
+        if (current.category_id && current.category_id === defaultCategoryId && !defaultIdValid) {
+          return { ...current, category_id: codeMatch?.id || '' };
+        }
+        if (!current.category_id && codeMatch && !current.title && !current.description) {
+          return { ...current, category_id: codeMatch.id };
+        }
+        return current;
+      });
       setRecent(rowsFromResponse(recentResponse).map((row) => ({
         id: String(row.id), number: String(row.number), title: String(row.title),
         state: String(row.state), priority: String(row.priority),
@@ -418,7 +497,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
       window.removeEventListener('focus', refreshVisibleTickets);
       document.removeEventListener('visibilitychange', refreshVisibleTickets);
     };
-  }, [applicationId, intakeDatasourceId, myTicketsDatasourceId, showRecentTickets, defaultCategoryId]);
+  }, [applicationId, applicationIdentifier, intakeDatasourceId, myTicketsDatasourceId, showRecentTickets, defaultCategoryId, defaultCategoryCode]);
 
   const loadDetail = async (ticketId: string, silent = false): Promise<RequesterDetail | null> => {
     if (!requesterDetailDatasourceId) return null;
@@ -479,7 +558,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
 
   const uploadAttachment = async (file: File): Promise<UploadedAttachment> => {
     const grant = await apiClient.post<{ id: string }>('/storage/upload-grants', {
-      applicationId,
+      applicationId: effectiveApplicationIdRef.current,
       permissionCode: 'service-desk.attachment.upload',
       purpose: 'ticket-attachments',
       fileName: file.name,
@@ -506,8 +585,19 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
     };
   };
 
-  const submit = async () => {
+  const submit = () => {
     if (!submitDatasourceId || !form.title.trim() || !form.description.trim()) return;
+    // Attachments are optional but encouraged: submitting without one asks once.
+    if (allowAttachments && files.length === 0) {
+      setNoAttachmentConfirm(true);
+      return;
+    }
+    void doSubmit();
+  };
+
+  const doSubmit = async () => {
+    if (!submitDatasourceId) return;
+    setNoAttachmentConfirm(false);
     setSubmitting(true);
     setReceipt('');
     try {
@@ -619,7 +709,7 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
 
   const fetchAccessUrl = async (attachment: PublicAttachment, disposition: 'download' | 'inline') => {
     const response = await apiClient.post('/storage/access-grants', {
-      applicationId,
+      applicationId: effectiveApplicationIdRef.current,
       fileId: attachment.storage_file_id,
       permissionCode: 'service-desk.attachment.read.own',
       disposition
@@ -696,21 +786,21 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
         </CardHeader>
         <CardContent className="p-5">
           {detailLoading ? <div className="flex min-h-48 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin" /></div> : (
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="space-y-5">
-                <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{selected.title}</h3><p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{selected.description}</p></section>
+                <section className="rounded-xl border border-border p-4"><h3 className="font-semibold">{selected.title}</h3><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-muted-foreground">{selected.description}</p></section>
                 {selected.resolution_summary && <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900"><div className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4" />{t('service_desk_reporter.detail.resolution_summary', 'Resolution summary')}</div><p className="mt-2 text-sm">{selected.resolution_summary}</p>{selected.auto_close_at && <p className="mt-2 text-xs">{t('service_desk_reporter.detail.auto_close_hint', 'If not confirmed, the ticket will close automatically at {{time}}.', { time: new Date(selected.auto_close_at).toLocaleString() })}</p>}</section>}
-                {selected.related_records.length > 0 && <section className="rounded-xl border border-border p-4"><div className="flex items-center gap-2"><Link2 className="h-4 w-4 text-primary" /><h3 className="font-semibold">{t('service_desk_reporter.related.title', 'Related work progress')}</h3></div><p className="mt-1 text-xs leading-5 text-muted-foreground/60">{t('service_desk_reporter.related.description', 'Only work explicitly shared by the support team is shown here. You do not need access to internal support tools.')}</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{selected.related_records.map((record) => <article key={record.id} className="rounded-lg border border-border bg-muted/20 p-3"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{record.number}</span><span className="rounded-full bg-background px-2 py-0.5 text-[11px]">{relatedRecordStatusLabel(record.state, record.state_label, t)}</span></div><p className="mt-2 text-sm font-medium">{record.label}</p>{record.last_verified_at && <p className="mt-1 text-xs text-muted-foreground/60">{t('service_desk_reporter.related.last_verified', 'Last confirmed {{time}}', { time: new Date(record.last_verified_at).toLocaleString() })}</p>}</article>)}</div></section>}
+                {selected.related_records.length > 0 && <section className="rounded-xl border border-border p-4"><div className="flex items-center gap-2"><Link2 className="h-4 w-4 text-primary" /><h3 className="font-semibold">{t('service_desk_reporter.related.title', 'Related work progress')}</h3></div><p className="mt-1 text-xs leading-5 text-muted-foreground/60">{t('service_desk_reporter.related.description', 'Only work explicitly shared by the support team is shown here. You do not need access to internal support tools.')}</p><div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">{selected.related_records.map((record) => <article key={record.id} className="rounded-lg border border-border bg-muted/20 p-3"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{record.number}</span><span className="rounded-full bg-background px-2 py-0.5 text-[11px]">{relatedRecordStatusLabel(record.state, record.state_label, t)}</span></div><p className="mt-2 text-sm font-medium">{record.label}</p>{record.last_verified_at && <p className="mt-1 text-xs text-muted-foreground/60">{t('service_desk_reporter.related.last_verified', 'Last confirmed {{time}}', { time: new Date(record.last_verified_at).toLocaleString() })}</p>}</article>)}</div></section>}
                 <section>
                   <h3 className="font-semibold">{t('service_desk_reporter.detail.public_progress', 'Public progress')}</h3>
                   <div className="mt-3 space-y-3 border-l border-border pl-5">
-                    {!createdActivity && orphanAttachments.length > 0 && <article className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.ticket_attachments', 'Ticket attachments')}</div><div className="mt-2 grid gap-2 sm:grid-cols-2">{orphanAttachments.map(renderAttachmentCard)}</div></article>}
+                    {!createdActivity && orphanAttachments.length > 0 && <article className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{t('service_desk_reporter.detail.ticket_attachments', 'Ticket attachments')}</div><div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">{orphanAttachments.map(renderAttachmentCard)}</div></article>}
                     {selected.activities.map((activity) => {
                       const activityAttachments = selected.attachments.filter((attachment) => attachment.activity_id === activity.id);
                       const shownAttachments = activity.id === createdActivity?.id
                         ? [...activityAttachments, ...orphanAttachments]
                         : activityAttachments;
-                      return <article key={activity.id} className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{activity.activity_type} · {new Date(activity.created_at).toLocaleString()}</div>{activity.body && <p className="mt-1 text-sm">{activity.body}</p>}{shownAttachments.length > 0 && <div className="mt-2 grid gap-2 sm:grid-cols-2">{shownAttachments.map(renderAttachmentCard)}</div>}</article>;
+                      return <article key={activity.id} className="relative"><span className="absolute -left-[24px] top-1.5 h-2 w-2 rounded-full bg-primary" /><div className="text-xs text-muted-foreground/60">{activity.activity_type} · {new Date(activity.created_at).toLocaleString()}</div>{activity.body && <p className="mt-1 break-words text-sm">{activity.body}</p>}{shownAttachments.length > 0 && <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">{shownAttachments.map(renderAttachmentCard)}</div>}</article>;
                     })}
                     {!selected.activities.length && <p className="text-sm text-muted-foreground/60">{t('service_desk_reporter.detail.no_progress', 'No public progress yet')}</p>}
                   </div>
@@ -742,26 +832,38 @@ export default function ServiceDeskReporterRenderer(props: ServiceDeskReporterPr
   }
 
   return (
+    <>
     <Card className="overflow-hidden">
       <CardHeader className="border-b bg-muted/20">
         <div className="flex items-start gap-3"><span className="rounded-lg bg-primary/10 p-2 text-primary"><LifeBuoy className="h-5 w-5" /></span><div><CardTitle className="text-lg">{title}</CardTitle><CardDescription className="mt-1">{description}</CardDescription></div></div>
       </CardHeader>
-      <CardContent className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <CardContent className="grid grid-cols-1 gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-4">
           {receipt && <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"><CheckCircle2 className="h-4 w-4" />{t('service_desk_reporter.submit.receipt_created', 'Created {{receipt}}', { receipt })}</div>}
-          <div className="space-y-2"><Label>{t('service_desk_reporter.form.subject_label', 'Subject')}</Label><Input value={form.title} maxLength={160} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder={t('service_desk_reporter.form.subject_placeholder', 'Briefly describe the issue that needs support')} className="placeholder:text-muted-foreground/60" /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.subject_hint', 'Enter at least 3 non-space characters.')}</p></div>
-          <div className="space-y-2"><Label>{t('service_desk_reporter.form.description_label', 'Detailed description')}</Label><Textarea className="min-h-28 placeholder:text-muted-foreground/60" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder={t('service_desk_reporter.form.description_placeholder', 'Describe the symptoms, the expected result, and what you have already tried')} /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.description_hint', 'Enter at least 3 non-space characters so support can understand the issue.')}</p></div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="space-y-2"><Label>{t('service_desk_reporter.form.subject_label', 'Subject')}<span className="text-red-500" aria-hidden="true"> *</span></Label><Input value={form.title} maxLength={160} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder={t('service_desk_reporter.form.subject_placeholder', 'Briefly describe the issue that needs support')} className="placeholder:text-muted-foreground/60" /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.subject_hint', 'Enter at least 3 non-space characters.')}</p></div>
+          <div className="space-y-2"><Label>{t('service_desk_reporter.form.description_label', 'Detailed description')}<span className="text-red-500" aria-hidden="true"> *</span></Label><Textarea className="min-h-28 placeholder:text-muted-foreground/60" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder={t('service_desk_reporter.form.description_placeholder', 'Describe the symptoms, the expected result, and what you have already tried')} /><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.description_hint', 'Enter at least 3 non-space characters so support can understand the issue.')}</p></div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.category_label', 'Category')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.category_id} onChange={(event) => setForm({ ...form, category_id: event.target.value })}><option value="">{t('service_desk_reporter.form.category_placeholder', 'Select')}</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.impact_label', 'Impact')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.impact} onChange={(event) => setForm({ ...form, impact: event.target.value as typeof form.impact })}><option value="high">{t('service_desk_reporter.form.level_high', 'High')}</option><option value="medium">{t('service_desk_reporter.form.level_medium', 'Medium')}</option><option value="low">{t('service_desk_reporter.form.level_low', 'Low')}</option></select></label>
             <label className="space-y-2 text-sm"><Label>{t('service_desk_reporter.form.urgency_label', 'Urgency')}</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3" value={form.urgency} onChange={(event) => setForm({ ...form, urgency: event.target.value as typeof form.urgency })}><option value="high">{t('service_desk_reporter.form.level_high', 'High')}</option><option value="medium">{t('service_desk_reporter.form.level_medium', 'Medium')}</option><option value="low">{t('service_desk_reporter.form.level_low', 'Low')}</option></select></label>
           </div>
-          {allowAttachments && <div className="space-y-2"><Label>{t('service_desk_reporter.form.attachments_label', 'Attachments')}</Label><label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.form.choose_files', 'Choose files')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, files, setFiles)} /></label>{files.length > 0 && <div className="space-y-1">{files.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm"><Paperclip className="h-3.5 w-3.5" /><span className="min-w-0 flex-1 truncate">{file.name}</span><button type="button" onClick={() => setFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}><X className="h-3.5 w-3.5" /></button></div>)}</div>}</div>}
+          {allowAttachments && <div className="space-y-2"><Label>{t('service_desk_reporter.form.attachments_label', 'Attachments')}<span className="ml-1 text-xs font-normal text-muted-foreground">{t('service_desk_reporter.form.attachments_suggested', '(suggested)')}</span></Label><label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"><FileUp className="h-4 w-4" />{t('service_desk_reporter.form.choose_files', 'Choose files')}<input className="sr-only" type="file" multiple accept={acceptedFileTypes} onChange={(event) => addFiles(event.target.files, files, setFiles)} /></label><p className="text-xs text-muted-foreground/60">{t('service_desk_reporter.form.attachments_hint', 'Optional: attach screenshots or photos to help the support team.')}</p>{files.length > 0 && <div className="space-y-1">{files.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm"><Paperclip className="h-3.5 w-3.5" /><span className="min-w-0 flex-1 truncate">{file.name}</span><button type="button" onClick={() => setFiles((current) => current.filter((_, itemIndex) => itemIndex !== index))}><X className="h-3.5 w-3.5" /></button></div>)}</div>}</div>}
           <Button className="w-full sm:w-auto" disabled={submitting || !formIsValid} onClick={() => void submit()}>{submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}{submitting ? t('service_desk_reporter.submit.submitting', 'Submitting…') : submitButtonText}</Button>
         </div>
         {showRecentTickets && <aside className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0"><h3 className="text-sm font-semibold">{t('service_desk_reporter.recent.title', 'My recent tickets')}</h3><p className="mt-1 text-xs text-muted-foreground/60">{canUseDetail ? t('service_desk_reporter.recent.hint_enabled', 'Click to view progress, reply, and confirm resolution') : t('service_desk_reporter.recent.hint_disabled', 'Detail data sources and requester permissions must also be configured')}</p><div className="mt-3 space-y-2">{recent.map((ticket) => <button type="button" disabled={!canUseDetail || detailLoading} onClick={() => void loadDetail(ticket.id)} key={ticket.id} className="w-full rounded-lg border border-border p-3 text-left transition enabled:hover:border-primary/50"><div className="flex items-center justify-between gap-2"><span className="font-mono text-xs text-muted-foreground">{ticket.number}</span><span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${stateBadgeTone(ticket.state)}`}>{statusLabel(ticket.state, t)}</span></div><p className="mt-2 line-clamp-2 text-sm font-medium">{ticket.title}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{ticket.priority}</p></button>)}{!recent.length && <p className="py-6 text-center text-sm text-muted-foreground/60">{t('service_desk_reporter.recent.empty', 'No submissions yet')}</p>}</div></aside>}
       </CardContent>
     </Card>
+    <Dialog open={noAttachmentConfirm} onOpenChange={setNoAttachmentConfirm}>
+      <DialogContent className="w-[calc(100%-2.5rem)] max-w-md rounded-2xl" aria-describedby={undefined}>
+        <DialogHeader><DialogTitle>{t('service_desk_reporter.no_attachment.title', 'Submit without an attachment?')}</DialogTitle></DialogHeader>
+        <p className="text-center text-sm text-muted-foreground">{t('service_desk_reporter.no_attachment.description', 'Attaching a screenshot or photo helps the support team resolve the issue faster.')}</p>
+        <div className="mt-2 flex flex-col gap-2.5">
+          <Button className="w-full" onClick={() => void doSubmit()}>{t('service_desk_reporter.no_attachment.submit', 'Submit anyway')}</Button>
+          <Button className="w-full" variant="outline" onClick={() => setNoAttachmentConfirm(false)}>{t('service_desk_reporter.no_attachment.back', 'Go back')}</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
 

@@ -536,6 +536,18 @@ interface ChartRendererProps {
   // flex: per-cell flex-grow ratio (default 1). subTextSignedColor: color signed % tokens in sub lines
   //   (+green #16a34a / -red #dc2626, same colors as the comp label). All optional; unset = zero change.
   overlapSummary?: Array<{ label?: string | { zh?: string; en?: string }; field?: string; ratioNum?: string; ratioDen?: string; textField?: string; subTextField?: string; subTextFields?: string[]; secondaryTextField?: string; flex?: number; subTextSignedColor?: boolean; color?: string; fontSize?: number }>;
+  // Table-mode summary strip (task #184, opt-in; when set it takes precedence over overlapSummary).
+  // Pure display: every cell text is pre-formatted in SQL and read verbatim from the FIRST row —
+  // main value field `<rowKey>_<colKey>` (e.g. bm_ly), optional sub-line `<rowKey>_<colKey>_pct`
+  // (e.g. bm_ly_pct, colored by sign: + green / - red). The renderer does no math and no string
+  // assembly. Column target: true → the whole column renders '—' when overlapHideTargets is on.
+  overlapSummaryTable?: {
+    columns: Array<{ key: string; label?: string | { zh?: string; en?: string }; subField?: boolean; target?: boolean }>;
+    rows: Array<{ key: string; label?: string | { zh?: string; en?: string } }>;
+  };
+  overlapSummaryTableEnabled?: boolean;              // Master switch for table mode (default true). false → cell mode (overlapSummary) even when table config is present.
+  overlapSummarySignedUpColor?: string;              // Summary sub-line color for '+x%' (and target achievement %). Default '#16a34a'.
+  overlapSummarySignedDownColor?: string;            // Summary sub-line color for '-x%'. Default '#dc2626'.
   overlapShowSummary?: boolean;                      // Show top summary bar (default true). Skeleton reserves space to avoid layout shift.
   // overlapBar + seriesField (multi-store comparison) only:
   seriesSameColor?: boolean;                         // true = every store bar uses overlapValueColor; false (default) = walk the chart palette per store.
@@ -695,12 +707,12 @@ interface OverlapSummaryCellView {
 
 // Sub-line signed-percent highlighter (overlapSummary subTextSignedColor): wraps each signed %
 // token in a span — '+x.x%' green / '-x.x%' red, same colors as the comp labels above.
-function renderSignedPercentText(text: string): React.ReactNode {
+function renderSignedPercentText(text: string, upColor = '#16a34a', downColor = '#dc2626'): React.ReactNode {
   const parts = text.split(/([+-]\d+(?:\.\d+)?%)/g);
   if (parts.length === 1) return text;
   return parts.map((part, i) =>
     i % 2 === 1
-      ? <span key={i} style={{ color: part.startsWith('-') ? '#dc2626' : '#16a34a' }}>{part}</span>
+      ? <span key={i} style={{ color: part.startsWith('-') ? downColor : upColor }}>{part}</span>
       : part
   );
 }
@@ -793,7 +805,7 @@ export function computeUniformFitScale(measurements: Array<{ available: number; 
   return Math.max(0.5, Math.min(1, scale));
 }
 
-function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin, autoFit = true }: { cells: OverlapSummaryCellView[]; defaultFontSize?: number; sideMargin?: number; autoFit?: boolean }) {
+function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin, autoFit = true, signedUpColor, signedDownColor }: { cells: OverlapSummaryCellView[]; defaultFontSize?: number; sideMargin?: number; autoFit?: boolean; signedUpColor?: string; signedDownColor?: string }) {
   const narrow = useMobileFlowLayout();
   const stripRef = React.useRef<HTMLDivElement | null>(null);
   const valueRefs = React.useRef<Array<HTMLDivElement | null>>([]);
@@ -861,7 +873,7 @@ function OverlapSummaryStrip({ cells, defaultFontSize, sideMargin, autoFit = tru
             )}
             {subLines.map((line, i) => (
               <div key={i} className="whitespace-nowrap tabular-nums text-slate-400 dark:text-neutral-500" style={{ fontSize: Math.max(9, valueSize - 4) }}>
-                {c.signedColor ? renderSignedPercentText(line) : line}
+                {c.signedColor ? renderSignedPercentText(line, signedUpColor, signedDownColor) : line}
               </div>
             ))}
           </div>
@@ -893,6 +905,154 @@ function OverlapSummaryBarSkeleton({ cells, overlapSideMargin }: { cells: number
           </div>
         </React.Fragment>
       ))}
+    </div>
+  );
+}
+
+// ── Table-mode summary strip (task #184) ─────────────────────────────────────
+// Rows × columns grid (e.g. 合计/BM/EC × 当期/LY/LLY/Target+%). Pure display: every text comes
+// pre-formatted from the datasource's FIRST row — main value field `<rowKey>_<colKey>`, sub-line
+// `<rowKey>_<colKey>_pct`. Missing/empty → '—'. Sub-lines are colored by sign via
+// renderSignedPercentText. hideTargets blanks columns flagged target: true.
+interface OverlapSummaryTableView {
+  columns: Array<{ key: string; label: string; sub: boolean; target: boolean }>;
+  rows: Array<{ key: string; label: string; cells: Array<{ text: string; sub?: string }> }>;
+}
+
+// Exported for unit tests.
+export function buildOverlapSummaryTableView(
+  rows: Record<string, unknown>[],
+  opts: {
+    config?: ChartRendererProps['overlapSummaryTable'];
+    hideTargets: boolean;
+    language: string;
+  },
+): OverlapSummaryTableView | null {
+  const cfg = opts.config;
+  if (!cfg || !Array.isArray(cfg.columns) || !cfg.columns.length || !Array.isArray(cfg.rows) || !cfg.rows.length) return null;
+  const first = rows[0] ?? {};
+  const read = (f: string): string => {
+    const raw = first[f];
+    return raw != null && raw !== '' ? String(raw) : '—';
+  };
+  const columns = cfg.columns.map((c) => ({
+    key: c.key,
+    label: resolveBilingualText(c.label, opts.language),
+    sub: c.subField !== false,
+    target: c.target === true,
+  }));
+  return {
+    columns,
+    rows: cfg.rows.map((r) => ({
+      key: r.key,
+      label: resolveBilingualText(r.label, opts.language),
+      cells: columns.map((c) => {
+        if (opts.hideTargets && c.target) return { text: '—' };
+        return { text: read(`${r.key}_${c.key}`), sub: c.sub ? read(`${r.key}_${c.key}_pct`) : undefined };
+      }),
+    })),
+  };
+}
+
+function OverlapSummaryTableStrip({ view, defaultFontSize, sideMargin, autoFit = true, signedUpColor, signedDownColor }: { view: OverlapSummaryTableView; defaultFontSize?: number; sideMargin?: number; autoFit?: boolean; signedUpColor?: string; signedDownColor?: string }) {
+  // Same strip-wide uniform auto-fit protocol as OverlapSummaryStrip: measure every main value
+  // cell and shrink all together when one exceeds its share; re-measure on data change + resize.
+  const stripRef = React.useRef<HTMLDivElement | null>(null);
+  const valueRefs = React.useRef<Array<HTMLDivElement | null>>([]);
+  const [fitScale, setFitScale] = React.useState(1);
+  const fitScaleRef = React.useRef(1);
+  const remeasure = React.useCallback(() => {
+    if (!autoFit) return;
+    const els = valueRefs.current.filter((e): e is HTMLDivElement => !!e);
+    if (!els.length) return;
+    const next = computeUniformFitScale(els.map((el) => ({ available: el.clientWidth, needed: el.scrollWidth / fitScaleRef.current })));
+    if (Math.abs(next - fitScaleRef.current) > 0.01) {
+      fitScaleRef.current = next;
+      setFitScale(next);
+    }
+  }, [autoFit]);
+  const fitKey = view.rows.map((r) => r.cells.map((c) => c.text).join('|')).join('|');
+  React.useLayoutEffect(() => {
+    if (!autoFit) {
+      if (fitScaleRef.current !== 1) {
+        fitScaleRef.current = 1;
+        setFitScale(1);
+      }
+      return;
+    }
+    remeasure();
+  }, [autoFit, fitKey, view.rows.length, view.columns.length, defaultFontSize, remeasure]);
+  React.useEffect(() => {
+    if (!autoFit) return;
+    const el = stripRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [autoFit, remeasure]);
+  const valueSize = Math.max(7, Math.round((defaultFontSize ?? 12) * fitScale));
+  const subSize = Math.max(8, valueSize - 2);
+  const headSize = Math.max(8, valueSize - 3);
+  const cellPad = 'px-0.5 py-[2.5px] whitespace-nowrap tabular-nums';
+  return (
+    <div
+      ref={stripRef}
+      className="mx-1 mb-3 rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-2.5 py-2.5"
+      style={sideMargin != null ? { marginLeft: sideMargin, marginRight: sideMargin } : undefined}
+    >
+      <table className="w-full border-collapse">
+        <thead>
+          <tr>
+            <th className="px-0.5 pb-0.5" />
+            {view.columns.map((c) => (
+              <th key={c.key} className="whitespace-nowrap px-0.5 pb-0.5 text-right font-semibold text-slate-400 dark:text-neutral-500" style={{ fontSize: headSize }}>{c.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {view.rows.map((r, ri) => (
+            <tr key={r.key}>
+              <td className={cn(cellPad, 'border-t border-dashed border-slate-200 dark:border-neutral-700 text-left text-slate-900 dark:text-neutral-100')} style={{ fontSize: valueSize }}>{r.label}</td>
+              {r.cells.map((cell, ci) => (
+                <td key={view.columns[ci].key} className={cn(cellPad, 'border-t border-dashed border-slate-200 dark:border-neutral-700 text-right')}>
+                  <div
+                    ref={(el) => { valueRefs.current[ri * view.columns.length + ci] = el; }}
+                    className="text-slate-900 dark:text-neutral-100"
+                    style={{ fontSize: valueSize }}
+                  >{cell.text}</div>
+                  {cell.sub != null && (
+                    <div className="text-slate-400 dark:text-neutral-500" style={{ fontSize: subSize }}>
+                      {view.columns[ci].target && cell.sub.endsWith('%')
+                        ? <span style={{ color: signedUpColor ?? '#16a34a' }}>{cell.sub}</span>
+                        : renderSignedPercentText(cell.sub, signedUpColor, signedDownColor)}
+                    </div>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Table-mode summary skeleton: header + rows×cols grid, reserves the real table height.
+function OverlapSummaryTableSkeleton({ rows, cols, overlapSideMargin }: { rows: number; cols: number; overlapSideMargin?: number }) {
+  return (
+    <div
+      className="mx-1 mb-3 rounded-xl border border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/60 px-2.5 py-2.5"
+      style={overlapSideMargin != null ? { marginLeft: overlapSideMargin, marginRight: overlapSideMargin } : undefined}
+    >
+      <div className="flex flex-col gap-1.5">
+        {Array.from({ length: Math.max(1, rows) + 1 }).map((_, ri) => (
+          <div key={ri} className="flex items-center gap-2">
+            {Array.from({ length: Math.max(1, cols) + 1 }).map((__, ci) => (
+              <Skeleton key={ci} className={cn('rounded', ri === 0 ? 'h-2.5' : 'h-3.5', ci === 0 ? 'w-8' : 'flex-1')} />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -972,6 +1132,10 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
   overlapSummaryFontSize,
   overlapSummaryAutoFit = true,
   overlapSummary,
+  overlapSummaryTable,
+  overlapSummaryTableEnabled = true,
+  overlapSummarySignedUpColor,
+  overlapSummarySignedDownColor,
   overlapShowSummary = true,
   seriesSameColor = false,
   seriesLegendVisible = true,
@@ -1735,6 +1899,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
         language: cfgLanguage,
         formatValue: fmtVal,
       });
+      const summaryTableView = buildOverlapSummaryTableView((_seriesField ? chartData : normalizedData) as Record<string, unknown>[], {
+        config: overlapSummaryTableEnabled !== false ? overlapSummaryTable : undefined,
+        hideTargets: overlapHideTargets,
+        language: cfgLanguage,
+      });
 
       const canDrill = !!drillDataSourceConfig && !drill;
       const onBarClick = canDrill
@@ -1799,9 +1968,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
               <span>{resolveBilingualText(drillBreadcrumbLabel, cfgLanguage) || title} › <span className="text-indigo-600 dark:text-indigo-300">{drill.label}</span></span>
             </div>
           )}
-          {overlapShowSummary !== false && summaryCells.length > 0 && (
-            <OverlapSummaryStrip cells={summaryCells} defaultFontSize={overlapSummaryFontSize} sideMargin={overlapSideMargin} autoFit={overlapSummaryAutoFit} />
-          )}
+          {overlapShowSummary !== false && (summaryTableView ? (
+            <OverlapSummaryTableStrip view={summaryTableView} defaultFontSize={overlapSummaryFontSize} sideMargin={overlapSideMargin} autoFit={overlapSummaryAutoFit} signedUpColor={overlapSummarySignedUpColor} signedDownColor={overlapSummarySignedDownColor} />
+          ) : summaryCells.length > 0 ? (
+            <OverlapSummaryStrip cells={summaryCells} defaultFontSize={overlapSummaryFontSize} sideMargin={overlapSideMargin} autoFit={overlapSummaryAutoFit} signedUpColor={overlapSummarySignedUpColor} signedDownColor={overlapSummarySignedDownColor} />
+          ) : null)}
           <HorizontalScrollChart
             minWidth={overlapMinWidth}
             height={plotHeight}
@@ -2255,6 +2426,14 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
           formatValue: (v) => formatCompactCurrency(v, 'CNY'),
         },
       );
+      const barSummaryTableView = buildOverlapSummaryTableView(
+        (_seriesField ? chartData : normalizedData) as Record<string, unknown>[],
+        {
+          config: overlapSummaryTableEnabled !== false ? overlapSummaryTable : undefined,
+          hideTargets: overlapHideTargets,
+          language: cfgLanguage,
+        },
+      );
 
       // Two-line bar-top labels (value + YoY%) — only with a seriesField pivot + barCompField;
       // otherwise the single-line showBarNumber label is unchanged.
@@ -2266,9 +2445,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
 
       return (
         <div className={cn('chart-container', fillCell && 'flex min-h-0 flex-1 flex-col')}>
-          {overlapShowSummary !== false && barSummaryCells.length > 0 && (
-            <OverlapSummaryStrip cells={barSummaryCells} defaultFontSize={overlapSummaryFontSize} autoFit={overlapSummaryAutoFit} />
-          )}
+          {overlapShowSummary !== false && (barSummaryTableView ? (
+            <OverlapSummaryTableStrip view={barSummaryTableView} defaultFontSize={overlapSummaryFontSize} autoFit={overlapSummaryAutoFit} signedUpColor={overlapSummarySignedUpColor} signedDownColor={overlapSummarySignedDownColor} />
+          ) : barSummaryCells.length > 0 ? (
+            <OverlapSummaryStrip cells={barSummaryCells} defaultFontSize={overlapSummaryFontSize} autoFit={overlapSummaryAutoFit} signedUpColor={overlapSummarySignedUpColor} signedDownColor={overlapSummarySignedDownColor} />
+          ) : null)}
           <BarChartAdaptiveContainer
             plotHeight={plotHeight}
             isBar={isBar}
@@ -2790,7 +2971,10 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
     chartType === 'line' && Array.isArray(additionalStats) && additionalStats.length > 0;
   // overlapBar summary visibility — config-only (not data-dependent); renderer and skeleton share the same signal for consistent height.
   const showOverlapSummary =
-    chartType === 'overlapBar' && overlapShowSummary !== false && Array.isArray(overlapSummary) && overlapSummary.length > 0;
+    chartType === 'overlapBar' && overlapShowSummary !== false &&
+    ((Array.isArray(overlapSummary) && overlapSummary.length > 0) ||
+      !!(overlapSummaryTableEnabled !== false && overlapSummaryTable && Array.isArray(overlapSummaryTable.columns) && overlapSummaryTable.columns.length > 0 &&
+        Array.isArray(overlapSummaryTable.rows) && overlapSummaryTable.rows.length > 0));
   // overlapBar outer horizontal padding: overlapSideMargin overrides default px-3 (0 = flush to prototype edge).
   const overlapContentPadX = chartType === 'overlapBar' && overlapSideMargin != null ? overlapSideMargin : undefined;
   const isCompactLayoutChart =
@@ -2855,7 +3039,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
         ) : isLoading && chartData.length === 0 ? (
           showOverlapSummary ? (
             <div className={cn('flex w-full flex-col', fillCell && 'min-h-0 flex-1')}>
-              <OverlapSummaryBarSkeleton cells={overlapSummary?.length ?? 0} overlapSideMargin={overlapSideMargin} />
+              {overlapSummaryTableEnabled !== false && overlapSummaryTable && Array.isArray(overlapSummaryTable.rows) && overlapSummaryTable.rows.length > 0 ? (
+                <OverlapSummaryTableSkeleton rows={overlapSummaryTable.rows.length} cols={overlapSummaryTable.columns?.length ?? 0} overlapSideMargin={overlapSideMargin} />
+              ) : (
+                <OverlapSummaryBarSkeleton cells={overlapSummary?.length ?? 0} overlapSideMargin={overlapSideMargin} />
+              )}
               <ChartAreaSkeleton height={plotHeight} chartType={chartType} className={fillCell ? 'flex min-h-0 flex-1 flex-col justify-center' : undefined} />
             </div>
           ) : (

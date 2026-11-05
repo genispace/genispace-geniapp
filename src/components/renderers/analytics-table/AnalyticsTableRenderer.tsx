@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { cn } from '@genispace/shared-utils';
 import { Skeleton } from '../../skeleton';
-import { Search, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react';
+import { Search, ChevronsUpDown, ChevronUp, ChevronDown, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { DatabaseDataSourceConfig } from '@/types/databaseDataSource';
 import type { ComponentParameterConfig } from '@/types/parameters';
@@ -188,6 +188,16 @@ export interface AnalyticsTableRendererProps {
   /** Pivot long-format rows into dynamic per-value columns (see AnalyticsTablePivot). Unset = the
    *  table renders exactly the static `columns`, unchanged behavior. */
   pivot?: AnalyticsTablePivot;
+  /** Inline row expansion (task #207 store-group tab): clicking a body row toggles child rows
+   *  under it. Children are fetched ONCE from `dataSourceConfig` alongside the parent rows (same
+   *  componentParameterConfig bindings) and attached to a parent when
+   *  child[childKeyField] === parent[parentKeyField]. Children render with the same columns,
+   *  keep their SQL order, and do not participate in index numbering/zebra/summary. */
+  expandable?: {
+    dataSourceConfig: DatabaseDataSourceConfig;
+    parentKeyField: string;
+    childKeyField: string;
+  };
   /** Unit note for the numeric values (bilingual, e.g. { en: 'Unit: ¥K' }): rendered right-aligned
    *  in small grey text above the table so pivot/summary value scales are not misread.
    *  Unset = hidden. */
@@ -240,6 +250,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   fetchLimit = 1000,
   wrapLabel = false,
   pivot,
+  expandable,
   unitLabel,
 }) => {
   // Content font sizes (px) — 13px floor for header/body, 12px for badges; raise via props for
@@ -313,6 +324,25 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   // filtered detail rows; without it, pill-filtered tables would show an all-rows total.
   const { rows: summaryRows } = useBoundRows(summaryDataSourceConfig, componentParameterConfig, pageParams, `${id}-sum`, 'detail-summary', rowsExtraParams);
   const summary = summaryRows[0];
+
+  // Inline row expansion: children are fetched once (whole set, same filter bindings) and grouped
+  // by the child key; a parent's expanded state toggles on row click. Child rows attach under their
+  // parent regardless of client-side search/sort of the parent list.
+  const { rows: expandChildRows } = useBoundRows(
+    expandable?.dataSourceConfig ?? null, componentParameterConfig, pageParams, `${id}-expand`, 'expand-rows', { limit: fetchLimit });
+  const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>({});
+  const expandChildMap = useMemo(() => {
+    if (!expandable) return null;
+    const m = new Map<string, Record<string, unknown>[]>();
+    for (const r of expandChildRows) {
+      const k = String(r[expandable.childKeyField] ?? '');
+      if (!k) continue;
+      const arr = m.get(k);
+      if (arr) arr.push(r); else m.set(k, [r]);
+    }
+    return m;
+  }, [expandable, expandChildRows]);
+  const toggleExpand = (key: string) => setExpandedKeys(s => ({ ...s, [key]: !s[key] }));
 
   // Pivot mode: group the long-format rows by `rowKeyField` (first row of each group supplies the
   // label and other static fields) and generate one column per distinct `columnField` value, sorted
@@ -659,8 +689,18 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
               // that same color or the frozen column reads darker than the rest of the row.
               const baseBg = bare ? 'bg-white dark:bg-neutral-800' : 'bg-card';
               const stickyBg = hl ? 'bg-indigo-50 dark:bg-indigo-950/30' : isZebra ? 'bg-slate-50 dark:bg-neutral-900' : baseBg;
+              const rowKey = String(r.row_key ?? i);
+              const expandKey = expandable ? String(r[expandable.parentKeyField] ?? '') : '';
+              const isOpen = !!expandable && !!expandedKeys[expandKey];
+              const kids = isOpen ? (expandChildMap?.get(expandKey) ?? []) : [];
+              // Child frozen cells use one fixed opaque bg (children skip zebra/highlight).
+              const childStickyBg = 'bg-slate-50 dark:bg-neutral-900';
               return (
-                <tr key={String(r.row_key ?? i)} className={cn('border-t border-slate-100 dark:border-neutral-800', hl ? 'bg-indigo-50 dark:bg-indigo-950/30' : isZebra && zebraClassName)}>
+                <React.Fragment key={rowKey}>
+                <tr
+                  className={cn('border-t border-slate-100 dark:border-neutral-800', hl ? 'bg-indigo-50 dark:bg-indigo-950/30' : isZebra && zebraClassName, expandable && 'cursor-pointer')}
+                  onClick={expandable && expandKey ? () => toggleExpand(expandKey) : undefined}
+                >
                   {showIndex && (
                     <td
                       className={cn('sticky left-0 z-10 px-2 py-1.5 text-center tabular-nums', stickyBg, hl ? 'text-indigo-400 dark:text-indigo-300' : 'text-slate-300 dark:text-neutral-600', hl && 'border-l-2 border-indigo-400')}
@@ -673,10 +713,32 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                       className={cn('px-2 py-1.5', cellAlignClass(col), col.sticky && stickyBg, hl && col.sticky && !showIndex && 'border-l-2 border-indigo-400')}
                       style={{ ...colStyle(col), fontSize: cellFs }}
                     >
-                      {renderCell(col, r, hl)}
+                      {col.kind === 'label' && expandable ? (
+                        <span className="flex items-center gap-1">
+                          <ChevronRight className={cn('h-3 w-3 flex-shrink-0 text-slate-400 transition-transform dark:text-neutral-500', isOpen && 'rotate-90 text-indigo-500 dark:text-indigo-300')} />
+                          {renderCell(col, r, hl)}
+                        </span>
+                      ) : renderCell(col, r, hl)}
                     </td>
                   ))}
                 </tr>
+                {kids.map((cr, ci) => (
+                  <tr key={`${rowKey}-c${ci}`} className="border-t border-slate-100 dark:border-neutral-800">
+                    {showIndex && (
+                      <td className={cn('sticky left-0 z-10 px-2 py-1.5', childStickyBg)} style={{ ...indexColStyle, fontSize: cellFs }} />
+                    )}
+                    {effectiveColumns.map(col => (
+                      <td
+                        key={col.key}
+                        className={cn('px-2 py-1.5', cellAlignClass(col), col.sticky && childStickyBg)}
+                        style={{ ...colStyle(col), fontSize: cellFs, ...(col.kind === 'label' ? { paddingLeft: 28 } : {}) }}
+                      >
+                        {renderCell(col, cr)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+                </React.Fragment>
               );
             })}
             {!loading && view.length === 0 && (

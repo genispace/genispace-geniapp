@@ -1534,6 +1534,27 @@ export const componentTypes: ComponentType[] = [
         defaultValue: [],
         description: t('chart.prop_types.overlap_summary.description', 'Overlap bar and column/bar: top summary strip cells { label?, field?, ratioNum?, ratioDen?, textField?, subTextField?, color?, fontSize? }; column/bar with seriesField sums over the pre-pivot rows')
       },
+      overlapSummaryTable: {
+        type: 'object',
+        label: t('chart.prop_types.overlap_summary_table.label', 'Overlap summary table'),
+        description: t('chart.prop_types.overlap_summary_table.description', 'Overlap bar and column/bar: table-mode summary strip { columns: [{ key, label?, subField?, target? }], rows: [{ key, label? }] }. Pure display: cell text comes from pre-formatted fields <rowKey>_<colKey> (and <rowKey>_<colKey>_pct as the sub line) on the first data row; empty → —; columns with target: true render — when hideTargets is on. Takes precedence over overlapSummary when configured')
+      },
+      overlapSummaryTableEnabled: {
+        type: 'boolean',
+        label: t('chart.prop_types.overlap_summary_table_enabled.label', 'Summary table mode'),
+        defaultValue: true,
+        description: t('chart.prop_types.overlap_summary_table_enabled.description', 'Master switch for the table-mode summary strip; false falls back to cell mode (overlapSummary) even when overlapSummaryTable is configured')
+      },
+      overlapSummarySignedUpColor: {
+        type: 'string',
+        label: t('chart.prop_types.overlap_summary_signed_up_color.label', 'Summary +% color'),
+        description: t('chart.prop_types.overlap_summary_signed_up_color.description', 'Sub-line color for positive percentages and target achievement in the overlap summary strip; default #16a34a')
+      },
+      overlapSummarySignedDownColor: {
+        type: 'string',
+        label: t('chart.prop_types.overlap_summary_signed_down_color.label', 'Summary -% color'),
+        description: t('chart.prop_types.overlap_summary_signed_down_color.description', 'Sub-line color for negative percentages in the overlap summary strip; default #dc2626')
+      },
       overlapBarWidth: {
         type: 'number',
         label: t('chart.prop_types.overlap_bar_width.label', 'Overlap bar width (px)'),

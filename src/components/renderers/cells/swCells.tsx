@@ -96,6 +96,10 @@ export interface SwCellProps {
   
   currencyField?: string;
 
+  /** Stacked cells only: row field holding the currency CODE for the sub value (e.g. control-store
+   *  currency for an LY sub-line); falls back to the main cell currency when unset/missing. */
+  subCurrencyField?: string;
+
   compact?: boolean;
 
   decimals?: number;
@@ -194,7 +198,11 @@ function StackedCell({
       }
     }
   } else if (cfg.subField) {
-    const subTxt = `${cfg.subPrefix ?? ''}${formatSwValue(row[cfg.subField], cfg.subFormat ?? cfg.format ?? 'plain', currency)}`;
+    const subCurrency =
+      cfg.subCurrencyField && typeof row[cfg.subCurrencyField] === 'string'
+        ? (row[cfg.subCurrencyField] as string)
+        : currency;
+    const subTxt = `${cfg.subPrefix ?? ''}${formatSwValue(row[cfg.subField], cfg.subFormat ?? cfg.format ?? 'plain', subCurrency)}`;
     subEl = <span className="text-[11px] text-slate-400 dark:text-neutral-500 tabular-nums">{subTxt}</span>;
   }
 

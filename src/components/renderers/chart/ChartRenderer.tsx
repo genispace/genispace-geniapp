@@ -910,7 +910,7 @@ function OverlapSummaryBarSkeleton({ cells, overlapSideMargin }: { cells: number
 }
 
 // ── Table-mode summary strip (task #184) ─────────────────────────────────────
-// Rows × columns grid (e.g. 合计/BM/EC × 当期/LY/LLY/Target+%). Pure display: every text comes
+// Rows × columns grid (e.g. total/BM/EC × current/LY/LLY/Target+%). Pure display: every text comes
 // pre-formatted from the datasource's FIRST row — main value field `<rowKey>_<colKey>`, sub-line
 // `<rowKey>_<colKey>_pct`. Missing/empty → '—'. Sub-lines are colored by sign via
 // renderSignedPercentText. hideTargets blanks columns flagged target: true.

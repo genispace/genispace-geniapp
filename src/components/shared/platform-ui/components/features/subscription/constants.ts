@@ -82,7 +82,7 @@ export const DEFAULT_SUBSCRIPTION_CONTEXT = {
     datasetLimit: 1,
     maxFileSize: 5,
 
-    creditsPerMonth: 1400000,
+    creditsPerMonth: 0,
     quotasCarryOver: false,
     quotasCarryOverMaxMonths: 0,
 

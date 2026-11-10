@@ -9,7 +9,7 @@
 export const CURRENCY_SYMBOLS: Record<string, string> = {
   CNY: '¥',
   HKD: 'HK$',
-  MOP: 'MOP$',
+  MOP: 'MOP',
   USD: '$',
   EUR: '€',
 };

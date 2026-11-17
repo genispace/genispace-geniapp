@@ -12,6 +12,8 @@ import { useMobileFlowLayout } from '@/mobile/mobileFlowLayoutContext';
 import { useStickyHeaderClone } from '../shared/useStickyHeaderClone';
 import { TableEmptyStateWithChromeInsets } from '../shared/TableEmptyStateWithChromeInsets';
 import { useBoundRows } from '../data/useBoundRows';
+import RankBadgeIcon, { type RankBadgeStyle } from './rankBadgeIcons';
+import { computeTieRanks } from './tieRank';
 import {
   renderSwCell,
   formatSwValue,
@@ -202,6 +204,20 @@ export interface AnalyticsTableRendererProps {
    *  in small grey text above the table so pivot/summary value scales are not misread.
    *  Unset = hidden. */
   unitLabel?: unknown;
+  /** Task #289 (req-1109 #26): replace ranks 1..topN in the `#` index column with a pure-SVG medal
+   *  (gold/silver/bronze). Ranks beyond topN keep the number. Applies to whichever rank source is
+   *  active (tieRank-computed rank, indexField value, or positional row number). Default off. */
+  rankBadge?: { enabled?: boolean; style?: RankBadgeStyle; topN?: number };
+  /** Task #289 (req-1109 #25追加): tie-aware ranking ("1224" skip style) computed client-side over
+   *  the full loaded row set. Rows sharing `valueField` tie at one rank R; the next distinct value
+   *  ranks R+N. Tied rows show a two-line index cell: the big shared rank plus a 6px
+   *  "subRank/tieCount" line numbered by the fixed secondary key (`subKeyField` asc, then
+   *  `nameField`) — decoupled from the table sort. When enabled it overrides the displayed rank
+   *  (indexField may still drive the header sort). All rows align to a uniform 46px row height. */
+  tieRank?: { enabled?: boolean; valueField?: string; subKeyField?: string; nameField?: string };
+  /** Pin the summary (total) row to the bottom of the scroll container while the list scrolls
+   *  (tfoot position:sticky). Default true; set false for a plain in-flow footer. */
+  stickySummary?: boolean;
 }
 
 
@@ -252,6 +268,9 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   pivot,
   expandable,
   unitLabel,
+  rankBadge,
+  tieRank,
+  stickySummary = true,
 }) => {
   // Content font sizes (px) — 13px floor for header/body, 12px for badges; raise via props for
   // low-vision users. Applied inline so they override the table's Tailwind `text-xs` per element.
@@ -410,6 +429,20 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
     });
   }, [baseRows, derivedFields]);
 
+  // Tie-aware ranking (#25追加): computed over the FULL derived row set (pre-search, pre-sort) so
+  // ranks and sub-ranks stay fixed no matter how the user sorts or filters client-side.
+  const tieRankEnabled = !!tieRank?.enabled && !!tieRank?.valueField;
+  const tieMap = useMemo(
+    () => (tieRankEnabled
+      ? computeTieRanks(derivedRows, {
+        valueField: tieRank!.valueField!,
+        subKeyField: tieRank!.subKeyField,
+        nameField: tieRank!.nameField,
+      })
+      : null),
+    [tieRankEnabled, tieRank?.valueField, tieRank?.subKeyField, tieRank?.nameField, derivedRows],
+  );
+
   const view = useMemo(() => {
     let r = derivedRows.slice();
     if (search.trim()) {
@@ -447,10 +480,13 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   // table-layout:auto) so `labelStickyLeft` below can offset the sticky label by the exact width.
   const indexPad = indexPadX ?? 8;
   // indexField: rank-like values can exceed the row count (e.g. national rank under a store filter),
-  // so size the column from the field's largest digit count instead of view.length.
-  const indexDigits = indexField
-    ? Math.max(1, ...view.map(r => { const x = Number(r[indexField]); return Number.isFinite(x) ? String(Math.trunc(Math.abs(x))).length : 1; }))
-    : String(Math.max(view.length, 1)).length;
+  // so size the column from the field's largest digit count instead of view.length. tieRank mode
+  // sizes from the computed "1224" ranks (a 30-way tie at 4 pushes the next rank to 34).
+  const indexDigits = tieMap
+    ? Math.max(1, ...view.map(r => { const info = tieMap.get(r); return info ? String(info.rank).length : 1; }))
+    : indexField
+      ? Math.max(1, ...view.map(r => { const x = Number(r[indexField]); return Number.isFinite(x) ? String(Math.trunc(Math.abs(x))).length : 1; }))
+      : String(Math.max(view.length, 1)).length;
   // A text header label (e.g. "Rank") plus the sort chevron needs more room than the rank digits.
   const indexLabelWidth = indexLabel != null ? 2 * indexPad + String(bi(indexLabel)).length * headerFs + 16 : 0;
   const indexColWidth = indexWidth ?? Math.max(indexWidthForDigits(indexDigits, indexPad), indexLabelWidth);
@@ -466,6 +502,20 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
   // When the index column is shown it is frozen at left:0, so the sticky label column must
   // start after it (left: indexColWidth); otherwise the label freezes at the very left edge.
   const labelStickyLeft = showIndex ? indexColWidth : 0;
+  // Displayed rank per row (the #26 medal decision reads it too): the tieRank-computed rank wins,
+  // then the datasource-computed indexField value, then the positional row number.
+  const badgeTopN = rankBadge?.topN ?? 3;
+  const badgeOn = !!rankBadge?.enabled;
+  const displayRankOf = (r: Record<string, unknown>, i: number): number | null => {
+    if (tieMap) return tieMap.get(r)?.rank ?? null;
+    if (indexField) {
+      const x = Number(r[indexField]);
+      return Number.isFinite(x) ? x : null;
+    }
+    return i + 1;
+  };
+  const showBadgeFor = (rank: number | null): rank is number =>
+    badgeOn && rank != null && rank >= 1 && rank <= badgeTopN;
   // Per-column fixed width (width+min+max so `table-layout:auto` honors it) merged with the
   // sticky-left offset for frozen columns.
   const colStyle = (col: AnalyticsColumn): React.CSSProperties | undefined => {
@@ -701,12 +751,35 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                   className={cn('border-t border-slate-100 dark:border-neutral-800', hl ? 'bg-indigo-50 dark:bg-indigo-950/30' : isZebra && zebraClassName, expandable && 'cursor-pointer')}
                   onClick={expandable && expandKey ? () => toggleExpand(expandKey) : undefined}
                 >
-                  {showIndex && (
-                    <td
-                      className={cn('sticky left-0 z-10 px-2 py-1.5 text-center tabular-nums', stickyBg, hl ? 'text-indigo-400 dark:text-indigo-300' : 'text-slate-300 dark:text-neutral-600', hl && 'border-l-2 border-indigo-400')}
-                      style={{ ...indexColStyle, fontSize: cellFs }}
-                    >{indexField ? formatIndexValue(r[indexField]) : i + 1}</td>
-                  )}
+                  {showIndex && (() => {
+                    const info = tieMap?.get(r);
+                    const rank = displayRankOf(r, i);
+                    return (
+                      <td
+                        className={cn('sticky left-0 z-10 px-2 py-1.5 text-center tabular-nums', stickyBg, hl ? 'text-indigo-400 dark:text-indigo-300' : 'text-slate-300 dark:text-neutral-600', hl && 'border-l-2 border-indigo-400')}
+                        style={{ ...indexColStyle, fontSize: cellFs }}
+                      >
+                        {tieMap ? (
+                          // Tie mode (#25追加): uniform 46px row height (34px content + py-1.5);
+                          // tied rows add a 6px "subRank/tieCount" line under the shared rank.
+                          <span className="flex min-h-[34px] flex-col items-center justify-center leading-none">
+                            {showBadgeFor(rank)
+                              ? <RankBadgeIcon style={rankBadge?.style} rank={rank} size={16} />
+                              : <span className="font-bold">{rank ?? '—'}</span>}
+                            {info && info.tieCount > 1 && (
+                              <span className="mt-0.5 whitespace-nowrap text-[6px] font-medium leading-none text-slate-400 dark:text-neutral-500">
+                                {info.subRank}/{info.tieCount}
+                              </span>
+                            )}
+                          </span>
+                        ) : showBadgeFor(rank) ? (
+                          <RankBadgeIcon style={rankBadge?.style} rank={rank} size={20} />
+                        ) : (
+                          indexField ? formatIndexValue(r[indexField]) : i + 1
+                        )}
+                      </td>
+                    );
+                  })()}
                   {effectiveColumns.map(col => (
                     <td
                       key={col.key}
@@ -760,7 +833,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
             )}
           </tbody>
           {summary && (
-            <tfoot className="sticky bottom-0 z-20">
+            <tfoot className={cn(stickySummary && 'sticky bottom-0 z-20')}>
               <tr className="border-t-2 border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 font-semibold">
                 {showIndex && <td className="sticky left-0 z-20 bg-slate-50 dark:bg-neutral-800 px-2 py-1.5 text-center text-slate-400 dark:text-neutral-500" style={{ ...indexColStyle, fontSize: cellFs }}>—</td>}
                 {effectiveColumns.map(col => (

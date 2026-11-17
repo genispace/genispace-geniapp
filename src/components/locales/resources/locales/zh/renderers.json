@@ -597,7 +597,14 @@
       "color": "颜色",
       "name": "名称",
       "yoy": "同比"
-    }
+    },
+    "quick_filter": "快速筛选",
+    "quick_filter_clear": "清除快速筛选",
+    "quick_filter_by": "按销量筛选（件）· 区间尺 + 自定义输入",
+    "quick_filter_hint": "尺子与输入框联动：拖尺子自动填入区间（拖到「>10」= 上限不限，最大值自动清空）；也可手动输入精确值（含 <0 退货、>10 等超出刻度的值）；单边留空 = 不限",
+    "qty_zero_note": "（无销售）",
+    "reset": "重置",
+    "apply": "应用筛选"
   },
   "filter_panel": {
     "filter": "筛选",

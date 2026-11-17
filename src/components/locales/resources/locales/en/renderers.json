@@ -611,7 +611,14 @@
       "color": "Color",
       "name": "Name",
       "yoy": "YoY"
-    }
+    },
+    "quick_filter": "Quick Filter",
+    "quick_filter_clear": "Clear quick filter",
+    "quick_filter_by": "Filter by quantity (pcs) · range slider + custom input",
+    "quick_filter_hint": "Slider and inputs stay in sync: drag the ruler to fill the range (drag to \">10\" = no upper limit, max input clears); or type exact values (incl. <0 returns and >10 beyond-scale values); leaving one side empty = no limit",
+    "qty_zero_note": "(no sales)",
+    "reset": "Reset",
+    "apply": "Apply"
   },
   "filter_panel": {
     "filter": "Filter",

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@genispace/shared-utils';
 import { Skeleton } from '../../skeleton';
-import { ChevronUp, ChevronDown, BarChart3, Table as TableIcon } from 'lucide-react';
+import { ChevronUp, ChevronDown, BarChart3, Table as TableIcon, Filter as FilterIcon, X as XIcon } from 'lucide-react';
 import type { DatabaseDataSourceConfig } from '@/types/databaseDataSource';
 import type { ComponentParameterConfig } from '@/types/parameters';
 import { useComponentCommunication } from '@/hooks/useComponentCommunication';
@@ -15,8 +15,17 @@ import type {
   ReportColumn,
   DimensionConfig,
   SummaryCardConfig,
+  SummaryCardSub,
   TopSummaryEntry,
 } from '@/types/productReport';
+import RangeSliderField from '../shared/RangeSliderField';
+import {
+  buildRangeChipText,
+  isRangeEmpty,
+  normalizeRange,
+  rangeToParams,
+  type RangeValue,
+} from '../shared/rangeSliderUtils';
 import { renderReportCell, resolveFieldByLang, formatReportValue, ReportCard } from '../product-detail/productCellRender';
 import { useMobileViewport } from '@/hooks/useMobileViewport';
 import { useMobileFlowLayout } from '@/mobile/mobileFlowLayoutContext';
@@ -98,6 +107,20 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   const showQuickScope =
     quickScopePills.length > 0 && evaluateVisibleWhen(quickScope?.visibleWhen, visibleWhenCtx);
   const filterKeys = useMemo(() => cfg.filterKeys ?? [], [cfg]);
+  // req-1109 #22 快速筛选（滞销品区间尺）：仅商品（primary）Tab 工具行显示入口；应用后把销量
+  // 区间注入列表与汇总数据源（qtyMin/qtyMax，空串=不限），KPI 卡与吸底汇总行自动变为命中口径。
+  const quickFilter = cfg.quickFilter;
+  const quickFilterEnabled = quickFilter?.enabled === true;
+  const [qfOpen, setQfOpen] = useState(false);
+  const [qtyRange, setQtyRange] = useState<RangeValue | null>(null); // 已应用的区间（null=未筛选）
+  const [qfDraft, setQfDraft] = useState<RangeValue>({ min: null, max: null }); // 弹层草稿
+  const qfMinParam = quickFilter?.minParam ?? 'qtyMin';
+  const qfMaxParam = quickFilter?.maxParam ?? 'qtyMax';
+  const qfParams = useMemo(
+    () => (qtyRange ? rangeToParams(qtyRange, qfMinParam, qfMaxParam) : {}),
+    [qtyRange, qfMinParam, qfMaxParam],
+  );
+  const qtySig = qtyRange ? `${qtyRange.min ?? ''}~${qtyRange.max ?? ''}` : '';
   const enabledViews = cfg.enabledViews ?? ['list', 'table'];
   const filterComponentId = cfg.filterComponentId ?? '';
   const primaryKeyField = cfg.primaryKeyField ?? 'plu';
@@ -191,7 +214,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   // Adjusting state during render (React's documented pattern) resets page BEFORE the row fetch fires, so
   // we never fetch page N of a freshly-changed dataset and then bounce back to page 1.
   const dateKey = dateKeys.map(k => String(comm.getCurrentParameter(k) ?? '')).join('|');
-  const displaySig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${scopeKey}|${dateKey}`;
+  const displaySig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${scopeKey}|${dateKey}|${qtySig}`;
   const sortSig = `${sortKey}|${sortAsc}`;
   // Sort debounce (task #104): a header click flips the arrow and blanks the table to the skeleton
   // SAME FRAME (tableSig below), but the request params wait SORT_DEBOUNCE_MS — a click burst
@@ -212,7 +235,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   }
   // resetSig rides the DEBOUNCED sort: the page-1 reset lands in the same render as the sort-param
   // change, so the debounce settle fires a single query (new sort + page 1) — never a stale-sort one.
-  const resetSig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${debouncedSort.key}|${debouncedSort.asc}|${scopeKey}|${dateKey}`;
+  const resetSig = `${filterKeyHash}|${primaryKey}|${subTabKey ?? ''}|${debouncedSort.key}|${debouncedSort.asc}|${scopeKey}|${dateKey}|${qtySig}`;
   const [pageResetSig, setPageResetSig] = useState(resetSig);
   if (resetSig !== pageResetSig) {
     setPageResetSig(resetSig);
@@ -248,17 +271,18 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     () => ({
       ...filterVals,
       ...scopeExtra,
+      ...qfParams,
       ...(isPrimary ? {} : { dimension, groupBy }),
       sortField,
       sortDir,
       page,
       limit: pageSize,
     }),
-    [filterKeyHash, isPrimary, dimension, groupBy, sortField, sortDir, page, pageSize, scopeKey, scopeParam, showQuickScope],
+    [filterKeyHash, isPrimary, dimension, groupBy, sortField, sortDir, page, pageSize, scopeKey, scopeParam, showQuickScope, qfParams],
   );
   const summaryExtra = useMemo(
-    () => ({ ...filterVals, ...scopeExtra }),
-    [filterKeyHash, scopeKey, scopeParam, showQuickScope],
+    () => ({ ...filterVals, ...scopeExtra, ...qfParams }),
+    [filterKeyHash, scopeKey, scopeParam, showQuickScope, qfParams],
   );
 
   // total = true COUNT(*) across all pages (endpoint pagination.total); rawRows is the current page only.
@@ -441,9 +465,34 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     const vis = (d?.subTabs ?? []).filter(s => evaluateVisibleWhen(s.visibleWhen, visibleWhenCtx));
     const nextSub = (vis.find(s => s.key === d?.defaultSubTab) ?? vis[0])?.key;
     pushTabHistory({ primaryKey: k, subTabKey: nextSub });
+    // req-1109 #22：快速筛选仅服务商品 Tab —— 切到维度 Tab 时自动清除（入口同步隐藏）。
+    if (d && d.source !== 'primary' && qtyRange) setQtyRange(null);
     setPrimaryKey(k);
     setSubTabKey(nextSub);
   };
+
+  // req-1109 #22 快速筛选处理器：应用（规范化 + 空区间=清除）、清除、打开弹层（草稿回显已应用值）。
+  const applyQuickFilter = () => {
+    const norm = normalizeRange(qfDraft);
+    setQtyRange(isRangeEmpty(norm) ? null : norm);
+    setQfOpen(false);
+  };
+  const clearQuickFilter = () => {
+    setQtyRange(null);
+    setQfDraft({ min: null, max: null });
+  };
+  const openQuickFilter = () => {
+    setQfDraft(qtyRange ?? { min: null, max: null });
+    setQfOpen(true);
+  };
+  const isZhLang = language.startsWith('zh');
+  const qfLabel = quickFilter?.label ? resolveBilingualText(quickFilter.label, language) : t('product_report.quick_filter', '快速筛选');
+  const qfMetric = quickFilter?.metricLabel ? resolveBilingualText(quickFilter.metricLabel, language) : isZhLang ? '销量' : 'Qty';
+  const qfUnit = quickFilter?.unit ? resolveBilingualText(quickFilter.unit, language) : isZhLang ? '件' : 'pcs';
+  const qfPlaceholder = quickFilter?.inputPlaceholder ? resolveBilingualText(quickFilter.inputPlaceholder, language) : isZhLang ? '不限' : 'Any';
+  const qfHint = quickFilter?.hint
+    ? resolveBilingualText(quickFilter.hint, language)
+    : t('product_report.quick_filter_hint', '尺子与输入框联动：拖尺子自动填入区间（拖到「>10」= 上限不限，最大值自动清空）；也可手动输入精确值（含 <0 退货、>10 等超出刻度的值）；单边留空 = 不限');
 
   const handleSubTabChange = (k: string) => {
     pushTabHistory({ primaryKey, subTabKey: k });
@@ -543,6 +592,16 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     : widthedColumns;
   const showViewToggle = enabledViews.length > 1;
 
+  // req-1109 #28：商品（primary）Tab 吸底汇总行——复用 summary 单行（含 sales_amt/sales_qty/stock 别名
+  // 与 sku_count），商品列显「Total · #命中数」；快速筛选生效时 summaryExtra 已带区间参数，自动为命中汇总。
+  const showPrimaryFooter = isPrimary && cfg.showPrimaryTotalRow === true;
+  const reportFooterRow = isPrimary ? (showPrimaryFooter ? summary : undefined) : totalRow;
+  const reportFooterLabel = isPrimary
+    ? `Total · #${summary?.sku_count ?? '—'}`
+    : resolveBilingualText(cfg.totalRowLabel, language) || t('product_report.total', 'Total');
+  // req-1109 #21：首列「#」序号（table/list 均显；连续编号、排序重排、汇总行显「—」）。
+  const showRowIndex = cfg.showRowIndex === true;
+
   return (
     <div className="space-y-3">
       {title && <h2 className="font-semibold text-slate-900 dark:text-neutral-100" style={{ fontSize: titleFs }}>{title}</h2>}
@@ -555,6 +614,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
               key={c.key ?? c.field ?? i}
               label={resolveBilingualText(c.label, language)}
               value={formatSummary(summary, c)}
+              subs={(c.subs ?? []).map(s => ({ prefix: s.prefix, field: s.field, text: formatSummarySub(summary, s) }))}
               color={c.color}
               labelFontSize={labelFs}
               valueFontSize={valueFs}
@@ -619,6 +679,32 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
         )}
       </div>
 
+      {isPrimary && quickFilterEnabled && (
+        // req-1109 #22 工具行入口：白色 pill（样式对齐筛选按钮）；应用后 pill 变为生效条件 chip（点 ✕ 清除）。
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={openQuickFilter}
+            className={cn('inline-flex items-center gap-1 rounded-full border bg-white dark:bg-neutral-900 px-3 py-1.5 shadow-sm transition-colors',
+              qtyRange ? 'border-indigo-300 text-indigo-600 dark:border-indigo-700 dark:text-indigo-300' : 'border-slate-200 text-slate-600 dark:border-neutral-700 dark:text-neutral-300')}
+            style={{ fontSize: badgeFs }}
+          >
+            <FilterIcon className="h-3 w-3" />
+            {qtyRange ? `${qfLabel} · ${buildRangeChipText(qtyRange, { metricLabel: qfMetric })}` : `${qfLabel} ⌄`}
+            {qtyRange && (
+              <span
+                role="button"
+                aria-label={t('product_report.quick_filter_clear', '清除快速筛选')}
+                className="ml-0.5 inline-flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200"
+                onClick={(e) => { e.stopPropagation(); clearQuickFilter(); }}
+              >
+                <XIcon className="h-3 w-3" />
+              </span>
+            )}
+          </button>
+        </div>
+      )}
+
       {showItemCount && (
         <div className="flex items-center justify-between">
           <span className={isMobileFlow ? 'flex-shrink-0 whitespace-nowrap text-slate-400 dark:text-neutral-500' : 'text-slate-400 dark:text-neutral-500'} style={{ fontSize: labelFs }}>{t('product_report.item_count', '{{count}} items', { count })}</span>
@@ -643,13 +729,21 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
       ) : viewMode === 'list' && cardLayout ? (
         <div ref={scrollRef} className="space-y-2 pr-0.5">
           {view.map((row, i) => (
-            <ReportCard key={String(row[keyField] ?? i)} layout={cardLayout} row={row} language={language} hiddenFields={hiddenFields} onClick={() => onRowClick(row)} />
+            <div key={String(row[keyField] ?? i)} className="flex items-start gap-2">
+              {showRowIndex && (
+                <span className="w-5 shrink-0 pt-4 text-right text-[11px] text-slate-400 dark:text-neutral-500" style={{ fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+              )}
+              <div className="min-w-0 flex-1">
+                <ReportCard layout={cardLayout} row={row} language={language} hiddenFields={hiddenFields} onClick={() => onRowClick(row)} />
+              </div>
+            </div>
           ))}
         </div>
       ) : columns.length > 0 ? (
         <ReportTable columns={columns} rows={view} language={language} keyField={keyField} onRowClick={onRowClick} rowClickColumn={isPrimary ? undefined : 'label'} scrollRef={scrollRef} cellFontSize={cellFs} stickyHeader={stickyHeader}
           headerSub={headerSub}
-          footerRow={totalRow} footerLabel={resolveBilingualText(cfg.totalRowLabel, language) || t('product_report.total', 'Total')}
+          showRowIndex={showRowIndex}
+          footerRow={reportFooterRow} footerLabel={reportFooterLabel}
           sort={sortOptions.length > 0 ? { fields: sortOptions.map(o => o.field).filter(Boolean), field: uiSortField, asc: sortAsc, onToggle: handleSortField } : undefined} />
       ) : (
         <EmptyState />
@@ -678,6 +772,53 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
           </button>
         </div>
       )}
+
+      {qfOpen && (
+        // req-1109 #22 底部选择框：区间尺 + 自定义输入；弹窗内不出现汇总块。
+        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={qfLabel}>
+          <div className="absolute inset-0 bg-black/40" onClick={() => setQfOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-2xl bg-white dark:bg-neutral-900 px-4 pb-6 pt-2 shadow-xl">
+            <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-slate-200 dark:bg-neutral-700" />
+            <div className="mb-1 flex items-center justify-between">
+              <span className="font-semibold text-slate-900 dark:text-neutral-100" style={{ fontSize: titleFs }}>{qfLabel}</span>
+              <button type="button" aria-label="close" className="text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200" onClick={() => setQfOpen(false)}>
+                <XIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="mb-3 text-slate-500 dark:text-neutral-400" style={{ fontSize: labelFs }}>
+              {t('product_report.quick_filter_by', '按销量筛选（件）· 区间尺 + 自定义输入')}
+            </div>
+            <RangeSliderField
+              value={qfDraft}
+              onChange={setQfDraft}
+              ticks={quickFilter?.ticks}
+              metricLabel={qfMetric}
+              unit={qfUnit}
+              zeroNote={t('product_report.qty_zero_note', '（无销售）')}
+              inputPlaceholder={qfPlaceholder}
+              hint={qfHint}
+            />
+            <div className="mt-4 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setQfDraft({ min: null, max: null })}
+                className="flex-1 rounded-xl border border-slate-200 py-2 text-slate-600 transition-colors hover:bg-slate-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                style={{ fontSize: labelFs }}
+              >
+                {t('product_report.reset', '重置')}
+              </button>
+              <button
+                type="button"
+                onClick={applyQuickFilter}
+                className="flex-1 rounded-xl bg-indigo-500 py-2 text-white transition-colors hover:bg-indigo-600"
+                style={{ fontSize: labelFs }}
+              >
+                {t('product_report.apply', '应用筛选')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -685,6 +826,14 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
 function formatSummary(summary: Record<string, unknown> | undefined, c: SummaryCardConfig): string {
   if (!summary) return '—';
   return formatReportValue(summary[c.field], c.format, summary[c.currencyField ?? 'currency']);
+}
+
+/** req-1109 #20 副行取值：无数据显「—」（不显示 0 占位误导），默认 number 格式。 */
+function formatSummarySub(summary: Record<string, unknown> | undefined, s: SummaryCardSub): string {
+  if (!summary) return '—';
+  const v = summary[s.field];
+  if (v == null || v === '') return '—';
+  return formatReportValue(v, s.format ?? 'number', summary.currency);
 }
 
 /** TopN header-subtitle value formatting: reuses formatReportValue; 'trend' renders a signed %
@@ -706,7 +855,7 @@ const DOT_CLASS: Record<string, string> = {
   indigo: 'bg-indigo-400', emerald: 'bg-emerald-400', amber: 'bg-amber-400', rose: 'bg-rose-400', slate: 'bg-slate-400',
 };
 
-function SummaryCard({ label, value, color, labelFontSize, valueFontSize }: { label: string; value: string; color?: string; labelFontSize: number; valueFontSize: number }) {
+function SummaryCard({ label, value, subs, color, labelFontSize, valueFontSize }: { label: string; value: string; subs?: { prefix?: string; field: string; text: string }[]; color?: string; labelFontSize: number; valueFontSize: number }) {
   const dot = DOT_CLASS[color ?? 'indigo'] ?? DOT_CLASS.indigo;
   return (
     <div className="rounded-xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-3 shadow-sm">
@@ -714,6 +863,11 @@ function SummaryCard({ label, value, color, labelFontSize, valueFontSize }: { la
         <span className={cn('h-1.5 w-1.5 rounded-full', dot)} />{label}
       </div>
       <div className="mt-1.5 text-slate-900 dark:text-neutral-100" style={{ fontSize: valueFontSize, fontWeight: 600 }}>{value}</div>
+      {subs?.map((s) => (
+        <div key={s.field} className="mt-0.5 text-slate-400 dark:text-neutral-500" style={{ fontSize: Math.max(labelFontSize - 2, 9), fontVariantNumeric: 'tabular-nums' }}>
+          {s.prefix && <b className="mr-0.5 text-slate-500 dark:text-neutral-400">{s.prefix}</b>}{s.text}
+        </div>
+      ))}
     </div>
   );
 }
@@ -759,7 +913,7 @@ const colWidthStyle = (c: ReportColumn): React.CSSProperties | undefined =>
       }
     : undefined;
 
-function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickColumn, scrollRef, cellFontSize, stickyHeader, sort, headerSub, footerRow, footerLabel }: {
+function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickColumn, scrollRef, cellFontSize, stickyHeader, sort, headerSub, footerRow, footerLabel, showRowIndex }: {
   columns: ReportColumn[];
   rows: Record<string, unknown>[];
   language: string;
@@ -778,12 +932,14 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
   /** Pinned footer total row (from a separate single-row datasource); label goes in the name column. */
   footerRow?: Record<string, unknown>;
   footerLabel?: string;
+  /** req-1109 #21：首列「#」序号（1 起连续、跨页累计、排序后重排；汇总行序号格显「—」）。 */
+  showRowIndex?: boolean;
 }) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   // Re-clone when the header content (columns/language/font/sort indicator) changes; row-width
   // drift is handled by the hook's ResizeObserver. headerSub values join the key — the subtitle
   // makes the thead one line taller, so a value change must trigger a re-clone.
-  const cloneKey = `${language}|${cellFontSize}|${columns.map(c => c.dataIndex).join(',')}|${sort?.field ?? ''}|${sort?.asc ?? ''}|${headerSub ? `${headerSub.prefix ?? ''}~${columns.map(c => headerSub.values[c.dataIndex] ?? '').join(',')}` : ''}`;
+  const cloneKey = `${language}|${cellFontSize}|${showRowIndex ? 'ri' : ''}|${columns.map(c => c.dataIndex).join(',')}|${sort?.field ?? ''}|${sort?.asc ?? ''}|${headerSub ? `${headerSub.prefix ?? ''}~${columns.map(c => headerSub.values[c.dataIndex] ?? '').join(',')}` : ''}`;
   useStickyHeaderClone({ enabled: !!stickyHeader, overlayRef, cloneKey });
   return (
     <div className={cn('rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm', stickyHeader ? 'overflow-visible' : 'overflow-hidden')}>
@@ -793,6 +949,9 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
         <table className="w-full" style={{ fontSize: cellFontSize }}>
           <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-neutral-800">
             <tr>
+              {showRowIndex && (
+                <th className="whitespace-nowrap px-1.5 py-2.5 text-center font-normal text-slate-400 dark:text-neutral-500" style={{ width: 28 }}>#</th>
+              )}
               {columns.map((c, i) => {
                 const sortable = !!sort && sort.fields.includes(c.dataIndex);
                 const sortActive = sortable && sort!.field === c.dataIndex;
@@ -828,6 +987,9 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
                 onClick={rowClickColumn ? undefined : () => onRowClick(row)}
                 className={cn('border-t border-slate-100 dark:border-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-800/60', !rowClickColumn && 'cursor-pointer')}
               >
+                {showRowIndex && (
+                  <td className="px-1.5 py-2.5 text-center text-slate-400 dark:text-neutral-500" style={{ fontVariantNumeric: 'tabular-nums' }}>{ri + 1}</td>
+                )}
                 {columns.map((c, ci) => {
                   const cellClickable = rowClickColumn != null && c.dataIndex === rowClickColumn;
                   return (
@@ -847,6 +1009,7 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
           {footerRow && (
             <tfoot className="sticky bottom-0 z-10">
               <tr className="border-t-2 border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 font-semibold">
+                {showRowIndex && <td className="px-1.5 py-2.5 text-center text-slate-400 dark:text-neutral-500">—</td>}
                 {columns.map((c, ci) => {
                   // The footer label sits in the name column (rowClickColumn on dimension tabs, else col 0).
                   const isLabelCell = rowClickColumn != null ? c.dataIndex === rowClickColumn : ci === 0;

@@ -28,6 +28,16 @@ export type ReportValueFormat =
   | 'percent1' // 12.3%
   | 'plain'; // raw value passthrough
 
+/** Summary card 副行（req-1109 #20）：主数值下方小字行（如 U 件数 / # SKU 数）。 */
+export interface SummaryCardSub {
+  /** 副行取值字段（须存在于 summary 数据源输出）。 */
+  field: string;
+  /** 加粗前缀符号（如 'U' / '#'），紧随其后的数值用 format 格式化。 */
+  prefix?: string;
+  /** 默认 'number'。 */
+  format?: ReportValueFormat;
+}
+
 /** One summary KPI card; reads a single field off the summary row. */
 export interface SummaryCardConfig {
   key?: string;
@@ -40,6 +50,8 @@ export interface SummaryCardConfig {
   color?: 'indigo' | 'emerald' | 'amber' | 'rose' | 'slate';
   /** Per-card visibility rule (e.g. hide the discount card for store managers via role/app rules). */
   visibleWhen?: VisibleWhen;
+  /** req-1109 #20：主数值下方副行（件数 / SKU# 等），无数据显示「—」。 */
+  subs?: SummaryCardSub[];
 }
 
 /**
@@ -300,6 +312,40 @@ export interface ProductReportConfig {
    *  second line under each table column title (same wrap-aggregate pattern as totalRow, slot moved
    *  from footer to header). Keyed by dimension key; only tabs with an entry fetch and render. */
   topSummary?: { entries: Record<string, TopSummaryEntry> };
+
+  /** req-1109 #21：首列「#」序号（table 与 list 视图均显示；1 起连续、跨页累计、排序后按新顺序
+   *  重排；快速筛选结果同样从 1 连续；汇总行序号格显「—」）。 */
+  showRowIndex?: boolean;
+
+  /** req-1109 #28：primary（商品）Tab 启用吸底汇总行（sticky tfoot，与 dimension 合计行同机制）。
+   *  数据取 summaryDataSourceConfig 单行（sales_amt/sales_qty/stock 别名 + sku_count），
+   *  商品列显「Total · #sku_count」（SKU# = 命中商品总条数）；快速筛选生效时自动变为命中汇总。 */
+  showPrimaryTotalRow?: boolean;
+
+  /** req-1109 #22：快速筛选（滞销品区间尺）。仅 primary（商品）Tab 工具行显示入口 pill；
+   *  应用后把销量区间作为参数注入列表与汇总数据源（minParam/maxParam，空串 = 不限）。 */
+  quickFilter?: QuickFilterConfig;
+}
+
+/** 快速筛选（区间尺）配置：控件本体为共享 RangeSliderField，刻度/文案可配。 */
+export interface QuickFilterConfig {
+  /** 默认 false（配置存在但未启用时不渲染入口）。 */
+  enabled?: boolean;
+  /** pill 与弹层标题（默认 快速筛选 / Quick Filter）。 */
+  label?: BilingualText;
+  /** 指标名（默认 销量 / Qty）。 */
+  metricLabel?: BilingualText;
+  /** 单位（默认 件 / pcs）。 */
+  unit?: BilingualText;
+  /** 输入框占位（默认 不限 / Any）。 */
+  inputPlaceholder?: BilingualText;
+  /** 弹层底部说明文案。 */
+  hint?: BilingualText;
+  /** 刻度数组，默认 13 档 ['<0','0',...,'10','>10']。 */
+  ticks?: string[];
+  /** 下限参数名（默认 qtyMin）与上限参数名（默认 qtyMax）。 */
+  minParam?: string;
+  maxParam?: string;
 }
 
 /** One subtitle item: `field` is the column dataIndex the value renders under; `valueField` picks

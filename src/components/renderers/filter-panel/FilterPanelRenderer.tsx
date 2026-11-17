@@ -58,6 +58,7 @@ import {
   type FilterInputHistoryMap,
 } from './filterInputHistory';
 import { useEscapedStickyPanel } from '../shared/useEscapedStickyPanel';
+import RangeSliderField from '../shared/RangeSliderField';
 import {
   getSharedPanelValues,
   publishSharedPanelValues,
@@ -384,7 +385,7 @@ export interface DateCustomTab {
 export interface FilterConfig {
   key: string;
   type: 'select' | 'radio' | 'dateRange' | 'text' | 'number' | 'tagInput'
-      | 'segmented' | 'presetDateRange' | 'pillSelect' | 'filterSheet';
+      | 'segmented' | 'presetDateRange' | 'pillSelect' | 'filterSheet' | 'rangeSlider';
   label: string;
   options?: FilterOption[];
   dataSource?: {
@@ -436,6 +437,14 @@ export interface FilterConfig {
   maxTags?: number;
   
   segments?: Array<{ label: any; value: string; icon?: string }>;
+  // rangeSlider (task #289, req-1109 #22): dual-thumb range ruler + min/max inputs. The committed
+  // value is published as TWO numeric params `{key}Min` / `{key}Max` (empty string = unbounded),
+  // so datasources bind them like `NULLIF({{qtyMin}},'')::numeric`.
+  /** Tick labels, low → high; default the 13-step qty ruler ('<0','0'…'10','>10'). The first/last
+   *  tick act as open ends (selecting them clears that bound). */
+  rangeTicks?: readonly string[];
+  /** Unit text appended to the condition line (bilingual, e.g. { zh: '件', en: 'pcs' }). */
+  rangeUnit?: BilingualText;
   // presetDateRange type
   fiscalPresets?: Array<{ label: any; value: string }>;
   // presetDateRange: DataSource returning each preset's resolved { value, label_zh/en, sub_zh/en, start_date, end_date }
@@ -2257,6 +2266,34 @@ const FilterPanelRenderer: React.FC<FilterPanelProps> = ({
             historyEnabled={filter.inputHistory?.enabled ?? false}
           />
         );
+      case 'rangeSlider': {
+        // Dual-thumb range ruler (#22): commits `{key}Min`/`{key}Max` numeric params
+        // ('' = unbounded) so datasources bind them like NULLIF({{qtyMin}},'')::numeric.
+        const parseBound = (v: unknown): number | null => {
+          if (v === '' || v === null || v === undefined) return null;
+          const x = Number(v);
+          return Number.isFinite(x) ? x : null;
+        };
+        return (
+          <div key={filter.key} className={isMobileLayout ? mobileFilterFieldStyles.field : 'min-w-0 flex-1'}>
+            <RangeSliderField
+              value={{
+                min: parseBound(filterValues[`${filter.key}Min`]),
+                max: parseBound(filterValues[`${filter.key}Max`]),
+              }}
+              onChange={v => handleMultiFilterChange({
+                [`${filter.key}Min`]: v.min ?? '',
+                [`${filter.key}Max`]: v.max ?? '',
+              })}
+              ticks={filter.rangeTicks}
+              metricLabel={displayFilterLabel(filter.label, language, localizeText)}
+              unit={filter.rangeUnit ? resolveBilingualLabel(filter.rangeUnit, language) : ''}
+              zeroNote={t('filter_panel.range_zero_note', '(no sales)')}
+              inputPlaceholder={t('filter_panel.range_unbounded', 'Any')}
+            />
+          </div>
+        );
+      }
       default:
         return null;
     }

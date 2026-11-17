@@ -635,7 +635,9 @@
     "select_all": "全选",
     "clear": "清空",
     "history_done": "完成",
-    "history_delete": "删除"
+    "history_delete": "删除",
+    "range_zero_note": "（无销售）",
+    "range_unbounded": "不限"
   },
   "metric_carousel": {
     "swipe_hint": "← 左右滑动查看全部 →"

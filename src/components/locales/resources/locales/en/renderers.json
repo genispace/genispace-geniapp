@@ -649,7 +649,9 @@
     "select_all": "Select all",
     "clear": "Clear",
     "history_done": "Done",
-    "history_delete": "Delete"
+    "history_delete": "Delete",
+    "range_zero_note": "(no sales)",
+    "range_unbounded": "Any"
   },
   "metric_carousel": {
     "swipe_hint": "← Swipe to see all →"

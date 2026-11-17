@@ -28,13 +28,13 @@ export type ReportValueFormat =
   | 'percent1' // 12.3%
   | 'plain'; // raw value passthrough
 
-/** Summary card 副行（req-1109 #20）：主数值下方小字行（如 U 件数 / # SKU 数）。 */
+/** Summary card sub-line (req-1109 #20): small text under the main value (e.g. U units / # SKU count). */
 export interface SummaryCardSub {
-  /** 副行取值字段（须存在于 summary 数据源输出）。 */
+  /** Field the sub-line reads (must exist in the summary datasource output). */
   field: string;
-  /** 加粗前缀符号（如 'U' / '#'），紧随其后的数值用 format 格式化。 */
+  /** Bold prefix symbol (e.g. 'U' / '#'); the following number is formatted via format. */
   prefix?: string;
-  /** 默认 'number'。 */
+  /** Defaults to 'number'. */
   format?: ReportValueFormat;
 }
 
@@ -50,7 +50,7 @@ export interface SummaryCardConfig {
   color?: 'indigo' | 'emerald' | 'amber' | 'rose' | 'slate';
   /** Per-card visibility rule (e.g. hide the discount card for store managers via role/app rules). */
   visibleWhen?: VisibleWhen;
-  /** req-1109 #20：主数值下方副行（件数 / SKU# 等），无数据显示「—」。 */
+  /** req-1109 #20: sub-line under the main value (units / SKU# etc.); "—" when empty. */
   subs?: SummaryCardSub[];
 }
 
@@ -313,37 +313,41 @@ export interface ProductReportConfig {
    *  from footer to header). Keyed by dimension key; only tabs with an entry fetch and render. */
   topSummary?: { entries: Record<string, TopSummaryEntry> };
 
-  /** req-1109 #21：首列「#」序号（table 与 list 视图均显示；1 起连续、跨页累计、排序后按新顺序
-   *  重排；快速筛选结果同样从 1 连续；汇总行序号格显「—」）。 */
+  /** req-1109 #21: leading "#" row index (shown in table and list views; 1-based continuous,
+   *  accumulated across pages, renumbered after sorting; quick-filter results also restart at 1;
+   *  the total row shows "—"). */
   showRowIndex?: boolean;
 
-  /** req-1109 #28：primary（商品）Tab 启用吸底汇总行（sticky tfoot，与 dimension 合计行同机制）。
-   *  数据取 summaryDataSourceConfig 单行（sales_amt/sales_qty/stock 别名 + sku_count），
-   *  商品列显「Total · #sku_count」（SKU# = 命中商品总条数）；快速筛选生效时自动变为命中汇总。 */
+  /** req-1109 #28: enable the sticky total row on the primary (product) tab (sticky tfoot, same
+   *  mechanism as the dimension total row). Data comes from the summaryDataSourceConfig single row
+   *  (sales_amt/sales_qty/stock aliases + sku_count); the product cell shows "Total · #sku_count"
+   *  (SKU# = number of hit products); with the quick filter active it automatically totals the hits. */
   showPrimaryTotalRow?: boolean;
 
-  /** req-1109 #22：快速筛选（滞销品区间尺）。仅 primary（商品）Tab 工具行显示入口 pill；
-   *  应用后把销量区间作为参数注入列表与汇总数据源（minParam/maxParam，空串 = 不限）。 */
+  /** req-1109 #22: quick filter (slow-mover range ruler). Entry pill shows on the primary (product)
+   *  tab toolbar only; applying injects the qty range into the list and summary datasources
+   *  (minParam/maxParam, empty string = unbounded). */
   quickFilter?: QuickFilterConfig;
 }
 
-/** 快速筛选（区间尺）配置：控件本体为共享 RangeSliderField，刻度/文案可配。 */
+/** Quick filter (range ruler) config: the control body is the shared RangeSliderField;
+ *  ticks/texts are configurable. */
 export interface QuickFilterConfig {
-  /** 默认 false（配置存在但未启用时不渲染入口）。 */
+  /** Default false (no entry rendered when the config exists but is not enabled). */
   enabled?: boolean;
-  /** pill 与弹层标题（默认 快速筛选 / Quick Filter）。 */
+  /** Pill and sheet title (default: Quick Filter). */
   label?: BilingualText;
-  /** 指标名（默认 销量 / Qty）。 */
+  /** Metric name (default: Qty). */
   metricLabel?: BilingualText;
-  /** 单位（默认 件 / pcs）。 */
+  /** Unit (default: pcs). */
   unit?: BilingualText;
-  /** 输入框占位（默认 不限 / Any）。 */
+  /** Input placeholder (default: Any). */
   inputPlaceholder?: BilingualText;
-  /** 弹层底部说明文案。 */
+  /** Sheet footer hint text. */
   hint?: BilingualText;
-  /** 刻度数组，默认 13 档 ['<0','0',...,'10','>10']。 */
+  /** Tick labels, default 13 ticks ['<0','0',...,'10','>10']. */
   ticks?: string[];
-  /** 下限参数名（默认 qtyMin）与上限参数名（默认 qtyMax）。 */
+  /** Low-bound param name (default qtyMin) and high-bound param name (default qtyMax). */
   minParam?: string;
   maxParam?: string;
 }

@@ -443,7 +443,7 @@ export interface FilterConfig {
   /** Tick labels, low → high; default the 13-step qty ruler ('<0','0'…'10','>10'). The first/last
    *  tick act as open ends (selecting them clears that bound). */
   rangeTicks?: readonly string[];
-  /** Unit text appended to the condition line (bilingual, e.g. { zh: '件', en: 'pcs' }). */
+  /** Unit text appended to the condition line (bilingual). */
   rangeUnit?: BilingualText;
   // presetDateRange type
   fiscalPresets?: Array<{ label: any; value: string }>;

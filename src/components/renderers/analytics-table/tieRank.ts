@@ -1,4 +1,4 @@
-// Tie-aware ranking ("1224" skip style) for AnalyticsTable (task #289, req-1109 #25追加).
+// Tie-aware ranking ("1224" skip style) for AnalyticsTable (task #289, req-1109 #25 follow-up).
 // Rows sharing the same `valueField` value tie at one rank R; the next distinct value ranks R+N
 // (N = size of the tied group). Within a tied group every row gets a stable sub-rank numbered by
 // the fixed secondary key (`subKeyField` ascending, then `nameField`) — precomputed over the FULL

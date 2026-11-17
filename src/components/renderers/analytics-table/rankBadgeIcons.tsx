@@ -1,6 +1,6 @@
 // Rank badge (medal) icons for AnalyticsTable (task #289, req-1109 #26).
 // Five pure-SVG styles ported from the approved prototype demo (reqirment/req-1109/demo):
-//   rosette = demo option I (花结勋章, selected), trophy = E, crown = F, star = G, ribbon = L.
+//   rosette = demo option I (rosette medal, selected), trophy = E, crown = F, star = G, ribbon = L.
 // Each renders in gold / silver / bronze for ranks 1 / 2 / 3. Pure + dependency-free so the
 // workbench copy can be synced verbatim (parity check strips imports).
 import React from 'react';

@@ -1,7 +1,9 @@
 /**
- * 区间尺控件（req-1109 #22 定稿：双滑块 13 档区间尺 + 最小/最大自定义输入联动）。
- * ProductReport 快速筛选与 FilterPanel「区间尺」控件共用；workbench 预览副本须逐行一致（parity）。
- * 纯逻辑见同目录 rangeSliderUtils.ts（刻度映射/文案/参数换算均在那里，本文件只做交互与渲染）。
+ * Range ruler field (req-1109 #22 final: dual-thumb 13-tick ruler + linked min/max custom inputs).
+ * Shared by the ProductReport quick filter and the FilterPanel "rangeSlider" control; the workbench
+ * preview copy must stay line-identical (parity).
+ * Pure logic lives in rangeSliderUtils.ts next to this file (tick mapping / texts / param mapping);
+ * this file only handles interaction and rendering.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@genispace/shared-utils';
@@ -18,15 +20,15 @@ export interface RangeSliderFieldProps {
   value: RangeValue;
   onChange: (v: RangeValue) => void;
   ticks?: readonly string[];
-  /** 指标名（销量 / Qty） */
+  /** Metric name (e.g. Qty) */
   metricLabel: string;
-  /** 单位（件 / pcs），可空 */
+  /** Unit (e.g. pcs), optional */
   unit?: string;
-  /** 精确值 = 0 附注（（无销售）） */
+  /** Note appended to an exact value of 0 (e.g. "(no sales)") */
   zeroNote?: string;
-  /** 输入框占位（不限 / Any） */
+  /** Input placeholder (e.g. Any) */
   inputPlaceholder?: string;
-  /** 底部提示文案（状态相关说明由父级按当前值选择传入） */
+  /** Footer hint (the parent picks state-dependent text for the current value) */
   hint?: React.ReactNode;
 }
 
@@ -37,14 +39,14 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
   metricLabel,
   unit = '',
   zeroNote,
-  inputPlaceholder = '不限',
+  inputPlaceholder = 'Any',
   hint,
 }) => {
   const last = ticks.length - 1;
   const minSnap = valueToTickSnap(value.min, 'min', ticks);
   const maxSnap = valueToTickSnap(value.max, 'max', ticks);
 
-  // 输入框文本：跟随外部值；用户编辑期间以本地态为准（失焦/回车提交）
+  // Input texts follow the external value; while the user edits, local state wins (commit on blur/Enter)
   const [minText, setMinText] = useState(value.min == null ? '' : String(value.min));
   const [maxText, setMaxText] = useState(value.max == null ? '' : String(value.max));
   const [editing, setEditing] = useState<'min' | 'max' | null>(null);
@@ -58,7 +60,7 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
     const text = side === 'min' ? minText : maxText;
     const parsed = parseRangeInput(text);
     if (parsed === undefined) {
-      // 非法输入：回显当前值，不触发变更
+      // Invalid input: echo the current value back, do not emit a change
       if (side === 'min') setMinText(value.min == null ? '' : String(value.min));
       else setMaxText(value.max == null ? '' : String(value.max));
       return;
@@ -67,7 +69,7 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
     else onChange({ ...value, max: parsed });
   };
 
-  // 滑块拖动：pointer capture + 最近刻度吸附
+  // Thumb dragging: pointer capture + snap to the nearest tick
   const trackRef = useRef<HTMLDivElement | null>(null);
   const dragSide = useRef<'min' | 'max' | null>(null);
   const moveToClientX = useCallback((clientX: number) => {
@@ -79,7 +81,8 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
     const index = Math.round(ratio * last);
     const v = tickIndexToValue(index, side, ticks);
     if (side === 'min') {
-      // min 不允许越过 max（同在端档 null 时允许并拢：精确值场景由 tickIndexToValue 中间档产生）
+      // min must not pass max (both may meet at an end tick when null: exact-value cases come from
+      // middle ticks via tickIndexToValue)
       const maxIdx = valueToTickSnap(value.max, 'max', ticks).index;
       const clamped = Math.min(index, maxIdx);
       onChange({ ...value, min: tickIndexToValue(clamped, 'min', ticks) });
@@ -99,7 +102,7 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
   };
   const onKnobPointerUp = () => { dragSide.current = null; };
   const onTrackPointerDown = (e: React.PointerEvent) => {
-    // 点击轨道：移动较近一侧滑块
+    // Track click: move the nearer thumb
     const el = trackRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -120,8 +123,8 @@ const RangeSliderField: React.FC<RangeSliderFieldProps> = ({
   return (
     <div>
       <div className="text-center text-[13px] text-slate-600 dark:text-neutral-300" style={{ fontVariantNumeric: 'tabular-nums' }}>
-        {buildRangeConditionText(value, { metricLabel, unit, zeroNote }).split(/(\-?\d+(?:\.\d+)?)/g).map((part, i) =>
-          /^\-?\d/.test(part) ? <b key={i} className="text-slate-900 dark:text-neutral-100">{part}</b> : <React.Fragment key={i}>{part}</React.Fragment>,
+        {buildRangeConditionText(value, { metricLabel, unit, zeroNote }).split(/(-?\d+(?:\.\d+)?)/g).map((part, i) =>
+          /^-?\d/.test(part) ? <b key={i} className="text-slate-900 dark:text-neutral-100">{part}</b> : <React.Fragment key={i}>{part}</React.Fragment>,
         )}
       </div>
 

@@ -208,7 +208,7 @@ export interface AnalyticsTableRendererProps {
    *  (gold/silver/bronze). Ranks beyond topN keep the number. Applies to whichever rank source is
    *  active (tieRank-computed rank, indexField value, or positional row number). Default off. */
   rankBadge?: { enabled?: boolean; style?: RankBadgeStyle; topN?: number };
-  /** Task #289 (req-1109 #25追加): tie-aware ranking ("1224" skip style) computed client-side over
+  /** Task #289 (req-1109 #25 follow-up): tie-aware ranking ("1224" skip style) computed client-side over
    *  the full loaded row set. Rows sharing `valueField` tie at one rank R; the next distinct value
    *  ranks R+N. Tied rows show a two-line index cell: the big shared rank plus a 6px
    *  "subRank/tieCount" line numbered by the fixed secondary key (`subKeyField` asc, then
@@ -429,7 +429,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
     });
   }, [baseRows, derivedFields]);
 
-  // Tie-aware ranking (#25追加): computed over the FULL derived row set (pre-search, pre-sort) so
+  // Tie-aware ranking (#25 follow-up): computed over the FULL derived row set (pre-search, pre-sort) so
   // ranks and sub-ranks stay fixed no matter how the user sorts or filters client-side.
   const tieRankEnabled = !!tieRank?.enabled && !!tieRank?.valueField;
   const tieMap = useMemo(
@@ -760,7 +760,7 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                         style={{ ...indexColStyle, fontSize: cellFs }}
                       >
                         {tieMap ? (
-                          // Tie mode (#25追加): uniform 46px row height (34px content + py-1.5);
+                          // Tie mode (#25 follow-up): uniform 46px row height (34px content + py-1.5);
                           // tied rows add a 6px "subRank/tieCount" line under the shared rank.
                           <span className="flex min-h-[34px] flex-col items-center justify-center leading-none">
                             {showBadgeFor(rank)

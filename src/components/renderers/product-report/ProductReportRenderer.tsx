@@ -107,13 +107,14 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
   const showQuickScope =
     quickScopePills.length > 0 && evaluateVisibleWhen(quickScope?.visibleWhen, visibleWhenCtx);
   const filterKeys = useMemo(() => cfg.filterKeys ?? [], [cfg]);
-  // req-1109 #22 快速筛选（滞销品区间尺）：仅商品（primary）Tab 工具行显示入口；应用后把销量
-  // 区间注入列表与汇总数据源（qtyMin/qtyMax，空串=不限），KPI 卡与吸底汇总行自动变为命中口径。
+  // req-1109 #22 quick filter (slow-mover range ruler): entry shows on the primary (product) tab
+  // toolbar only; applying injects the qty range into the list and summary datasources
+  // (qtyMin/qtyMax, empty string = unbounded), so KPI cards and the sticky total row follow the hits.
   const quickFilter = cfg.quickFilter;
   const quickFilterEnabled = quickFilter?.enabled === true;
   const [qfOpen, setQfOpen] = useState(false);
-  const [qtyRange, setQtyRange] = useState<RangeValue | null>(null); // 已应用的区间（null=未筛选）
-  const [qfDraft, setQfDraft] = useState<RangeValue>({ min: null, max: null }); // 弹层草稿
+  const [qtyRange, setQtyRange] = useState<RangeValue | null>(null); // applied range (null = unfiltered)
+  const [qfDraft, setQfDraft] = useState<RangeValue>({ min: null, max: null }); // sheet draft
   const qfMinParam = quickFilter?.minParam ?? 'qtyMin';
   const qfMaxParam = quickFilter?.maxParam ?? 'qtyMax';
   const qfParams = useMemo(
@@ -465,13 +466,15 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     const vis = (d?.subTabs ?? []).filter(s => evaluateVisibleWhen(s.visibleWhen, visibleWhenCtx));
     const nextSub = (vis.find(s => s.key === d?.defaultSubTab) ?? vis[0])?.key;
     pushTabHistory({ primaryKey: k, subTabKey: nextSub });
-    // req-1109 #22：快速筛选仅服务商品 Tab —— 切到维度 Tab 时自动清除（入口同步隐藏）。
+    // req-1109 #22: the quick filter serves the product tab only — auto-clear on switching to a
+    // dimension tab (the entry hides at the same time).
     if (d && d.source !== 'primary' && qtyRange) setQtyRange(null);
     setPrimaryKey(k);
     setSubTabKey(nextSub);
   };
 
-  // req-1109 #22 快速筛选处理器：应用（规范化 + 空区间=清除）、清除、打开弹层（草稿回显已应用值）。
+  // req-1109 #22 quick filter handlers: apply (normalize; empty range = clear), clear, open the
+  // sheet (draft echoes the applied value).
   const applyQuickFilter = () => {
     const norm = normalizeRange(qfDraft);
     setQtyRange(isRangeEmpty(norm) ? null : norm);
@@ -485,14 +488,13 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     setQfDraft(qtyRange ?? { min: null, max: null });
     setQfOpen(true);
   };
-  const isZhLang = language.startsWith('zh');
-  const qfLabel = quickFilter?.label ? resolveBilingualText(quickFilter.label, language) : t('product_report.quick_filter', '快速筛选');
-  const qfMetric = quickFilter?.metricLabel ? resolveBilingualText(quickFilter.metricLabel, language) : isZhLang ? '销量' : 'Qty';
-  const qfUnit = quickFilter?.unit ? resolveBilingualText(quickFilter.unit, language) : isZhLang ? '件' : 'pcs';
-  const qfPlaceholder = quickFilter?.inputPlaceholder ? resolveBilingualText(quickFilter.inputPlaceholder, language) : isZhLang ? '不限' : 'Any';
+  const qfLabel = quickFilter?.label ? resolveBilingualText(quickFilter.label, language) : t('product_report.quick_filter', 'Quick Filter');
+  const qfMetric = quickFilter?.metricLabel ? resolveBilingualText(quickFilter.metricLabel, language) : t('product_report.quick_filter_metric', 'Qty');
+  const qfUnit = quickFilter?.unit ? resolveBilingualText(quickFilter.unit, language) : t('product_report.quick_filter_unit', 'pcs');
+  const qfPlaceholder = quickFilter?.inputPlaceholder ? resolveBilingualText(quickFilter.inputPlaceholder, language) : t('product_report.quick_filter_placeholder', 'Any');
   const qfHint = quickFilter?.hint
     ? resolveBilingualText(quickFilter.hint, language)
-    : t('product_report.quick_filter_hint', '尺子与输入框联动：拖尺子自动填入区间（拖到「>10」= 上限不限，最大值自动清空）；也可手动输入精确值（含 <0 退货、>10 等超出刻度的值）；单边留空 = 不限');
+    : t('product_report.quick_filter_hint', 'Drag the ruler to fill the range (">10" = no upper bound, max clears); or type exact values (out-of-scale values like <0 returns or >10 allowed); leave either side empty = unbounded');
 
   const handleSubTabChange = (k: string) => {
     pushTabHistory({ primaryKey, subTabKey: k });
@@ -592,14 +594,17 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
     : widthedColumns;
   const showViewToggle = enabledViews.length > 1;
 
-  // req-1109 #28：商品（primary）Tab 吸底汇总行——复用 summary 单行（含 sales_amt/sales_qty/stock 别名
-  // 与 sku_count），商品列显「Total · #命中数」；快速筛选生效时 summaryExtra 已带区间参数，自动为命中汇总。
+  // req-1109 #28: primary (product) tab sticky total row — reuses the summary single row (with
+  // sales_amt/sales_qty/stock aliases and sku_count); the product cell shows "Total · #hit-count".
+  // When the quick filter is active summaryExtra already carries the range params, so this row
+  // automatically totals the hits.
   const showPrimaryFooter = isPrimary && cfg.showPrimaryTotalRow === true;
   const reportFooterRow = isPrimary ? (showPrimaryFooter ? summary : undefined) : totalRow;
   const reportFooterLabel = isPrimary
     ? `Total · #${summary?.sku_count ?? '—'}`
     : resolveBilingualText(cfg.totalRowLabel, language) || t('product_report.total', 'Total');
-  // req-1109 #21：首列「#」序号（table/list 均显；连续编号、排序重排、汇总行显「—」）。
+  // req-1109 #21: leading "#" row-index column (table and list views; continuous numbering,
+  // renumbered after sorting, "—" on the total row).
   const showRowIndex = cfg.showRowIndex === true;
 
   return (
@@ -680,7 +685,8 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
       </div>
 
       {isPrimary && quickFilterEnabled && (
-        // req-1109 #22 工具行入口：白色 pill（样式对齐筛选按钮）；应用后 pill 变为生效条件 chip（点 ✕ 清除）。
+        // req-1109 #22 toolbar entry: white pill styled like the filter button; once applied the
+        // pill becomes the active-condition chip (click ✕ to clear).
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -694,7 +700,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
             {qtyRange && (
               <span
                 role="button"
-                aria-label={t('product_report.quick_filter_clear', '清除快速筛选')}
+                aria-label={t('product_report.quick_filter_clear', 'Clear quick filter')}
                 className="ml-0.5 inline-flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200"
                 onClick={(e) => { e.stopPropagation(); clearQuickFilter(); }}
               >
@@ -774,7 +780,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
       )}
 
       {qfOpen && (
-        // req-1109 #22 底部选择框：区间尺 + 自定义输入；弹窗内不出现汇总块。
+        // req-1109 #22 bottom sheet: range ruler + custom inputs; no summary block inside the sheet.
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={qfLabel}>
           <div className="absolute inset-0 bg-black/40" onClick={() => setQfOpen(false)} />
           <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-2xl bg-white dark:bg-neutral-900 px-4 pb-6 pt-2 shadow-xl">
@@ -786,7 +792,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
               </button>
             </div>
             <div className="mb-3 text-slate-500 dark:text-neutral-400" style={{ fontSize: labelFs }}>
-              {t('product_report.quick_filter_by', '按销量筛选（件）· 区间尺 + 自定义输入')}
+              {t('product_report.quick_filter_by', 'Filter by qty (pcs) · range ruler + custom input')}
             </div>
             <RangeSliderField
               value={qfDraft}
@@ -794,7 +800,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
               ticks={quickFilter?.ticks}
               metricLabel={qfMetric}
               unit={qfUnit}
-              zeroNote={t('product_report.qty_zero_note', '（无销售）')}
+              zeroNote={t('product_report.qty_zero_note', '(no sales)')}
               inputPlaceholder={qfPlaceholder}
               hint={qfHint}
             />
@@ -805,7 +811,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
                 className="flex-1 rounded-xl border border-slate-200 py-2 text-slate-600 transition-colors hover:bg-slate-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 style={{ fontSize: labelFs }}
               >
-                {t('product_report.reset', '重置')}
+                {t('product_report.reset', 'Reset')}
               </button>
               <button
                 type="button"
@@ -813,7 +819,7 @@ const ProductReportRenderer: React.FC<ProductReportRendererProps> = (props) => {
                 className="flex-1 rounded-xl bg-indigo-500 py-2 text-white transition-colors hover:bg-indigo-600"
                 style={{ fontSize: labelFs }}
               >
-                {t('product_report.apply', '应用筛选')}
+                {t('product_report.apply', 'Apply')}
               </button>
             </div>
           </div>
@@ -828,7 +834,7 @@ function formatSummary(summary: Record<string, unknown> | undefined, c: SummaryC
   return formatReportValue(summary[c.field], c.format, summary[c.currencyField ?? 'currency']);
 }
 
-/** req-1109 #20 副行取值：无数据显「—」（不显示 0 占位误导），默认 number 格式。 */
+/** req-1109 #20 sub-line value: "—" when empty (no misleading 0 placeholder); number format by default. */
 function formatSummarySub(summary: Record<string, unknown> | undefined, s: SummaryCardSub): string {
   if (!summary) return '—';
   const v = summary[s.field];
@@ -932,7 +938,8 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
   /** Pinned footer total row (from a separate single-row datasource); label goes in the name column. */
   footerRow?: Record<string, unknown>;
   footerLabel?: string;
-  /** req-1109 #21：首列「#」序号（1 起连续、跨页累计、排序后重排；汇总行序号格显「—」）。 */
+  /** req-1109 #21: leading "#" row index (1-based continuous, accumulated across pages, renumbered
+   * after sorting; the total row shows "—"). */
   showRowIndex?: boolean;
 }) {
   const overlayRef = useRef<HTMLDivElement | null>(null);

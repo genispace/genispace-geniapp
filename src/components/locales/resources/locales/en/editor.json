@@ -3535,7 +3535,14 @@
     "role_rules_restrict": "Restrict options to values",
     "role_rules_restrict_ph": "allowed values, comma-separated",
     "sheet_bind_date": "Filter options by global date range",
-    "sheet_bind_date_hint": "Fetch options with the panel date range ({{startDate}}/{{endDate}}) so the list reflects the selected period."
+    "sheet_bind_date_hint": "Fetch options with the panel date range ({{startDate}}/{{endDate}}) so the list reflects the selected period.",
+    "type_range_slider": "Range Slider (ruler)",
+    "range_slider_title": "Range slider (dual-thumb ruler)",
+    "range_slider_hint": "Dual-thumb ruler plus min/max inputs. Commits two numeric page params named {key}Min / {key}Max (empty = unbounded); bind them in SQL as numeric bounds (NULLIF on empty string).",
+    "range_ticks": "Tick labels (CSV, low to high)",
+    "range_ticks_hint": "Leave empty for the default 13-step quantity ruler (<0, 0…10, >10). The first and last ticks act as open ends: selecting them clears that bound.",
+    "range_unit": "Unit text (condition line)",
+    "range_unit_placeholder_zh": "e.g. pcs (Chinese)"
   },
   "hero_card": {
     "title_component": "Hero Card",
@@ -3798,7 +3805,22 @@
     "unit_label_zh": "Unit label (Chinese)",
     "unit_label_en": "Unit label (English)",
     "unit_label_zh_placeholder": "e.g. 单位：¥K",
-    "unit_label_en_placeholder": "e.g. Unit: ¥K"
+    "unit_label_en_placeholder": "e.g. Unit: ¥K",
+    "sticky_summary": "Sticky summary row (pin totals to the table bottom while scrolling)",
+    "rank_badge_title": "Rank badges (medal icons)",
+    "rank_badge_hint": "Ranks up to Top N render as SVG medals (gold / silver / bronze for 1 / 2 / 3); other rows keep the numeric rank. Rank source: the tie-rank computed rank when Tie ranks is on, else the index (#) field, else the row position.",
+    "rank_badge_style": "Badge style",
+    "rank_badge_style_rosette": "Rosette medal (default)",
+    "rank_badge_style_trophy": "Trophy",
+    "rank_badge_style_crown": "Crown",
+    "rank_badge_style_star": "Star",
+    "rank_badge_style_ribbon": "Ribbon medal",
+    "rank_badge_topn": "Top N ranks get badges",
+    "tie_rank_title": "Tie ranks (shared rank + sub-rank)",
+    "tie_rank_hint": "Rows with equal values share rank R and the next rank jumps to R+N (three rows tied at 1 → next is 4). Tied rows show a two-line rank cell (rank + sub-rank/tie count in 6px); row height stays uniform. The sub-rank follows the fixed sub key below, independent of the list sort order.",
+    "tie_rank_value_field": "Value field (ties share a rank)",
+    "tie_rank_subkey_field": "Sub-rank key (ascending)",
+    "tie_rank_name_field": "Name field (final tie-breaker)"
   },
   "common": {
     "chinese": "Chinese"
@@ -4076,7 +4098,15 @@
     "light_colors": "lightColors (values needing a light border)",
     "title_field_zh": "titleField.zh (field name)",
     "title_field_en": "titleField.en (field name)",
-    "page_size": "Page size (rows per page)"
+    "page_size": "Page size (rows per page)",
+    "show_row_index": "Row index column (#)",
+    "show_primary_total_row": "Sticky total row on the primary tab",
+    "card_subs": "Sub-lines (under the main value)",
+    "quick_filter": "Quick filter (qty range ruler)",
+    "quick_filter_enable": "Enable",
+    "quick_filter_hint": "Entry pill shows on the primary (product) tab toolbar only. Applying injects the qty range into the list and summary data sources (minParam/maxParam, empty = unbounded); the total row switches to the hit total while the filter is active.",
+    "quick_filter_ticks": "Tick labels (CSV, blank = default 13-step ruler)",
+    "card_sub_remove": "Remove sub-line"
   },
   "radar": {
     "tab_basic": "Basic",

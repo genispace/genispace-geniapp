@@ -3549,7 +3549,14 @@
     "role_rules_restrict": "限制可选值为",
     "role_rules_restrict_ph": "允许的值，逗号分隔",
     "sheet_bind_date": "按全局日期范围过滤选项",
-    "sheet_bind_date_hint": "使用面板日期范围（{{startDate}}/{{endDate}}）获取选项，使列表反映所选周期。"
+    "sheet_bind_date_hint": "使用面板日期范围（{{startDate}}/{{endDate}}）获取选项，使列表反映所选周期。",
+    "type_range_slider": "区间尺",
+    "range_slider_title": "区间尺（双滑块刻度）",
+    "range_slider_hint": "双滑块刻度尺 + 最小/最大输入联动。提交 {key}Min / {key}Max 两个数值参数（空=不限），SQL 中按数值界限绑定（空串用 NULLIF 处理）。",
+    "range_ticks": "刻度标签（逗号分隔，低→高）",
+    "range_ticks_hint": "留空使用默认 13 档销量尺（<0、0…10、>10）；首/尾档为开放端，选中即清除该侧界限。",
+    "range_unit": "单位文案（条件条）",
+    "range_unit_placeholder_zh": "如：件"
   },
   "hero_card": {
     "title_component": "Hero 卡片",
@@ -3812,7 +3819,22 @@
     "unit_label_zh": "单位标注（中文）",
     "unit_label_en": "单位标注（英文）",
     "unit_label_zh_placeholder": "如：单位：¥K",
-    "unit_label_en_placeholder": "如：Unit: ¥K"
+    "unit_label_en_placeholder": "如：Unit: ¥K",
+    "sticky_summary": "吸底汇总行（滚动时合计行固定在表格底部）",
+    "rank_badge_title": "排名徽章（奖章图标）",
+    "rank_badge_hint": "名次 ≤ Top N 的行渲染为 SVG 奖章（1/2/3 名为金/银/铜），其余行保持数字名次。名次来源：开启并列名次时取并列计算名次，否则取序号（#）字段值，否则取行位置序号。",
+    "rank_badge_style": "徽章样式",
+    "rank_badge_style_rosette": "花结勋章（默认）",
+    "rank_badge_style_trophy": "奖杯",
+    "rank_badge_style_crown": "皇冠",
+    "rank_badge_style_star": "五角星",
+    "rank_badge_style_ribbon": "勋表竖奖章",
+    "rank_badge_topn": "前 N 名显示徽章",
+    "tie_rank_title": "并列名次（同名次跳号 + 子名次）",
+    "tie_rank_hint": "数值相同的行共享名次 R，下一名次跳号为 R+N（3 人并列第 1 → 下一名第 4）。并列行名次格为双行（大名次 + 6px 小字子名次/同额人数），行高保持一致。子名次按下方的固定次要键编号，与列表排序解耦。",
+    "tie_rank_value_field": "并列取值字段（同值并列）",
+    "tie_rank_subkey_field": "子名次次要键（升序）",
+    "tie_rank_name_field": "姓名字段（末位决胜）"
   },
   "common": {
     "chinese": "中文"
@@ -4090,7 +4112,15 @@
     "light_colors": "lightColors（需要浅边框的颜色值）",
     "title_field_zh": "titleField.zh（字段名）",
     "title_field_en": "titleField.en（字段名）",
-    "page_size": "每页条数"
+    "page_size": "每页条数",
+    "show_row_index": "序号列（#）",
+    "show_primary_total_row": "商品 Tab 吸底汇总行",
+    "card_subs": "副行（主数值下方）",
+    "quick_filter": "快速筛选（销量区间尺）",
+    "quick_filter_enable": "启用",
+    "quick_filter_hint": "入口 pill 仅显示在商品 Tab 工具行；应用后把区间注入列表与汇总数据源（minParam/maxParam，空=不限），筛选生效时汇总行切换为命中汇总。",
+    "quick_filter_ticks": "刻度标签（逗号分隔，留空=默认 13 档）",
+    "card_sub_remove": "删除副行"
   },
   "radar": {
     "tab_basic": "基础",

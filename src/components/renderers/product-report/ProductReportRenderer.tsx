@@ -952,7 +952,12 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
     <div className={cn('rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm', stickyHeader ? 'overflow-visible' : 'overflow-hidden')}>
       {stickyHeader && <div ref={overlayRef} aria-hidden className="rounded-t-2xl" />}
       <div className="overflow-hidden rounded-2xl">
-      <div ref={scrollRef} className="overflow-x-auto">
+      {/* req-1109 #28: with a footer row the table gets a bounded height so it scrolls in place
+          and the sticky tfoot pins to the bottom of that scroll area (long lists); short lists
+          stay below the maxHeight, so the footer simply follows the last row. overflow-x-auto
+          alone computes overflow-y as auto too, but without a height bound there is nothing to
+          stick against — the footer would sit at its natural position off-screen. */}
+      <div ref={scrollRef} className={cn('overflow-x-auto', footerRow && 'overflow-y-auto')} style={footerRow ? { maxHeight: 560 } : undefined}>
         <table className="w-full" style={{ fontSize: cellFontSize }}>
           <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-neutral-800">
             <tr>

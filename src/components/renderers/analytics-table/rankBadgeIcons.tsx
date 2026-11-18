@@ -129,19 +129,24 @@ export interface RankBadgeIconProps {
   rank: number;
   /** Icon width in px (height follows the style's aspect ratio). Default 20. */
   size?: number;
+  /** Vertical budget in px — width is derived from the style's aspect ratio so the badge renders
+   *  as large as the available height allows (per-style widths differ). Wins over `size`. */
+  fitHeight?: number;
 }
 
-const RankBadgeIcon: React.FC<RankBadgeIconProps> = ({ style = 'rosette', rank, size = 20 }) => {
+const RankBadgeIcon: React.FC<RankBadgeIconProps> = ({ style = 'rosette', rank, size = 20, fitHeight }) => {
   const medalRank = rank <= 1 ? 1 : rank === 2 ? 2 : 3;
   const p = PALETTES[medalRank];
   const shape = SHAPES[style] ?? SHAPES.rosette;
+  const width = fitHeight != null ? Math.max(8, Math.round(fitHeight / shape.ratio)) : size;
+  const height = fitHeight != null ? Math.round(fitHeight) : Math.round(size * shape.ratio);
   // Deterministic id: every instance of the same style+rank emits an identical gradient def, so
   // duplicate ids across badges are harmless and snapshots stay stable.
   const gid = `rankbadge-${style}-${medalRank}`;
   return (
     <svg
-      width={size}
-      height={Math.round(size * shape.ratio)}
+      width={width}
+      height={height}
       viewBox={shape.viewBox}
       role="img"
       aria-label={`rank-${rank}`}

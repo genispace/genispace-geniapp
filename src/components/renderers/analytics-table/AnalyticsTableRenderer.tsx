@@ -210,7 +210,7 @@ export interface AnalyticsTableRendererProps {
   rankBadge?: { enabled?: boolean; style?: RankBadgeStyle; topN?: number };
   /** Task #289 (req-1109 #25 follow-up): tie-aware ranking ("1224" skip style) computed client-side over
    *  the full loaded row set. Rows sharing `valueField` tie at one rank R; the next distinct value
-   *  ranks R+N. Tied rows show a two-line index cell: the big shared rank plus a 6px
+   *  ranks R+N. Tied rows show a two-line index cell: the big shared rank plus an 8px
    *  "subRank/tieCount" line numbered by the fixed secondary key (`subKeyField` asc, then
    *  `nameField`) — decoupled from the table sort. When enabled it overrides the displayed rank
    *  (indexField may still drive the header sort). All rows align to a uniform 46px row height. */
@@ -756,24 +756,25 @@ const AnalyticsTableRenderer: React.FC<AnalyticsTableRendererProps> = ({
                     const rank = displayRankOf(r, i);
                     return (
                       <td
-                        className={cn('sticky left-0 z-10 px-2 py-1.5 text-center tabular-nums', stickyBg, hl ? 'text-indigo-400 dark:text-indigo-300' : 'text-slate-300 dark:text-neutral-600', hl && 'border-l-2 border-indigo-400')}
+                        className={cn('sticky left-0 z-10 px-2 text-center tabular-nums', tieMap ? 'py-1' : 'py-1.5', stickyBg, hl ? 'text-indigo-400 dark:text-indigo-300' : 'text-slate-300 dark:text-neutral-600', hl && 'border-l-2 border-indigo-400')}
                         style={{ ...indexColStyle, fontSize: cellFs }}
                       >
                         {tieMap ? (
-                          // Tie mode (#25 follow-up): uniform 46px row height (34px content + py-1.5);
-                          // tied rows add a 6px "subRank/tieCount" line under the shared rank.
-                          <span className="flex min-h-[34px] flex-col items-center justify-center leading-none">
+                          // Tie mode (#25 follow-up): uniform 46px row height (38px content + py-1);
+                          // tied rows add an 8px "subRank/tieCount" line under the shared rank, and
+                          // the badge gets the remaining vertical budget (28px) via fitHeight.
+                          <span className="flex min-h-[38px] flex-col items-center justify-center leading-none">
                             {showBadgeFor(rank)
-                              ? <RankBadgeIcon style={rankBadge?.style} rank={rank} size={16} />
+                              ? <RankBadgeIcon style={rankBadge?.style} rank={rank} fitHeight={28} />
                               : <span className="font-bold">{rank ?? '—'}</span>}
                             {info && info.tieCount > 1 && (
-                              <span className="mt-0.5 whitespace-nowrap text-[6px] font-medium leading-none text-slate-400 dark:text-neutral-500">
+                              <span className="mt-0.5 whitespace-nowrap text-[8px] font-medium leading-none text-slate-400 dark:text-neutral-500">
                                 {info.subRank}/{info.tieCount}
                               </span>
                             )}
                           </span>
                         ) : showBadgeFor(rank) ? (
-                          <RankBadgeIcon style={rankBadge?.style} rank={rank} size={20} />
+                          <RankBadgeIcon style={rankBadge?.style} rank={rank} fitHeight={24} />
                         ) : (
                           indexField ? formatIndexValue(r[indexField]) : i + 1
                         )}

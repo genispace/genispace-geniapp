@@ -30,6 +30,7 @@ import { renderReportCell, resolveFieldByLang, formatReportValue, ReportCard } f
 import { useMobileViewport } from '@/hooks/useMobileViewport';
 import { useMobileFlowLayout } from '@/mobile/mobileFlowLayoutContext';
 import { useStickyHeaderClone } from '../shared/useStickyHeaderClone';
+import { useStickyFooterClone } from '../shared/useStickyFooterClone';
 import { evaluateVisibleWhen } from '@/utils/visibleWhen';
 import { useVisibleWhenContext } from '@/hooks/useVisibleWhenContext';
 
@@ -943,21 +944,27 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
   showRowIndex?: boolean;
 }) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
+  const footerOverlayRef = useRef<HTMLDivElement | null>(null);
   // Re-clone when the header content (columns/language/font/sort indicator) changes; row-width
   // drift is handled by the hook's ResizeObserver. headerSub values join the key — the subtitle
   // makes the thead one line taller, so a value change must trigger a re-clone.
   const cloneKey = `${language}|${cellFontSize}|${showRowIndex ? 'ri' : ''}|${columns.map(c => c.dataIndex).join(',')}|${sort?.field ?? ''}|${sort?.asc ?? ''}|${headerSub ? `${headerSub.prefix ?? ''}~${columns.map(c => headerSub.values[c.dataIndex] ?? '').join(',')}` : ''}`;
   useStickyHeaderClone({ enabled: !!stickyHeader, overlayRef, cloneKey });
+  // Footer clone re-clones when the total VALUES change (the clone is a DOM snapshot, not live).
+  const footerCloneKey = `${cloneKey}|${footerLabel ?? ''}|${footerRow ? columns.map(c => String(footerRow[c.dataIndex] ?? '')).join(',') : ''}`;
+  useStickyFooterClone({ enabled: !!footerRow, overlayRef: footerOverlayRef, cloneKey: footerCloneKey });
   return (
-    <div className={cn('rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm', stickyHeader ? 'overflow-visible' : 'overflow-hidden')}>
+    // overflow must stay visible whenever a sticky header/footer overlay needs to pin against
+    // the page scrollport; the inner wrapper still clips the table body to the rounded card.
+    <div className={cn('rounded-2xl border border-slate-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm', (stickyHeader || footerRow) ? 'overflow-visible' : 'overflow-hidden')}>
       {stickyHeader && <div ref={overlayRef} aria-hidden className="rounded-t-2xl" />}
       <div className="overflow-hidden rounded-2xl">
-      {/* req-1109 #28: with a footer row the table gets a bounded height so it scrolls in place
-          and the sticky tfoot pins to the bottom of that scroll area (long lists); short lists
-          stay below the maxHeight, so the footer simply follows the last row. overflow-x-auto
-          alone computes overflow-y as auto too, but without a height bound there is nothing to
-          stick against — the footer would sit at its natural position off-screen. */}
-      <div ref={scrollRef} className={cn('overflow-x-auto', footerRow && 'overflow-y-auto')} style={footerRow ? { maxHeight: 560 } : undefined}>
+      {/* req-1109 #28: the total row pins to the PAGE scrollport bottom via a sticky clone
+          overlay below the table (useStickyFooterClone) — the horizontal scroller cannot host
+          a page-level sticky footer itself, and a bounded inner scroll box left the pinned
+          footer below the fold. Short lists: the clone rests at its natural position right
+          after the last row. */}
+      <div ref={scrollRef} className="overflow-x-auto">
         <table className="w-full" style={{ fontSize: cellFontSize }}>
           <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-neutral-800">
             <tr>
@@ -1019,7 +1026,9 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
             ))}
           </tbody>
           {footerRow && (
-            <tfoot className="sticky bottom-0 z-10">
+            // Pinning is handled by the sticky clone overlay below the card; this real tfoot
+            // supplies layout widths and gets visibility:hidden while the clone is active.
+            <tfoot>
               <tr className="border-t-2 border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 font-semibold">
                 {showRowIndex && <td className="px-1.5 py-2.5 text-center text-slate-400 dark:text-neutral-500">—</td>}
                 {columns.map((c, ci) => {
@@ -1041,6 +1050,7 @@ function ReportTable({ columns, rows, language, keyField, onRowClick, rowClickCo
         </table>
       </div>
       </div>
+      {footerRow && <div ref={footerOverlayRef} aria-hidden className="rounded-b-2xl" />}
     </div>
   );
 }

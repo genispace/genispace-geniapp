@@ -96,11 +96,13 @@ describe('AnalyticsTableRenderer tieRank (#25追加)', () => {
   ];
   const TIE_CFG = { enabled: true, valueField: 'sales_amt_cny', subKeyField: 'store_code' };
 
-  it('shows the shared rank with a 6px subRank/tieCount line and "1224" skip numbering', () => {
+  it('shows the shared rank with an 8px subRank/tieCount line and "1224" skip numbering', () => {
     renderTable({ tieRank: TIE_CFG }, TIED);
     expect(screen.getByText('1/3')).toBeInTheDocument();
     expect(screen.getByText('2/3')).toBeInTheDocument();
     expect(screen.getByText('3/3')).toBeInTheDocument();
+    // Sub line renders at 8px (req-1109 follow-up: enlarged from 6px for legibility).
+    expect(screen.getByText('1/3').className).toContain('text-[8px]');
     // Next distinct value after a 3-way tie at 1 ranks 4, without a sub line.
     expect(screen.getByText('4')).toBeInTheDocument();
     expect(screen.queryByText('1/1')).not.toBeInTheDocument();
@@ -134,6 +136,8 @@ describe('AnalyticsTableRenderer tieRank (#25追加)', () => {
     const badges = container.querySelectorAll('svg[data-rank-badge="rosette"]');
     expect(badges).toHaveLength(3);
     expect([...badges].map(b => b.getAttribute('data-rank'))).toEqual(['1', '1', '1']);
+    // Tie mode sizes badges by the 28px vertical budget (fitHeight): rosette ratio 40/34 → w 24.
+    expect(badges[0].getAttribute('height')).toBe('28');
     expect(screen.getByText('1/3')).toBeInTheDocument();
     expect(screen.getByText('4')).toBeInTheDocument();
   });

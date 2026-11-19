@@ -61,6 +61,7 @@ export {
   type AgentIdentityProps,
   type AgentIdentitySize,
 } from './components/features/agent';
+export { ModelReasoningField } from './components/features/agent/ModelReasoningField';
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './components/ui/card';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
@@ -455,3 +456,6 @@ export {
 // - BillingRechargePayment: references @/app/services/billing
 // These components should remain in their respective application projects
 export * from './kit/ai';
+
+
+export { MethodViewField } from "./components/patterns/MethodViewField";

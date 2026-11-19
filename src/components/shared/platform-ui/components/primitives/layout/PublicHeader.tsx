@@ -33,6 +33,8 @@ export interface NavigationConfig {
   chatUrl: string;
   partnerUrl: string;
   webUrl: string;
+  /** Documentation site for the current region and deployment environment. */
+  docsUrl?: string;
 }
 
 export interface PublicHeaderProps {

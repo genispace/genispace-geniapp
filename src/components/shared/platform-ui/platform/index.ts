@@ -1,13 +1,8 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { Platform } from './types';
 
-const win = typeof window !== 'undefined'
-  ? (window as unknown as { genibot?: unknown })
-  : null;
-
 export function getPlatform(): Platform {
-  if (!win) return 'web';
-  return win.genibot != null ? 'desktop' : 'web';
+  return 'web';
 }
 
 export function isDesktop(): boolean {
@@ -24,13 +19,6 @@ export function resolveAbsoluteUrl(href: string, base?: string): string {
 }
 
 export function openExternal(url: string): void {
-  if (getPlatform() === 'desktop') {
-    const g = (win as unknown as { genibot?: { openExternal?: (u: string) => void } })?.genibot;
-    if (typeof g?.openExternal === 'function') {
-      g.openExternal(url);
-      return;
-    }
-  }
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 

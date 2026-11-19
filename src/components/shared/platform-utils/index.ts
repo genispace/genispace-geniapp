@@ -1,4 +1,5 @@
 export { cn } from './utils/cn';
+export { webMcpAppSandbox } from './mcpAppSandbox';
 
 export {
   getPlaneBaseUrl,

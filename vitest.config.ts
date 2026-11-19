@@ -13,6 +13,11 @@ export default defineConfig({
       '@genispace/shared-ui': path.resolve(root, 'src/components/shared/platform-ui/index.ts'),
       '@genispace/shared-utils': path.resolve(root, 'src/components/shared/platform-utils/index.ts'),
       '@genispace/workbench-templates': path.resolve(root, 'src/components/shared/templates/index.ts'),
+      // Tests never render the MCP Apps preview; the host is a private frontend package.
+      '@genispace/mcp-app-host/react': path.resolve(
+        root,
+        'src/components/shared/mcp-app-host/standalone-unavailable.tsx',
+      ),
       '@genispace/geniapp/components/adapters/host': path.resolve(root, 'src/components/adapters/host.ts'),
       '@genispace/geniapp/utils': path.resolve(root, 'src/utils.ts'),
     },

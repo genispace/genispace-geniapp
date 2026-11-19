@@ -31,11 +31,14 @@ export function PublicFooter({ navigationConfig }: PublicFooterProps) {
   const { t } = useTranslation('common');
   const showIcpRecord = isChinaEdition();
   const isStandalone = isStandaloneEdition();
+  const runtimeDocsUrl = (window as { __APP_CONFIG__?: { DOCS_URL?: string } }).__APP_CONFIG__?.DOCS_URL;
+  const docsUrl = (navigationConfig.docsUrl?.trim() || runtimeDocsUrl?.trim()
+    || (showIcpRecord || isStandalone ? 'https://docs.genispace.cn' : 'https://docs.genispace.ai')).replace(/\/+$/, '');
 
   const standaloneNavigation = {
     resources: [
-      { name: t('footer.navigation.docs', "Documentation"), href: 'https://docs.genispace.cn', external: true },
-      { name: t('footer.navigation.api', "API Reference"), href: 'https://docs.genispace.cn/api/overview', external: true },
+      { name: t('footer.navigation.docs', "Documentation"), href: docsUrl, external: true },
+      { name: t('footer.navigation.api', "API Reference"), href: `${docsUrl}/api/overview`, external: true },
       { name: t('footer.navigation.licenseQuery', "License Query"), href: 'https://www.genispace.com/license-query', external: true },
       { name: t('footer.navigation.contact', "Contact"), href: 'https://www.genispace.com/contact', external: true },
     ],
@@ -58,8 +61,8 @@ export function PublicFooter({ navigationConfig }: PublicFooterProps) {
       { name: t('footer.navigation.models', "Models"), href: '/model-services', baseUrl: navigationConfig.appUrl },
     ],
     resources: [
-      { name: t('footer.navigation.docs', "Documentation"), href: 'https://docs.genispace.com', external: true },
-      { name: t('footer.navigation.api', "API Reference"), href: 'https://docs.genispace.com/api/overview', external: true },
+      { name: t('footer.navigation.docs', "Documentation"), href: docsUrl, external: true },
+      { name: t('footer.navigation.api', "API Reference"), href: `${docsUrl}/api/overview`, external: true },
       { name: t('footer.navigation.licenseQuery', "License Query"), href: '/license-query', baseUrl: navigationConfig.appUrl },
       { name: t('footer.navigation.contact', "Contact"), href: '/contact', baseUrl: navigationConfig.webUrl },
     ],

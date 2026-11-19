@@ -108,22 +108,27 @@ function renderOverlapBarOverlay(
           const sBarW = opts.barWidth != null ? Math.min(opts.barWidth, maxBarW) : Math.min(maxBarW, 28);
           const groupW = n * sBarW + gap * (n - 1);
           const gLeft = cx0 + (band - groupW) / 2;
-          tv.forEach((t, k) => { const yt = ys(t.v); els.push(<rect key={`r${k}-${i}`} x={gLeft} y={yt} width={groupW} height={Math.max(0, y0 - yt)} fill={t.color} fillOpacity={0.14} rx={2} />); });
+          tv.forEach((t, k) => { const yt = ys(t.v); els.push(<rect key={`r${k}-${i}`} x={gLeft} y={Math.min(yt, y0)} width={groupW} height={Math.abs(y0 - yt)} fill={t.color} fillOpacity={0.14} rx={2} />); });
           seriesList.forEach((s, k) => {
             const left = gLeft + k * (sBarW + gap);
             const cx = left + sBarW / 2;
             const sales = toNum(row[s.key]) ?? 0;
             const ySales = ys(sales);
-            els.push(<rect key={`s-${i}-${k}`} x={left} y={ySales} width={sBarW} height={Math.max(0, y0 - ySales)} rx={2} fill={s.color} fillOpacity={0.95} />);
+            els.push(<rect key={`s-${i}-${k}`} x={left} y={Math.min(ySales, y0)} width={sBarW} height={Math.abs(y0 - ySales)} rx={2} fill={s.color} fillOpacity={0.95} />);
             const topY = Math.min(ySales, ...tv.map(t => ys(t.v)));
             const compRaw = opts.compKey ? row[`__comp__${s.key}`] : undefined;
             const comp = compRaw != null ? toNum(compRaw) : undefined;
             const compMissing = opts.compKey != null && comp == null;
+            // Negative bar: labels go BELOW the bar bottom (stacked value over delta%) so they
+            // don't overlap the bar body; positive bars keep the labels above the top.
+            const neg = sales < 0;
+            const botY = neg ? Math.max(ySales, ...tv.map(t => ys(t.v))) : 0;
             // Stack value label above the delta% label, both scaled to the configured font size.
-            const valueY = comp != null || compMissing ? topY - compFs - 5 : topY - 5;
+            const valueY = neg ? botY + labelFs + 2 : comp != null || compMissing ? topY - compFs - 5 : topY - 5;
             if (opts.valueLabel) els.push(<text key={`v-${i}-${k}`} x={cx} y={valueY} textAnchor="middle" fill={opts.valueLabelColor} fontSize={labelFs} fontWeight={600}>{opts.formatBarLabel(sales)}</text>);
-            if (comp != null) els.push(<text key={`c-${i}-${k}`} x={cx} y={topY - 4} textAnchor="middle" fill={comp >= 0 ? '#16a34a' : '#dc2626'} fontSize={compFs}>{comp >= 0 ? '+' : ''}{comp.toFixed(1)}%</text>);
-            else if (compMissing) els.push(<text key={`c-${i}-${k}`} x={cx} y={topY - 4} textAnchor="middle" fill="#94a3b8" fontSize={compFs}>—</text>);
+            const compY = neg ? botY + labelFs + compFs + 5 : topY - 4;
+            if (comp != null) els.push(<text key={`c-${i}-${k}`} x={cx} y={compY} textAnchor="middle" fill={comp >= 0 ? '#16a34a' : '#dc2626'} fontSize={compFs}>{comp >= 0 ? '+' : ''}{comp.toFixed(1)}%</text>);
+            else if (compMissing) els.push(<text key={`c-${i}-${k}`} x={cx} y={compY} textAnchor="middle" fill="#94a3b8" fontSize={compFs}>—</text>);
           });
           tv.forEach((t, k) => { const yt = ys(t.v); els.push(<line key={`l${k}-${i}`} x1={gLeft - 1} x2={gLeft + groupW + 1} y1={yt} y2={yt} stroke={t.color} strokeWidth={1.4} strokeDasharray="3 2" />); });
           return <g key={`g-${i}`}>{els}</g>;
@@ -132,20 +137,24 @@ function renderOverlapBarOverlay(
         const cx = left + barW / 2;
         const sales = toNum(row[opts.valueKey]) ?? 0;
         const ySales = ys(sales);
-        tv.forEach((t, k) => { const yt = ys(t.v); els.push(<rect key={`r${k}-${i}`} x={left} y={yt} width={barW} height={Math.max(0, y0 - yt)} fill={t.color} fillOpacity={0.14} rx={2} />); });
+        tv.forEach((t, k) => { const yt = ys(t.v); els.push(<rect key={`r${k}-${i}`} x={left} y={Math.min(yt, y0)} width={barW} height={Math.abs(y0 - yt)} fill={t.color} fillOpacity={0.14} rx={2} />); });
         const clickable = !!opts.onBarClick && opts.drillKeyField != null && row[opts.drillKeyField] != null;
-        els.push(<rect key={`s-${i}`} x={left} y={ySales} width={barW} height={Math.max(0, y0 - ySales)} rx={2} fill={opts.valueColor} fillOpacity={0.95} style={{ cursor: clickable ? 'pointer' : 'default' }} onClick={clickable ? () => opts.onBarClick?.(row) : undefined} />);
+        els.push(<rect key={`s-${i}`} x={left} y={Math.min(ySales, y0)} width={barW} height={Math.abs(y0 - ySales)} rx={2} fill={opts.valueColor} fillOpacity={0.95} style={{ cursor: clickable ? 'pointer' : 'default' }} onClick={clickable ? () => opts.onBarClick?.(row) : undefined} />);
         tv.forEach((t, k) => { const yt = ys(t.v); els.push(<line key={`l${k}-${i}`} x1={left - 1} x2={left + barW + 1} y1={yt} y2={yt} stroke={t.color} strokeWidth={1.4} strokeDasharray="3 2" />); });
         const topY = Math.min(ySales, ...tv.map(t => ys(t.v)));
         // compKey configured but value null/non-numeric (zero or missing LY base) = not comparable:
         // show a muted '—' instead of coercing to a misleading +0.0%; no compKey at all → no delta label.
         const comp = opts.compKey && row[opts.compKey] != null ? toNum(row[opts.compKey]) : undefined;
         const compMissing = opts.compKey != null && comp == null;
+        // Negative bar: labels go BELOW the bar bottom so they don't overlap the bar body.
+        const neg = sales < 0;
+        const botY = neg ? Math.max(ySales, ...tv.map(t => ys(t.v))) : 0;
         // Stack value label above the delta% label, both scaled to the configured value-label font size.
-        const valueY = comp != null || compMissing ? topY - compFs - 5 : topY - 5;
+        const valueY = neg ? botY + labelFs + 2 : comp != null || compMissing ? topY - compFs - 5 : topY - 5;
+        const compY = neg ? botY + labelFs + compFs + 5 : topY - 4;
         if (opts.valueLabel) els.push(<text key={`v-${i}`} x={cx} y={valueY} textAnchor="middle" fill={opts.valueLabelColor} fontSize={labelFs} fontWeight={600}>{opts.formatBarLabel(sales)}</text>);
-        if (comp != null) els.push(<text key={`c-${i}`} x={cx} y={topY - 4} textAnchor="middle" fill={comp >= 0 ? '#16a34a' : '#dc2626'} fontSize={compFs}>{comp >= 0 ? '+' : ''}{comp.toFixed(1)}%</text>);
-        else if (compMissing) els.push(<text key={`c-${i}`} x={cx} y={topY - 4} textAnchor="middle" fill="#94a3b8" fontSize={compFs}>—</text>);
+        if (comp != null) els.push(<text key={`c-${i}`} x={cx} y={compY} textAnchor="middle" fill={comp >= 0 ? '#16a34a' : '#dc2626'} fontSize={compFs}>{comp >= 0 ? '+' : ''}{comp.toFixed(1)}%</text>);
+        else if (compMissing) els.push(<text key={`c-${i}`} x={cx} y={compY} textAnchor="middle" fill="#94a3b8" fontSize={compFs}>—</text>);
         return <g key={`g-${i}`}>{els}</g>;
       })}
     </g>
@@ -204,19 +213,22 @@ function measureMaxLabelWidthPx(labels: string[], fontSizePx: number): number {
   return Math.ceil(max);
 }
 
-// d3-style nice ticks: returns [0, step, 2*step, … niceMax] with top >= rawMax; step is 1/2/2.5/5×10^n.
+// d3-style nice ticks: returns [min?, 0, step, … niceMax]; step is 1/2/2.5/5×10^n.
 // Used for overlapBar Y-axis (prototype-aligned ticks instead of hard-coded max*1.14).
-function niceAxisTicks(rawMax: number, targetCount = 4): { max: number; ticks: number[] } {
-  if (!(rawMax > 0)) return { max: 100, ticks: [0, 25, 50, 75, 100] };
-  const rawStep = rawMax / targetCount;
+// rawMin < 0 (e.g. a negative sales bucket) extends the axis below zero so positive bars grow up
+// from the 0-line and negative bars grow down from it — 0 stays exactly on a tick.
+function niceAxisTicks(rawMax: number, targetCount = 4, rawMin = 0): { min: number; max: number; ticks: number[] } {
+  if (!(rawMax > 0) && !(rawMin < 0)) return { min: 0, max: 100, ticks: [0, 25, 50, 75, 100] };
+  const rawStep = Math.max(rawMax, -rawMin, 1) / targetCount;
   const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
   const norm = rawStep / mag;
   const niceNorm = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10;
   const step = niceNorm * mag;
   const max = Math.ceil(rawMax / step) * step;
+  const min = rawMin < 0 ? -Math.ceil(-rawMin / step) * step : 0;
   const ticks: number[] = [];
-  for (let v = 0; v <= max + step / 2; v += step) ticks.push(Math.round(v));
-  return { max, ticks };
+  for (let v = min; v <= max + step / 2; v += step) ticks.push(Math.round(v));
+  return { min, max, ticks };
 }
 
 // 6-digit hex → rgba with alpha. Used for semi-transparent legend target fills (stroke stays solid).
@@ -992,7 +1004,6 @@ function OverlapSummaryTableStrip({ view, defaultFontSize, sideMargin, autoFit =
   }, [autoFit, remeasure]);
   const valueSize = Math.max(7, Math.round((defaultFontSize ?? 12) * fitScale));
   const subSize = Math.max(8, valueSize - 2);
-  const headSize = Math.max(8, valueSize - 3);
   const cellPad = 'px-0.5 py-[2.5px] whitespace-nowrap tabular-nums';
   return (
     <div
@@ -1005,7 +1016,7 @@ function OverlapSummaryTableStrip({ view, defaultFontSize, sideMargin, autoFit =
           <tr>
             <th className="px-0.5 pb-0.5" />
             {view.columns.map((c) => (
-              <th key={c.key} className="whitespace-nowrap px-0.5 pb-0.5 text-right font-semibold text-slate-400 dark:text-neutral-500" style={{ fontSize: headSize }}>{c.label}</th>
+              <th key={c.key} className="whitespace-nowrap px-0.5 pb-0.5 text-right font-normal text-slate-900 dark:text-neutral-100" style={{ fontSize: valueSize }}>{c.label}</th>
             ))}
           </tr>
         </thead>
@@ -1876,18 +1887,23 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
       const targets = allTargets.filter((tg) => !(showLine && tg.hideWithLine));
 
       let rawMax = 0;
+      let rawMin = 0;
       overlapRows.forEach((r) => {
-        rawMax = Math.max(
-          rawMax,
+        const vals = [
           ...(overlapSeries ? overlapSeries.map((s) => toNum(r[s.key]) || 0) : [toNum(r[overlapValueKey]) || 0]),
           ...targets.map((tg) => toNum(r[tg.dataKey]) || 0),
           // Cumulative values are >= the bar values, so they must feed the axis max or the line
           // gets clipped at the top of the plot.
           ...(showLine && overlapLineKey ? [toNum(r[overlapLineKey]) || 0] : []),
-        );
+        ];
+        rawMax = Math.max(rawMax, ...vals);
+        rawMin = Math.min(rawMin, ...vals);
       });
       // Nice ticks (prototype-aligned): top >= rawMax with uniform steps instead of hard-coded max*1.14.
-      const { max: yMax, ticks: yTicks } = niceAxisTicks(rawMax);
+      // rawMin < 0 pulls the axis below zero so negative bars draw down from the 0-line (task #298:
+      // recharts' default allowDataOverflow=false was silently widening the explicit [0, yMax] domain
+      // to the data min, lifting the bars' baseline above the fixed Y-axis' 0 tick).
+      const { min: yMin, max: yMax, ticks: yTicks } = niceAxisTicks(rawMax, 4, rawMin);
 
       // Summary strip cells come from the shared builder (also used by the column/bar path).
       // With seriesField the pivot dropped the raw metric columns, so sums run over the PRE-PIVOT
@@ -1980,7 +1996,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
             yAxisWidth={36}
             fixedYAxis={
               <ComposedChart data={overlapRows} margin={{ top: 20, right: 0, left: 0, bottom: 10 }}>
-                <YAxis domain={[0, yMax]} ticks={yTicks} tick={{ fontSize: yAxisFontSize ?? 12 }} axisLine={false} tickLine={false} width={36} tickFormatter={(v: number) => fmtAxisTick(v)} />
+                <YAxis domain={[yMin, yMax]} ticks={yTicks} tick={{ fontSize: yAxisFontSize ?? 12 }} axisLine={false} tickLine={false} width={36} tickFormatter={(v: number) => fmtAxisTick(v)} />
                 <XAxis dataKey={xField} height={xAxisH} tick={false} axisLine={false} tickLine={false} />
               </ComposedChart>
             }
@@ -2002,7 +2018,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
                 interval={0}
                 height={xAxisH}
               />
-              <YAxis domain={[0, yMax]} ticks={yTicks} hide />
+              <YAxis domain={[yMin, yMax]} ticks={yTicks} hide />
               {showTooltip && (
                 <Tooltip
                   cursor={{ fill: 'rgba(99,102,241,0.06)' }}

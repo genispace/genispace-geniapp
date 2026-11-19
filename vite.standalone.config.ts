@@ -26,6 +26,12 @@ export default defineConfig({
         root,
         'src/components/shared/templates/index.ts',
       ),
+      // The MCP Apps host is a private frontend package and is not part of this
+      // self-contained bundle; the mirror's lazy import resolves to a stub instead.
+      '@genispace/mcp-app-host/react': path.resolve(
+        root,
+        'src/components/shared/mcp-app-host/standalone-unavailable.tsx',
+      ),
       '@genispace/geniapp/components/adapters/host': path.resolve(
         root,
         'src/components/adapters/host.ts',

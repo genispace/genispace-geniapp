@@ -23,6 +23,7 @@
       "@genispace/shared-ui": ["src/components/shared/platform-ui/index"],
       "@genispace/shared-utils": ["src/components/shared/platform-utils/index"],
       "@genispace/workbench-templates": ["src/components/shared/templates/index"],
+      "@genispace/mcp-app-host/core": ["src/components/shared/mcp-app-host/contract.ts"],
       "@genispace/geniapp": ["src/index"],
       "@genispace/geniapp/components": ["src/components/index"],
       "@genispace/geniapp/components/adapters/host": ["src/components/adapters/host"],
